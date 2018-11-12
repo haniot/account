@@ -6,6 +6,7 @@ import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
 import { IUserRepository } from '../../../src/application/port/user.repository.interface'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { User } from '../../../src/application/domain/model/user'
+import { ObjectID } from 'bson'
 
 require('sinon-mongoose')
 
@@ -30,13 +31,18 @@ describe('Repositories: Users', () => {
         }
     }
 
+    const repo: IUserRepository = new UserRepository(modelFake,
+        new UserEntityMapperMock(), new CustomLoggerMock())
+
     afterEach(() => {
         sinon.restore()
     })
 
     describe('getAll()', () => {
         it('should return a list of users', () => {
+
             const resultExpected: Array<User> = new Array(defaultUser)
+
             sinon
                 .mock(modelFake)
                 .expects('find')
@@ -50,9 +56,6 @@ describe('Repositories: Users', () => {
                 .withArgs(100)
                 .chain('exec')
                 .resolves(resultExpected)
-
-            const repo: IUserRepository = new UserRepository(modelFake,
-                new UserEntityMapperMock(), new CustomLoggerMock())
 
             return repo.find(queryMock)
                 .then((users: Array<User>) => {
@@ -79,9 +82,6 @@ describe('Repositories: Users', () => {
                     .chain('exec')
                     .resolves([])
 
-                const repo: IUserRepository = new UserRepository(modelFake,
-                    new UserEntityMapperMock(), new CustomLoggerMock())
-
                 return repo.find(queryMock)
                     .then((users: Array<User>) => {
                         assert.isNotNull(users)
@@ -92,31 +92,27 @@ describe('Repositories: Users', () => {
     })
 
     describe('getById()', () => {
+        it('should return a unique user', () => {
 
-        const customQueryMock: any = {
-            serialize: () => {
-                return {
-                    fields: {},
-                    ordination: {},
-                    pagination: { page: 1, limit: 100 },
-                    filters: {id: defaultUser.getId()}
+            const customQueryMock: any = {
+                serialize: () => {
+                    return {
+                        fields: {},
+                        ordination: {},
+                        pagination: { page: 1, limit: 100 },
+                        filters: { id: defaultUser.getId() }
+                    }
                 }
             }
-        }
-
-        it('should return a unique user', () => {
 
             sinon
                 .mock(modelFake)
                 .expects('findOne')
-                .withArgs({id: defaultUser.getId()})
+                .withArgs({ id: defaultUser.getId() })
                 .chain('select')
                 .withArgs({})
                 .chain('exec')
                 .resolves(defaultUser)
-
-            const repo: IUserRepository = new UserRepository(modelFake,
-                new UserEntityMapperMock(), new CustomLoggerMock())
 
             return repo.findOne(customQueryMock)
                 .then((user: User) => {
@@ -129,14 +125,339 @@ describe('Repositories: Users', () => {
                 })
         })
 
-        context('when the user is not found', () => {})
-        context('when the user id is invalid', () => {})
+        context('when the user is not found', () => {
+            it('should return info message from user not found', () => {
+
+                const randomId: any = new ObjectID()
+
+                const customQueryMock: any = {
+                    serialize: () => {
+                        return {
+                            fields: {},
+                            ordination: {},
+                            pagination: { page: 1, limit: 100 },
+                            filters: { id: randomId }
+                        }
+                    }
+                }
+
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({ id: randomId })
+                    .chain('select')
+                    .withArgs({})
+                    .chain('exec')
+                    .resolves(undefined)
+
+                return repo.findOne(customQueryMock)
+                    .then((result: any) => {
+                        assert.isNotNull(result)
+                        assert.isUndefined(result)
+                        assert.isNotObject(result)
+                    })
+            })
+        })
+
+        context('when the user id is invalid', () => {
+            it('should return info message about invalid parameter', () => {
+
+                const invalidId: string = '1a2b3c'
+
+                const customQueryMock: any = {
+                    serialize: () => {
+                        return {
+                            fields: {},
+                            ordination: {},
+                            pagination: { page: 1, limit: 100 },
+                            filters: { id: invalidId }
+                        }
+                    }
+                }
+
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({ id: invalidId })
+                    .chain('select')
+                    .withArgs({})
+                    .chain('exec')
+                    .rejects({ name: 'CastError' })
+
+                return repo.findOne(customQueryMock)
+                    .catch((err: any) => {
+                        assert.isNotNull(err)
+                        assert.equal(err.message, 'The given ID is not in valid format.')
+                    })
+
+            })
+        })
     })
 
     describe('save', () => {
-        it('should return the saved user', () => {})
+        it('should return the saved user', () => {
+
+            sinon
+                .mock(modelFake)
+                .expects('create')
+                .withArgs(defaultUser)
+                .resolves(defaultUser)
+
+            return repo.create(defaultUser)
+                .then((user: User) => {
+                    assert.isNotNull(user)
+                    assert.equal(user.getId(), defaultUser.getId())
+                    assert.equal(user.getEmail(), defaultUser.getEmail())
+                    assert.equal(user.getPassword(), defaultUser.getPassword())
+                    assert.equal(user.getType(), defaultUser.getType())
+                    assert.equal(user.getCreatedAt(), defaultUser.getCreatedAt())
+                })
+        })
+
         context('when there are validation errors', () => {
-            it('should return info message from missing required fields', () => {})
+            it('should return info message from missing required fields', () => {
+
+                const incompletUser: any = {
+                    'email': 'incomplete@mail.com',
+                    'type': 2
+                }
+
+                sinon
+                    .mock(modelFake)
+                    .expects('create')
+                    .withArgs(incompletUser)
+                    .rejects({ name: 'ValidationError' })
+
+                return repo.create(incompletUser)
+                    .catch((err: any) => {
+                        assert.isNotNull(err)
+                        assert.equal(err.message, 'Required fields were not provided!')
+                    })
+            })
+        })
+
+        context('when data already exists', () => {
+            it('should return info message from duplicated data', () => {
+
+                sinon
+                    .mock(modelFake)
+                    .expects('create')
+                    .withArgs(defaultUser)
+                    .rejects({ name: 'MongoError', code: 11000 })
+
+                return repo.create(defaultUser)
+                    .catch((err: any) => {
+                        assert.isNotNull(err)
+                        assert.equal(err.message, 'A registration with the same unique data already exists!')
+                    })
+            })
         })
     })
+
+    describe('update', () => {
+        it('should return the updated user', () => {
+
+            sinon
+                .mock(modelFake)
+                .expects('findOneAndUpdate')
+                .withArgs({ _id: defaultUser.getId() }, defaultUser, { new: true })
+                .chain('exec')
+                .resolves(defaultUser)
+
+            return repo.update(defaultUser)
+                .then((user: User) => {
+                    assert.isNotNull(user)
+                    assert.equal(user.getId(), defaultUser.getId())
+                    assert.equal(user.getEmail(), defaultUser.getEmail())
+                    assert.equal(user.getPassword(), defaultUser.getPassword())
+                    assert.equal(user.getType(), defaultUser.getType())
+                    assert.equal(user.getCreatedAt(), defaultUser.getCreatedAt())
+                })
+        })
+
+        context('when data already exists', () => {
+            it('should return info message from duplicated data', () => {
+
+                sinon
+                    .mock(modelFake)
+                    .expects('findOneAndUpdate')
+                    .withArgs({ _id: defaultUser.getId() }, defaultUser, { new: true })
+                    .chain('exec')
+                    .rejects({ name: 'MongoError', code: 11000 })
+
+                return repo.update(defaultUser)
+                    .catch((err: any) => {
+                        assert.isNotNull(err)
+                        assert.equal(err.message, 'A registration with the same unique data already exists!')
+                    })
+            })
+        })
+
+        context('when the user is not found', () => {
+            it('should return info message from user not found', () => {
+
+                sinon
+                    .mock(modelFake)
+                    .expects('findOneAndUpdate')
+                    .withArgs({ _id: defaultUser.getId() }, defaultUser, { new: true })
+                    .chain('exec')
+                    .resolves(undefined)
+
+                return repo.update(defaultUser)
+                    .then((result: any) => {
+                        assert.isNotNull(result)
+                        assert.isUndefined(result)
+                        assert.isNotObject(result)
+                    })
+            })
+        })
+
+        context('when the user id is invalid', () => {
+            it('should return info message about invalid parameter', () => {
+
+                const invalidUser: User = new User()
+                invalidUser.setId('1a2b3c')
+                invalidUser.setEmail('invaliduserid@mail.com')
+                invalidUser.setPassword('invalid123')
+                invalidUser.setCreatedAt(new Date())
+
+                sinon
+                    .mock(modelFake)
+                    .expects('findOneAndUpdate')
+                    .withArgs({ _id: invalidUser.getId() }, invalidUser, { new: true })
+                    .chain('exec')
+                    .rejects({ name: 'CastError' })
+
+                return repo.update(invalidUser)
+                    .catch((err: any) => {
+                        assert.isNotNull(err)
+                        assert.equal(err.message, 'The given ID is not in valid format.')
+                    })
+            })
+
+        })
+    })
+
+    describe('delete', () => {
+        it('should return true for confirm delete', () => {
+
+            const userId: string = '5b13826de00324086854584a' // The defaultUser id, but only the string
+
+            sinon
+                .mock(modelFake)
+                .expects('findOneAndDelete')
+                .withArgs({ _id: userId })
+                .chain('exec')
+                .resolves(true)
+
+            return repo.delete(userId)
+                .then((isDeleted: Boolean) => {
+                    assert.isBoolean(isDeleted)
+                    assert.isTrue(isDeleted)
+                })
+        })
+
+        context('when the user is not found', () => {
+            it('should return false for confirm that user is not founded', () => {
+
+                const randomId: any = new ObjectID()
+
+                sinon
+                    .mock(modelFake)
+                    .expects('findOneAndDelete')
+                    .withArgs({ _id: randomId })
+                    .chain('exec')
+                    .resolves(false)
+
+                return repo.delete(randomId)
+                    .then((isDeleted: Boolean) => {
+                        assert.isBoolean(isDeleted)
+                        assert.isFalse(isDeleted)
+                    })
+            })
+        })
+
+        context('when the user id is invalid', () => {
+            it('should return info message about invalid parameter', () => {
+
+                const invalidId: string = '1a2b3c'
+
+                sinon
+                    .mock(modelFake)
+                    .expects('findOneAndDelete')
+                    .withArgs({ _id: invalidId })
+                    .chain('exec')
+                    .rejects({ name: 'CastError' })
+
+                return repo.delete(invalidId)
+                    .catch((err: any) => {
+                        assert.isNotNull(err)
+                        assert.equal(err.message, 'The given ID is not in valid format.')
+                    })
+            })
+        })
+    })
+
+    describe('count', () => {
+        it('should return how many users there are in the database for a query', () => {
+
+            const customQueryMock: any = {
+                serialize: () => {
+                    return {
+                        fields: {},
+                        ordination: {},
+                        pagination: { page: 1, limit: 100 },
+                        filters: { type: 1 }
+                    }
+                }
+            }
+
+            sinon
+                .mock(modelFake)
+                .expects('estimatedDocumentCount')
+                .withArgs(customQueryMock.serialize().filters)
+                .chain('exec')
+                .resolves(1)
+
+            return repo.count(customQueryMock)
+                .then((countUsers: number) => {
+                    assert.isNumber(countUsers)
+                    assert.equal(countUsers, 1)
+                })
+        })
+
+        context('when there no are users in database for a query', () => {
+            it('should return 0', () => {
+
+                const customQueryMock: any = {
+                    serialize: () => {
+                        return {
+                            fields: {},
+                            ordination: {},
+                            pagination: { page: 1, limit: 100 },
+                            filters: { type: 3 }
+                        }
+                    }
+                }
+
+                sinon
+                    .mock(modelFake)
+                    .expects('estimatedDocumentCount')
+                    .withArgs(customQueryMock.serialize().filters)
+                    .chain('exec')
+                    .resolves(0)
+
+
+                return repo.count(customQueryMock)
+                    .then((countUsers: number) => {
+                        assert.isNumber(countUsers)
+                        assert.equal(countUsers, 0)
+                    })
+            })
+        })
+    })
+
+    describe('findByEmail', () => {})
+    describe('checkIfExists', () => {})
+
 })
