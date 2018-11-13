@@ -457,7 +457,170 @@ describe('Repositories: Users', () => {
         })
     })
 
-    describe('findByEmail', () => {})
-    describe('checkIfExists', () => {})
+    describe('findByEmail', () => {
+        it('should return a unique user', () => {
+
+            const email: string = 'loremipsum@mail.com'
+            const customQueryMock: any = {
+                serialize: () => {
+                    return {
+                        fields: {},
+                        ordination: {},
+                        pagination: { page: 1, limit: 100 },
+                        filters: { email: email }
+                    }
+                }
+            }
+
+            sinon
+                .mock(modelFake)
+                .expects('findOne')
+                .withArgs({ email: email })
+                .chain('select')
+                .withArgs({})
+                .chain('exec')
+                .resolves(defaultUser)
+
+            return repo.getByEmail(email, customQueryMock)
+                .then((user: User) => {
+                    assert.isNotNull(user)
+                    assert.equal(user.getId(), defaultUser.getId())
+                    assert.equal(user.getEmail(), defaultUser.getEmail())
+                    assert.equal(user.getPassword(), defaultUser.getPassword())
+                    assert.equal(user.getType(), defaultUser.getType())
+                    assert.equal(user.getCreatedAt(), defaultUser.getCreatedAt())
+                })
+        })
+
+        context('when the user is not found', () => {
+            it('should return info message from user not found', () => {
+
+                const email: string = 'loremipsum@mail.com'
+                const customQueryMock: any = {
+                    serialize: () => {
+                        return {
+                            fields: {},
+                            ordination: {},
+                            pagination: { page: 1, limit: 100 },
+                            filters: { email: email }
+                        }
+                    }
+                }
+
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({ email: email })
+                    .chain('select')
+                    .withArgs({})
+                    .chain('exec')
+                    .resolves(undefined)
+
+                return repo.getByEmail(email, customQueryMock)
+                    .then((result: any) => {
+                        assert.isNotNull(result)
+                        assert.isUndefined(result)
+                        assert.isNotObject(result)
+                    })
+            })
+        })
+        context('when the user email is invalid', () => {
+            it('should return info message about invalid parameters', () => {
+
+                const invalidEmail: string = 'inv#lid$mail'
+                const customQueryMock: any = {
+                    serialize: () => {
+                        return {
+                            fields: {},
+                            ordination: {},
+                            pagination: { page: 1, limit: 100 },
+                            filters: { email: invalidEmail }
+                        }
+                    }
+                }
+
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({ email: invalidEmail })
+                    .chain('select')
+                    .withArgs({})
+                    .chain('exec')
+                    .rejects({ name: 'ObjectParameterError' })
+
+                return repo.findOne(customQueryMock)
+                    .catch((err: any) => {
+                        assert.isNotNull(err)
+                        assert.equal(err.message, 'Invalid query parameters!')
+                    })
+
+            })
+        })
+    })
+
+    describe('checkIfExists', () => {
+        it('should return true if user exists', () => {
+
+            sinon
+                .mock(modelFake)
+                .expects('findOne')
+                .withArgs({ email: defaultUser.getEmail() })
+                .chain('select')
+                .withArgs({})
+                .chain('exec')
+                .resolves(defaultUser)
+
+
+            return repo.checkExist(defaultUser)
+                .then((exists: Boolean) => {
+                    assert.isBoolean(exists)
+                    assert.isTrue(exists)
+                })
+        })
+
+        context('when user is not found', () => {
+            it('should return info message from user not found', () => {
+
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({ email: defaultUser.getEmail() })
+                    .chain('select')
+                    .withArgs({})
+                    .chain('exec')
+                    .resolves(undefined)
+
+                return repo.checkExist(defaultUser)
+                    .then((exists: Boolean) => {
+                        assert.isBoolean(exists)
+                        assert.isFalse(exists)
+                    })
+            })
+        })
+
+        context('when the user email is invalid', () => {
+            it('should return info message about invalid parameter', () => {
+
+                const invalidEmail: string = 'inv#lid$mail'
+                const userWithInvalidMail: User = new User()
+                userWithInvalidMail.setEmail('inv#lid$mail')
+
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({ email: invalidEmail })
+                    .chain('select')
+                    .withArgs({})
+                    .chain('exec')
+                    .rejects({ name: 'ObjectParameterError' })
+
+                return repo.checkExist(userWithInvalidMail)
+                    .catch((err: any) => {
+                        assert.isNotNull(err)
+                        assert.equal(err.message, 'An internal error has occurred in the database!')
+                    })
+            })
+        })
+    })
 
 })
