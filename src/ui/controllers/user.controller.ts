@@ -9,6 +9,7 @@ import { ApiExceptionManager } from '../exceptions/api.exception.manager'
 import { Query } from '../../infrastructure/repository/query/query'
 import { ApiException } from '../exceptions/api.exception'
 import { ILogger } from '../../utils/custom.logger'
+import { UserType } from '../../application/domain/utils/user.type'
 
 /**
  * Controller that implements User feature operations.
@@ -39,6 +40,7 @@ export class UserController {
      */
     @httpPost('/auth')
     public async authUser(@request() req: Request, @response() res: Response): Promise<Response> {
+        // TODO implementar rota de autenticação
         return res.status(201).send({token: 'validtoken'})
     }
     /**
@@ -51,7 +53,7 @@ export class UserController {
     public async addAdminUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: User = await this._userService
-                .add(new User(req.body.email, req.body.password, 1))
+                .add(new User(req.body.email, req.body.password, UserType.ADMIN))
             return res.status(HttpStatus.CREATED).send(result)
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
@@ -70,7 +72,7 @@ export class UserController {
     public async addCaregiverUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: User = await this._userService
-                .add(new User(req.body.email, req.body.password, 2))
+                .add(new User(req.body.email, req.body.password, UserType.CAREGIVER))
             return res.status(HttpStatus.CREATED).send(result)
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)

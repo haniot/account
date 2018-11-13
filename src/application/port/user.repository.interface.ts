@@ -29,4 +29,21 @@ export interface IUserRepository extends IRepository<User> {
      * @throws {ValidationException | RepositoryException}
      */
     checkExist(user: User): Promise<boolean>
+
+    /**
+     * Change the user password.
+     * @param id
+     * @param old_password
+     * @param new_password
+     * @return {Promise<boolean>} True if the password was changed or False, otherwise.
+     * @throws {ValidationException | RepositoryException}
+     */
+    changePassword(id: string, old_password: string, new_password: string): Promise<boolean>
+
+    /**
+     * Encrypt the user password
+     * @param password
+     * @return {string} Encrypted password if the encrypt was successfully.
+     */
+    encryptPassword(password: string) : string
 }

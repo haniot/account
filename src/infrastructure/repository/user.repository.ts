@@ -8,6 +8,7 @@ import { IEntityMapper } from '../entity/mapper/entity.mapper.interface'
 import { Query } from './query/query'
 import { IQuery } from '../../application/port/query.interface'
 import { ILogger } from '../../utils/custom.logger'
+import bcrypt from 'bcryptjs'
 
 /**
  * Implementation of the user repository.
@@ -54,5 +55,43 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
                     return resolve(false)
                 }).catch(err => reject(super.mongoDBErrorListener(err)))
         })
+    }
+
+    /**
+     * Change the user password.
+     * @param id
+     * @param old_password
+     * @param new_password
+     * @return {Promise<boolean>} True if the password was changed or False, otherwise.
+     * @throws {ValidationException | RepositoryException}
+     */
+    public changePassword(id: string, old_password: string, new_password: string): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            const query: Query = new Query()
+            query.filters = { _id: id }
+            return super.findOne(query)
+                .then((user: User) => {
+                    if (!user || !bcrypt.compareSync(user.getPassword(), old_password)) return resolve(false)
+                    user.setPassword(this.encryptPassword(new_password))
+                    super.update(user)
+                        .then((user: User) => {
+                            if (!user) return resolve(false)
+                            resolve(true)
+                        }).catch(err => reject(super.mongoDBErrorListener(err)))
+                    resolve(true)
+                }).catch(err => reject(super.mongoDBErrorListener(err)))
+
+            resolve(true)
+        })
+    }
+
+    /**
+     * Encrypt the user password
+     * @param password
+     * @return {string} Encrypted password if the encrypt was successfully.
+     */
+    public encryptPassword(password: string): string {
+        const salt = bcrypt.genSaltSync(10)
+        return bcrypt.hashSync(password, salt)
     }
 }
