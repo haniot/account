@@ -11,31 +11,29 @@ info:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 servers:
-  - description: localhost http
-    url: 'http://127.0.0.1/api/v1'
-  - description: localhost https
-    url: 'https://127.0.0.1/api/v1'
-  - description: SwaggerHub API Auto Mocking
-    url: 'https://virtserver.swaggerhub.com/haniot/haniot-api-account/v1'
+- description: localhost http
+  url: 'http://127.0.0.1:80/api/v1'
+- description: SwaggerHub API Auto Mocking
+  url: 'https://virtserver.swaggerhub.com/haniot/haniot-api-account/v1'
 tags:
-  - name: users
-    description: Operations for the User resource.
+- name: users
+  description: Operations for the User resource.
 paths:
   /users:
     get:
       tags:
-        - users
+      - users
       summary: Recover users.
-      description: >- 
+      description: >-
         Returns list with users. The query supports Field Selection, Paging,
         Sorting, and Filtering.
       operationId: getAllUsers
       parameters:
-        - $ref: '#/components/parameters/fieldsParam'
-        - $ref: '#/components/parameters/pageParam'
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/sortParam'
-        - $ref: '#/components/parameters/filterParam'
+      - $ref: '#/components/parameters/fieldsParam'
+      - $ref: '#/components/parameters/pageParam'
+      - $ref: '#/components/parameters/limitParam'
+      - $ref: '#/components/parameters/sortParam'
+      - $ref: '#/components/parameters/filterParam'
       responses:
         '200':
           description: List of users.
@@ -67,8 +65,8 @@ paths:
                 $ref: '#/components/schemas/Error'
         '406':
           description: >-
-            The server is not implementing the media type requested by the client 
-            for the application response. Only application/json is currently 
+            The server is not implementing the media type requested by the client
+            for the application response. Only application/json is currently
             accepted.
           content:
             application/json:
@@ -83,7 +81,7 @@ paths:
         '500':
           description: >-
             An internal server error occurred. Although the client appears to
-            provide a correct request, the server encountered an unexpected 
+            provide a correct request, the server encountered an unexpected
             condition that prevented it from responding to the request.
           content:
             application/json:
@@ -92,19 +90,19 @@ paths:
   /users/{user_id}:
     get:
       tags:
-        - users
+      - users
       summary: Recover user data.
       description: Recover the user data.
       operationId: getUserById
       parameters:
-        - name: user_id
-          in: path
-          required: true
-          description: User ID
-          example: 5accb6215ba48413e81e7853e
-          schema:
-            type: string
-        - $ref: '#/components/parameters/fieldsParam'
+      - name: user_id
+        in: path
+        required: true
+        description: User ID
+        example: 5accb6215ba48413e81e7853e
+        schema:
+          type: string
+      - $ref: '#/components/parameters/fieldsParam'
       responses:
         '200':
           description: Requested user data.
@@ -126,8 +124,8 @@ paths:
                 $ref: '#/components/schemas/Error'
         '404':
           description: >-
-           Specified resource does not exist. Usually when the URI is incorrect or the
-           resource is not found, or even no longer exists.
+            Specified resource does not exist. Usually when the URI is incorrect or the
+            resource is not found, or even no longer exists.
           content:
             application/json:
               schema:
@@ -156,19 +154,19 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     patch:
-      tags: 
+      tags:
       - users
       summary: Update user data.
       description: Update the user data.
       operationId: updateUser
       parameters:
-        - name: user_id
-          in: path
-          required: true
-          description: User ID
-          example: 5accb6215ba48413e81e7853e
-          schema:
-            type: string
+      - name: user_id
+        in: path
+        required: true
+        description: User ID
+        example: 5accb6215ba48413e81e7853e
+        schema:
+          type: string
       responses:
         '200':
           description: Updated user data.
@@ -198,8 +196,8 @@ paths:
                 $ref: '#/components/schemas/Error'
         '406':
           description: >-
-            The server is not implementing the media type requested by the client 
-            for the application response. Only application/json is currently 
+            The server is not implementing the media type requested by the client
+            for the application response. Only application/json is currently
             accepted.
           content:
             application/json:
@@ -214,7 +212,7 @@ paths:
                 $ref: '#/components/schemas/Error'
         '415':
           description: >-
-            The server does not support the requested payload format. Only 
+            The server does not support the requested payload format. Only
             application/json is accepted.
           content:
             application/json:
@@ -229,7 +227,7 @@ paths:
         '500':
           description: >-
             An internal server error occurred. Although the client appears to
-            provide a correct request, the server encountered an unexpected 
+            provide a correct request, the server encountered an unexpected
             condition that prevented it from responding to the request.
           content:
             application/json:
@@ -249,16 +247,16 @@ paths:
       description: Delete the user data.
       operationId: deleteUserById
       parameters:
-        - name: user_id
-          in: path
-          required: true
-          description: User ID
-          example: 5accb6215ba48413e81e7853e
-          schema:
-            type: string
+      - name: user_id
+        in: path
+        required: true
+        description: User ID
+        example: 5accb6215ba48413e81e7853e
+        schema:
+          type: string
       responses:
         '204':
-          description: >- 
+          description: >-
             Operation performed successfully. There is no data to be returned
         '401':
           description: Authentication failed due to invalid authentication credentials.
@@ -274,8 +272,8 @@ paths:
                 $ref: '#/components/schemas/Error'
         '404':
           description: >-
-           Specified resource does not exist. Usually when the URI is incorrect or the
-           resource is not found, or even no longer exists.
+            Specified resource does not exist. Usually when the URI is incorrect or the
+            resource is not found, or even no longer exists.
           content:
             application/json:
               schema:
@@ -303,25 +301,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-  /users/auth:
-    post:
+  /users/{user_id}/password:
+    patch:
       tags:
-        - users
-      summary: Authenticate user.
-      description: Authenticate a user.
-      operationId: authUser
+      - users
+      summary: Change user password.
+      description: Change the user password.
+      operationId: changePassword
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        description: User ID
+        example: 5accb6215ba48413e81e7853e
+        schema:
+          type: string
       responses:
         '201':
-          description: User successfully authenticated.
-          content:
-            application/json:
-              example:
-                token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.VFb0qJ1LRg_4ujbZoRMXnVkUgiuKq5KxWqNdbKq_G9Vvz-S1zZa9LPxtHWKa64zDl2ofkT8F6jBt_K4riU-fPg 
-                      
+          description: >-
+            Operation performed successfully. There is no data to be returned
         '400':
           description: >-
-            Request can not be met, syntactically incorrect or violates the 
-            schema. Normally it occurs due to validation issues, such as 
+            Request can not be met, syntactically incorrect or violates the
+            schema. Normally it occurs due to validation issues, such as
             fields that are expected in the request body and not passed.
           content:
             application/json:
@@ -350,7 +352,7 @@ paths:
         '406':
           description: >-
             The server is not implementing the media type requested by the client
-            for the application response. Only application/json is currently 
+            for the application response. Only application/json is currently
             accepted.
           content:
             application/json:
@@ -358,8 +360,93 @@ paths:
                 $ref: '#/components/schemas/Error'
         '415':
           description: >-
-           The server does not support the requested payload format. Only 
-           application/json is accepted.
+            The server does not support the requested payload format. Only
+            application/json is accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to
+            provide a correct request, the server encountered an unexpected
+            condition that prevented it from responding to the request."
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              example:
+                old_password: loremipsum123
+                new_password: loremipsum123456
+        description: Old and new user passwords.
+        required: true
+  /users/auth:
+    post:
+      tags:
+      - users
+      summary: Authenticate user.
+      description: Authenticate a user.
+      operationId: authUser
+      responses:
+        '201':
+          description: User successfully authenticated.
+          content:
+            application/json:
+              example:
+                token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.VFb0qJ1LRg_4ujbZoRMXnVkUgiuKq5KxWqNdbKq_G9Vvz-S1zZa9LPxtHWKa64zDl2ofkT8F6jBt_K4riU-fPg
+
+        '400':
+          description: >-
+            Request can not be met, syntactically incorrect or violates the
+            schema. Normally it occurs due to validation issues, such as
+            fields that are expected in the request body and not passed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to register users.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect
+            or the resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client
+            for the application response. Only application/json is currently
+            accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '415':
+          description: >-
+            The server does not support the requested payload format. Only
+            application/json is accepted.
           content:
             application/json:
               schema:
@@ -391,7 +478,7 @@ paths:
   /users/admin:
     post:
       tags:
-        - users
+      - users
       summary: Register admin user.
       description: Register a new user as admin.
       operationId: addAdminUser
@@ -404,8 +491,8 @@ paths:
                 $ref: '#/components/schemas/User'
         '400':
           description: >-
-            Request can not be met, syntactically incorrect or violates the 
-            schema. Normally it occurs due to validation issues, such as 
+            Request can not be met, syntactically incorrect or violates the
+            schema. Normally it occurs due to validation issues, such as
             fields that are expected in the request body and not passed.
           content:
             application/json:
@@ -434,7 +521,7 @@ paths:
         '406':
           description: >-
             The server is not implementing the media type requested by the client
-            for the application response. Only application/json is currently 
+            for the application response. Only application/json is currently
             accepted.
           content:
             application/json:
@@ -442,8 +529,8 @@ paths:
                 $ref: '#/components/schemas/Error'
         '415':
           description: >-
-           The server does not support the requested payload format. Only 
-           application/json is accepted.
+            The server does not support the requested payload format. Only
+            application/json is accepted.
           content:
             application/json:
               schema:
@@ -473,7 +560,7 @@ paths:
   /users/caregiver:
     post:
       tags:
-        - users
+      - users
       summary: Register caregiver user.
       description: Register a new user as caregiver.
       operationId: addCaregiverUser
@@ -486,8 +573,8 @@ paths:
                 $ref: '#/components/schemas/User'
         '400':
           description: >-
-            Request can not be met, syntactically incorrect or violates the 
-            schema. Normally it occurs due to validation issues, such as 
+            Request can not be met, syntactically incorrect or violates the
+            schema. Normally it occurs due to validation issues, such as
             fields that are expected in the request body and not passed.
           content:
             application/json:
@@ -516,7 +603,7 @@ paths:
         '406':
           description: >-
             The server is not implementing the media type requested by the client
-            for the application response. Only application/json is currently 
+            for the application response. Only application/json is currently
             accepted.
           content:
             application/json:
@@ -524,8 +611,8 @@ paths:
                 $ref: '#/components/schemas/Error'
         '415':
           description: >-
-           The server does not support the requested payload format. Only 
-           application/json is accepted.
+            The server does not support the requested payload format. Only
+            application/json is accepted.
           content:
             application/json:
               schema:
@@ -558,10 +645,10 @@ components:
       type: object
       description: Representation of resource User.
       required:
-        - name
-        - email
-        - password
-        - type
+      - name
+      - email
+      - password
+      - type
       properties:
         id:
           type: string
@@ -572,7 +659,7 @@ components:
         email:
           type: string
           description: User email.
-          example: loremipsum@mail.com     
+          example: loremipsum@mail.com
         password:
           type: string
           description: User password.
@@ -586,7 +673,7 @@ components:
           type: string
           format: date-time
           description: >-
-            Date and hour according to the UTC pattern, automatically generated 
+            Date and hour according to the UTC pattern, automatically generated
             on moment that resource is saved on server.
           readOnly: true
     Error:
@@ -595,9 +682,9 @@ components:
         Default template for error message. All returned errors will follow this
         template.
       required:
-        - code
-        - message
-        - description
+      - code
+      - message
+      - description
       properties:
         code:
           type: integer
@@ -617,9 +704,9 @@ components:
       name: fields
       required: false
       description: >-
-        Allows you to retrieve only the information you want. To do this, 
-        simply provide the name of the attributes separated by commas. 
-        For example: **_fields=field1,field2_** indicates that only 
+        Allows you to retrieve only the information you want. To do this,
+        simply provide the name of the attributes separated by commas.
+        For example: **_fields=field1,field2_** indicates that only
         field1 and field2 should be listed in the query result.
       schema:
         type: array
@@ -652,7 +739,7 @@ components:
       description: >-
         Contains the names of the attributes, separated by commas, that
         will be used to sort the result of the query. For ascending sort,
-        use the '+' character before the attribute name. For descending 
+        use the '+' character before the attribute name. For descending
         sort, use the '-' character before the attribute name. By default,
         the order is ascending, so the '+' symbol is optional, just enter
         the attribute.
@@ -661,32 +748,32 @@ components:
         items:
           type: string
         default:
-          - created_at
+        - created_at
     filterParam:
       in: query
       name: ''
       required: false
       description: >-
-        To filter a collection by multiple concurrent attributes or filter 
+        To filter a collection by multiple concurrent attributes or filter
         multiple values for an attribute, simply use the attribute/property
         name with an equal sign and the expected values, separated by a comma.
         **_property=value1,value2,value3_**. The query is not case sensitive.
-        Example: **_?name=elvis,john_** to retrieve exactly the same users with 
+        Example: **_?name=elvis,john_** to retrieve exactly the same users with
         elvis or john name.
         For filtering with logical operators, just follow the syntax:
         **_property=operator:value_**. The available operators are:
-         - **gt** -> Defines which value of the attribute is greater than 
+         - **gt** -> Defines which value of the attribute is greater than
                     (that is,>) the specified value.
          - **gte** -> Defines which attribute value is greater than or equal to
                     (that is,>=) the specified value.
          - **lt** -> Define the value of the attribute to be less than (that is, <)
                     the specified value.
-         - **lte** -> Defines which value of the attribute is less than or equal to 
+         - **lte** -> Defines which value of the attribute is less than or equal to
                     (that is, <=) the specified value.
 
-        Example: **_?field1=gte:80&age=lt:100_** to recover the users with age 
+        Example: **_?field1=gte:80&age=lt:100_** to recover the users with age
         is greater than or equal to 80 and less then 100.
-        
+
       schema:
         type: string
     dateStartParam:
@@ -704,7 +791,7 @@ components:
       required: false
       description: >-
         Define end date in format: YYYY-MM-DD ou YYYY-MM-DD hh:mm:ss.The
-        attribute used for the query will be the registration_date. 
+        attribute used for the query will be the registration_date.
       schema:
         type: string
         default: today

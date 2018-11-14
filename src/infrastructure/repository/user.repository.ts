@@ -26,6 +26,19 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
     }
 
     /**
+     * Create a new user.
+     *
+     * @param user
+     * @return {Promise<User>} User, if the save was successful.
+     * @throws {ValidationException | RepositoryException}
+     * @override
+     */
+    public create(user: User): Promise<User> {
+        user.setPassword(this.encryptPassword(user.getPassword()))
+        return super.create(user)
+    }
+
+    /**
      * Retrieves the user by your email.
      *
      * @param e User email.
@@ -71,11 +84,11 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
             query.filters = { _id: id }
             return super.findOne(query)
                 .then((user: User) => {
-                    if (!user || !bcrypt.compareSync(user.getPassword(), old_password)) return resolve(false)
+                    if (!user || !this.comparePasswords(old_password, user.getPassword())) return resolve(false)
                     user.setPassword(this.encryptPassword(new_password))
                     super.update(user)
-                        .then((user: User) => {
-                            if (!user) return resolve(false)
+                        .then((result: User) => {
+                            if (!result) return resolve(false)
                             resolve(true)
                         }).catch(err => reject(super.mongoDBErrorListener(err)))
                     resolve(true)
@@ -90,8 +103,18 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
      * @param password
      * @return {string} Encrypted password if the encrypt was successfully.
      */
-    public encryptPassword(password: string): string {
+    public encryptPassword(password: string | undefined): string {
         const salt = bcrypt.genSaltSync(10)
         return bcrypt.hashSync(password, salt)
+    }
+
+    /**
+     * Compare if two passwords match.
+     * @param password_one The not hash password
+     * @param password_two The hash password
+     * @return True if the passwords matches, false otherwise.
+     */
+    public comparePasswords(password_one: string, password_two: string | undefined): boolean {
+        return bcrypt.compareSync(password_one, password_two)
     }
 }

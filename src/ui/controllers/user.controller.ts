@@ -41,8 +41,9 @@ export class UserController {
     @httpPost('/auth')
     public async authUser(@request() req: Request, @response() res: Response): Promise<Response> {
         // TODO implementar rota de autenticação
-        return res.status(201).send({token: 'validtoken'})
+        return res.status(201).send({ token: 'validtoken' })
     }
+
     /**
      * Add new user as admin.
      *
@@ -81,6 +82,23 @@ export class UserController {
         }
     }
 
+    @httpPatch('/:user_id/password')
+    public async changeUserPassword(@request() req: Request, @response() res: Response): Promise<Response> {
+        try {
+            const result: boolean = await this._userService
+                .changePassword(req.params.user_id, req.body.old_password, req.body.new_password)
+            if (!result) {
+                return res.status(HttpStatus.BAD_REQUEST)
+                    .send(this.getMessageNotChangePassword())
+            }
+            return res.status(HttpStatus.NO_CONTENT).send()
+        } catch (err) {
+            const handlerError = ApiExceptionManager.build(err)
+            return res.status(handlerError.code)
+                .send(handlerError.toJson())
+        }
+    }
+
     /**
      * Get all users.
      * For the query strings, the query-strings-parser middleware was used.
@@ -112,8 +130,10 @@ export class UserController {
     @httpGet('/:user_id')
     public async getUserById(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const result: User = await this._userService.getById(req.params.user_id, new Query().deserialize(req.query))
-            if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageNotFoundUser())
+            const result: User = await this._userService
+                .getById(req.params.user_id, new Query().deserialize(req.query))
+            if (!result) return res.status(HttpStatus.NOT_FOUND)
+                .send(this.getMessageNotFoundUser())
             return res.status(HttpStatus.OK).send(result)
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
@@ -169,4 +189,14 @@ export class UserController {
             'User not found or already removed. A new operation for the same resource is not required!'
         ).toJson()
     }
+
+    private getMessageNotChangePassword(): object {
+        return new ApiException(
+            HttpStatus.BAD_REQUEST,
+            'Password could not be updated',
+            'The password could not be updated. Probably, ' +
+            'the params are syntactically incorrect.'
+        ).toJson()
+    }
+
 }

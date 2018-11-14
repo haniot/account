@@ -79,4 +79,16 @@ export class UserService implements IUserService {
     public async remove(id: string | number): Promise<boolean> {
         return this._userRepository.delete(id)
     }
+
+    /**
+     *
+     * @param id - Unique identifier.
+     * @param old_password - Old user password.
+     * @param new_password - New user password.
+     * @return {Promise<boolean>}
+     * @throws {ValidationException | RepositoryException}
+     */
+    public async changePassword(id: string, old_password: string, new_password: string): Promise<boolean> {
+        return this._userRepository.changePassword(id, old_password, new_password)
+    }
 }

@@ -45,5 +45,13 @@ export interface IUserRepository extends IRepository<User> {
      * @param password
      * @return {string} Encrypted password if the encrypt was successfully.
      */
-    encryptPassword(password: string) : string
+    encryptPassword(password: string): string
+
+    /**
+     * Compare if two passwords match.
+     * @param password1
+     * @param password2
+     * @return True if the passwords matches, false otherwise.
+     */
+    comparePasswords(password1: string, password2: string): boolean
 }
