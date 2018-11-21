@@ -28,7 +28,7 @@ export abstract class BaseRepository<T extends Entity, TModel> implements IRepos
         const itemNew: TModel = this.mapper.transform(item)
         return new Promise<T>((resolve, reject) => {
             this.Model.create(itemNew)
-                .then((result: TModel) => resolve(this.mapper.transform(result)))
+                .then(result => resolve(this.mapper.transform(result.toJSON())))
                 .catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
@@ -42,7 +42,7 @@ export abstract class BaseRepository<T extends Entity, TModel> implements IRepos
                 .skip(Number((q.pagination.limit * q.pagination.page) - q.pagination.limit))
                 .limit(Number(q.pagination.limit))
                 .exec() // execute query
-                .then((result: any) => resolve(result.map(item => this.mapper.transform(item))))
+                .then(result => resolve(result.map(item => this.mapper.transform(item.toJSON()))))
                 .catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
@@ -52,9 +52,9 @@ export abstract class BaseRepository<T extends Entity, TModel> implements IRepos
             this.Model.findOne(query.serialize().filters)
                 .select(query.serialize().fields)
                 .exec()
-                .then((result: TModel) => {
+                .then(result => {
                     if (!result) return resolve(undefined)
-                    return resolve(this.mapper.transform(result))
+                    return resolve(this.mapper.transform(result.toJSON()))
                 })
                 .catch(err => reject(this.mongoDBErrorListener(err)))
         })
@@ -67,7 +67,7 @@ export abstract class BaseRepository<T extends Entity, TModel> implements IRepos
                 .exec()
                 .then(result => {
                     if (!result) return resolve(undefined)
-                    return resolve(this.mapper.transform(result))
+                    return resolve(this.mapper.transform(result.toJSON()))
                 })
                 .catch(err => reject(this.mongoDBErrorListener(err)))
         })
