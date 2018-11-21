@@ -40,8 +40,18 @@ export class UserController {
      */
     @httpPost('/auth')
     public async authUser(@request() req: Request, @response() res: Response): Promise<Response> {
-        // TODO implementar rota de autenticação
-        return res.status(201).send({ token: 'validtoken' })
+        // TODO implementar JWT
+        try {
+            const result: object = await this._userService
+                .authenticateUser(req.body.email, req.body.password)
+            if (!result) return res.status(HttpStatus.NOT_FOUND)
+                .send(this.getMessageNotFoundUser())
+            return res.status(HttpStatus.OK).send(result)
+        } catch (err) {
+            const handlerError = ApiExceptionManager.build(err)
+            return res.status(handlerError.code)
+                .send(handlerError.toJson())
+        }
     }
 
     /**
@@ -54,7 +64,7 @@ export class UserController {
     public async addAdminUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: User = await this._userService
-                .add(new User(req.body.email, req.body.password, UserType.ADMIN))
+                .add(new User(req.body.name, req.body.email, req.body.password, UserType.ADMIN, true))
             return res.status(HttpStatus.CREATED).send(result)
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
@@ -73,7 +83,7 @@ export class UserController {
     public async addCaregiverUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: User = await this._userService
-                .add(new User(req.body.email, req.body.password, UserType.CAREGIVER))
+                .add(new User(req.body.name, req.body.email, req.body.password, UserType.CAREGIVER, true))
             return res.status(HttpStatus.CREATED).send(result)
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)

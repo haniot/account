@@ -81,6 +81,7 @@ export class UserService implements IUserService {
     }
 
     /**
+     * Change the user password.
      *
      * @param id - Unique identifier.
      * @param old_password - Old user password.
@@ -90,5 +91,16 @@ export class UserService implements IUserService {
      */
     public async changePassword(id: string, old_password: string, new_password: string): Promise<boolean> {
         return this._userRepository.changePassword(id, old_password, new_password)
+    }
+
+    /**
+     * Authenticate the user.
+     * @param email
+     * @param password
+     * @return {Promise<object>}
+     * @throws {ValidationException | RepositoryException}
+     */
+    public async authenticateUser(email: string, password: string): Promise<object> {
+       return this._userRepository.authenticateUser(email, password)
     }
 }

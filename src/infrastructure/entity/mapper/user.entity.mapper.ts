@@ -25,9 +25,11 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
     public modelToModelEntity(item: User): UserEntity {
         const result: UserEntity = new UserEntity()
         if (item.getId()) result.setId(item.getId())
+        if (item.getName()) result.setName(item.getName())
         if (item.getEmail()) result.setEmail(item.getEmail())
         if (item.getPassword()) result.setPassword(item.getPassword())
         if (item.getType()) result.setType(item.getType())
+        if (item.getChangePassword() !== undefined) result.setChangePassword(item.getChangePassword())
         return result
     }
 
@@ -42,9 +44,11 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
         const result: User = new User()
         result.setId(item.getId())
         if (item.getEmail()) result.setEmail(item.getEmail())
+        if (item.getName()) result.setName(item.getName())
         if (item.getPassword()) result.setPassword(item.getPassword())
         if (item.getType()) result.setType(item.getType())
         if (item.getCreatedAt()) result.setCreatedAt(item.getCreatedAt())
+        if (item.getChangePassword() !== undefined) result.setChangePassword(item.getChangePassword())
         return result
     }
 
@@ -59,10 +63,12 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
         const result: User = new User()
         if (!json) return result
         if (json.id !== undefined) result.setId(json.id)
+        if (json.name !== undefined) result.setName(json.name)
         if (json.email !== undefined) result.setEmail(json.email)
         if (json.password !== undefined) result.setPassword(json.password)
         if (json.type !== undefined) result.setType(json.type)
         if (json.created_at !== undefined) result.setCreatedAt(new Date(json.created_at))
+        if (json.change_password !== undefined) result.setChangePassword(json.change_password)
         return result
     }
 }

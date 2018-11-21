@@ -9,6 +9,7 @@ import { User } from '../domain/model/user'
 export interface IUserService extends IService<User> {
 
     /**
+     * Change the user password.
      *
      * @param id - Unique identifier.
      * @param old_password - Old user password.
@@ -17,4 +18,13 @@ export interface IUserService extends IService<User> {
      * @throws {ValidationException | RepositoryException}
      */
     changePassword(id: string, old_password: string, new_password: string): Promise<boolean>
+
+    /**
+     * Authenticate the user.
+     * @param email
+     * @param password
+     * @return {Promise<object>}
+     * @throws {ValidationException | RepositoryException}
+     */
+    authenticateUser(email: string, password: string): Promise<object>
 }

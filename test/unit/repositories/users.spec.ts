@@ -7,6 +7,9 @@ import { IUserRepository } from '../../../src/application/port/user.repository.i
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { User } from '../../../src/application/domain/model/user'
 import { ObjectID } from 'bson'
+// import { ILogger } from '../../../src/utils/custom.logger'
+// import { DI } from '../../../src/di/di'
+// import { Identifier } from '../../../src/di/identifiers'
 
 require('sinon-mongoose')
 
@@ -14,9 +17,11 @@ describe('Repositories: Users', () => {
 
     const defaultUser: User = new User()
     defaultUser.setId('5b13826de00324086854584a')
+    defaultUser.setName('Lorem Ipsum')
     defaultUser.setEmail('loremipsum@mail.com')
     defaultUser.setPassword('lorem123')
-    defaultUser.setCreatedAt(new Date())
+    defaultUser.setCreatedAt(new Date('2018-11-21 21:25:05'))
+    defaultUser.setChangePassword(true)
 
     const modelFake: any = UserRepoModel
 
@@ -30,6 +35,8 @@ describe('Repositories: Users', () => {
             }
         }
     }
+
+    // const logger: ILogger = DI.getInstance().getContainer().get<ILogger>(Identifier.LOGGER)
 
     const repo: IUserRepository = new UserRepository(modelFake,
         new UserEntityMapperMock(), new CustomLoggerMock())
@@ -61,7 +68,6 @@ describe('Repositories: Users', () => {
                 .then((users: Array<User>) => {
                     assert.isNotNull(users)
                     assert.equal(users.length, resultExpected.length)
-                    assert.equal(users[0], resultExpected[0])
                 })
         })
 
@@ -118,6 +124,7 @@ describe('Repositories: Users', () => {
                 .then((user: User) => {
                     assert.isNotNull(user)
                     assert.equal(user.getId(), defaultUser.getId())
+                    assert.equal(user.getName(), defaultUser.getName())
                     assert.equal(user.getEmail(), defaultUser.getEmail())
                     assert.equal(user.getPassword(), defaultUser.getPassword())
                     assert.equal(user.getType(), defaultUser.getType())
@@ -194,7 +201,7 @@ describe('Repositories: Users', () => {
         })
     })
 
-    describe('save', () => {
+    describe('save()', () => {
         it('should return the saved user', () => {
 
             sinon
@@ -207,6 +214,7 @@ describe('Repositories: Users', () => {
                 .then((user: User) => {
                     assert.isNotNull(user)
                     assert.equal(user.getId(), defaultUser.getId())
+                    assert.equal(user.getName(), defaultUser.getName())
                     assert.equal(user.getEmail(), defaultUser.getEmail())
                     assert.equal(user.getPassword(), defaultUser.getPassword())
                     assert.equal(user.getType(), defaultUser.getType())
@@ -217,18 +225,17 @@ describe('Repositories: Users', () => {
         context('when there are validation errors', () => {
             it('should return info message from missing required fields', () => {
 
-                const incompletUser: any = {
-                    'email': 'incomplete@mail.com',
-                    'type': 2
-                }
+                const incompleteUser: User = new User()
+                incompleteUser.setEmail('incomplete@mail.com')
+                incompleteUser.setPassword('anything')
 
                 sinon
                     .mock(modelFake)
                     .expects('create')
-                    .withArgs(incompletUser)
+                    .withArgs(incompleteUser)
                     .rejects({ name: 'ValidationError' })
 
-                return repo.create(incompletUser)
+                return repo.create(incompleteUser)
                     .catch((err: any) => {
                         assert.isNotNull(err)
                         assert.equal(err.message, 'Required fields were not provided!')
@@ -254,7 +261,7 @@ describe('Repositories: Users', () => {
         })
     })
 
-    describe('update', () => {
+    describe('update()', () => {
         it('should return the updated user', () => {
 
             sinon
@@ -268,6 +275,7 @@ describe('Repositories: Users', () => {
                 .then((user: User) => {
                     assert.isNotNull(user)
                     assert.equal(user.getId(), defaultUser.getId())
+                    assert.equal(user.getName(), defaultUser.getName())
                     assert.equal(user.getEmail(), defaultUser.getEmail())
                     assert.equal(user.getPassword(), defaultUser.getPassword())
                     assert.equal(user.getType(), defaultUser.getType())
@@ -277,7 +285,6 @@ describe('Repositories: Users', () => {
 
         context('when data already exists', () => {
             it('should return info message from duplicated data', () => {
-
                 sinon
                     .mock(modelFake)
                     .expects('findOneAndUpdate')
@@ -338,7 +345,7 @@ describe('Repositories: Users', () => {
         })
     })
 
-    describe('delete', () => {
+    describe('delete()', () => {
         it('should return true for confirm delete', () => {
 
             const userId: string = '5b13826de00324086854584a' // The defaultUser id, but only the string
@@ -398,7 +405,7 @@ describe('Repositories: Users', () => {
         })
     })
 
-    describe('count', () => {
+    describe('count()', () => {
         it('should return how many users there are in the database for a query', () => {
 
             const customQueryMock: any = {
@@ -457,7 +464,7 @@ describe('Repositories: Users', () => {
         })
     })
 
-    describe('findByEmail', () => {
+    describe('findByEmail()', () => {
         it('should return a unique user', () => {
 
             const email: string = 'loremipsum@mail.com'
@@ -485,6 +492,7 @@ describe('Repositories: Users', () => {
                 .then((user: User) => {
                     assert.isNotNull(user)
                     assert.equal(user.getId(), defaultUser.getId())
+                    assert.equal(user.getName(), defaultUser.getName())
                     assert.equal(user.getEmail(), defaultUser.getEmail())
                     assert.equal(user.getPassword(), defaultUser.getPassword())
                     assert.equal(user.getType(), defaultUser.getType())
@@ -558,7 +566,7 @@ describe('Repositories: Users', () => {
         })
     })
 
-    describe('checkIfExists', () => {
+    describe('checkIfExists()', () => {
         it('should return true if user exists', () => {
 
             sinon
@@ -623,4 +631,43 @@ describe('Repositories: Users', () => {
         })
     })
 
+    describe('changePassword', () => {
+        it('should return status true for password changed', () => {
+
+            const user_id: string = '5b13826de00324086854584a'
+            const old_password: string = 'lorem123'
+            const new_password: string = 'newpasswordexample'
+
+            const updatedUser: User = new User()
+            updatedUser.setName(defaultUser.getName())
+            updatedUser.setId(defaultUser.getId())
+            updatedUser.setType(defaultUser.getType())
+            updatedUser.setEmail(defaultUser.getEmail())
+            updatedUser.setPassword(new_password)
+            updatedUser.setChangePassword(defaultUser.getChangePassword())
+
+            sinon
+                .mock(modelFake)
+                .expects('findOneAndUpdate')
+                .withArgs({ _id: user_id }, updatedUser, { new: true })
+                .chain('exec')
+                .resolves(updatedUser)
+
+            sinon
+                .mock(modelFake)
+                .expects('findOne')
+                .withArgs({ _id: user_id })
+                .chain('select')
+                .withArgs({})
+                .chain('exec')
+                .resolves(defaultUser)
+
+            return repo.changePassword(user_id, old_password, new_password)
+                .then((isChanged: boolean) => {
+                    assert.isBoolean(isChanged)
+                    assert.isTrue(isChanged)
+                })
+
+        })
+    })
 })

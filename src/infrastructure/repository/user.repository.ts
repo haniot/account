@@ -9,6 +9,7 @@ import { Query } from './query/query'
 import { IQuery } from '../../application/port/query.interface'
 import { ILogger } from '../../utils/custom.logger'
 import bcrypt from 'bcryptjs'
+import { ChangePasswordException } from '../../application/domain/exception/change.password.exception'
 
 /**
  * Implementation of the user repository.
@@ -86,20 +87,18 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
                 .then((user: User) => {
                     if (!user || !this.comparePasswords(old_password, user.getPassword())) return resolve(false)
                     user.setPassword(this.encryptPassword(new_password))
+                    user.setChangePassword(false)
                     super.update(user)
                         .then((result: User) => {
                             if (!result) return resolve(false)
                             resolve(true)
                         }).catch(err => reject(super.mongoDBErrorListener(err)))
-                    resolve(true)
                 }).catch(err => reject(super.mongoDBErrorListener(err)))
-
-            resolve(true)
         })
     }
 
     /**
-     * Encrypt the user password
+     * Encrypt the user password.
      * @param password
      * @return {string} Encrypted password if the encrypt was successfully.
      */
@@ -116,5 +115,30 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
      */
     public comparePasswords(password_one: string, password_two: string | undefined): boolean {
         return bcrypt.compareSync(password_one, password_two)
+    }
+
+    /**
+     * Authenticate a user.
+     *
+     * @param email
+     * @param password
+     * @return {Promise<boolean>} True if the password was changed or False, otherwise.
+     * @throws {ChangePasswordExeption}
+     */
+    public authenticateUser(email: string, password: string): object {
+        return new Promise<object>((resolve, reject) => {
+            const query: IQuery = new Query()
+            return this.getByEmail(email, query)
+                .then((user: User) => {
+                    if (!user || !this.comparePasswords(password, user.getPassword())) return resolve(undefined)
+                    if (user.getChangePassword()) {
+                        return reject(
+                            new ChangePasswordException('Change password is necessary.',
+                                'To ensure information security, the user must change the access password.'))
+                    }
+                    resolve({ token: 'validtoken' })
+                }).catch(err => reject(super.mongoDBErrorListener(err)))
+
+        })
     }
 }

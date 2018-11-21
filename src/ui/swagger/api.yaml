@@ -11,29 +11,32 @@ info:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 servers:
-- description: localhost http
-  url: 'http://127.0.0.1:80/api/v1'
-- description: SwaggerHub API Auto Mocking
-  url: 'https://virtserver.swaggerhub.com/haniot/haniot-api-account/v1'
+  - description: localhost http
+    url: 'http://127.0.0.1:80/api/v1'
+  - description: SwaggerHub API Auto Mocking
+    url: 'https://virtserver.swaggerhub.com/haniot/haniot-api-account/v1'
 tags:
-- name: users
-  description: Operations for the User resource.
+  - name: users
+    description: Operations for the User resource.
+
 paths:
   /users:
     get:
+      security:
+        - JWTAuth: []
       tags:
-      - users
+        - users
       summary: Recover users.
       description: >-
         Returns list with users. The query supports Field Selection, Paging,
         Sorting, and Filtering.
       operationId: getAllUsers
       parameters:
-      - $ref: '#/components/parameters/fieldsParam'
-      - $ref: '#/components/parameters/pageParam'
-      - $ref: '#/components/parameters/limitParam'
-      - $ref: '#/components/parameters/sortParam'
-      - $ref: '#/components/parameters/filterParam'
+        - $ref: '#/components/parameters/fieldsParam'
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortParam'
+        - $ref: '#/components/parameters/filterParam'
       responses:
         '200':
           description: List of users.
@@ -89,20 +92,22 @@ paths:
                 $ref: '#/components/schemas/Error'
   /users/{user_id}:
     get:
+      security:
+        - JWTAuth: []
       tags:
-      - users
+        - users
       summary: Recover user data.
       description: Recover the user data.
       operationId: getUserById
       parameters:
-      - name: user_id
-        in: path
-        required: true
-        description: User ID
-        example: 5accb6215ba48413e81e7853e
-        schema:
-          type: string
-      - $ref: '#/components/parameters/fieldsParam'
+        - name: user_id
+          in: path
+          required: true
+          description: User ID
+          example: 5accb6215ba48413e81e7853e
+          schema:
+            type: string
+        - $ref: '#/components/parameters/fieldsParam'
       responses:
         '200':
           description: Requested user data.
@@ -154,19 +159,21 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
     patch:
+      security:
+        - JWTAuth: []
       tags:
-      - users
+        - users
       summary: Update user data.
       description: Update the user data.
       operationId: updateUser
       parameters:
-      - name: user_id
-        in: path
-        required: true
-        description: User ID
-        example: 5accb6215ba48413e81e7853e
-        schema:
-          type: string
+        - name: user_id
+          in: path
+          required: true
+          description: User ID
+          example: 5accb6215ba48413e81e7853e
+          schema:
+            type: string
       responses:
         '200':
           description: Updated user data.
@@ -241,19 +248,21 @@ paths:
         description: Data of the user to be updated.
         required: true
     delete:
+      security:
+        - JWTAuth: []
       tags:
-      - users
+        - users
       summary: Delete user data.
       description: Delete the user data.
       operationId: deleteUserById
       parameters:
-      - name: user_id
-        in: path
-        required: true
-        description: User ID
-        example: 5accb6215ba48413e81e7853e
-        schema:
-          type: string
+        - name: user_id
+          in: path
+          required: true
+          description: User ID
+          example: 5accb6215ba48413e81e7853e
+          schema:
+            type: string
       responses:
         '204':
           description: >-
@@ -303,21 +312,23 @@ paths:
                 $ref: '#/components/schemas/Error'
   /users/{user_id}/password:
     patch:
+      security:
+        - JWTAuth: []
       tags:
-      - users
+        - users
       summary: Change user password.
       description: Change the user password.
       operationId: changePassword
       parameters:
-      - name: user_id
-        in: path
-        required: true
-        description: User ID
-        example: 5accb6215ba48413e81e7853e
-        schema:
-          type: string
+        - name: user_id
+          in: path
+          required: true
+          description: User ID
+          example: 5accb6215ba48413e81e7853e
+          schema:
+            type: string
       responses:
-        '201':
+        '204':
           description: >-
             Operation performed successfully. There is no data to be returned
         '400':
@@ -336,7 +347,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         '403':
-          description: User does not have permission to register users.
+          description: User does not have permission to update password.
           content:
             application/json:
               schema:
@@ -385,15 +396,20 @@ paths:
         content:
           application/json:
             schema:
-              example:
-                old_password: loremipsum123
-                new_password: loremipsum123456
+              type: object
+              properties:
+                old_password:
+                  type: string
+                  example: 'lorem123'
+                new_password:
+                  type: string
+                  example: 'loremipsum123'
         description: Old and new user passwords.
         required: true
   /users/auth:
     post:
       tags:
-      - users
+        - users
       summary: Authenticate user.
       description: Authenticate a user.
       operationId: authUser
@@ -477,8 +493,10 @@ paths:
         required: true
   /users/admin:
     post:
+      security:
+        - JWTAuth: []
       tags:
-      - users
+        - users
       summary: Register admin user.
       description: Register a new user as admin.
       operationId: addAdminUser
@@ -559,8 +577,10 @@ paths:
         required: true
   /users/caregiver:
     post:
+      security:
+        - JWTAuth: []
       tags:
-      - users
+        - users
       summary: Register caregiver user.
       description: Register a new user as caregiver.
       operationId: addCaregiverUser
@@ -640,15 +660,20 @@ paths:
         description: Data of the user to be saved.
         required: true
 components:
+  securitySchemes:
+    JWTAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     User:
       type: object
       description: Representation of resource User.
       required:
-      - name
-      - email
-      - password
-      - type
+        - name
+        - email
+        - password
+        - type
       properties:
         id:
           type: string
@@ -656,6 +681,10 @@ components:
           description: Automatically generated key field.
           example: 5accb6215ba48413e81e7853e
           readOnly: true
+        name:
+          type: string
+          description: Name of the user.
+          example: Lorem Ipsum
         email:
           type: string
           description: User email.
@@ -666,9 +695,16 @@ components:
           example: loremipsum123
         type:
           type: number
-          readOnly: true
           description: Type of user.
           example: 1
+          readOnly: true
+        change_password:
+          type: boolean
+          description: >-
+            State parameter used to verify that the user is required to change
+            their password.
+          example: true
+          readOnly: true
         created_at:
           type: string
           format: date-time
@@ -682,9 +718,9 @@ components:
         Default template for error message. All returned errors will follow this
         template.
       required:
-      - code
-      - message
-      - description
+        - code
+        - message
+        - description
       properties:
         code:
           type: integer
@@ -748,7 +784,7 @@ components:
         items:
           type: string
         default:
-        - created_at
+          - created_at
     filterParam:
       in: query
       name: ''
@@ -773,7 +809,6 @@ components:
 
         Example: **_?field1=gte:80&age=lt:100_** to recover the users with age
         is greater than or equal to 80 and less then 100.
-
       schema:
         type: string
     dateStartParam:
@@ -805,7 +840,6 @@ components:
          - **[1..n]w** - Total of weeks (1w, 2w, ...)
          - **[1..n]m** - Total of months (1m, 2m, ...)
          - **[1..n]y** - Total of years (1y, 2y, ...)
-
         The attribute used for the query will be the registration_date.
       schema:
         type: string

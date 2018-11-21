@@ -32,6 +32,7 @@ export interface IUserRepository extends IRepository<User> {
 
     /**
      * Change the user password.
+     *
      * @param id
      * @param old_password
      * @param new_password
@@ -42,16 +43,28 @@ export interface IUserRepository extends IRepository<User> {
 
     /**
      * Encrypt the user password
+     *
      * @param password
      * @return {string} Encrypted password if the encrypt was successfully.
      */
     encryptPassword(password: string): string
 
     /**
-     * Compare if two passwords match.
+     * Compare if two passwords match.,
+     *
      * @param password1
      * @param password2
      * @return True if the passwords matches, false otherwise.
      */
-    comparePasswords(password1: string, password2: string): boolean
+    comparePasswords(password_one: string, password_two: string): boolean
+
+    /**
+     * Authenticate a user.
+     *
+     * @param email
+     * @param password
+     * @return {Promise<boolean>} True if the password was changed or False, otherwise.
+     * @throws {ValidationException | RepositoryException}
+     */
+    authenticateUser(email: string, password: string): object
 }

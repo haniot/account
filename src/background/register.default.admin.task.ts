@@ -31,7 +31,12 @@ export class RegisterDefaultAdminTask {
             const countUser = await this._userRepository.count(query)
             if (countUser <= 0) {
                 const user = await this._userRepository.create(
-                    new User('admin@haniot.com', 'admin', UserType.ADMIN))
+                    new User(
+                        'admin',
+                        'admin@haniot.com',
+                        'admin',
+                        UserType.ADMIN,
+                        true))
                 if (!user) throw new RepositoryException('Default admin user not created')
                 this._logger.info('Default admin user created successfully.')
             }

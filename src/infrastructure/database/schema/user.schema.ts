@@ -4,6 +4,10 @@ interface IUserModel extends Mongoose.Document {
 }
 
 const userSchema = new Mongoose.Schema({
+        name: {
+            type: String,
+            required: 'Name required!'
+        },
         email: {
             type: String,
             required: 'Email required!',
@@ -14,8 +18,10 @@ const userSchema = new Mongoose.Schema({
             required: 'Password required!'
         },
         type: {
-            type: Number,
-            required: 'Type is required!'
+            type: Number
+        },
+        change_password: {
+            type: Boolean
         }
     },
     {
@@ -26,6 +32,7 @@ const userSchema = new Mongoose.Schema({
                 delete ret._id
                 delete ret.__v
                 delete ret.updatedAt
+                delete ret.change_password
                 return ret
             }
         }
