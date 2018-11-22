@@ -1,12 +1,12 @@
 import sinon from 'sinon'
-import { assert } from 'chai'
-import { UserRepository } from '../../../src/infrastructure/repository/user.repository'
-import { UserEntityMapperMock } from '../../mocks/user.entity.mapper.mock'
-import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
-import { IUserRepository } from '../../../src/application/port/user.repository.interface'
-import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
-import { User } from '../../../src/application/domain/model/user'
-import { ObjectID } from 'bson'
+import {assert} from 'chai'
+import {UserRepository} from '../../../src/infrastructure/repository/user.repository'
+import {UserEntityMapperMock} from '../../mocks/user.entity.mapper.mock'
+import {CustomLoggerMock} from '../../mocks/custom.logger.mock'
+import {IUserRepository} from '../../../src/application/port/user.repository.interface'
+import {UserRepoModel} from '../../../src/infrastructure/database/schema/user.schema'
+import {User} from '../../../src/application/domain/model/user'
+import {ObjectID} from 'bson'
 // import { ILogger } from '../../../src/utils/custom.logger'
 // import { DI } from '../../../src/di/di'
 // import { Identifier } from '../../../src/di/identifiers'
@@ -30,7 +30,7 @@ describe('Repositories: Users', () => {
             return {
                 fields: {},
                 ordination: {},
-                pagination: { page: 1, limit: 100 },
+                pagination: {page: 1, limit: 100},
                 filters: {}
             }
         }
@@ -48,7 +48,7 @@ describe('Repositories: Users', () => {
     describe('getAll()', () => {
         it('should return a list of users', () => {
 
-            const resultExpected: Array<User> = new Array(defaultUser)
+            const resultExpected: any = new Array(defaultUser)
 
             sinon
                 .mock(modelFake)
@@ -68,6 +68,16 @@ describe('Repositories: Users', () => {
                 .then((users: Array<User>) => {
                     assert.isNotNull(users)
                     assert.equal(users.length, resultExpected.length)
+                    assert.property(users[0], 'name')
+                    assert.propertyVal(users[0], 'name', defaultUser.getName())
+                    assert.property(users[0], 'email')
+                    assert.propertyVal(users[0], 'email', defaultUser.getEmail())
+                    assert.property(users[0], 'password')
+                    assert.propertyVal(users[0], 'password', defaultUser.getPassword())
+                    assert.property(users[0], 'type')
+                    assert.propertyVal(users[0], 'type', defaultUser.getType())
+                    assert.property(users[0], 'created_at')
+
                 })
         })
 
@@ -105,8 +115,8 @@ describe('Repositories: Users', () => {
                     return {
                         fields: {},
                         ordination: {},
-                        pagination: { page: 1, limit: 100 },
-                        filters: { id: defaultUser.getId() }
+                        pagination: {page: 1, limit: 100},
+                        filters: {id: defaultUser.getId()}
                     }
                 }
             }
@@ -114,7 +124,7 @@ describe('Repositories: Users', () => {
             sinon
                 .mock(modelFake)
                 .expects('findOne')
-                .withArgs({ id: defaultUser.getId() })
+                .withArgs({id: defaultUser.getId()})
                 .chain('select')
                 .withArgs({})
                 .chain('exec')
@@ -123,12 +133,15 @@ describe('Repositories: Users', () => {
             return repo.findOne(customQueryMock)
                 .then((user: User) => {
                     assert.isNotNull(user)
-                    assert.equal(user.getId(), defaultUser.getId())
-                    assert.equal(user.getName(), defaultUser.getName())
-                    assert.equal(user.getEmail(), defaultUser.getEmail())
-                    assert.equal(user.getPassword(), defaultUser.getPassword())
-                    assert.equal(user.getType(), defaultUser.getType())
-                    assert.equal(user.getCreatedAt(), defaultUser.getCreatedAt())
+                    assert.property(user, 'name')
+                    assert.propertyVal(user, 'name', defaultUser.getName())
+                    assert.property(user, 'email')
+                    assert.propertyVal(user, 'email', defaultUser.getEmail())
+                    assert.property(user, 'password')
+                    assert.propertyVal(user, 'password', defaultUser.getPassword())
+                    assert.property(user, 'type')
+                    assert.propertyVal(user, 'type', defaultUser.getType())
+                    assert.property(user, 'created_at')
                 })
         })
 
@@ -142,8 +155,8 @@ describe('Repositories: Users', () => {
                         return {
                             fields: {},
                             ordination: {},
-                            pagination: { page: 1, limit: 100 },
-                            filters: { id: randomId }
+                            pagination: {page: 1, limit: 100},
+                            filters: {id: randomId}
                         }
                     }
                 }
@@ -151,7 +164,7 @@ describe('Repositories: Users', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs({ id: randomId })
+                    .withArgs({id: randomId})
                     .chain('select')
                     .withArgs({})
                     .chain('exec')
@@ -176,8 +189,8 @@ describe('Repositories: Users', () => {
                         return {
                             fields: {},
                             ordination: {},
-                            pagination: { page: 1, limit: 100 },
-                            filters: { id: invalidId }
+                            pagination: {page: 1, limit: 100},
+                            filters: {id: invalidId}
                         }
                     }
                 }
@@ -185,11 +198,11 @@ describe('Repositories: Users', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs({ id: invalidId })
+                    .withArgs({id: invalidId})
                     .chain('select')
                     .withArgs({})
                     .chain('exec')
-                    .rejects({ name: 'CastError' })
+                    .rejects({name: 'CastError'})
 
                 return repo.findOne(customQueryMock)
                     .catch((err: any) => {
@@ -213,12 +226,15 @@ describe('Repositories: Users', () => {
             return repo.create(defaultUser)
                 .then((user: User) => {
                     assert.isNotNull(user)
-                    assert.equal(user.getId(), defaultUser.getId())
-                    assert.equal(user.getName(), defaultUser.getName())
-                    assert.equal(user.getEmail(), defaultUser.getEmail())
-                    assert.equal(user.getPassword(), defaultUser.getPassword())
-                    assert.equal(user.getType(), defaultUser.getType())
-                    assert.equal(user.getCreatedAt(), defaultUser.getCreatedAt())
+                    assert.property(user, 'name')
+                    assert.propertyVal(user, 'name', defaultUser.getName())
+                    assert.property(user, 'email')
+                    assert.propertyVal(user, 'email', defaultUser.getEmail())
+                    assert.property(user, 'password')
+                    assert.propertyVal(user, 'password', defaultUser.getPassword())
+                    assert.property(user, 'type')
+                    assert.propertyVal(user, 'type', defaultUser.getType())
+                    assert.property(user, 'created_at')
                 })
         })
 
@@ -233,7 +249,7 @@ describe('Repositories: Users', () => {
                     .mock(modelFake)
                     .expects('create')
                     .withArgs(incompleteUser)
-                    .rejects({ name: 'ValidationError' })
+                    .rejects({name: 'ValidationError'})
 
                 return repo.create(incompleteUser)
                     .catch((err: any) => {
@@ -250,7 +266,7 @@ describe('Repositories: Users', () => {
                     .mock(modelFake)
                     .expects('create')
                     .withArgs(defaultUser)
-                    .rejects({ name: 'MongoError', code: 11000 })
+                    .rejects({name: 'MongoError', code: 11000})
 
                 return repo.create(defaultUser)
                     .catch((err: any) => {
@@ -267,19 +283,22 @@ describe('Repositories: Users', () => {
             sinon
                 .mock(modelFake)
                 .expects('findOneAndUpdate')
-                .withArgs({ _id: defaultUser.getId() }, defaultUser, { new: true })
+                .withArgs({_id: defaultUser.getId()}, defaultUser, {new: true})
                 .chain('exec')
                 .resolves(defaultUser)
 
             return repo.update(defaultUser)
                 .then((user: User) => {
                     assert.isNotNull(user)
-                    assert.equal(user.getId(), defaultUser.getId())
-                    assert.equal(user.getName(), defaultUser.getName())
-                    assert.equal(user.getEmail(), defaultUser.getEmail())
-                    assert.equal(user.getPassword(), defaultUser.getPassword())
-                    assert.equal(user.getType(), defaultUser.getType())
-                    assert.equal(user.getCreatedAt(), defaultUser.getCreatedAt())
+                    assert.property(user, 'name')
+                    assert.propertyVal(user, 'name', defaultUser.getName())
+                    assert.property(user, 'email')
+                    assert.propertyVal(user, 'email', defaultUser.getEmail())
+                    assert.property(user, 'password')
+                    assert.propertyVal(user, 'password', defaultUser.getPassword())
+                    assert.property(user, 'type')
+                    assert.propertyVal(user, 'type', defaultUser.getType())
+                    assert.property(user, 'created_at')
                 })
         })
 
@@ -288,9 +307,9 @@ describe('Repositories: Users', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOneAndUpdate')
-                    .withArgs({ _id: defaultUser.getId() }, defaultUser, { new: true })
+                    .withArgs({_id: defaultUser.getId()}, defaultUser, {new: true})
                     .chain('exec')
-                    .rejects({ name: 'MongoError', code: 11000 })
+                    .rejects({name: 'MongoError', code: 11000})
 
                 return repo.update(defaultUser)
                     .catch((err: any) => {
@@ -306,7 +325,7 @@ describe('Repositories: Users', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOneAndUpdate')
-                    .withArgs({ _id: defaultUser.getId() }, defaultUser, { new: true })
+                    .withArgs({_id: defaultUser.getId()}, defaultUser, {new: true})
                     .chain('exec')
                     .resolves(undefined)
 
@@ -331,9 +350,9 @@ describe('Repositories: Users', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOneAndUpdate')
-                    .withArgs({ _id: invalidUser.getId() }, invalidUser, { new: true })
+                    .withArgs({_id: invalidUser.getId()}, invalidUser, {new: true})
                     .chain('exec')
-                    .rejects({ name: 'CastError' })
+                    .rejects({name: 'CastError'})
 
                 return repo.update(invalidUser)
                     .catch((err: any) => {
@@ -353,7 +372,7 @@ describe('Repositories: Users', () => {
             sinon
                 .mock(modelFake)
                 .expects('findOneAndDelete')
-                .withArgs({ _id: userId })
+                .withArgs({_id: userId})
                 .chain('exec')
                 .resolves(true)
 
@@ -372,7 +391,7 @@ describe('Repositories: Users', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOneAndDelete')
-                    .withArgs({ _id: randomId })
+                    .withArgs({_id: randomId})
                     .chain('exec')
                     .resolves(false)
 
@@ -392,9 +411,9 @@ describe('Repositories: Users', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOneAndDelete')
-                    .withArgs({ _id: invalidId })
+                    .withArgs({_id: invalidId})
                     .chain('exec')
-                    .rejects({ name: 'CastError' })
+                    .rejects({name: 'CastError'})
 
                 return repo.delete(invalidId)
                     .catch((err: any) => {
@@ -413,8 +432,8 @@ describe('Repositories: Users', () => {
                     return {
                         fields: {},
                         ordination: {},
-                        pagination: { page: 1, limit: 100 },
-                        filters: { type: 1 }
+                        pagination: {page: 1, limit: 100},
+                        filters: {type: 1}
                     }
                 }
             }
@@ -441,8 +460,8 @@ describe('Repositories: Users', () => {
                         return {
                             fields: {},
                             ordination: {},
-                            pagination: { page: 1, limit: 100 },
-                            filters: { type: 3 }
+                            pagination: {page: 1, limit: 100},
+                            filters: {type: 3}
                         }
                     }
                 }
@@ -473,8 +492,8 @@ describe('Repositories: Users', () => {
                     return {
                         fields: {},
                         ordination: {},
-                        pagination: { page: 1, limit: 100 },
-                        filters: { email: email }
+                        pagination: {page: 1, limit: 100},
+                        filters: {email: email}
                     }
                 }
             }
@@ -482,7 +501,7 @@ describe('Repositories: Users', () => {
             sinon
                 .mock(modelFake)
                 .expects('findOne')
-                .withArgs({ email: email })
+                .withArgs({email: email})
                 .chain('select')
                 .withArgs({})
                 .chain('exec')
@@ -491,12 +510,15 @@ describe('Repositories: Users', () => {
             return repo.getByEmail(email, customQueryMock)
                 .then((user: User) => {
                     assert.isNotNull(user)
-                    assert.equal(user.getId(), defaultUser.getId())
-                    assert.equal(user.getName(), defaultUser.getName())
-                    assert.equal(user.getEmail(), defaultUser.getEmail())
-                    assert.equal(user.getPassword(), defaultUser.getPassword())
-                    assert.equal(user.getType(), defaultUser.getType())
-                    assert.equal(user.getCreatedAt(), defaultUser.getCreatedAt())
+                    assert.property(user, 'name')
+                    assert.propertyVal(user, 'name', defaultUser.getName())
+                    assert.property(user, 'email')
+                    assert.propertyVal(user, 'email', defaultUser.getEmail())
+                    assert.property(user, 'password')
+                    assert.propertyVal(user, 'password', defaultUser.getPassword())
+                    assert.property(user, 'type')
+                    assert.propertyVal(user, 'type', defaultUser.getType())
+                    assert.property(user, 'created_at')
                 })
         })
 
@@ -509,8 +531,8 @@ describe('Repositories: Users', () => {
                         return {
                             fields: {},
                             ordination: {},
-                            pagination: { page: 1, limit: 100 },
-                            filters: { email: email }
+                            pagination: {page: 1, limit: 100},
+                            filters: {email: email}
                         }
                     }
                 }
@@ -518,7 +540,7 @@ describe('Repositories: Users', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs({ email: email })
+                    .withArgs({email: email})
                     .chain('select')
                     .withArgs({})
                     .chain('exec')
@@ -541,8 +563,8 @@ describe('Repositories: Users', () => {
                         return {
                             fields: {},
                             ordination: {},
-                            pagination: { page: 1, limit: 100 },
-                            filters: { email: invalidEmail }
+                            pagination: {page: 1, limit: 100},
+                            filters: {email: invalidEmail}
                         }
                     }
                 }
@@ -550,11 +572,11 @@ describe('Repositories: Users', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs({ email: invalidEmail })
+                    .withArgs({email: invalidEmail})
                     .chain('select')
                     .withArgs({})
                     .chain('exec')
-                    .rejects({ name: 'ObjectParameterError' })
+                    .rejects({name: 'ObjectParameterError'})
 
                 return repo.findOne(customQueryMock)
                     .catch((err: any) => {
@@ -572,7 +594,7 @@ describe('Repositories: Users', () => {
             sinon
                 .mock(modelFake)
                 .expects('findOne')
-                .withArgs({ email: defaultUser.getEmail() })
+                .withArgs({email: defaultUser.getEmail()})
                 .chain('select')
                 .withArgs({})
                 .chain('exec')
@@ -592,7 +614,7 @@ describe('Repositories: Users', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs({ email: defaultUser.getEmail() })
+                    .withArgs({email: defaultUser.getEmail()})
                     .chain('select')
                     .withArgs({})
                     .chain('exec')
@@ -616,11 +638,11 @@ describe('Repositories: Users', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs({ email: invalidEmail })
+                    .withArgs({email: invalidEmail})
                     .chain('select')
                     .withArgs({})
                     .chain('exec')
-                    .rejects({ name: 'ObjectParameterError' })
+                    .rejects({name: 'ObjectParameterError'})
 
                 return repo.checkExist(userWithInvalidMail)
                     .catch((err: any) => {
@@ -628,46 +650,6 @@ describe('Repositories: Users', () => {
                         assert.equal(err.message, 'An internal error has occurred in the database!')
                     })
             })
-        })
-    })
-
-    describe('changePassword', () => {
-        it('should return status true for password changed', () => {
-
-            const user_id: string = '5b13826de00324086854584a'
-            const old_password: string = 'lorem123'
-            const new_password: string = 'newpasswordexample'
-
-            const updatedUser: User = new User()
-            updatedUser.setName(defaultUser.getName())
-            updatedUser.setId(defaultUser.getId())
-            updatedUser.setType(defaultUser.getType())
-            updatedUser.setEmail(defaultUser.getEmail())
-            updatedUser.setPassword(new_password)
-            updatedUser.setChangePassword(defaultUser.getChangePassword())
-
-            sinon
-                .mock(modelFake)
-                .expects('findOneAndUpdate')
-                .withArgs({ _id: user_id }, updatedUser, { new: true })
-                .chain('exec')
-                .resolves(updatedUser)
-
-            sinon
-                .mock(modelFake)
-                .expects('findOne')
-                .withArgs({ _id: user_id })
-                .chain('select')
-                .withArgs({})
-                .chain('exec')
-                .resolves(defaultUser)
-
-            return repo.changePassword(user_id, old_password, new_password)
-                .then((isChanged: boolean) => {
-                    assert.isBoolean(isChanged)
-                    assert.isTrue(isChanged)
-                })
-
         })
     })
 })

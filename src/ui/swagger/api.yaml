@@ -411,7 +411,30 @@ paths:
       tags:
         - users
       summary: Authenticate user.
-      description: Authenticate a user.
+      description: |
+        Authenticate a user. User authentication is performed using JWT token generation. In generating the JWT token, there are following types of attributes:
+
+        **Reserved Claims**: Non-mandatory (but recommended) attributes used in token validation by API security protocols. These are used to create a pattern and are defined in RFC-7519.
+        * sub () - Entity that the token belongs to, usually the user ID (it is good practice that this ID is not the same as the database);
+        * aud (audience) - The token recipient represents the application (client) that will use it. In conjunction with iss it is possible to restrict or allow access to certain groups (called audience) if they are in the correct aud;
+        * iss (emitter) - sets the emitter of the token;
+        * exp (expiration) - Timestamp of when the token will expire;
+        * iat (issued at) - Timestamp from when the token was created.
+
+        **Public claims**: Attributes that are not part of the pattern, and are defined especially for sharing information between applications.
+
+        * scopes - A developer-defined attribute that specifies token access scopes.
+
+        Example of values that can compose the payload.:
+
+        * sub: 5accb6215ba48413e81e7853e
+        * aud: 227G5L
+        * iss: haniot
+        * exp: 1534020202
+        * iat: 1534009474
+        * scopes: 'users:readAll users:register users:read users:update users:remove"'
+
+
       operationId: authUser
       responses:
         '201':

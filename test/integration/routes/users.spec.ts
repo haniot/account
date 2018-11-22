@@ -1,14 +1,14 @@
 import { expect } from 'chai'
 import request from 'supertest'
-import { App } from '../../src/app'
-import { User } from '../../src/application/domain/model/user'
-import { UserType } from '../../src/application/domain/utils/user.type'
-import { CustomLogger, ILogger } from '../../src/utils/custom.logger'
+import { App } from '../../../src/app'
+import { User } from '../../../src/application/domain/model/user'
+import { UserType } from '../../../src/application/domain/utils/user.type'
+import { CustomLogger, ILogger } from '../../../src/utils/custom.logger'
 import { Application } from 'express'
-import { BackgroundService } from '../../src/background/background.service'
-import { DI } from '../../src/di/di'
-import { Identifier } from '../../src/di/identifiers'
-import { UserRepoModel } from '../../src/infrastructure/database/schema/user.schema'
+import { BackgroundService } from '../../../src/background/background.service'
+import { DI } from '../../../src/di/di'
+import { Identifier } from '../../../src/di/identifiers'
+import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 
 const logger: ILogger = new CustomLogger()
 const app: Application = new App(logger).getExpress()

@@ -1,12 +1,12 @@
-import { injectable } from 'inversify'
-import { IRepository } from '../../../application/port/repository.interface'
-import { RepositoryException } from '../../../application/domain/exception/repository.exception'
-import { Entity } from '../../../application/domain/model/entity'
-import { ValidationException } from '../../../application/domain/exception/validation.exception'
-import { ConflictException } from '../../../application/domain/exception/conflict.exception'
-import { IEntityMapper } from '../../entity/mapper/entity.mapper.interface'
-import { IQuery } from '../../../application/port/query.interface'
-import { ILogger } from '../../../utils/custom.logger'
+import {injectable} from 'inversify'
+import {IRepository} from '../../../application/port/repository.interface'
+import {RepositoryException} from '../../../application/domain/exception/repository.exception'
+import {Entity} from '../../../application/domain/model/entity'
+import {ValidationException} from '../../../application/domain/exception/validation.exception'
+import {ConflictException} from '../../../application/domain/exception/conflict.exception'
+import {IEntityMapper} from '../../entity/mapper/entity.mapper.interface'
+import {IQuery} from '../../../application/port/query.interface'
+import {ILogger} from '../../../utils/custom.logger'
 
 /**
  * Base implementation of the repository.
@@ -28,7 +28,7 @@ export abstract class BaseRepository<T extends Entity, TModel> implements IRepos
         const itemNew: TModel = this.mapper.transform(item)
         return new Promise<T>((resolve, reject) => {
             this.Model.create(itemNew)
-                .then(result =>{
+                .then(result => {
                     resolve(this.mapper.transform(result.toJSON()))
                 })
                 .catch(err => reject(this.mongoDBErrorListener(err)))
@@ -65,7 +65,7 @@ export abstract class BaseRepository<T extends Entity, TModel> implements IRepos
     public update(item: T): Promise<T> {
         const itemUp: T = this.mapper.transform(item)
         return new Promise<T>((resolve, reject) => {
-            this.Model.findOneAndUpdate({ _id: itemUp.getId() }, itemUp, { new: true })
+            this.Model.findOneAndUpdate({_id: itemUp.getId()}, itemUp, {new: true})
                 .exec()
                 .then(result => {
                     if (!result) return resolve(undefined)
@@ -77,7 +77,7 @@ export abstract class BaseRepository<T extends Entity, TModel> implements IRepos
 
     public delete(id: string | number): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            this.Model.findOneAndDelete({ _id: id })
+            this.Model.findOneAndDelete({_id: id})
                 .exec()
                 .then(result => {
                     if (!result) return resolve(false)
