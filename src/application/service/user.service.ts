@@ -4,9 +4,9 @@ import { IUserService } from '../port/user.service.interface'
 import { Identifier } from '../../di/identifiers'
 import { IUserRepository } from '../port/user.repository.interface'
 import { ConflictException } from '../domain/exception/conflict.exception'
-import { UserValidator } from '../domain/validator/user.validator'
+import { UserCreateValidator } from '../domain/validator/user.create.validator'
 import { IQuery } from '../port/query.interface'
-import { EmailValidator } from '../domain/validator/email.validator'
+import { UserUpdateValidator } from '../domain/validator/user.update.validator'
 
 /**
  * Implementing User Service.
@@ -27,7 +27,7 @@ export class UserService implements IUserService {
      * @throws {ConflictException | RepositoryException} If a data conflict occurs, as an existing user.
      */
     public async add(user: User): Promise<User> {
-        await UserValidator.validate(user)
+        await UserCreateValidator.validate(user)
         const userExist = await this._userRepository.checkExist(user)
         if (userExist) throw new ConflictException('User already has an account...')
         return this._userRepository.create(user)
@@ -65,7 +65,7 @@ export class UserService implements IUserService {
      * @throws {ConflictException | RepositoryException}
      */
     public async update(user: User): Promise<User> {
-        await EmailValidator.validate(user.getEmail())
+        await UserUpdateValidator.validate(user)
         return this._userRepository.update(user)
     }
 

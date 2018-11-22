@@ -2,7 +2,7 @@ import { ValidationException } from '../exception/validation.exception'
 import { User } from '../model/user'
 import { EmailValidator } from './email.validator'
 
-export class UserValidator {
+export class UserCreateValidator {
     public static validate(user: User): void | ValidationException {
         const fields: Array<string> = []
 
