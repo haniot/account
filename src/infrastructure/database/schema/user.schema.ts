@@ -32,7 +32,6 @@ const userSchema = new Mongoose.Schema({
                 delete ret._id
                 delete ret.__v
                 delete ret.updatedAt
-                delete ret.change_password
                 return ret
             }
         }

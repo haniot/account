@@ -10,6 +10,8 @@ import { Query } from '../../infrastructure/repository/query/query'
 import { ApiException } from '../exceptions/api.exception'
 import { ILogger } from '../../utils/custom.logger'
 import { UserType } from '../../application/domain/utils/user.type'
+import {IEntityMapper} from '../../infrastructure/entity/mapper/entity.mapper.interface'
+import {UserEntity} from '../../infrastructure/entity/user.entity'
 
 /**
  * Controller that implements User feature operations.
@@ -28,7 +30,8 @@ export class UserController {
      */
     constructor(
         @inject(Identifier.USER_SERVICE) private readonly _userService: IUserService,
-        @inject(Identifier.LOGGER) readonly _logger: ILogger
+        @inject(Identifier.LOGGER) readonly _logger: ILogger,
+        @inject(Identifier.USER_ENTITY_MAPPER) private readonly _userMapper: IEntityMapper<User, UserEntity>
     ) {
     }
 
@@ -65,7 +68,7 @@ export class UserController {
         try {
             const result: User = await this._userService
                 .add(new User(req.body.name, req.body.email, req.body.password, UserType.ADMIN, true))
-            return res.status(HttpStatus.CREATED).send(result)
+            return res.status(HttpStatus.CREATED).send(this._userMapper.transform(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
@@ -84,7 +87,7 @@ export class UserController {
         try {
             const result: User = await this._userService
                 .add(new User(req.body.name, req.body.email, req.body.password, UserType.CAREGIVER, true))
-            return res.status(HttpStatus.CREATED).send(result)
+            return res.status(HttpStatus.CREATED).send(this._userMapper.transform(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
@@ -144,7 +147,7 @@ export class UserController {
                 .getById(req.params.user_id, new Query().deserialize(req.query))
             if (!result) return res.status(HttpStatus.NOT_FOUND)
                 .send(this.getMessageNotFoundUser())
-            return res.status(HttpStatus.OK).send(result)
+            return res.status(HttpStatus.OK).send(this._userMapper.transform(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
@@ -165,7 +168,7 @@ export class UserController {
             user.setId(req.params.user_id)
             const result = await this._userService.update(user)
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageNotFoundUser())
-            return res.status(HttpStatus.OK).send(result)
+            return res.status(HttpStatus.OK).send(this._userMapper.transform(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)

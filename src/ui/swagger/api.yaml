@@ -425,15 +425,18 @@ paths:
 
         * scopes - A developer-defined attribute that specifies token access scopes.
 
-        Example of values that can compose the payload.:
+        **Example of values that compose the payload:**
 
-        * sub: 5accb6215ba48413e81e7853e
-        * aud: 227G5L
-        * iss: haniot
-        * exp: 1534020202
-        * iat: 1534009474
-        * scopes: 'users:readAll users:register users:read users:update users:remove"'
 
+        ```json
+        {
+          "sub": "5accb6215ba48413e81e7853e",
+          "aud": "227G5L",
+          "iss": "haniot",
+          "exp": 1534020202,
+          "iat": 1534009474,
+          "scopes": "users:readAll users:register users:read users:update users:remove"
+        }
 
       operationId: authUser
       responses:
@@ -460,7 +463,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
         '403':
-          description: User does not have permission to register users.
+          description: >-
+            User password must be changed. It occours when the system requires that user change your password during the auth proccess.
           content:
             application/json:
               schema:

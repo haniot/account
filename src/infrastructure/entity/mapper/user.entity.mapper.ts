@@ -29,7 +29,6 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
         if (item.getEmail()) result.setEmail(item.getEmail())
         if (item.getPassword()) result.setPassword(item.getPassword())
         if (item.getType()) result.setType(item.getType())
-        if (item.getChangePassword() !== undefined) result.setChangePassword(item.getChangePassword())
         return result
     }
 
