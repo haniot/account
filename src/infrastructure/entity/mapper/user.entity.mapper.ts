@@ -30,6 +30,7 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
         if (item.getPassword()) result.setPassword(item.getPassword())
         if (item.getType()) result.setType(item.getType())
         if (item.getCreatedAt()) result.setCreatedAt(item.getCreatedAt())
+        if (item.getChangePassword() !== undefined) result.setChangePassword(item.getChangePassword())
         return result
     }
 
@@ -48,7 +49,6 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
         if (item.getPassword()) result.setPassword(item.getPassword())
         if (item.getType()) result.setType(item.getType())
         if (item.getCreatedAt()) result.setCreatedAt(item.getCreatedAt())
-        if (item.getChangePassword() !== undefined) result.setChangePassword(item.getChangePassword())
         return result
     }
 
@@ -68,7 +68,6 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
         if (json.password !== undefined) result.setPassword(json.password)
         if (json.type !== undefined) result.setType(json.type)
         if (json.created_at !== undefined) result.setCreatedAt(new Date(json.created_at))
-        if (json.change_password !== undefined) result.setChangePassword(json.change_password)
         return result
     }
 }

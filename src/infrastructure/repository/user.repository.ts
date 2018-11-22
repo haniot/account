@@ -1,15 +1,15 @@
-import {inject, injectable} from 'inversify'
-import {User} from '../../application/domain/model/user'
-import {Identifier} from '../../di/identifiers'
-import {IUserRepository} from '../../application/port/user.repository.interface'
-import {UserEntity} from '../entity/user.entity'
-import {BaseRepository} from './base/base.repository'
-import {IEntityMapper} from '../entity/mapper/entity.mapper.interface'
-import {Query} from './query/query'
-import {IQuery} from '../../application/port/query.interface'
-import {ILogger} from '../../utils/custom.logger'
+import { inject, injectable } from 'inversify'
+import { User } from '../../application/domain/model/user'
+import { Identifier } from '../../di/identifiers'
+import { IUserRepository } from '../../application/port/user.repository.interface'
+import { UserEntity } from '../entity/user.entity'
+import { BaseRepository } from './base/base.repository'
+import { IEntityMapper } from '../entity/mapper/entity.mapper.interface'
+import { Query } from './query/query'
+import { IQuery } from '../../application/port/query.interface'
+import { ILogger } from '../../utils/custom.logger'
 import bcrypt from 'bcryptjs'
-import {ChangePasswordException} from '../../application/domain/exception/change.password.exception'
+import { ChangePasswordException } from '../../application/domain/exception/change.password.exception'
 
 /**
  * Implementation of the user repository.
@@ -48,7 +48,7 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
      * @throws {RepositoryException}
      */
     public async getByEmail(e: string, query: IQuery): Promise<User> {
-        query.filters = {email: e}
+        query.filters = { email: e }
         return super.findOne(query)
     }
 
@@ -81,19 +81,20 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
      */
     public changePassword(id: string, old_password: string, new_password: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            const query: Query = new Query()
-            query.filters = {_id: id}
-            return super.findOne(query)
-                .then((user: User) => {
-                    if (!user || !this.comparePasswords(old_password, user.getPassword())) return resolve(false)
-                    user.setPassword(this.encryptPassword(new_password))
-                    user.setChangePassword(false)
-                    super.update(user)
-                        .then((result: User) => {
-                            if (!result) return resolve(false)
-                            resolve(true)
-                        }).catch(err => reject(super.mongoDBErrorListener(err)))
-                }).catch(err => reject(super.mongoDBErrorListener(err)))
+            this.userModel.findOne( { _id: id })
+                .then((user) => {
+                    if (!user || !this.comparePasswords(old_password, user.password)) return resolve(false)
+                    user.password = this.encryptPassword(new_password)
+                    user.change_password = false
+                    this.userModel.findOneAndUpdate({ _id: user.id }, user, { new: true })
+                        .exec()
+                        .then(result => {
+                            if (!result) return resolve(undefined)
+                            return resolve(this.mapper.transform(result.toJSON()))
+                        })
+                        .catch(err => reject(this.mongoDBErrorListener(err)))
+                })
+                .catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
 
@@ -125,20 +126,18 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
      * @return {Promise<boolean>} True if the password was changed or False, otherwise.
      * @throws {ChangePasswordExeption}
      */
-    public authenticateUser(email: string, password: string): Promise<object> {
+    public authenticateUser(userMail: string, password: string): Promise<object> {
         return new Promise<object>((resolve, reject) => {
-            const query: IQuery = new Query()
-            return this.getByEmail(email, query)
-                .then((user: User) => {
-                    if (!user || !this.comparePasswords(password, user.getPassword())) return resolve(undefined)
-                    if (user.getChangePassword()) {
+            return this.userModel.findOne({ email: userMail })
+                .then(user => {
+                    if (!user || !this.comparePasswords(password, user.password)) return resolve(undefined)
+                    if (user.change_password) {
                         return reject(
                             new ChangePasswordException('Change password is necessary.',
                                 'To ensure information security, the user must change the access password.'))
                     }
-                    resolve({token: 'validtoken'})
+                    resolve({ token: 'validtoken' })
                 }).catch(err => reject(super.mongoDBErrorListener(err)))
-
         })
     }
 }
