@@ -376,7 +376,7 @@ describe('Routes: User', () => {
         it('should return status code 204 and no content', () => {
 
             return request(app)
-                .delete(`/api/v1/users/${defaultAdminUser.getId()}`)
+                .delete(`/api/v1/users/${defaultCaregiverUser.getId()}`)
                 .set('Content-Type', 'application/json')
                 .expect(204)
                 .then(res => {
@@ -418,6 +418,65 @@ describe('Routes: User', () => {
 
     })
 
+    describe('POST /users/auth', () => {
+        it('should return a token when auth is successfully', () => {
+
+            return request(app)
+                .post('/api/v1/users/auth')
+                .send({
+                    email: defaultAdminUser.getEmail(),
+                    password: 'admin123'
+                })
+                .set('Content-Type', 'application/json')
+                .expect(200)
+                .then(res => {
+                    expect(res.body).is.not.null
+                    expect(res.body).to.have.property('token')
+                })
+        })
+
+        context('when there are no user with id parameter', () => {
+            it('should return status code 400 and info message from user not found', () => {
+
+                return request(app)
+                    .post('/api/v1/users/auth')
+                    .send({
+                        email: 'anyone@mail.com',
+                        password: 'anyone'
+                    })
+                    .set('Content-Type', 'application/json')
+                    .expect(404)
+                    .then(err => {
+                        expect(err.body).to.have.property('message')
+                        expect(err.body).to.have.property('description')
+                    })
+            })
+        })
+
+        context('when user needs to update your password', () => {
+            it('should return status code 403 and info message from change password', () => {
+
+                updateChangeUser(
+                    { _id: defaultAdminUser.getId() },
+                    { change_password: true })
+
+                return request(app)
+                    .post('/api/v1/users/auth')
+                    .send({
+                        email: defaultAdminUser.getEmail(),
+                        password: 'admin123'
+                    })
+                    .set('Content-Type', 'application/json')
+                    .expect(403)
+                    .then(err => {
+                        expect(err.body).to.have.property('message')
+                        expect(err.body).to.have.property('description')
+                        expect(err.body).to.have.property('redirect_link')
+                    })
+            })
+        })
+    })
+
     describe('GET /users', () => {
         it('should return status code 200 and a list of users', () => {
 
@@ -457,4 +516,8 @@ describe('Routes: User', () => {
 
 async function deleteMany() {
     await UserRepoModel.deleteMany({})
- }
+}
+
+async function updateChangeUser(conditions, doc) {
+    await UserRepoModel.updateOne(conditions, doc).exec()
+}

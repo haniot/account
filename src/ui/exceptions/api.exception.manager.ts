@@ -27,9 +27,8 @@ export abstract class ApiExceptionManager {
         } else if (err instanceof RepositoryException) {
             return new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, err.message, err.description)
         } else if (err instanceof ChangePasswordException) {
-            return new ApiException(HttpStatus.FORBIDDEN, err.message, err.description)
+            return new ApiException(HttpStatus.FORBIDDEN, err.message, err.description, err.link)
         }
-
         return new ApiException(HttpStatus.INTERNAL_SERVER_ERROR, err.message, err.description)
     }
 }

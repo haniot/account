@@ -416,7 +416,6 @@ paths:
 
         **Reserved Claims**: Non-mandatory (but recommended) attributes used in token validation by API security protocols. These are used to create a pattern and are defined in RFC-7519.
         * sub () - Entity that the token belongs to, usually the user ID (it is good practice that this ID is not the same as the database);
-        * aud (audience) - The token recipient represents the application (client) that will use it. In conjunction with iss it is possible to restrict or allow access to certain groups (called audience) if they are in the correct aud;
         * iss (emitter) - sets the emitter of the token;
         * exp (expiration) - Timestamp of when the token will expire;
         * iat (issued at) - Timestamp from when the token was created.
@@ -425,13 +424,12 @@ paths:
 
         * scopes - A developer-defined attribute that specifies token access scopes.
 
-        **Example of values that compose the payload:**
+        Example of values that can compose the payload.:
 
 
         ```json
         {
           "sub": "5accb6215ba48413e81e7853e",
-          "aud": "227G5L",
           "iss": "haniot",
           "exp": 1534020202,
           "iat": 1534009474,
@@ -445,7 +443,7 @@ paths:
           content:
             application/json:
               example:
-                token: eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiYWRtaW4iOnRydWUsImlhdCI6MTUxNjIzOTAyMn0.VFb0qJ1LRg_4ujbZoRMXnVkUgiuKq5KxWqNdbKq_G9Vvz-S1zZa9LPxtHWKa64zDl2ofkT8F6jBt_K4riU-fPg
+                token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1YWNjYjYyMTViYTQ4NDEzZTgxZTc4NTNlIiwiaXNzIjoiaGFuaW90IiwiZXhwIjoxNTM0MDIwMjAyLCJpYXQiOjE1MzQwMDk0NzQsInNjb3BlcyI6InVzZXJzOnJlYWRBbGwgdXNlcnM6cmVnaXN0ZXIgdXNlcnM6cmVhZCB1c2Vyczp1cGRhdGUgdXNlcnM6cmVtb3ZlIn0.vkan_NyX-PwPwlACkg7PqqTKUEbnBOSBSu_aq3gUZRM
 
         '400':
           description: >-
@@ -465,10 +463,15 @@ paths:
         '403':
           description: >-
             User password must be changed. It occours when the system requires that user change your password during the auth proccess.
+
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                example:
+                  code: 403
+                  message: Change password is necessary.
+                  description: "To ensure information security, the user must change the access password. Access /api/v1/users/{user_id}/password to update then."
+                  link: /api/v1/users/{user_id}/password
         '404':
           description: >-
             Specified resource does not exist. Usually when the URI is incorrect
@@ -747,7 +750,6 @@ components:
       required:
         - code
         - message
-        - description
       properties:
         code:
           type: integer
@@ -761,6 +763,8 @@ components:
         description:
           type: string
           description: Detailed description of the error.
+        redirect_link:
+          type: string
   parameters:
     fieldsParam:
       in: query

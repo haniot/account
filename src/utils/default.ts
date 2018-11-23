@@ -24,4 +24,7 @@ export abstract class Default {
 
     // Log
     public static readonly LOG_DIR: string = 'logs'
+
+    // JWT Secret
+    public static readonly JWT_SECRET: string = 's3cr3tk3y'
 }
