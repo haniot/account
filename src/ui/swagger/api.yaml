@@ -471,7 +471,7 @@ paths:
                   code: 403
                   message: Change password is necessary.
                   description: "To ensure information security, the user must change the access password. Access /api/v1/users/{user_id}/password to update then."
-                  link: /api/v1/users/{user_id}/password
+                  redirect_link: /api/v1/users/{user_id}/password
         '404':
           description: >-
             Specified resource does not exist. Usually when the URI is incorrect
