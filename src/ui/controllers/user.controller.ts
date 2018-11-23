@@ -33,7 +33,7 @@ export class UserController {
     }
 
     /**
-     * Add new user as admin.
+     * Authenticate user.
      *
      * @param {Request} req
      * @param {Response} res
@@ -43,7 +43,7 @@ export class UserController {
         // TODO implementar JWT
         try {
             const result: object = await this._userService
-                .authenticateUser(req.body.email, req.body.password)
+                .authenticate(req.body.email, req.body.password)
             if (!result) return res.status(HttpStatus.NOT_FOUND)
                 .send(this.getMessageNotFoundUser())
             return res.status(HttpStatus.OK).send(result)
@@ -74,7 +74,7 @@ export class UserController {
     }
 
     /**
-     * Add new user as admin.
+     * Add new user as caregiver.
      *
      * @param {Request} req
      * @param {Response} res
@@ -92,6 +92,12 @@ export class UserController {
         }
     }
 
+    /**
+     * Change user password.
+     *
+     * @param req
+     * @param res
+     */
     @httpPatch('/:user_id/password')
     public async changeUserPassword(@request() req: Request, @response() res: Response): Promise<Response> {
         try {

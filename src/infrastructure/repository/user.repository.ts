@@ -73,6 +73,7 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
 
     /**
      * Change the user password.
+     *
      * @param id
      * @param old_password
      * @param new_password
@@ -100,6 +101,7 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
 
     /**
      * Encrypt the user password.
+     *
      * @param password
      * @return {string} Encrypted password if the encrypt was successfully.
      */
@@ -110,6 +112,7 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
 
     /**
      * Compare if two passwords match.
+     *
      * @param password_one The not hash password
      * @param password_two The hash password
      * @return True if the passwords matches, false otherwise.
@@ -126,7 +129,7 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
      * @return {Promise<boolean>} True if the password was changed or False, otherwise.
      * @throws {ChangePasswordExeption}
      */
-    public authenticateUser(userMail: string, password: string): Promise<object> {
+    public authenticate(userMail: string, password: string): Promise<object> {
         return new Promise<object>((resolve, reject) => {
             return this.userModel.findOne({ email: userMail })
                 .then(user => {

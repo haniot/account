@@ -13,6 +13,7 @@ import { RepositoryException } from '../application/domain/exception/repository.
  * database. If there is no, a default user is created with the following
  * data:
  *
+ * - name: admin
  * - email: admin@haniot.com
  * - password: admin
  * - type: 1

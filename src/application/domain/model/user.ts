@@ -58,6 +58,7 @@ export class User extends Entity implements ISerializable<User> {
 
     /**
      * Get registration date.
+     *
      * @remarks Date in ISO 8601 format.
      */
     public getCreatedAt(): Date | undefined {

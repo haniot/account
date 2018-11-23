@@ -95,12 +95,13 @@ export class UserService implements IUserService {
 
     /**
      * Authenticate the user.
+     *
      * @param email
      * @param password
      * @return {Promise<object>}
      * @throws {ValidationException | RepositoryException}
      */
-    public async authenticateUser(email: string, password: string): Promise<object> {
-       return this._userRepository.authenticateUser(email, password)
+    public async authenticate(email: string, password: string): Promise<object> {
+       return this._userRepository.authenticate(email, password)
     }
 }

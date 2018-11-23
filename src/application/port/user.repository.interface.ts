@@ -66,5 +66,5 @@ export interface IUserRepository extends IRepository<User> {
      * @return {Promise<boolean>} True if the password was changed or False, otherwise.
      * @throws {ValidationException | RepositoryException}
      */
-    authenticateUser(email: string, password: string): Promise<object>
+    authenticate(email: string, password: string): Promise<object>
 }

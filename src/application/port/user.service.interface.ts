@@ -21,10 +21,11 @@ export interface IUserService extends IService<User> {
 
     /**
      * Authenticate the user.
+     *
      * @param email
      * @param password
      * @return {Promise<object>}
      * @throws {ValidationException | RepositoryException}
      */
-    authenticateUser(email: string, password: string): Promise<object>
+    authenticate(email: string, password: string): Promise<object>
 }
