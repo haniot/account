@@ -167,7 +167,7 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
 
         payload.scope =
             user.type === UserType.ADMIN ?
-                'scope: caregiverAccount:create caregiverAccount:deleteAll ' +
+                'caregiverAccount:create caregiverAccount:deleteAll ' +
                 'caregiverAccount:readAll caregiverAccount:updateAll adminAccount:create ' +
                 'adminAccount:deleteAll adminAccount:readAll adminAccount:updateAll'
                 :

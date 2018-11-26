@@ -13,8 +13,8 @@ COPY . /usr/src/ac
 EXPOSE 80
 EXPOSE 443
 
-# ENTRYPOINT  npm run build && npm start 
-ENTRYPOINT  npm run build && npm run start:dev
+ENTRYPOINT  npm run build && npm start
+# ENTRYPOINT  npm run build && npm run start:dev
 # ENTRYPOINT npm run build && npm run test:integration
 # ENTRYPOINT npm run build && npm run test:cov
 # ENTRYPOINT npm run build && npm run build:doc
