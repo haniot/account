@@ -8,8 +8,11 @@ import { IEntityMapper } from '../entity/mapper/entity.mapper.interface'
 import { Query } from './query/query'
 import { IQuery } from '../../application/port/query.interface'
 import { ILogger } from '../../utils/custom.logger'
-import bcrypt from 'bcryptjs'
 import { ChangePasswordException } from '../../application/domain/exception/change.password.exception'
+import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
+import { Default } from '../../utils/default'
+import { UserType } from '../../application/domain/utils/user.type'
 
 /**
  * Implementation of the user repository.
@@ -82,7 +85,7 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
      */
     public changePassword(id: string, old_password: string, new_password: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            this.userModel.findOne( { _id: id })
+            this.userModel.findOne({ _id: id })
                 .then((user) => {
                     if (!user || !this.comparePasswords(old_password, user.password)) return resolve(false)
                     user.password = this.encryptPassword(new_password)
@@ -136,11 +139,44 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
                     if (!user || !this.comparePasswords(password, user.password)) return resolve(undefined)
                     if (user.change_password) {
                         return reject(
-                            new ChangePasswordException('Change password is necessary.',
-                                'To ensure information security, the user must change the access password.'))
+                            new ChangePasswordException(
+                                'Change password is necessary.',
+                                `To ensure information security, the user must change the access password.` +
+                                `To change it, access PATCH /api/v1/users/${user._id}/password.`,
+                                `/api/v1/users/${user._id}/password`))
                     }
-                    resolve({ token: 'validtoken' })
+                    resolve(this.generateToken(user))
                 }).catch(err => reject(super.mongoDBErrorListener(err)))
         })
+    }
+
+    /**
+     * Generate a token by user data.
+     *
+     * @param user
+     * @return {token} The generated token.
+     */
+    public generateToken(user: any): object {
+
+        const payload: any = {
+            sub: user._id,
+            iss: 'haniot',
+            iat: Math.round(Date.now() / 1000),
+            exp: Math.round(Date.now() / 1000 + 24 * 60 * 60)
+        }
+
+        payload.scope =
+            user.type === UserType.ADMIN ?
+                'scope: caregiverAccount:create caregiverAccount:deleteAll ' +
+                'caregiverAccount:readAll caregiverAccount:updateAll adminAccount:create ' +
+                'adminAccount:deleteAll adminAccount:readAll adminAccount:updateAll'
+                :
+                'caregiverAccount:delete caregiverAccount:read ' +
+                'caregiverAccount:update'
+
+        const secret: string = process.env.JWT_SECRET || Default.JWT_SECRET
+        const userToken: object = { token: jwt.sign(payload, secret) }
+
+        return userToken
     }
 }

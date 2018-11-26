@@ -1,6 +1,6 @@
-import {IRepository} from './repository.interface'
-import {IQuery} from './query.interface'
-import {User} from '../domain/model/user'
+import { IRepository } from './repository.interface'
+import { IQuery } from './query.interface'
+import { User } from '../domain/model/user'
 
 /**
  * Interface of the user repository.
@@ -67,4 +67,12 @@ export interface IUserRepository extends IRepository<User> {
      * @throws {ValidationException | RepositoryException}
      */
     authenticate(email: string, password: string): Promise<object>
+
+    /**
+     * Generate a token by user data.
+     *
+     * @param user
+     * @return {token} The generated token.
+     */
+    generateToken(user: any): object
 }

@@ -35,7 +35,7 @@ export class RegisterDefaultAdminTask {
                     new User(
                         'admin',
                         'admin@haniot.com',
-                        'admin',
+                        'admin*123',
                         UserType.ADMIN,
                         true))
                 if (!user) throw new RepositoryException('Default admin user not created')

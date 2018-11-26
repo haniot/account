@@ -9,6 +9,7 @@ import { Exception } from '../../application/domain/exception/exception'
 export class ApiException extends Exception {
     public code: number
     public description?: string
+    public redirect_link?: string
 
     /**
      * Creates an instance of ApiException.
@@ -16,11 +17,13 @@ export class ApiException extends Exception {
      * @param code HTTP status code
      * @param message Short message
      * @param description Detailed message
+     * @param redirect_link Link to perform the error handling or for more information.
      */
-    constructor(code: number, message: string, description?: string) {
+    constructor(code: number, message: string, description?: string, redirect_link?: string) {
         super(message)
         this.code = code
         this.description = description
+        this.redirect_link = redirect_link
     }
 
     /**
@@ -32,7 +35,8 @@ export class ApiException extends Exception {
         return {
             code: this.code,
             message: this.message,
-            description: this.description
+            description: this.description,
+            redirect_link: this.redirect_link
         }
     }
 }

@@ -1,22 +1,20 @@
 import { IEntityMapper } from '../../src/infrastructure/entity/mapper/entity.mapper.interface'
 
-export class UserEntityMapperMock implements IEntityMapper<any, any>{
+export class UserEntityMapperMock implements IEntityMapper<any, any> {
 
-    public transform(item: any): any{
+    public transform(item: any): any {
         return item
     }
 
-    jsonToModel(json: any): any {
-        return undefined;
+    public jsonToModel(json: any): any {
+        return json
     }
 
-    modelEntityToModel(item: any): any {
-        return undefined;
+    public modelEntityToModel(item: any): any {
+        return item
     }
 
-    modelToModelEntity(item: any): any {
-        return undefined;
+    public modelToModelEntity(item: any): any {
+        return item
     }
-
 }
-
