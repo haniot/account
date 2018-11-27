@@ -6,7 +6,7 @@ info:
   version: "v1"
   title: HANIoT Account Service - API Reference
   contact:
-    email: lucas.rocha@nutes.uepb.edu.br
+    email: haniot@nutes.uepb.edu.br
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
