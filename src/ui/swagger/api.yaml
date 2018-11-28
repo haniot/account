@@ -602,7 +602,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Lorem Ipsum
+                email:
+                  type: string
+                  example: loremipsum@mail.com
+                password:
+                  type: string
+                  example: 'lorem123'
         description: Data of the user to be saved.
         required: true
   /users/caregiver:
@@ -686,7 +696,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/User'
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: Lorem Ipsum
+                email:
+                  type: string
+                  example: loremipsum@mail.com
+                password:
+                  type: string
+                  example: 'lorem123'
         description: Data of the user to be saved.
         required: true
 components:
@@ -719,21 +739,10 @@ components:
           type: string
           description: User email.
           example: loremipsum@mail.com
-        password:
-          type: string
-          description: User password.
-          example: loremipsum123
         type:
           type: number
           description: Type of user.
           example: 1
-          readOnly: true
-        change_password:
-          type: boolean
-          description: >-
-            State parameter used to verify that the user is required to change
-            their password.
-          example: true
           readOnly: true
         created_at:
           type: string
