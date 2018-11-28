@@ -52,7 +52,6 @@ describe('Routes: User', () => {
                         expect(res.body.name).to.eql('Admin')
                         expect(res.body).to.have.property('email')
                         expect(res.body.email).to.eql('admin@example.com')
-                        expect(res.body).to.have.property('password')
                         expect(res.body).to.have.property('type')
                         expect(res.body.type).to.eql(UserType.ADMIN)
                         expect(res.body).to.have.property('created_at')
@@ -127,7 +126,6 @@ describe('Routes: User', () => {
                         expect(res.body.name).to.eql('Lorem Ipsum')
                         expect(res.body).to.have.property('email')
                         expect(res.body.email).to.eql('loremipsum@mail.com')
-                        expect(res.body).to.have.property('password')
                         expect(res.body).to.have.property('type')
                         expect(res.body.type).to.eql(UserType.CAREGIVER)
                         expect(res.body).to.have.property('created_at')
@@ -201,7 +199,6 @@ describe('Routes: User', () => {
                     expect(res.body.name).to.eql('Admin')
                     expect(res.body).to.have.property('email')
                     expect(res.body.email).to.eql('admin@example.com')
-                    expect(res.body).to.have.property('password')
                     expect(res.body).to.have.property('type')
                     expect(res.body.type).to.eql(UserType.ADMIN)
                     expect(res.body).to.have.property('created_at')
@@ -255,7 +252,6 @@ describe('Routes: User', () => {
                     expect(res.body.name).to.eql('New Admin')
                     expect(res.body).to.have.property('email')
                     expect(res.body.email).to.eql('admin@example.com')
-                    expect(res.body).to.have.property('password')
                     expect(res.body).to.have.property('type')
                     expect(res.body.type).to.eql(UserType.ADMIN)
                     expect(res.body).to.have.property('created_at')
@@ -331,7 +327,7 @@ describe('Routes: User', () => {
 
             return request(app)
                 .patch(`/api/v1/users/${defaultAdminUser.getId()}/password`)
-                .send({ 'old_password': 'admin', 'new_password': 'admin123' })
+                .send({ old_password: 'admin', new_password: 'admin123' })
                 .set('Content-Type', 'application/json')
                 .expect(204)
                 .then(res => {
@@ -344,7 +340,7 @@ describe('Routes: User', () => {
 
                 return request(app)
                     .patch(`/api/v1/users/${defaultAdminUser.getId()}/password`)
-                    .send({ 'old_password': 'admin', 'new_password': 'admin123' })
+                    .send({ old_password: 'admin', new_password: 'admin123' })
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(err => {
@@ -361,7 +357,7 @@ describe('Routes: User', () => {
 
                 return request(app)
                     .patch(`/api/v1/users/${randomId}/paassword`)
-                    .send({ 'old_password': 'admin', 'new_password': 'admin123' })
+                    .send({ old_password: 'admin', new_password: 'admin123' })
                     .set('Content-Type', 'application/json')
                     .expect(404)
                     .then(err => {
@@ -486,13 +482,13 @@ describe('Routes: User', () => {
                 .expect(200)
                 .then(res => {
                     expect(res.body).to.have.lengthOf(2)
+                    expect(res.body[0]).to.have.property('id')
                     expect(res.body[0]).to.have.property('name')
                     expect(res.body[0]).to.have.property('email')
-                    expect(res.body[0]).to.have.property('password')
                     expect(res.body[0]).to.have.property('type')
+                    expect(res.body[1]).to.have.property('id')
                     expect(res.body[1]).to.have.property('name')
                     expect(res.body[1]).to.have.property('email')
-                    expect(res.body[1]).to.have.property('password')
                     expect(res.body[1]).to.have.property('type')
                 })
         })
