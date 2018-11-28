@@ -10,6 +10,7 @@ import { Query } from '../../infrastructure/repository/query/query'
 import { ApiException } from '../exceptions/api.exception'
 import { ILogger } from '../../utils/custom.logger'
 import { UserType } from '../../application/domain/utils/user.type'
+import { ChangePasswordException } from '../../application/domain/exception/change.password.exception'
 
 /**
  * Controller that implements User feature operations.
@@ -28,7 +29,7 @@ export class UserController {
      */
     constructor(
         @inject(Identifier.USER_SERVICE) private readonly _userService: IUserService,
-        @inject(Identifier.LOGGER) readonly _logger: ILogger,
+        @inject(Identifier.LOGGER) readonly _logger: ILogger
     ) {
     }
 
@@ -104,11 +105,15 @@ export class UserController {
             const result: boolean = await this._userService
                 .changePassword(req.params.user_id, req.body.old_password, req.body.new_password)
             if (!result) {
-                return res.status(HttpStatus.BAD_REQUEST)
-                    .send(this.getMessageNotChangePassword())
+                return res.status(HttpStatus.NOT_FOUND)
+                    .send(this.getMessageNotFoundUser())
             }
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
+            if (err instanceof ChangePasswordException) {
+                return res.status(HttpStatus.BAD_REQUEST)
+                    .send(new ApiException(HttpStatus.BAD_REQUEST, err.message, err.description).toJson())
+            }
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
                 .send(handlerError.toJson())
@@ -205,14 +210,4 @@ export class UserController {
             'User not found or already removed. A new operation for the same resource is not required!'
         ).toJson()
     }
-
-    private getMessageNotChangePassword(): object {
-        return new ApiException(
-            HttpStatus.BAD_REQUEST,
-            'Password could not be updated',
-            'The password could not be updated. Probably, ' +
-            'the params are syntactically incorrect.'
-        ).toJson()
-    }
-
 }

@@ -87,14 +87,20 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
         return new Promise<boolean>((resolve, reject) => {
             this.userModel.findOne({ _id: id })
                 .then((user) => {
-                    if (!user || !this.comparePasswords(old_password, user.password)) return resolve(false)
+                    if (!user) return resolve(false)
+                    if (!this.comparePasswords(old_password, user.password)) {
+                        return reject(new ChangePasswordException(
+                            'Password does not match',
+                            'The old password parameter does not match with the actual user password.'
+                        ))
+                    }
                     user.password = this.encryptPassword(new_password)
                     user.change_password = false
                     this.userModel.findOneAndUpdate({ _id: user.id }, user, { new: true })
                         .exec()
                         .then(result => {
-                            if (!result) return resolve(undefined)
-                            return resolve(this.mapper.transform(result.toJSON()))
+                            if (!result) return resolve(false)
+                            return resolve(true)
                         })
                         .catch(err => reject(this.mongoDBErrorListener(err)))
                 })

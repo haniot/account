@@ -7,6 +7,7 @@ import { Exception } from './exception'
  */
 export class ChangePasswordException extends Exception {
     public link?: string
+
     /**
      * Creates an instance of ChangePasswordException.
      *

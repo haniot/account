@@ -7,6 +7,7 @@ import { ConflictException } from '../domain/exception/conflict.exception'
 import { UserCreateValidator } from '../domain/validator/user.create.validator'
 import { IQuery } from '../port/query.interface'
 import { UserUpdateValidator } from '../domain/validator/user.update.validator'
+import { ChangePasswordValidator } from '../domain/validator/change.password.validator'
 
 /**
  * Implementing User Service.
@@ -90,6 +91,7 @@ export class UserService implements IUserService {
      * @throws {ValidationException | RepositoryException}
      */
     public async changePassword(id: string, old_password: string, new_password: string): Promise<boolean> {
+        await ChangePasswordValidator.validate(old_password, new_password)
         return this._userRepository.changePassword(id, old_password, new_password)
     }
 
@@ -102,6 +104,6 @@ export class UserService implements IUserService {
      * @throws {ValidationException | RepositoryException}
      */
     public async authenticate(email: string, password: string): Promise<object> {
-       return this._userRepository.authenticate(email, password)
+        return this._userRepository.authenticate(email, password)
     }
 }

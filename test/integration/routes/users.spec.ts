@@ -350,6 +350,21 @@ describe('Routes: User', () => {
             })
         })
 
+        context('when there are not required parameters in request', () => {
+            it('should return status code 400 and message info about missing parameters', () => {
+
+                return request(app)
+                    .patch(`/api/v1/users/${defaultAdminUser.getId()}/password`)
+                    .send({})
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(err => {
+                        expect(err.body).to.have.property('message')
+                        expect(err.body).to.have.property('description')
+                    })
+            })
+        })
+
         context('when there are no user with id parameter', () => {
             it('should return status code 404 and info message from user not found', () => {
 
