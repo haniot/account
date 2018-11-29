@@ -413,7 +413,7 @@ paths:
         Authenticate a user. User authentication is performed using JWT token generation. In generating the JWT token, there are following types of attributes:
 
         **Reserved Claims**: Non-mandatory (but recommended) attributes used in token validation by API security protocols. These are used to create a pattern and are defined in RFC-7519.
-        * sub () - Entity that the token belongs to, usually the user ID (it is good practice that this ID is not the same as the database);
+        * sub (subject) - Entity that the token belongs to, usually the user ID;
         * iss (emitter) - sets the emitter of the token;
         * exp (expiration) - Timestamp of when the token will expire;
         * iat (issued at) - Timestamp from when the token was created.
