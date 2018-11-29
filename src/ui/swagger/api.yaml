@@ -312,8 +312,6 @@ paths:
                 $ref: '#/components/schemas/Error'
   /users/{user_id}/password:
     patch:
-      security:
-        - JWTAuth: []
       tags:
         - users
       summary: Change user password.
