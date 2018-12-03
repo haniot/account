@@ -13,6 +13,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { Default } from '../../utils/default'
 import { UserType } from '../../application/domain/utils/user.type'
+import { AuthenticationException } from '../../application/domain/exception/authentication.exception'
 
 /**
  * Implementation of the user repository.
@@ -142,7 +143,13 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
         return new Promise<object>((resolve, reject) => {
             return this.userModel.findOne({ email: userMail })
                 .then(user => {
-                    if (!user || !this.comparePasswords(password, user.password)) return resolve(undefined)
+                    if (!user || !this.comparePasswords(password, user.password)) {
+                        return reject(
+                            new AuthenticationException(
+                                'Authentication failed due to invalid authentication credentials.'
+                            )
+                        )
+                    }
                     if (user.change_password) {
                         return reject(
                             new ChangePasswordException(

@@ -436,7 +436,7 @@ paths:
 
       operationId: authUser
       responses:
-        '201':
+        '200':
           description: User successfully authenticated.
           content:
             application/json:

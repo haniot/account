@@ -446,8 +446,8 @@ describe('Routes: User', () => {
                 })
         })
 
-        context('when there are no user with id parameter', () => {
-            it('should return status code 400 and info message from user not found', () => {
+        context('when there are invalid credentials in params', () => {
+            it('should return status code 401 and info message from invalid credentials', () => {
 
                 return request(app)
                     .post('/api/v1/users/auth')
@@ -456,10 +456,9 @@ describe('Routes: User', () => {
                         password: 'anyone'
                     })
                     .set('Content-Type', 'application/json')
-                    .expect(404)
+                    .expect(401)
                     .then(err => {
                         expect(err.body).to.have.property('message')
-                        expect(err.body).to.have.property('description')
                     })
             })
         })
