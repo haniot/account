@@ -18,7 +18,7 @@ export interface IRepository<T> {
     create(item: T): Promise<T>
 
     /**
-     * Listing items according to parameter values.
+     * List items according to parameter values.
      *
      * @param query Defines object to be used for queries.
      * @return {Promise<Array<T>>}
@@ -51,7 +51,7 @@ export interface IRepository<T> {
      * @return {Promise<boolean>}
      * @throws {ValidationException | RepositoryException}
      */
-    delete(id: string | number): Promise<boolean>
+    delete(id: string): Promise<boolean>
 
     /**
      * Returns the total of items according to the query.

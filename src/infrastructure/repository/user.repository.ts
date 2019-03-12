@@ -25,7 +25,7 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
     constructor(
         @inject(Identifier.USER_REPO_MODEL) protected readonly userModel: any,
         @inject(Identifier.USER_ENTITY_MAPPER) protected readonly userMapper: IEntityMapper<User, UserEntity>,
-        @inject(Identifier.LOGGER) protected readonly logger: ILogger
+        @inject(Identifier.LOGGER) readonly logger: ILogger
     ) {
         super(userModel, userMapper, logger)
     }

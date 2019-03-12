@@ -1,19 +1,19 @@
 import { Container, inject, injectable } from 'inversify'
 import { Identifier } from '../di/identifiers'
-import { IDBConnection } from '../infrastructure/port/db.connection.interface'
+import { IConnectionDB } from '../infrastructure/port/connection.db.interface'
 import { CustomLogger } from '../utils/custom.logger'
-import { RegisterDefaultAdminTask } from './register.default.admin.task'
+import { RegisterDefaultAdminTask } from './task/register.default.admin.task'
 import { DI } from '../di/di'
 
 @injectable()
 export class BackgroundService {
-    private readonly _diContainer: Container
+    private readonly container: Container
 
     constructor(
-        @inject(Identifier.MONGODB_CONNECTION) private _mongodb: IDBConnection,
+        @inject(Identifier.MONGODB_CONNECTION) private _mongodb: IConnectionDB,
         @inject(Identifier.LOGGER) private _logger: CustomLogger
     ) {
-        this._diContainer = DI.getInstance().getContainer()
+        this.container = DI.getInstance().getContainer()
     }
 
     public async startServices(): Promise<void> {
@@ -24,13 +24,16 @@ export class BackgroundService {
              * database is connected, and in this case, a task is run to check
              * if there are registered admin users.
              */
-            this._mongodb.eventConnection.on('connected', () => {
-                const registerDefaultAdminTask: RegisterDefaultAdminTask =
-                    new RegisterDefaultAdminTask(this._diContainer.get(Identifier.USER_REPOSITORY), this._logger)
-                registerDefaultAdminTask.run()
-            })
+            await new RegisterDefaultAdminTask(this._mongodb,
+                this.container.get(Identifier.USER_REPOSITORY),
+                this.container.get(Identifier.LOGGER)).run()
 
-            await this._mongodb.tryConnect() // Initialize mongodb
+            /**
+             * Trying to connect to mongodb.
+             * Go ahead only when the run is resolved.
+             * Since the application depends on the database connection to work.
+             */
+            await this._mongodb.tryConnect(0, 1000) // Initialize mongodb
 
             /**
              * Register your events using the event bus instance here.

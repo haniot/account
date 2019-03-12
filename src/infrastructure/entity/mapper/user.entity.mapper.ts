@@ -24,7 +24,7 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
      */
     public modelToModelEntity(item: User): UserEntity {
         const result: UserEntity = new UserEntity()
-        if (item.getId()) result.setId(item.getId())
+        if (item.id) result.setId(item.id)
         if (item.getName()) result.setName(item.getName())
         if (item.getEmail()) result.setEmail(item.getEmail())
         if (item.getPassword()) result.setPassword(item.getPassword())
@@ -43,7 +43,7 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
      */
     public modelEntityToModel(item: UserEntity): User {
         const result: User = new User()
-        result.setId(item.getId())
+        result.id = item.getId()
         if (item.getEmail()) result.setEmail(item.getEmail())
         if (item.getName()) result.setName(item.getName())
         if (item.getPassword()) result.setPassword(item.getPassword())
@@ -62,7 +62,7 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
     public jsonToModel(json: any): User {
         const result: User = new User()
         if (!json) return result
-        if (json.id !== undefined) result.setId(json.id)
+        if (json.id !== undefined) result.id = json.id
         if (json.name !== undefined) result.setName(json.name)
         if (json.email !== undefined) result.setEmail(json.email)
         if (json.password !== undefined) result.setPassword(json.password)

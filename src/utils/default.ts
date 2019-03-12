@@ -10,11 +10,13 @@
 export abstract class Default {
     public static readonly APP_TITLE: string = 'HANIoT Account Service'
     public static readonly APP_DESCRIPTION: string = 'Microservice responsible for adding' +
-    'updating, providing, deleting and authenticating users. '
+        'updating, providing, deleting and authenticating users. '
     public static readonly NODE_ENV: string = 'development' // development, test, production
     public static readonly PORT_HTTP: number = 80
     public static readonly PORT_HTTPS: number = 443
     public static readonly SWAGGER_PATH: string = './src/ui/swagger/api.yaml'
+    public static readonly SWAGGER_URI: string = 'https://api.swaggerhub.com/apis/haniot/haniot-account-service/v1/swagger.json'
+    public static readonly LOGO_URI: string = 'http://www.ocariot.com.br/wp-content/uploads/2018/08/cropped-512-32x32.png'
 
     // MongoDB
     public static readonly MONGODB_URI: string = 'mongodb://127.0.0.1:27017/haniot-account-service'

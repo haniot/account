@@ -131,7 +131,7 @@ export class UserController {
     @httpGet('/')
     public async getAllUsers(@request() req: Request, @response() res: Response) {
         try {
-            const result: Array<User> = await this._userService.getAll(new Query().deserialize(req.query))
+            const result: Array<User> = await this._userService.getAll(new Query().fromJSON(req.query))
             return res.status(HttpStatus.OK).send(result)
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
@@ -152,7 +152,7 @@ export class UserController {
     public async getUserById(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: User = await this._userService
-                .getById(req.params.user_id, new Query().deserialize(req.query))
+                .getById(req.params.user_id, new Query().fromJSON(req.query))
             if (!result) return res.status(HttpStatus.NOT_FOUND)
                 .send(this.getMessageNotFoundUser())
             return res.status(HttpStatus.OK).send(result)
@@ -172,8 +172,8 @@ export class UserController {
     @httpPatch('/:user_id')
     public async updateUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const user: User = new User().deserialize(req.body)
-            user.setId(req.params.user_id)
+            const user: User = new User().fromJSON(req.body)
+            user.id = req.params.user_id
             const result = await this._userService.update(user)
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageNotFoundUser())
             return res.status(HttpStatus.OK).send(result)

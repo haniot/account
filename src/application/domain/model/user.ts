@@ -1,5 +1,7 @@
 import { Entity } from './entity'
-import { ISerializable } from '../utils/serializable.interface'
+import { IJSONSerializable } from '../utils/json.serializable.interface'
+import { IJSONDeserializable } from '../utils/json.deserializable.interface'
+import { JsonUtils } from '../utils/json.utils'
 
 /**
  * Implementation of the user entity.
@@ -7,7 +9,7 @@ import { ISerializable } from '../utils/serializable.interface'
  * @extends {Entity}
  * @implements {ISerializable<User>}
  */
-export class User extends Entity implements ISerializable<User> {
+export class User extends Entity implements IJSONSerializable, IJSONDeserializable<User> {
     private name?: string
     private email?: string
     private password?: string
@@ -81,44 +83,28 @@ export class User extends Entity implements ISerializable<User> {
      * Called as default when the object
      * is displayed in console.log()
      */
-    public toJSON(): string {
-        return this.serialize()
-    }
-
-    /**
-     * Convert this object to json.
-     *
-     * @returns {object}
-     */
-    public serialize(): any {
+    public toJSON(): any {
         return {
-            id: super.getId(),
+            id: super.id,
             name: this.name,
             email: this.email,
-            password: this.password,
-            type: this.type,
-            created_at: this.created_at ? this.created_at.toISOString() : this.created_at,
-            change_password: this.change_password
+            type: this.type
         }
     }
 
-    /**
-     * Transform JSON into User object.
-     *
-     * @param json
-     */
-    public deserialize(json: any): User {
+    public fromJSON(json: any): User {
         if (!json) return this
-        if (typeof json === 'string') json = JSON.parse(json)
 
-        if (json.id) this.setId(json.id)
-        if (json.name) this.setName(json.name)
-        if (json.email) this.setEmail(json.email)
-        if (json.password) this.setPassword(json.password)
-        if (json.type) this.setType(json.type)
-        if (json.created_at) this.setCreatedAt(new Date(json.created_at))
-        if (json.change_password !== undefined) this.setChangePassword(json.change_password)
+        if (typeof json === 'string' && JsonUtils.isJsonString(json)) {
+            json = JSON.parse(json)
+        }
 
+        if (json.id !== undefined) super.id = json.id
+        if (json.name !== undefined) this.name = json.name
+        if (json.email !== undefined) this.email = json.email
+        if (json.password !== undefined) this.password = json.password
+        if (json.type !== undefined) this.type = json.type
+        if (json.created_at !== undefined) this.created_at = json.created_at
         return this
     }
 }

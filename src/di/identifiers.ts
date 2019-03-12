@@ -24,8 +24,8 @@ export abstract class Identifier {
     public static readonly USER_ENTITY_MAPPER: any = Symbol.for('UserEntityMapper')
 
     // Background Services
-    public static readonly MONGODB_CONNECTION_FACTORY: any = Symbol.for('MongoDBConnectionFactory')
-    public static readonly MONGODB_CONNECTION: any = Symbol.for('MongoDBConnection')
+    public static readonly MONGODB_CONNECTION_FACTORY: any = Symbol.for('ConnectionFactoryMongodb')
+    public static readonly MONGODB_CONNECTION: any = Symbol.for('ConnectionMongodb')
     public static readonly BACKGROUND_SERVICE: any = Symbol.for('BackgroundService')
 
     // Log

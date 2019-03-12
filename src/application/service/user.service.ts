@@ -53,7 +53,7 @@ export class UserService implements IUserService {
      * @return {Promise<User>}
      * @throws {RepositoryException}
      */
-    public async getById(id: string | number, query: IQuery): Promise<User> {
+    public async getById(id: string, query: IQuery): Promise<User> {
         query.filters = { _id: id }
         return this._userRepository.findOne(query)
     }
@@ -77,7 +77,7 @@ export class UserService implements IUserService {
      * @return {Promise<boolean>}
      * @throws {ValidationException | RepositoryException}
      */
-    public async remove(id: string | number): Promise<boolean> {
+    public async remove(id: string): Promise<boolean> {
         return this._userRepository.delete(id)
     }
 

@@ -12,9 +12,9 @@ import { UserRepoModel } from '../infrastructure/database/schema/user.schema'
 import { UserEntityMapper } from '../infrastructure/entity/mapper/user.entity.mapper'
 import { IEntityMapper } from '../infrastructure/entity/mapper/entity.mapper.interface'
 import { User } from '../application/domain/model/user'
-import { MongoDBConnectionFactory } from '../infrastructure/database/mongodb.connection.factory'
-import { MongoDBConnection } from '../infrastructure/database/mongodb.connection'
-import { IDBConnection } from '../infrastructure/port/db.connection.interface'
+import { ConnectionFactoryMongodb } from '../infrastructure/database/connection.factory.mongodb'
+import { ConnectionMongodb } from '../infrastructure/database/connection.mongodb'
+import { IConnectionDB } from '../infrastructure/port/connection.db.interface'
 import { IConnectionFactory } from '../infrastructure/port/connection.factory.interface'
 import { BackgroundService } from '../background/background.service'
 import { App } from '../app'
@@ -86,10 +86,10 @@ export class DI {
         // Background Services
         this.container
             .bind<IConnectionFactory>(Identifier.MONGODB_CONNECTION_FACTORY)
-            .to(MongoDBConnectionFactory).inSingletonScope()
+            .to(ConnectionFactoryMongodb).inSingletonScope()
         this.container
-            .bind<IDBConnection>(Identifier.MONGODB_CONNECTION)
-            .to(MongoDBConnection).inSingletonScope()
+            .bind<IConnectionDB>(Identifier.MONGODB_CONNECTION)
+            .to(ConnectionMongodb).inSingletonScope()
         this.container
             .bind(Identifier.BACKGROUND_SERVICE)
             .to(BackgroundService).inSingletonScope()

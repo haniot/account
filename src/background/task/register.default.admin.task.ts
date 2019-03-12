@@ -1,12 +1,14 @@
 import { inject } from 'inversify'
-import { Identifier } from '../di/identifiers'
-import { IUserRepository } from '../application/port/user.repository.interface'
-import { IQuery } from '../application/port/query.interface'
-import { Query } from '../infrastructure/repository/query/query'
-import { UserType } from '../application/domain/utils/user.type'
-import { User } from '../application/domain/model/user'
-import { ILogger } from '../utils/custom.logger'
-import { RepositoryException } from '../application/domain/exception/repository.exception'
+import { Identifier } from '../../di/identifiers'
+import { IUserRepository } from '../../application/port/user.repository.interface'
+import { IQuery } from '../../application/port/query.interface'
+import { Query } from '../../infrastructure/repository/query/query'
+import { UserType } from '../../application/domain/utils/user.type'
+import { User } from '../../application/domain/model/user'
+import { ILogger } from '../../utils/custom.logger'
+import { RepositoryException } from '../../application/domain/exception/repository.exception'
+import { IConnectionDB } from '../../infrastructure/port/connection.db.interface'
+import { IBackgroundTask } from '../../application/port/background.task.interface'
 
 /**
  * In this class it's checked whether there are any admin users in the
@@ -18,14 +20,21 @@ import { RepositoryException } from '../application/domain/exception/repository.
  * - password: admin
  * - type: 1
  */
-export class RegisterDefaultAdminTask {
+export class RegisterDefaultAdminTask implements IBackgroundTask {
     constructor(
+        @inject(Identifier.MONGODB_CONNECTION) private readonly _mongodb: IConnectionDB,
         @inject(Identifier.USER_REPOSITORY) private readonly _userRepository: IUserRepository,
         @inject(Identifier.LOGGER) private readonly _logger: ILogger
     ) {
     }
 
     public async run(): Promise<void> {
+        this._mongodb.eventConnection.on('connected', async () => {
+            await this.createUserAdmin()
+        })
+    }
+
+    private async createUserAdmin(): Promise<void> {
         const query: IQuery = new Query()
         query.filters = { type: UserType.ADMIN }
         try {
@@ -45,5 +54,9 @@ export class RegisterDefaultAdminTask {
             this._logger.error(err.message)
             setTimeout(run, 2000)
         }
+    }
+
+    public stop(): Promise<void> {
+        return Promise.resolve()
     }
 }

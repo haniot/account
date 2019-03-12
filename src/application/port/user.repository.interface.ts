@@ -18,7 +18,7 @@ export interface IUserRepository extends IRepository<User> {
      * @return {Promise<User>}
      * @throws {RepositoryException}
      */
-    getByEmail(email: string | number, query: IQuery): Promise<User>
+    getByEmail(email: string, query: IQuery): Promise<User>
 
     /**
      * Checks if an user already has a registration.
