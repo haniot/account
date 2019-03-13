@@ -4,9 +4,9 @@ import { IUserService } from '../port/user.service.interface'
 import { Identifier } from '../../di/identifiers'
 import { IUserRepository } from '../port/user.repository.interface'
 import { ConflictException } from '../domain/exception/conflict.exception'
-import { UserCreateValidator } from '../domain/validator/user.create.validator'
+import { CreateUserValidator } from '../domain/validator/create.user.validator'
 import { IQuery } from '../port/query.interface'
-import { UserUpdateValidator } from '../domain/validator/user.update.validator'
+import { UpdateUserValidator } from '../domain/validator/update.user.validator'
 import { ChangePasswordValidator } from '../domain/validator/change.password.validator'
 
 /**
@@ -28,7 +28,7 @@ export class UserService implements IUserService {
      * @throws {ConflictException | RepositoryException} If a data conflict occurs, as an existing user.
      */
     public async add(user: User): Promise<User> {
-        await UserCreateValidator.validate(user)
+        await CreateUserValidator.validate(user)
         const userExist = await this._userRepository.checkExist(user)
         if (userExist) throw new ConflictException('User already has an account...')
         return this._userRepository.create(user)
@@ -66,7 +66,7 @@ export class UserService implements IUserService {
      * @throws {ConflictException | RepositoryException}
      */
     public async update(user: User): Promise<User> {
-        await UserUpdateValidator.validate(user)
+        await UpdateUserValidator.validate(user)
         return this._userRepository.update(user)
     }
 
@@ -93,17 +93,5 @@ export class UserService implements IUserService {
     public async changePassword(id: string, old_password: string, new_password: string): Promise<boolean> {
         await ChangePasswordValidator.validate(old_password, new_password)
         return this._userRepository.changePassword(id, old_password, new_password)
-    }
-
-    /**
-     * Authenticate the user.
-     *
-     * @param email
-     * @param password
-     * @return {Promise<object>}
-     * @throws {ValidationException | RepositoryException}
-     */
-    public async authenticate(email: string, password: string): Promise<object> {
-        return this._userRepository.authenticate(email, password)
     }
 }

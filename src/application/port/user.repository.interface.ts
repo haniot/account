@@ -13,12 +13,12 @@ export interface IUserRepository extends IRepository<User> {
     /**
      * Retrieves the user by your email.
      *
-     * @param email User email.
+     * @param user User username.
      * @param query Defines object to be used for queries.
      * @return {Promise<User>}
      * @throws {RepositoryException}
      */
-    getByEmail(email: string, query: IQuery): Promise<User>
+    getByUsername(user: string, query: IQuery): Promise<User>
 
     /**
      * Checks if an user already has a registration.
@@ -52,27 +52,9 @@ export interface IUserRepository extends IRepository<User> {
     /**
      * Compare if two passwords match.,
      *
-     * @param password1
-     * @param password2
+     * @param password_one
+     * @param password_two
      * @return True if the passwords matches, false otherwise.
      */
     comparePasswords(password_one: string, password_two: string): boolean
-
-    /**
-     * Authenticate a user.
-     *
-     * @param email
-     * @param password
-     * @return {Promise<boolean>} True if the password was changed or False, otherwise.
-     * @throws {ValidationException | RepositoryException}
-     */
-    authenticate(email: string, password: string): Promise<object>
-
-    /**
-     * Generate a token by user data.
-     *
-     * @param user
-     * @return {token} The generated token.
-     */
-    generateToken(user: any): object
 }

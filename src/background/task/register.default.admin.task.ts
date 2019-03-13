@@ -1,14 +1,14 @@
-import { inject } from 'inversify'
+import { inject, injectable } from 'inversify'
 import { Identifier } from '../../di/identifiers'
-import { IUserRepository } from '../../application/port/user.repository.interface'
 import { IQuery } from '../../application/port/query.interface'
 import { Query } from '../../infrastructure/repository/query/query'
 import { UserType } from '../../application/domain/utils/user.type'
-import { User } from '../../application/domain/model/user'
 import { ILogger } from '../../utils/custom.logger'
 import { RepositoryException } from '../../application/domain/exception/repository.exception'
 import { IConnectionDB } from '../../infrastructure/port/connection.db.interface'
 import { IBackgroundTask } from '../../application/port/background.task.interface'
+import { Admin } from '../../application/domain/model/admin'
+import { IAdminRepository } from '../../application/port/admin.repository.interface'
 
 /**
  * In this class it's checked whether there are any admin users in the
@@ -20,10 +20,11 @@ import { IBackgroundTask } from '../../application/port/background.task.interfac
  * - password: admin
  * - type: 1
  */
+@injectable()
 export class RegisterDefaultAdminTask implements IBackgroundTask {
     constructor(
         @inject(Identifier.MONGODB_CONNECTION) private readonly _mongodb: IConnectionDB,
-        @inject(Identifier.USER_REPOSITORY) private readonly _userRepository: IUserRepository,
+        @inject(Identifier.ADMIN_REPOSITORY) private readonly _adminRepository: IAdminRepository,
         @inject(Identifier.LOGGER) private readonly _logger: ILogger
     ) {
     }
@@ -38,20 +39,20 @@ export class RegisterDefaultAdminTask implements IBackgroundTask {
         const query: IQuery = new Query()
         query.filters = { type: UserType.ADMIN }
         try {
-            const countUser = await this._userRepository.count(query)
-            if (countUser <= 0) {
-                const user = await this._userRepository.create(
-                    new User(
-                        'admin',
-                        'admin@haniot.com',
-                        'admin*123',
-                        UserType.ADMIN,
-                        true))
+            const countUser = await this._adminRepository.count(query)
+            if (!countUser) {
+                const adminDefault = new Admin()
+                adminDefault.username = 'admin'
+                adminDefault.password = 'admin*123'
+                adminDefault.email = 'admin@haniot.com'
+                adminDefault.type = UserType.ADMIN
+
+                const user = await this._adminRepository.create(adminDefault)
                 if (!user) throw new RepositoryException('Default admin user not created')
                 this._logger.info('Default admin user created successfully.')
             }
         } catch (err) {
-            this._logger.error(err.message)
+            this._logger.error(err.description)
             setTimeout(run, 2000)
         }
     }

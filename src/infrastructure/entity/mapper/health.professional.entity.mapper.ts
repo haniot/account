@@ -1,57 +1,58 @@
 import { injectable } from 'inversify'
-import { User } from '../../../application/domain/model/user'
-import { UserEntity } from '../user.entity'
 import { IEntityMapper } from '../../port/entity.mapper.interface'
+import { HealthProfessional } from '../../../application/domain/model/health.professional'
+import { HealthProfessionalEntity } from '../health.professional.entity'
 
 @injectable()
-export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
+export class HealthProfessionalEntityMapper implements IEntityMapper<HealthProfessional, HealthProfessionalEntity> {
     public transform(item: any): any {
-        if (item instanceof User) return this.modelToModelEntity(item)
+        if (item instanceof HealthProfessional) return this.modelToModelEntity(item)
         return this.jsonToModel(item) // json
     }
 
     /**
-     * Convert {User} for {UserEntity}.
+     * Convert {HealthProfessional} for {HealthProfessionalEntity}.
      *
-     * @see Before setting the value, it is important to verify that the type is valid.
-     * Therefore, you do not run the risk that in an UPDATE / PATCH action type,
-     * attributes that should not be updated are saved with null values.
      * @see Creation Date should not be mapped to the type the repository understands.
      * Because this attribute is created automatically by the database.
      * Therefore, if a null value is passed at update time, an exception is thrown.
      * @param item
      */
-    public modelToModelEntity(item: User): UserEntity {
-        const result: UserEntity = new UserEntity()
+    public modelToModelEntity(item: HealthProfessional): HealthProfessionalEntity {
+        const result: HealthProfessionalEntity = new HealthProfessionalEntity()
 
         if (item.id) result.id = item.id
         if (item.username) result.username = item.username
         if (item.password) result.password = item.password
         if (item.type) result.type = item.type
         if (item.scopes) result.scopes = item.scopes
+        if (item.email) result.email = item.email
+        if (item.name) result.name = item.name
+        if (item.health_area) result.health_area = item.health_area
+
         return result
     }
 
     /**
-     * Convert {UserEntity} for {User}.
+     * Convert {HealthProfessionalEntity} for {HealthProfessional}.
      *
      * @see Each attribute must be mapped only if it contains an assigned value,
      * because at some point the attribute accessed may not exist.
      * @param item
      */
-    public modelEntityToModel(item: UserEntity): User {
+    public modelEntityToModel(item: HealthProfessionalEntity): HealthProfessional {
         throw Error('Not implemented!')
     }
 
     /**
-     * Convert JSON for {User}.
+     * Convert JSON for {HealthProfessional}.
      *
      * @see Each attribute must be mapped only if it contains an assigned value,
      * because at some point the attribute accessed may not exist.
      * @param json
      */
-    public jsonToModel(json: any): User {
-        const result: User = new User()
+    public jsonToModel(json: any): HealthProfessional {
+        const result: HealthProfessional = new HealthProfessional()
         if (!json) return result
 
         if (json.id !== undefined) result.id = json.id
@@ -59,7 +60,11 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
         if (json.password !== undefined) result.password = json.password
         if (json.type !== undefined) result.type = json.type
         if (json.scopes !== undefined) result.scopes = json.scopes
+        if (json.email) result.email = json.email
+        if (json.name) result.name = json.name
+        if (json.health_area) result.health_area = json.health_area
 
         return result
     }
+
 }

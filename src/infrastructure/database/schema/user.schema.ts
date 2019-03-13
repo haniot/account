@@ -4,13 +4,9 @@ interface IUserModel extends Mongoose.Document {
 }
 
 const userSchema = new Mongoose.Schema({
-        name: {
+        username: {
             type: String,
-            required: 'Name required!'
-        },
-        email: {
-            type: String,
-            required: 'Email required!',
+            required: 'Name required!',
             index: { unique: true }
         },
         password: {
@@ -18,10 +14,21 @@ const userSchema = new Mongoose.Schema({
             required: 'Password required!'
         },
         type: {
-            type: Number
+            type: String
         },
         change_password: {
             type: Boolean
+        },
+        email: { /* Common parameter between admin and health professional. */
+            type: String,
+            index: { unique: true },
+            required: 'Email required!'
+        }, /* Health Professional parameters*/
+        name: {
+            type: String
+        },
+        health_area: {
+            type: String
         }
     },
     {
@@ -31,8 +38,6 @@ const userSchema = new Mongoose.Schema({
                 ret.id = ret._id
                 delete ret._id
                 delete ret.__v
-                delete ret.password
-                delete ret.updatedAt
                 return ret
             }
         }
