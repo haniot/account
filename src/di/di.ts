@@ -39,6 +39,7 @@ import { IAdminService } from '../application/port/admin.service.interface'
 import { HealthProfessionalService } from '../application/service/health.professional.service'
 import { AdminService } from '../application/service/admin.service'
 import { AdminController } from '../ui/controllers/admin.controller'
+import { HealthProfessionalController } from '../ui/controllers/health.professional.controller'
 
 export class DI {
     private static instance: DI
@@ -89,6 +90,8 @@ export class DI {
         this.container.bind<AuthController>(Identifier.AUTH_CONTROLLER)
             .to(AuthController).inSingletonScope()
         this.container.bind<AdminController>(Identifier.ADMIN_CONTROLLER).to(AdminController).inSingletonScope()
+        this.container.bind<HealthProfessionalController>(Identifier.HEALTH_PROFESSIONAL_CONTROLLER)
+            .to(HealthProfessionalController).inSingletonScope()
 
         // Services
         this.container.bind<IUserService>(Identifier.USER_SERVICE).to(UserService).inSingletonScope()

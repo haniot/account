@@ -18,7 +18,11 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
     constructor() {
         super()
         super.type = UserType.HEALTH_PROFESSIONAL
-        super.scopes = []
+        super.scopes = [
+            'healthprofessional:delete',
+            'healthprofessional:read',
+            'healthprofessional:update'
+        ]
     }
 
     get email(): string | undefined {
@@ -52,10 +56,17 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
         }
 
         super.fromJSON(json)
+        if (json.email) this.email = json.email
+        if (json.name) this.name = json.name
+        if (json.health_area) this.health_area = json.health_area
+
         return this
     }
 
     public toJSON(): any {
-        return super.toJSON()
+        return {
+            ...super.toJSON(),
+            ...{ email: this.email, name: this.name, health_area: this.health_area }
+        }
     }
 }

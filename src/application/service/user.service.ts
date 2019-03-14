@@ -1,13 +1,10 @@
 import { inject, injectable } from 'inversify'
-import { User } from '../domain/model/user'
 import { IUserService } from '../port/user.service.interface'
 import { Identifier } from '../../di/identifiers'
 import { IUserRepository } from '../port/user.repository.interface'
-import { ConflictException } from '../domain/exception/conflict.exception'
-import { CreateUserValidator } from '../domain/validator/create.user.validator'
-import { IQuery } from '../port/query.interface'
-import { UpdateUserValidator } from '../domain/validator/update.user.validator'
 import { ChangePasswordValidator } from '../domain/validator/change.password.validator'
+import { IQuery } from '../port/query.interface'
+import { User } from '../domain/model/user'
 
 /**
  * Implementing User Service.
@@ -17,57 +14,6 @@ import { ChangePasswordValidator } from '../domain/validator/change.password.val
 @injectable()
 export class UserService implements IUserService {
     constructor(@inject(Identifier.USER_REPOSITORY) private readonly _userRepository: IUserRepository) {
-    }
-
-    /**
-     * Adds a new user.
-     * Before adding, it is checked whether the user already exists.
-     *
-     * @param {User} user
-     * @returns {(Promise<User>)}
-     * @throws {ConflictException | RepositoryException} If a data conflict occurs, as an existing user.
-     */
-    public async add(user: User): Promise<User> {
-        await CreateUserValidator.validate(user)
-        const userExist = await this._userRepository.checkExist(user)
-        if (userExist) throw new ConflictException('User already has an account...')
-        return this._userRepository.create(user)
-    }
-
-    /**
-     * Get the data of all users in the infrastructure.
-     *
-     * @param query Defines object to be used for queries.
-     * @return {Promise<Array<User>>}
-     * @throws {RepositoryException}
-     */
-    public async getAll(query: IQuery): Promise<Array<User>> {
-        return this._userRepository.find(query)
-    }
-
-    /**
-     * Get in infrastructure the user data.
-     *
-     * @param id Unique identifier.
-     * @param query Defines object to be used for queries.
-     * @return {Promise<User>}
-     * @throws {RepositoryException}
-     */
-    public async getById(id: string, query: IQuery): Promise<User> {
-        query.filters = { _id: id }
-        return this._userRepository.findOne(query)
-    }
-
-    /**
-     * Update user data.
-     *
-     * @param user - User containing the data to be updated
-     * @return {Promise<User>}
-     * @throws {ConflictException | RepositoryException}
-     */
-    public async update(user: User): Promise<User> {
-        await UpdateUserValidator.validate(user)
-        return this._userRepository.update(user)
     }
 
     /**
@@ -93,5 +39,21 @@ export class UserService implements IUserService {
     public async changePassword(id: string, old_password: string, new_password: string): Promise<boolean> {
         await ChangePasswordValidator.validate(old_password, new_password)
         return this._userRepository.changePassword(id, old_password, new_password)
+    }
+
+    public add(item: User): Promise<User> {
+        throw Error('Not implemented!')
+    }
+
+    public getAll(query: IQuery): Promise<Array<User>> {
+        throw Error('Not implemented!')
+    }
+
+    public getById(id: string, query: IQuery): Promise<User> {
+        throw Error('Not implemented!')
+    }
+
+    public update(item: User): Promise<User> {
+        throw Error('Not implemented!')
     }
 }

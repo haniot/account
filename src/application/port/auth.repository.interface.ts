@@ -20,5 +20,5 @@ export interface IAuthRepository {
      *
      * @param user
      */
-    generateAccessToken(user: User): object
+    generateAccessToken(user: User): string
 }

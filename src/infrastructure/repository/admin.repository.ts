@@ -22,9 +22,4 @@ export class AdminRepository extends BaseRepository<Admin, AdminEntity> implemen
         if (item.password) item.password = this._userRepository.encryptPassword(item.password)
         return super.create(item)
     }
-
-    public teste123(): string {
-        console.log('estou sendo chamado')
-        return 'texto'
-    }
 }

@@ -601,7 +601,7 @@ describe('Repositories: Users', () => {
                 .resolves(defaultUser)
 
 
-            return repo.checkExist(defaultUser)
+            return repo.checkExistByUsername(defaultUser)
                 .then((exists: Boolean) => {
                     assert.isBoolean(exists)
                     assert.isTrue(exists)
@@ -620,7 +620,7 @@ describe('Repositories: Users', () => {
                     .chain('exec')
                     .resolves(undefined)
 
-                return repo.checkExist(defaultUser)
+                return repo.checkExistByUsername(defaultUser)
                     .then((exists: Boolean) => {
                         assert.isBoolean(exists)
                         assert.isFalse(exists)
@@ -644,7 +644,7 @@ describe('Repositories: Users', () => {
                     .chain('exec')
                     .rejects({name: 'ObjectParameterError'})
 
-                return repo.checkExist(userWithInvalidMail)
+                return repo.checkExistByUsername(userWithInvalidMail)
                     .catch((err: any) => {
                         assert.isNotNull(err)
                         assert.equal(err.message, 'An internal error has occurred in the database!')

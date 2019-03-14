@@ -8,17 +8,27 @@ import { CreateAdminValidator } from '../domain/validator/create.admin.validator
 import { UserType } from '../domain/utils/user.type'
 import { ObjectIdValidator } from '../domain/validator/object.id.validator'
 import { UpdateAdminValidator } from '../domain/validator/update.admin.validator'
+import { IUserRepository } from '../port/user.repository.interface'
+import { ConflictException } from '../domain/exception/conflict.exception'
+import { Strings } from '../../utils/strings'
 
 @injectable()
 export class AdminService implements IAdminService {
     constructor(
-        @inject(Identifier.ADMIN_REPOSITORY) private readonly _adminRepository: IAdminRepository
+        @inject(Identifier.ADMIN_REPOSITORY) private readonly _adminRepository: IAdminRepository,
+        @inject(Identifier.USER_REPOSITORY) private readonly _userRepository: IUserRepository
     ) {
     }
 
-    public add(item: Admin): Promise<Admin> {
+    public async add(item: Admin): Promise<Admin> {
         try {
             CreateAdminValidator.validate(item)
+
+            const hasUsername = await this._userRepository.checkExist(item.username!)
+            if (hasUsername) throw new ConflictException(Strings.USER.USERNAME_ALREADY_REGISTERED)
+
+            const hasEmail = await this._userRepository.checkExist(undefined, item.email!)
+            if (hasEmail) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -50,9 +60,18 @@ export class AdminService implements IAdminService {
         return this._adminRepository.delete(id)
     }
 
-    public update(item: Admin): Promise<Admin> {
+    public async update(item: Admin): Promise<Admin> {
         try {
             UpdateAdminValidator.validate(item)
+
+            if (item.username) {
+                const hasUsername = await this._userRepository.checkExist(item.username)
+                if (hasUsername) throw new ConflictException(Strings.USER.USERNAME_ALREADY_REGISTERED)
+            }
+            if (item.email) {
+                const hasEmail = await this._userRepository.checkExist(undefined, item.email)
+                if (hasEmail) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
+            }
         } catch (err) {
             return Promise.reject(err)
         }

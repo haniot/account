@@ -46,6 +46,7 @@ export class RegisterDefaultAdminTask implements IBackgroundTask {
                 adminDefault.password = 'admin*123'
                 adminDefault.email = 'admin@haniot.com'
                 adminDefault.type = UserType.ADMIN
+                adminDefault.change_password = true
 
                 const user = await this._adminRepository.create(adminDefault)
                 if (!user) throw new RepositoryException('Default admin user not created')

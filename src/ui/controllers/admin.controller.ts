@@ -23,6 +23,7 @@ export class AdminController {
     public async addAdminUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const admin: Admin = new Admin().fromJSON(req.body)
+            admin.change_password = true
             const result: Admin = await this._adminService.add(admin)
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
         } catch (err) {
@@ -64,7 +65,7 @@ export class AdminController {
     public async updateAdminById(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const admin: Admin = new Admin().fromJSON(req.body)
-            admin.id = req.params.user_id
+            admin.id = req.params.admin_id
             const result: Admin = await this._adminService.update(admin)
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageAdminNotFound())
             return res.status(HttpStatus.OK).send(this.toJSONView(result))

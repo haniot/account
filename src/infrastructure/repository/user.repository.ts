@@ -5,11 +5,10 @@ import { IUserRepository } from '../../application/port/user.repository.interfac
 import { UserEntity } from '../entity/user.entity'
 import { IEntityMapper } from '../port/entity.mapper.interface'
 import { BaseRepository } from './base/base.repository'
-import { Query } from './query/query'
-import { IQuery } from '../../application/port/query.interface'
 import { ILogger } from '../../utils/custom.logger'
 import { ChangePasswordException } from '../../application/domain/exception/change.password.exception'
 import bcrypt from 'bcryptjs'
+import { Query } from './query/query'
 
 /**
  * Implementation of the user repository.
@@ -27,43 +26,21 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
     }
 
     /**
-     * Create a new user.
+     * Checks if an user already has a registration with username or email.
+     * What differs one user to another is your email and username.
      *
-     * @param user
-     * @return {Promise<User>} User, if the save was successful.
-     * @throws {ValidationException | RepositoryException}
-     * @override
-     */
-    public create(user: User): Promise<User> {
-        user.password = this.encryptPassword(user.password)
-        return super.create(user)
-    }
-
-    /**
-     * Retrieves the user by your email.
-     *
-     * @param e User email.
-     * @param query Defines object to be used for queries.
-     * @return {Promise<User>}
-     * @throws {RepositoryException}
-     */
-    public async getByUsername(user: string, query: IQuery): Promise<User> {
-        query.filters = { username: user }
-        return super.findOne(query)
-    }
-
-    /**
-     * Checks if an user already has a registration.
-     * What differs one user to another is your email.
-     *
-     * @param user
      * @return {Promise<boolean>} True if it exists or False, otherwise.
      * @throws {ValidationException | RepositoryException}
+     * @param _username
+     * @param _email
+     *
      */
-    public checkExist(user: User): Promise<boolean> {
+    public async checkExist(_username?: string, _email?: string): Promise<boolean> {
+        const query = new Query()
+        if (_username !== undefined) query.addFilter({ username: _username })
+        if (_email !== undefined) query.addFilter({ email: _email })
         return new Promise<boolean>((resolve, reject) => {
-            const username: any = user.username ? user.username : ''
-            this.getByUsername(username, new Query())
+            super.findOne(query)
                 .then((result: User) => {
                     if (result) return resolve(true)
                     return resolve(false)

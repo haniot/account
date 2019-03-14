@@ -14,6 +14,7 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
     private _password?: string // Password for user authentication.
     private _type?: string // Type of user. Can be Child, Educator, Health Professional or Family.
     private _scopes!: Array<string> // Scope that signal the types of access the user has.
+    private _change_password?: boolean
 
     constructor() {
         super()
@@ -51,6 +52,14 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
         this._scopes = value
     }
 
+    get change_password(): boolean | undefined {
+        return this._change_password
+    }
+
+    set change_password(value: boolean | undefined) {
+        this._change_password = value
+    }
+
     public addScope(scope: string): void {
         if (!this.scopes) this._scopes = []
         if (scope) this._scopes.push(scope)
@@ -80,7 +89,7 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
         return {
             id: super.id,
             username: this.username,
-            type: this.type,
+            type: this.type
         }
     }
 }

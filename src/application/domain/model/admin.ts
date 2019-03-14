@@ -10,7 +10,16 @@ export class Admin extends User implements IJSONSerializable, IJSONDeserializabl
     constructor() {
         super()
         super.type = UserType.ADMIN
-        super.scopes = []
+        super.scopes = [
+            'healthprofessional:create',
+            'healthprofessional:deleteAll',
+            'healthprofessional:readAll',
+            'healthprofessional:updateAll',
+            'admin:create',
+            'admin:deleteAll',
+            'admin:readAll',
+            'admin:updateAll'
+        ]
     }
 
     get email(): string | undefined {
@@ -26,12 +35,16 @@ export class Admin extends User implements IJSONSerializable, IJSONDeserializabl
         if (typeof json === 'string' && JsonUtils.isJsonString(json)) {
             json = JSON.parse(json)
         }
-
         super.fromJSON(json)
+        if (json.email !== undefined) this.email = json.email
+
         return this
     }
 
     public toJSON(): any {
-        return super.toJSON()
+        return {
+            ...super.toJSON(),
+            ...{ email: this.email }
+        }
     }
 }

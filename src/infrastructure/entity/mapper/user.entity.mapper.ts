@@ -29,6 +29,8 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
         if (item.password) result.password = item.password
         if (item.type) result.type = item.type
         if (item.scopes) result.scopes = item.scopes
+        if (item.change_password) result.change_password = item.change_password
+
         return result
     }
 

@@ -14,6 +14,8 @@ export abstract class Strings {
     }
 
     public static readonly USER: any = {
+        EMAIL_ALREADY_REGISTERED: 'A user with this email already registered!',
+        USERNAME_ALREADY_REGISTERED: 'A user with this username already registered!',
         NOT_FOUND: 'User not found!',
         NOT_FOUND_DESCRIPTION: 'User not found or already removed. A new operation for the same resource is not required.',
         PASSWORD_NOT_MATCH: 'Password does not match!',
@@ -21,16 +23,11 @@ export abstract class Strings {
     }
 
     public static readonly ADMIN: any = {
-        ALREADY_REGISTERED: 'Admin is already registered!',
-        CHILDREN_REGISTER_REQUIRED: 'It is necessary for children to be registered before proceeding.',
-        IDS_WITHOUT_REGISTER: 'The following IDs were verified without registration:',
         NOT_FOUND: 'Admin not found!',
         NOT_FOUND_DESCRIPTION: 'Admin not found or already removed. A new operation for the same resource is not required.',
-        ASSOCIATION_FAILURE: 'The association could not be performed because the child does not have a record.'
     }
 
     public static readonly HEALTH_PROFESSIONAL: any = {
-        ALREADY_REGISTERED: 'Health Professional is already registered!',
         NOT_FOUND: 'Health Professional not found!',
         NOT_FOUND_DESCRIPTION: 'Health Professional not found or already removed.' +
             ' A new operation for the same resource is not required.'

@@ -29,7 +29,8 @@ const userSchema = new Mongoose.Schema({
         },
         health_area: {
             type: String
-        }
+        },
+        scopes: [{ type: String }]
     },
     {
         timestamps: { createdAt: 'created_at', updatedAt: false },
