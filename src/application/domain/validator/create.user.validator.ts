@@ -10,7 +10,7 @@ export class CreateUserValidator {
 
         if (fields.length > 0) {
             throw new ValidationException('Required fields were not provided...',
-                'User validation failed: '.concat(fields.join(', ')).concat(' required!'))
+                'User validation: '.concat(fields.join(', ')).concat(' required!'))
         }
     }
 }

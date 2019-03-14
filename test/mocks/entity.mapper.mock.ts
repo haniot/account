@@ -1,6 +1,6 @@
 import { IEntityMapper } from '../../src/infrastructure/port/entity.mapper.interface'
 
-export class UserEntityMapperMock implements IEntityMapper<any, any> {
+export class EntityMapperMock implements IEntityMapper<any, any> {
 
     public transform(item: any): any {
         return item
