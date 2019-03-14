@@ -25,7 +25,7 @@ export class BackgroundService {
              * if there are registered admin users.
              */
             await new RegisterDefaultAdminTask(this._mongodb,
-                this.container.get(Identifier.USER_REPOSITORY),
+                this.container.get(Identifier.ADMIN_REPOSITORY),
                 this.container.get(Identifier.LOGGER)).run()
 
             /**

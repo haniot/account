@@ -15,10 +15,10 @@ import { IAdminRepository } from '../../application/port/admin.repository.interf
  * database. If there is no, a default user is created with the following
  * data:
  *
- * - name: admin
+ * - username: admin
  * - email: admin@haniot.com
- * - password: admin
- * - type: 1
+ * - password: admin*123
+ * - type: ADMIN
  */
 @injectable()
 export class RegisterDefaultAdminTask implements IBackgroundTask {
