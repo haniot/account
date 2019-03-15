@@ -1,0 +1,92 @@
+import { Entity } from './entity'
+import { IJSONSerializable } from '../utils/json.serializable.interface'
+import { IJSONDeserializable } from '../utils/json.deserializable.interface'
+import { JsonUtils } from '../utils/json.utils'
+import { HealthProfessional } from './health.professional'
+
+export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeserializable<PilotStudy> {
+    private _name?: string
+    private _is_active?: boolean
+    private _start?: string
+    private _end?: string
+    private _health_professionals_id?: Array<HealthProfessional>
+
+    constructor() {
+        super()
+    }
+
+    get name(): string | undefined {
+        return this._name
+    }
+
+    set name(value: string | undefined) {
+        this._name = value
+    }
+
+    get is_active(): boolean | undefined {
+        return this._is_active
+    }
+
+    set is_active(value: boolean | undefined) {
+        this._is_active = value
+    }
+
+    get start(): string | undefined {
+        return this._start
+    }
+
+    set start(value: string | undefined) {
+        this._start = value
+    }
+
+    get end(): string | undefined {
+        return this._end
+    }
+
+    set end(value: string | undefined) {
+        this._end = value
+    }
+
+    get health_professionals_id(): Array<HealthProfessional> | undefined {
+        return this._health_professionals_id
+    }
+
+    set health_professionals_id(value: Array<HealthProfessional> | undefined) {
+        this._health_professionals_id = value
+    }
+
+    public fromJSON(json: any): PilotStudy {
+        if (!json) return this
+        if (typeof json === 'string' && JsonUtils.isJsonString(json)) {
+            json = JSON.parse(json)
+        }
+
+        if (json.id) super.id = json.id
+        if (json.name) this.name = json.name
+        if (json.is_active) this.is_active = json.is_active
+        if (json.start) this.start = json.start
+        if (json.end) this.end = json.end
+        if (json.health_professionals_id && json.health_professionals_id instanceof Array)
+            this.health_professionals_id = json.health_professionals_id
+
+        return this
+    }
+
+    public toJSON(): any {
+        return {
+            id: super.id,
+            name: this.name,
+            is_active: this.is_active,
+            start: this.start,
+            end: this.end,
+            health_professionals_id:
+                this.health_professionals_id ?
+                    this.health_professionals_id.map(healthProfessional => {
+                        healthProfessional.toJSON()
+                        healthProfessional.type = undefined
+                        return healthProfessional
+                    }) :
+                    this.health_professionals_id
+        }
+    }
+}
