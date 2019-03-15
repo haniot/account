@@ -18,14 +18,4 @@ export interface IUserService extends IService<User> {
      * @throws {ValidationException | RepositoryException}
      */
     changePassword(id: string, old_password: string, new_password: string): Promise<boolean>
-
-    /**
-     * Authenticate the user.
-     *
-     * @param email
-     * @param password
-     * @return {Promise<object>}
-     * @throws {ValidationException | RepositoryException}
-     */
-    authenticate(email: string, password: string): Promise<object>
 }

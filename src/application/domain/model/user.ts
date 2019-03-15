@@ -1,124 +1,95 @@
 import { Entity } from './entity'
-import { ISerializable } from '../utils/serializable.interface'
+import { JsonUtils } from '../utils/json.utils'
+import { IJSONSerializable } from '../utils/json.serializable.interface'
+import { IJSONDeserializable } from '../utils/json.deserializable.interface'
 
 /**
  * Implementation of the user entity.
  *
  * @extends {Entity}
- * @implements {ISerializable<User>}
+ * @implements {IJSONSerializable, IJSONDeserializable<User>}
  */
-export class User extends Entity implements ISerializable<User> {
-    private name?: string
-    private email?: string
-    private password?: string
-    private type?: number
-    private created_at?: Date
-    private change_password?: boolean
+export class User extends Entity implements IJSONSerializable, IJSONDeserializable<User> {
+    private _username?: string // Username for user authentication.
+    private _password?: string // Password for user authentication.
+    private _type?: string // Type of user. Can be Child, Educator, Health Professional or Family.
+    private _scopes!: Array<string> // Scope that signal the types of access the user has.
+    private _change_password?: boolean
 
-    constructor(name?: string, email?: string, password?: string, type?: number, change_password?: boolean, id?: string) {
-        super(id)
-        this.setName(name)
-        this.setEmail(email)
-        this.setPassword(password)
-        this.setType(type)
-        this.setChangePassword(change_password)
+    constructor() {
+        super()
     }
 
-    public getName(): string | undefined {
-        return this.name
+    get username(): string | undefined {
+        return this._username
     }
 
-    public setName(value: string | undefined) {
-        this.name = value
+    set username(value: string | undefined) {
+        this._username = value
     }
 
-    public getEmail(): string | undefined {
-        return this.email
+    get password(): string | undefined {
+        return this._password
     }
 
-    public setEmail(value: string | undefined) {
-        this.email = value
+    set password(value: string | undefined) {
+        this._password = value
     }
 
-    public getPassword(): string | undefined {
-        return this.password
+    get type(): string | undefined {
+        return this._type
     }
 
-    public setPassword(value: string | undefined) {
-        this.password = value
+    set type(value: string | undefined) {
+        this._type = value
     }
 
-    public getType(): number | undefined {
-        return this.type
+    get scopes(): Array<string> {
+        return this._scopes
     }
 
-    public setType(value: number | undefined) {
-        this.type = value
+    set scopes(value: Array<string>) {
+        this._scopes = value
     }
 
-    /**
-     * Get registration date.
-     *
-     * @remarks Date in ISO 8601 format.
-     */
-    public getCreatedAt(): Date | undefined {
-        return this.created_at
+    get change_password(): boolean | undefined {
+        return this._change_password
     }
 
-    public setCreatedAt(value: Date | undefined) {
-        this.created_at = value
+    set change_password(value: boolean | undefined) {
+        this._change_password = value
     }
 
-    public getChangePassword(): boolean | undefined {
-        return this.change_password
+    public addScope(scope: string): void {
+        if (!this.scopes) this._scopes = []
+        if (scope) this._scopes.push(scope)
     }
 
-    public setChangePassword(value: boolean | undefined) {
-        this.change_password = value
-    }
-
-    /**
-     * Called as default when the object
-     * is displayed in console.log()
-     */
-    public toJSON(): string {
-        return this.serialize()
-    }
-
-    /**
-     * Convert this object to json.
-     *
-     * @returns {object}
-     */
-    public serialize(): any {
-        return {
-            id: super.getId(),
-            name: this.name,
-            email: this.email,
-            password: this.password,
-            type: this.type,
-            created_at: this.created_at ? this.created_at.toISOString() : this.created_at,
-            change_password: this.change_password
+    public removeScope(scope: string): void {
+        if (scope) {
+            this.scopes = this.scopes.filter(item => item !== scope)
         }
     }
 
-    /**
-     * Transform JSON into User object.
-     *
-     * @param json
-     */
-    public deserialize(json: any): User {
+    public fromJSON(json: any): User {
         if (!json) return this
-        if (typeof json === 'string') json = JSON.parse(json)
+        if (typeof json === 'string' && JsonUtils.isJsonString(json)) {
+            json = JSON.parse(json)
+        }
 
-        if (json.id) this.setId(json.id)
-        if (json.name) this.setName(json.name)
-        if (json.email) this.setEmail(json.email)
-        if (json.password) this.setPassword(json.password)
-        if (json.type) this.setType(json.type)
-        if (json.created_at) this.setCreatedAt(new Date(json.created_at))
-        if (json.change_password !== undefined) this.setChangePassword(json.change_password)
+        if (json.id !== undefined) super.id = json.id
+        if (json.username !== undefined) this.username = json.username
+        if (json.password !== undefined) this.password = json.password
+        if (json.scope !== undefined) this.scopes = json.scope
 
         return this
+    }
+
+    public toJSON(): any {
+        return {
+            id: super.id,
+            username: this.username,
+            type: this.type
+        }
     }
 }

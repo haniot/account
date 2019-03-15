@@ -1,5 +1,4 @@
 import 'reflect-metadata'
-import yaml from 'yamljs'
 import morgan from 'morgan'
 import helmet from 'helmet'
 import bodyParser from 'body-parser'
@@ -9,7 +8,7 @@ import qs from 'query-strings-parser'
 import express, { Application, Request, Response } from 'express'
 import { Container, inject, injectable } from 'inversify'
 import { InversifyExpressServer } from 'inversify-express-utils'
-import { ApiException } from './ui/exceptions/api.exception'
+import { ApiException } from './ui/exception/api.exception'
 import { Default } from './utils/default'
 import { DI } from './di/di'
 import { Identifier } from './di/identifiers'
@@ -61,7 +60,7 @@ export class App {
      */
     private middleware(): void {
         const inversifyExpress: InversifyExpressServer = new InversifyExpressServer(
-            this.container, null, { rootPath: '/api/v1' })
+            this.container, null, { rootPath: '/' })
 
         inversifyExpress.setConfig((app) => {
             // for handling query strings
@@ -83,20 +82,30 @@ export class App {
                     stream: { write: (str: string) => this._logger.info(str) }
                 }
             ))
-
-            // Middleware swagger. It should not run in the test environment.
-            if ((process.env.NODE_ENV || Default.NODE_ENV) !== 'test') {
-                const options = {
-                    customCss: '.swagger-ui .topbar { display: none }',
-                    customfavIcon: 'http://nutes.uepb.edu.br/wp-content/uploads/2014/01/icon.fw_.png',
-                    customSiteTitle: `API Reference | ${Default.APP_TITLE}`
-                }
-
-                app.use('/api/v1/reference', swaggerUi.serve, swaggerUi.setup(yaml.load(Default.SWAGGER_PATH), options))
-            }
         })
+
         this.express = inversifyExpress.build()
+        this.setupSwaggerUI()
         this.handleError()
+    }
+
+    /**
+     * Setup swagger ui.
+     *
+     * @private
+     * @return Promise<void>
+     */
+    private setupSwaggerUI(): void {
+        // Middleware swagger. It should not run in the test environment.
+        if ((process.env.NODE_ENV || Default.NODE_ENV) !== 'test') {
+            const options = {
+                swaggerUrl: Default.SWAGGER_URI,
+                customCss: '.swagger-ui .topbar { display: none }',
+                customfavIcon: Default.LOGO_URI,
+                customSiteTitle: `API Reference | HANIoT Account Service`
+            }
+            this.express.use('/reference', swaggerUi.serve, swaggerUi.setup(null, options))
+        }
     }
 
     /**

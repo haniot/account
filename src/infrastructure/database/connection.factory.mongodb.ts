@@ -4,17 +4,20 @@ import { IConnectionFactory } from '../port/connection.factory.interface'
 import { Default } from '../../utils/default'
 
 @injectable()
-export class MongoDBConnectionFactory implements IConnectionFactory {
-    private readonly options: object = {
+export class ConnectionFactoryMongodb implements IConnectionFactory {
+    private readonly options = {
         useNewUrlParser: true,
         useCreateIndex: true,
         useFindAndModify: false,
         bufferMaxEntries: 0,
-        reconnectTries: this.getRetryCount(),
-        reconnectInterval: this.getRetryInterval()
+        reconnectTries: Number.MAX_SAFE_INTEGER,
+        reconnectInterval: 1500
     }
 
-    public createConnection(): Promise<Connection> {
+    public createConnection(retries: number, interval: number): Promise<Connection> {
+        this.options.reconnectTries = (retries === 0) ? Number.MAX_SAFE_INTEGER : retries
+        this.options.reconnectInterval = interval
+
         return new Promise<Connection>((resolve, reject) => {
             mongoose.connect(this.getDBUri(), this.options)
                 .then((result: Mongoose) => resolve(result.connection))
@@ -32,24 +35,5 @@ export class MongoDBConnectionFactory implements IConnectionFactory {
             return process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST
         }
         return process.env.MONGODB_URI || Default.MONGODB_URI
-    }
-
-    /**
-     * Retrieve the number of retries to reconnect.
-     *
-     * @return {number}
-     */
-    private getRetryCount(): number {
-        const retryCount = Number(process.env.MONGODB_CON_RETRY_COUNT) || Default.MONGODB_CON_RETRY_COUNT
-        return (retryCount === 0) ? Number.MAX_SAFE_INTEGER : retryCount
-    }
-
-    /**
-     * Retrieve the time interval in ms for a new attempt to reconnect.
-     *
-     * @return {number}
-     */
-    private getRetryInterval(): number {
-        return Number(process.env.MONGODB_CON_RETRY_INTERVAL) || Default.MONGODB_CON_RETRY_INTERVAL
     }
 }

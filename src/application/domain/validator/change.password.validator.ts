@@ -8,7 +8,7 @@ export class ChangePasswordValidator {
         if (!new_password) fields.push('new_password')
         if (fields.length > 0) {
             throw new ValidationException('Required fields were not provided...',
-                'Change password validation failed: '.concat(fields.join(', ')).concat(' required!'))
+                'Change password validation: '.concat(fields.join(', ')).concat(' required!'))
         }
     }
 }

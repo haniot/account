@@ -1,5 +1,4 @@
 import { IRepository } from './repository.interface'
-import { IQuery } from './query.interface'
 import { User } from '../domain/model/user'
 
 /**
@@ -11,24 +10,15 @@ import { User } from '../domain/model/user'
  */
 export interface IUserRepository extends IRepository<User> {
     /**
-     * Retrieves the user by your email.
+     * Checks if an user already has a registration with username or email.
+     * What differs one user to another is your email and username.
      *
-     * @param email User email.
-     * @param query Defines object to be used for queries.
-     * @return {Promise<User>}
-     * @throws {RepositoryException}
-     */
-    getByEmail(email: string | number, query: IQuery): Promise<User>
-
-    /**
-     * Checks if an user already has a registration.
-     * What differs one user to another is your email.
+     * @param username
      *
-     * @param user
      * @return {Promise<boolean>} True if it exists or False, otherwise.
      * @throws {ValidationException | RepositoryException}
      */
-    checkExist(user: User): Promise<boolean>
+    checkExist(username?: string, email?: string): Promise<boolean>
 
     /**
      * Change the user password.
@@ -52,27 +42,9 @@ export interface IUserRepository extends IRepository<User> {
     /**
      * Compare if two passwords match.,
      *
-     * @param password1
-     * @param password2
+     * @param password_one
+     * @param password_two
      * @return True if the passwords matches, false otherwise.
      */
     comparePasswords(password_one: string, password_two: string): boolean
-
-    /**
-     * Authenticate a user.
-     *
-     * @param email
-     * @param password
-     * @return {Promise<boolean>} True if the password was changed or False, otherwise.
-     * @throws {ValidationException | RepositoryException}
-     */
-    authenticate(email: string, password: string): Promise<object>
-
-    /**
-     * Generate a token by user data.
-     *
-     * @param user
-     * @return {token} The generated token.
-     */
-    generateToken(user: any): object
 }

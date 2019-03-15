@@ -6,19 +6,40 @@ import { UserController } from '../ui/controllers/user.controller'
 import { IUserService } from '../application/port/user.service.interface'
 import { UserService } from '../application/service/user.service'
 import { IUserRepository } from '../application/port/user.repository.interface'
-import { UserRepository } from '../infrastructure/repository/user.repository'
 import { UserEntity } from '../infrastructure/entity/user.entity'
 import { UserRepoModel } from '../infrastructure/database/schema/user.schema'
 import { UserEntityMapper } from '../infrastructure/entity/mapper/user.entity.mapper'
-import { IEntityMapper } from '../infrastructure/entity/mapper/entity.mapper.interface'
 import { User } from '../application/domain/model/user'
-import { MongoDBConnectionFactory } from '../infrastructure/database/mongodb.connection.factory'
-import { MongoDBConnection } from '../infrastructure/database/mongodb.connection'
-import { IDBConnection } from '../infrastructure/port/db.connection.interface'
+import { ConnectionFactoryMongodb } from '../infrastructure/database/connection.factory.mongodb'
+import { ConnectionMongodb } from '../infrastructure/database/connection.mongodb'
+import { IConnectionDB } from '../infrastructure/port/connection.db.interface'
 import { IConnectionFactory } from '../infrastructure/port/connection.factory.interface'
 import { BackgroundService } from '../background/background.service'
 import { App } from '../app'
 import { CustomLogger, ILogger } from '../utils/custom.logger'
+import { AuthController } from '../ui/controllers/auth.controller'
+import { IAuthService } from '../application/port/auth.service.interface'
+import { AuthService } from '../application/service/auth.service'
+import { IAuthRepository } from '../application/port/auth.repository.interface'
+import { AuthRepository } from '../infrastructure/repository/auth.repository'
+import { HealthProfessional } from '../application/domain/model/health.professional'
+import { HealthProfessionalEntity } from '../infrastructure/entity/health.professional.entity'
+import { HealthProfessionalEntityMapper } from '../infrastructure/entity/mapper/health.professional.entity.mapper'
+import { IEntityMapper } from '../infrastructure/port/entity.mapper.interface'
+import { IHealthProfessionalRepository } from '../application/port/health.professional.repository.interface'
+import { HealthProfessionalRepository } from '../infrastructure/repository/health.professional.repository'
+import { IAdminRepository } from '../application/port/admin.repository.interface'
+import { AdminRepository } from '../infrastructure/repository/admin.repository'
+import { UserRepository } from '../infrastructure/repository/user.repository'
+import { AdminEntity } from '../infrastructure/entity/admin.entity'
+import { Admin } from '../application/domain/model/admin'
+import { AdminEntityMapper } from '../infrastructure/entity/mapper/admin.entity.mapper'
+import { IHealthProfessionalService } from '../application/port/health.professional.service.interface'
+import { IAdminService } from '../application/port/admin.service.interface'
+import { HealthProfessionalService } from '../application/service/health.professional.service'
+import { AdminService } from '../application/service/admin.service'
+import { AdminController } from '../ui/controllers/admin.controller'
+import { HealthProfessionalController } from '../ui/controllers/health.professional.controller'
 
 export class DI {
     private static instance: DI
@@ -66,30 +87,53 @@ export class DI {
         // Controllers
         this.container.bind<HomeController>(Identifier.HOME_CONTROLLER).to(HomeController).inSingletonScope()
         this.container.bind<UserController>(Identifier.USER_CONTROLLER).to(UserController).inSingletonScope()
+        this.container.bind<AuthController>(Identifier.AUTH_CONTROLLER)
+            .to(AuthController).inSingletonScope()
+        this.container.bind<AdminController>(Identifier.ADMIN_CONTROLLER).to(AdminController).inSingletonScope()
+        this.container.bind<HealthProfessionalController>(Identifier.HEALTH_PROFESSIONAL_CONTROLLER)
+            .to(HealthProfessionalController).inSingletonScope()
 
         // Services
         this.container.bind<IUserService>(Identifier.USER_SERVICE).to(UserService).inSingletonScope()
+        this.container.bind<IAuthService>(Identifier.AUTH_SERVICE)
+            .to(AuthService).inSingletonScope()
+        this.container.bind<IHealthProfessionalService>(Identifier.HEALTH_PROFESSIONAL_SERVICE)
+            .to(HealthProfessionalService).inSingletonScope()
+        this.container.bind<IAdminService>(Identifier.ADMIN_SERVICE)
+            .to(AdminService).inSingletonScope()
 
         // Repositories
         this.container
             .bind<IUserRepository>(Identifier.USER_REPOSITORY)
             .to(UserRepository).inSingletonScope()
+        this.container.bind<IAuthRepository>(Identifier.AUTH_REPOSITORY)
+            .to(AuthRepository).inSingletonScope()
+        this.container.bind<IHealthProfessionalRepository>(Identifier.HEALTH_PROFESSIONAL_REPOSITORY)
+            .to(HealthProfessionalRepository).inSingletonScope()
+        this.container.bind<IAdminRepository>(Identifier.ADMIN_REPOSITORY)
+            .to(AdminRepository).inSingletonScope()
+
         // Models
-        this.container.bind(Identifier.USER_ENTITY).toConstantValue(UserEntity)
         this.container.bind(Identifier.USER_REPO_MODEL).toConstantValue(UserRepoModel)
 
         // Mappers
         this.container
             .bind<IEntityMapper<User, UserEntity>>(Identifier.USER_ENTITY_MAPPER)
             .to(UserEntityMapper).inSingletonScope()
+        this.container
+            .bind<IEntityMapper<HealthProfessional, HealthProfessionalEntity>>(Identifier.HEALTH_PROFESSIONAL_ENTITY_MAPPER)
+            .to(HealthProfessionalEntityMapper).inSingletonScope()
+        this.container
+            .bind<IEntityMapper<Admin, AdminEntity>>(Identifier.ADMIN_ENTITY_MAPPER)
+            .to(AdminEntityMapper).inSingletonScope()
 
         // Background Services
         this.container
             .bind<IConnectionFactory>(Identifier.MONGODB_CONNECTION_FACTORY)
-            .to(MongoDBConnectionFactory).inSingletonScope()
+            .to(ConnectionFactoryMongodb).inSingletonScope()
         this.container
-            .bind<IDBConnection>(Identifier.MONGODB_CONNECTION)
-            .to(MongoDBConnection).inSingletonScope()
+            .bind<IConnectionDB>(Identifier.MONGODB_CONNECTION)
+            .to(ConnectionMongodb).inSingletonScope()
         this.container
             .bind(Identifier.BACKGROUND_SERVICE)
             .to(BackgroundService).inSingletonScope()

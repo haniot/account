@@ -1,4 +1,7 @@
-export class UserType {
-    public static readonly ADMIN = 1
-    public static readonly CAREGIVER = 2
+/**
+ * Names of user types supported.
+ */
+export enum UserType {
+    ADMIN = 'ADMIN',
+    HEALTH_PROFESSIONAL = 'HEALTH_PROFESSIONAL',
 }
