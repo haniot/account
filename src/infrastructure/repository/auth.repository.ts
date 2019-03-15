@@ -32,6 +32,7 @@ export class AuthRepository implements IAuthRepository {
     public authenticate(_email: string, password: string): Promise<object> {
         return new Promise<object>((resolve, reject) => {
             this.userModel.findOne({ email: _email })
+                .exec()
                 .then(user => {
                     /* Validate password and generate access token*/
                     if (!user || !user.password) {
@@ -45,7 +46,7 @@ export class AuthRepository implements IAuthRepository {
                         return reject(
                             new ChangePasswordException(
                                 'Change password is necessary.',
-                                `To ensure information security, the user must change the access password.` +
+                                `To ensure information security, the user must change the access password. ` +
                                 `To change it, access PATCH /users/${user._id}/password.`,
                                 `/users/${user._id}/password`))
                     }
@@ -68,6 +69,6 @@ export class AuthRepository implements IAuthRepository {
         }
 
         const secret: string = process.env.JWT_SECRET || Default.JWT_SECRET
-        return  jwt.sign(payload, secret)
+        return jwt.sign(payload, secret)
     }
 }

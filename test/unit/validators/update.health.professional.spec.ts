@@ -1,20 +1,32 @@
 import { assert } from 'chai'
-import { ObjectID } from 'bson'
 import { UpdateHealthProfessionalValidator } from '../../../src/application/domain/validator/update.health.professional.validator'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
 import { HealthAreaTypes } from '../../../src/application/domain/utils/health.area.types'
+import { DefaultUsersMock } from '../../mocks/default.users.mock'
 
 describe('Validators: UpdateHealthProfessionalValidator', () => {
-    const user: HealthProfessional = new HealthProfessional()
-    user.id = `${new ObjectID()}`
-    user.username = 'admin'
-    user.email = 'admin@mail.com'
-    user.health_area = HealthAreaTypes.NUTRITION
+    const user: HealthProfessional = new HealthProfessional().fromJSON(DefaultUsersMock.HEALTH_PROFESSIONAL)
+    user.password = undefined
 
     it('should return undefined when the validation was successful', () => {
-
         const result = UpdateHealthProfessionalValidator.validate(user)
         assert.equal(result, undefined)
+    })
+
+    context('when does not update email', () => {
+        it('should return undefined when the validation was successful', () => {
+            user.email = undefined
+            const result = UpdateHealthProfessionalValidator.validate(user)
+            assert.equal(result, undefined)
+        })
+    })
+
+    context('when does not update health_area', () => {
+        it('should return undefined when the validation was successful', () => {
+            user.health_area = undefined
+            const result = UpdateHealthProfessionalValidator.validate(user)
+            assert.equal(result, undefined)
+        })
     })
 
     context('when the user parameters was invalid', () => {

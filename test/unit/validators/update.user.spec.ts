@@ -1,12 +1,11 @@
 import { assert } from 'chai'
-import { ObjectID } from 'bson'
 import { User } from '../../../src/application/domain/model/user'
 import { UpdateUserValidator } from '../../../src/application/domain/validator/update.user.validator'
+import { DefaultUsersMock } from '../../mocks/default.users.mock'
 
 describe('Validators: UpdateUserValidator', () => {
-    const user: User = new User()
-    user.id = `${new ObjectID()}`
-    user.username = 'user'
+    const user: User = new User().fromJSON(DefaultUsersMock.USER)
+    user.password = undefined
 
     it('should return undefined when the validation was successful', () => {
         const result = UpdateUserValidator.validate(user)

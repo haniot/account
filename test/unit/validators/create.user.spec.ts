@@ -2,14 +2,12 @@ import { assert } from 'chai'
 import { Admin } from '../../../src/application/domain/model/admin'
 import { User } from '../../../src/application/domain/model/user'
 import { CreateUserValidator } from '../../../src/application/domain/validator/create.user.validator'
+import { DefaultUsersMock } from '../../mocks/default.users.mock'
 
 describe('Validators: CreateUserValidator', () => {
-    const user: User = new User()
-    user.username = 'user'
-    user.password = 'user123'
+    const user: User = new User().fromJSON(DefaultUsersMock.USER)
 
     it('should return undefined when the validation was successful', () => {
-
         const result = CreateUserValidator.validate(user)
         assert.equal(result, undefined)
     })

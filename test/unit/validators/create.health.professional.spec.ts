@@ -2,17 +2,12 @@ import { assert } from 'chai'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
 import { CreateHealthProfessionalValidator } from '../../../src/application/domain/validator/create.health.professional.validator'
 import { HealthAreaTypes } from '../../../src/application/domain/utils/health.area.types'
+import { DefaultUsersMock } from '../../mocks/default.users.mock'
 
 describe('Validators: CreateHealthProfessionalValidator', () => {
-    const user: HealthProfessional = new HealthProfessional()
-    user.username = 'health'
-    user.password = 'health123'
-    user.email = 'health@mail.com'
-    user.name = 'health pro'
-    user.health_area = HealthAreaTypes.NUTRITION
+    const user: HealthProfessional = new HealthProfessional().fromJSON(DefaultUsersMock.HEALTH_PROFESSIONAL)
 
     it('should return undefined when the validation was successful', () => {
-
         const result = CreateHealthProfessionalValidator.validate(user)
         assert.equal(result, undefined)
     })

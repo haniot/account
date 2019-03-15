@@ -1,15 +1,12 @@
 import { assert } from 'chai'
 import { Admin } from '../../../src/application/domain/model/admin'
 import { CreateAdminValidator } from '../../../src/application/domain/validator/create.admin.validator'
+import { DefaultUsersMock } from '../../mocks/default.users.mock'
 
 describe('Validators: CreateAdminValidator', () => {
-    const user: Admin = new Admin()
-    user.username = 'admin'
-    user.password = 'admin123'
-    user.email = 'admin@mail.com'
+    const user: Admin = new Admin().fromJSON(DefaultUsersMock.ADMIN)
 
     it('should return undefined when the validation was successful', () => {
-
         const result = CreateAdminValidator.validate(user)
         assert.equal(result, undefined)
     })

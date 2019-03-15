@@ -1,18 +1,23 @@
 import { assert } from 'chai'
 import { Admin } from '../../../src/application/domain/model/admin'
 import { UpdateAdminValidator } from '../../../src/application/domain/validator/update.admin.validator'
-import { ObjectID } from 'bson'
+import { DefaultUsersMock } from '../../mocks/default.users.mock'
 
 describe('Validators: UpdateAdminValidator', () => {
-    const user: Admin = new Admin()
-    user.id = `${new ObjectID()}`
-    user.username = 'admin'
-    user.email = 'admin@mail.com'
+    const user: Admin = new Admin().fromJSON(DefaultUsersMock.ADMIN)
+    user.password = undefined
 
     it('should return undefined when the validation was successful', () => {
-
         const result = UpdateAdminValidator.validate(user)
         assert.equal(result, undefined)
+    })
+
+    context('when does not update email', () => {
+        it('should return undefined when the validation was successful', () => {
+            user.email = undefined
+            const result = UpdateAdminValidator.validate(user)
+            assert.equal(result, undefined)
+        })
     })
 
     context('when the user parameters was invalid', () => {
