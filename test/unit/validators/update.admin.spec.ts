@@ -1,10 +1,10 @@
 import { assert } from 'chai'
 import { Admin } from '../../../src/application/domain/model/admin'
 import { UpdateAdminValidator } from '../../../src/application/domain/validator/update.admin.validator'
-import { DefaultUsersMock } from '../../mocks/default.users.mock'
+import { DefaultEntityMock } from '../../mocks/default.entity.mock'
 
 describe('Validators: UpdateAdminValidator', () => {
-    const user: Admin = new Admin().fromJSON(DefaultUsersMock.ADMIN)
+    const user: Admin = new Admin().fromJSON(DefaultEntityMock.ADMIN)
     user.password = undefined
 
     it('should return undefined when the validation was successful', () => {

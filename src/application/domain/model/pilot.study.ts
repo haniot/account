@@ -7,8 +7,8 @@ import { HealthProfessional } from './health.professional'
 export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeserializable<PilotStudy> {
     private _name?: string
     private _is_active?: boolean
-    private _start?: string
-    private _end?: string
+    private _start?: Date
+    private _end?: Date
     private _health_professionals_id?: Array<HealthProfessional>
 
     constructor() {
@@ -31,19 +31,19 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
         this._is_active = value
     }
 
-    get start(): string | undefined {
+    get start(): Date | undefined {
         return this._start
     }
 
-    set start(value: string | undefined) {
+    set start(value: Date | undefined) {
         this._start = value
     }
 
-    get end(): string | undefined {
+    get end(): Date | undefined {
         return this._end
     }
 
-    set end(value: string | undefined) {
+    set end(value: Date | undefined) {
         this._end = value
     }
 
@@ -55,10 +55,27 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
         this._health_professionals_id = value
     }
 
+    public addHealthProfessional(healthProfessional: HealthProfessional) {
+        if (!this.health_professionals_id) this.health_professionals_id = []
+        this.health_professionals_id.push(healthProfessional)
+        this.health_professionals_id = this.removeRepeatHealthProfessional(this.health_professionals_id)
+    }
+
+    public removeRepeatHealthProfessional(healthProfessionals: Array<HealthProfessional>) {
+        return healthProfessionals.filter((obj, pos, arr) => {
+            return arr.map(group => group.id).indexOf(obj.id) === pos
+        })
+    }
+
     public fromJSON(json: any): PilotStudy {
         if (!json) return this
-        if (typeof json === 'string' && JsonUtils.isJsonString(json)) {
-            json = JSON.parse(json)
+        if (typeof json === 'string') {
+            if (!JsonUtils.isJsonString(json)) {
+                super.id = json
+                return this
+            } else {
+                json = JSON.parse(json)
+            }
         }
 
         if (json.id) super.id = json.id
@@ -67,8 +84,8 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
         if (json.start) this.start = json.start
         if (json.end) this.end = json.end
         if (json.health_professionals_id && json.health_professionals_id instanceof Array)
-            this.health_professionals_id = json.health_professionals_id
-
+            this.health_professionals_id =
+                json.health_professionals_id.map(id => new HealthProfessional().fromJSON(id))
         return this
     }
 

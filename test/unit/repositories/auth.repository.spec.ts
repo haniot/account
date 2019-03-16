@@ -6,14 +6,14 @@ import { EntityMapperMock } from '../../mocks/entity.mapper.mock'
 import { UserRepositoryMock } from '../../mocks/user.repository.mock'
 import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
 import { Admin } from '../../../src/application/domain/model/admin'
-import { DefaultUsersMock } from '../../mocks/default.users.mock'
+import { DefaultEntityMock } from '../../mocks/default.entity.mock'
 
 require('sinon-mongoose')
 
 describe('Repositories: AuthRepository', () => {
     const modelFake: any = UserRepoModel
     const repo = new AuthRepository(modelFake, new EntityMapperMock(), new UserRepositoryMock(), new CustomLoggerMock())
-    const user: Admin = new Admin().fromJSON(DefaultUsersMock.ADMIN)
+    const user: Admin = new Admin().fromJSON(DefaultEntityMock.ADMIN)
 
     afterEach(() => {
         sinon.restore()

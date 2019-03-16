@@ -2,10 +2,10 @@ import { assert } from 'chai'
 import { Admin } from '../../../src/application/domain/model/admin'
 import { User } from '../../../src/application/domain/model/user'
 import { CreateUserValidator } from '../../../src/application/domain/validator/create.user.validator'
-import { DefaultUsersMock } from '../../mocks/default.users.mock'
+import { DefaultEntityMock } from '../../mocks/default.entity.mock'
 
 describe('Validators: CreateUserValidator', () => {
-    const user: User = new User().fromJSON(DefaultUsersMock.USER)
+    const user: User = new User().fromJSON(DefaultEntityMock.USER)
 
     it('should return undefined when the validation was successful', () => {
         const result = CreateUserValidator.validate(user)

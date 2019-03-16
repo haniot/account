@@ -2,10 +2,10 @@ import { assert } from 'chai'
 import { UpdateHealthProfessionalValidator } from '../../../src/application/domain/validator/update.health.professional.validator'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
 import { HealthAreaTypes } from '../../../src/application/domain/utils/health.area.types'
-import { DefaultUsersMock } from '../../mocks/default.users.mock'
+import { DefaultEntityMock } from '../../mocks/default.entity.mock'
 
 describe('Validators: UpdateHealthProfessionalValidator', () => {
-    const user: HealthProfessional = new HealthProfessional().fromJSON(DefaultUsersMock.HEALTH_PROFESSIONAL)
+    const user: HealthProfessional = new HealthProfessional().fromJSON(DefaultEntityMock.HEALTH_PROFESSIONAL)
     user.password = undefined
 
     it('should return undefined when the validation was successful', () => {

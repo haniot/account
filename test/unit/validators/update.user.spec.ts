@@ -1,10 +1,10 @@
 import { assert } from 'chai'
 import { User } from '../../../src/application/domain/model/user'
 import { UpdateUserValidator } from '../../../src/application/domain/validator/update.user.validator'
-import { DefaultUsersMock } from '../../mocks/default.users.mock'
+import { DefaultEntityMock } from '../../mocks/default.entity.mock'
 
 describe('Validators: UpdateUserValidator', () => {
-    const user: User = new User().fromJSON(DefaultUsersMock.USER)
+    const user: User = new User().fromJSON(DefaultEntityMock.USER)
     user.password = undefined
 
     it('should return undefined when the validation was successful', () => {

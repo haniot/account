@@ -3,7 +3,7 @@ import sinon from 'sinon'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { EntityMapperMock } from '../../mocks/entity.mapper.mock'
 import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
-import { DefaultUsersMock } from '../../mocks/default.users.mock'
+import { DefaultEntityMock } from '../../mocks/default.entity.mock'
 import { UserRepositoryMock } from '../../mocks/user.repository.mock'
 import { HealthProfessionalRepository } from '../../../src/infrastructure/repository/health.professional.repository'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
@@ -14,7 +14,7 @@ describe('Repositories: HealthProfessionalRepository', () => {
     const modelFake: any = UserRepoModel
     const repo =
         new HealthProfessionalRepository(modelFake, new EntityMapperMock(), new UserRepositoryMock(), new CustomLoggerMock())
-    const user: HealthProfessional = new HealthProfessional().fromJSON(DefaultUsersMock.HEALTH_PROFESSIONAL)
+    const user: HealthProfessional = new HealthProfessional().fromJSON(DefaultEntityMock.HEALTH_PROFESSIONAL)
 
     afterEach(() => {
         sinon.restore()

@@ -4,7 +4,7 @@ import { UserRepository } from '../../../src/infrastructure/repository/user.repo
 import { EntityMapperMock } from '../../mocks/entity.mapper.mock'
 import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
 import { Admin } from '../../../src/application/domain/model/admin'
-import { DefaultUsersMock } from '../../mocks/default.users.mock'
+import { DefaultEntityMock } from '../../mocks/default.entity.mock'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 
 require('sinon-mongoose')
@@ -13,7 +13,7 @@ describe('Repositories: User', () => {
 
     const modelFake: any = UserRepoModel
     const repo = new UserRepository(modelFake, new EntityMapperMock(), new CustomLoggerMock())
-    const user: Admin = new Admin().fromJSON(DefaultUsersMock.ADMIN)
+    const user: Admin = new Admin().fromJSON(DefaultEntityMock.ADMIN)
 
     afterEach(() => {
         sinon.restore()
