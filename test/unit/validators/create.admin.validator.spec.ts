@@ -1,14 +1,13 @@
 import { assert } from 'chai'
 import { Admin } from '../../../src/application/domain/model/admin'
-import { User } from '../../../src/application/domain/model/user'
-import { CreateUserValidator } from '../../../src/application/domain/validator/create.user.validator'
+import { CreateAdminValidator } from '../../../src/application/domain/validator/create.admin.validator'
 import { DefaultEntityMock } from '../../mocks/default.entity.mock'
 
-describe('Validators: CreateUserValidator', () => {
-    const user: User = new User().fromJSON(DefaultEntityMock.USER)
+describe('Validators: CreateAdminValidator', () => {
+    const user: Admin = new Admin().fromJSON(DefaultEntityMock.ADMIN)
 
     it('should return undefined when the validation was successful', () => {
-        const result = CreateUserValidator.validate(user)
+        const result = CreateAdminValidator.validate(user)
         assert.equal(result, undefined)
     })
 
@@ -17,14 +16,14 @@ describe('Validators: CreateUserValidator', () => {
             user.username = undefined
 
             try {
-                CreateUserValidator.validate(user)
+                CreateAdminValidator.validate(user)
             } catch (err) {
                 assert.property(err, 'message')
                 assert.property(err, 'description')
                 assert.equal(err.message, 'Required fields were not provided...')
                 assert.equal(err.description, 'User validation: username required!')
             } finally {
-                user.username = 'user'
+                user.username = DefaultEntityMock.ADMIN.username
             }
         })
 
@@ -32,20 +31,48 @@ describe('Validators: CreateUserValidator', () => {
             user.password = undefined
 
             try {
-                CreateUserValidator.validate(user)
+                CreateAdminValidator.validate(user)
             } catch (err) {
                 assert.property(err, 'message')
                 assert.property(err, 'description')
                 assert.equal(err.message, 'Required fields were not provided...')
                 assert.equal(err.description, 'User validation: password required!')
             } finally {
-                user.password = 'user123'
+                user.password = DefaultEntityMock.ADMIN.password
+            }
+        })
+
+        it('should throw an error for does not pass email', () => {
+            user.email = undefined
+
+            try {
+                CreateAdminValidator.validate(user)
+            } catch (err) {
+                assert.property(err, 'message')
+                assert.property(err, 'description')
+                assert.equal(err.message, 'Required fields were not provided...')
+                assert.equal(err.description, 'User validation: email required!')
+            } finally {
+                user.email = DefaultEntityMock.ADMIN.email
+            }
+        })
+
+        it('should throw an error for invalid email', () => {
+            user.email = 'invalid'
+
+            try {
+                CreateAdminValidator.validate(user)
+            } catch (err) {
+                assert.property(err, 'message')
+                assert.equal(err.message, 'Invalid email address!')
+            } finally {
+                user.email = DefaultEntityMock.ADMIN.email
             }
         })
 
         it('should throw an error for does not pass any of required parameters', () => {
             try {
-                CreateUserValidator.validate(new Admin())
+                CreateAdminValidator.validate(new Admin())
             } catch (err) {
                 assert.property(err, 'message')
                 assert.property(err, 'description')

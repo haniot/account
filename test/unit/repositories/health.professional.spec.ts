@@ -48,7 +48,7 @@ describe('Repositories: HealthProfessionalRepository', () => {
         })
 
         context('when the password is not passed', () => {
-            it('should return something', () => {
+            it('should reject an error', () => {
                 user.password = undefined
                 sinon
                     .mock(modelFake)

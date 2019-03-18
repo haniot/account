@@ -1,7 +1,6 @@
 import { assert } from 'chai'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
 import { CreateHealthProfessionalValidator } from '../../../src/application/domain/validator/create.health.professional.validator'
-import { HealthAreaTypes } from '../../../src/application/domain/utils/health.area.types'
 import { DefaultEntityMock } from '../../mocks/default.entity.mock'
 
 describe('Validators: CreateHealthProfessionalValidator', () => {
@@ -24,7 +23,7 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
                 assert.equal(err.message, 'Required fields were not provided...')
                 assert.equal(err.description, 'User validation: username required!')
             } finally {
-                user.username = 'health'
+                user.username = DefaultEntityMock.HEALTH_PROFESSIONAL.username
             }
         })
 
@@ -39,7 +38,7 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
                 assert.equal(err.message, 'Required fields were not provided...')
                 assert.equal(err.description, 'User validation: password required!')
             } finally {
-                user.password = 'health123'
+                user.password = DefaultEntityMock.HEALTH_PROFESSIONAL.password
             }
         })
 
@@ -54,7 +53,7 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
                 assert.equal(err.message, 'Required fields were not provided...')
                 assert.equal(err.description, 'User validation: email required!')
             } finally {
-                user.email = 'health@mail.com'
+                user.email = DefaultEntityMock.HEALTH_PROFESSIONAL.email
             }
         })
 
@@ -67,7 +66,7 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
                 assert.property(err, 'message')
                 assert.equal(err.message, 'Invalid email address!')
             } finally {
-                user.email = 'health@mail.com'
+                user.email = DefaultEntityMock.HEALTH_PROFESSIONAL.email
             }
         })
 
@@ -82,7 +81,7 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
                 assert.equal(err.message, 'Required fields were not provided...')
                 assert.equal(err.description, 'User validation: name required!')
             } finally {
-                user.name = 'health@mail.com'
+                user.name = DefaultEntityMock.HEALTH_PROFESSIONAL.name
             }
         })
 
@@ -97,12 +96,12 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
                 assert.equal(err.message, 'Required fields were not provided...')
                 assert.equal(err.description, 'User validation: health_area required!')
             } finally {
-                user.health_area = HealthAreaTypes.NUTRITION
+                user.health_area = DefaultEntityMock.HEALTH_PROFESSIONAL.health_area
             }
         })
 
         it('should throw an error for pass invalid health area', () => {
-            user.health_area = 'ONCOLOGIST'
+            user.health_area = 'oncologist'
 
             try {
                 CreateHealthProfessionalValidator.validate(user)
@@ -110,9 +109,9 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
                 assert.property(err, 'message')
                 assert.property(err, 'description')
                 assert.equal(err.message, 'Health Area not mapped!')
-                assert.equal(err.description, 'The mapped areas are: NUTRITION, DENTISTRY.')
+                assert.equal(err.description, 'The mapped areas are: nutrition, dentistry.')
             } finally {
-                user.health_area = HealthAreaTypes.NUTRITION
+                user.health_area = DefaultEntityMock.HEALTH_PROFESSIONAL.health_area
             }
         })
 

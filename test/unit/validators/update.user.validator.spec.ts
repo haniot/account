@@ -12,6 +12,14 @@ describe('Validators: UpdateUserValidator', () => {
         assert.equal(result, undefined)
     })
 
+    context('when the user does not have id', () => {
+        it('should return undefined when the validation was successful', () => {
+            user.id = undefined
+            const result = UpdateUserValidator.validate(user)
+            assert.equal(result, undefined)
+        })
+    })
+
     context('when the user parameters was invalid', () => {
         it('should throw an error for try update password', () => {
             user.password = 'user'

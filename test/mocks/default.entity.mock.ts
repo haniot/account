@@ -27,9 +27,9 @@ export abstract class DefaultEntityMock {
     public static readonly PILOT_STUDY: any = {
         id: new ObjectId(),
         name: 'pilotstudy',
-        is_active: 'true',
+        is_active: true,
         start: '2019-03-15T00:00:00',
         end: '2019-04-15T23:59:59',
-        health_professional_ids: [new ObjectId()]
+        health_professionals_id: [DefaultEntityMock.HEALTH_PROFESSIONAL]
     }
 }

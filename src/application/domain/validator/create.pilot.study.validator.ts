@@ -16,9 +16,7 @@ export class CreatePilotStudyValidator {
             item.health_professionals_id.map(healthProfessional => {
                 if (!healthProfessional.id) {
                     fields.push(('Collection with health_professional IDs (ID cannot be empty)'))
-                } else {
-                    ObjectIdValidator.validate(healthProfessional.id)
-                }
+                } else ObjectIdValidator.validate(healthProfessional.id)
             })
         }
 

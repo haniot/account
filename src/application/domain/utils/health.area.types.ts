@@ -1,4 +1,4 @@
 export enum HealthAreaTypes {
-    NUTRITION = 'NUTRITION',
-    DENTISTRY = 'DENTISTRY'
+    NUTRITION = 'nutrition',
+    DENTISTRY = 'dentistry'
 }

@@ -24,16 +24,15 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
     public create(item: PilotStudy): Promise<PilotStudy> {
         const itemNew: PilotStudy = this.mapper.transform(item)
         return new Promise<PilotStudy>((resolve, reject) => {
-            this.Model.create(itemNew)
-                .then((result) => {
+            return this.Model.create(itemNew)
+                .then(result => {
                     if (!result) return resolve(undefined)
 
                     const query = new Query()
                     query.addFilter({ _id: result.id })
 
                     return resolve(this.findOne(query))
-                })
-                .catch(err => reject(this.mongoDBErrorListener(err)))
+                }).catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
 
@@ -67,8 +66,7 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
                     result
                         .filter(item => item.health_professionals_id!.length > 0)
                         .map(item => this.mapper.transform(item)))
-                )
-                .catch(err => reject(this.mongoDBErrorListener(err)))
+                ).catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
 
@@ -91,8 +89,7 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
                 .then((result: PilotStudy) => {
                     if (!result) return resolve(undefined)
                     return resolve(this.mapper.transform(result))
-                })
-                .catch(err => reject(this.mongoDBErrorListener(err)))
+                }).catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
 
@@ -105,8 +102,7 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
                 .then((result: PilotStudy) => {
                     if (!result) return resolve(undefined)
                     return resolve(this.mapper.transform(result))
-                })
-                .catch(err => reject(this.mongoDBErrorListener(err)))
+                }).catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
 

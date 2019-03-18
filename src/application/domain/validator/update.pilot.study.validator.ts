@@ -7,10 +7,10 @@ export class UpdatePilotStudyValidator {
         const fields: Array<string> = []
 
         if (item.id) ObjectIdValidator.validate(item.id)
-        if (item.health_professionals_id && item.health_professionals_id.length > 0) {
+        if (item.health_professionals_id && item.health_professionals_id.length) {
             item.health_professionals_id.map(healthProfessional => {
                 if (!healthProfessional.id)
-                    fields.push(('Collection with health_professional IDs (ID cannot be empty'))
+                    fields.push(('Collection with health_professional IDs (ID cannot be empty)'))
                 else ObjectIdValidator.validate(healthProfessional.id)
             })
         }

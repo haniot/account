@@ -2,20 +2,14 @@ openapi: 3.0.0
 info:
   description: >-
     This is the RESTful API documentation of the microservice for HANIoT platform user account.
-  # description: >-
-  #   This is a **Account Service** RESTful API documentation implemented to
-  #   administer the create, select, update and remove operations from users.
-  version: "v1"
+  version: 1.0.0
   title: HANIoT Account Service
-  # contact:
-  #   email: haniot@nutes.uepb.edu.br
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 servers:
-  # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/haniot/haniot-account-service/v1
+    url: https://virtserver.swaggerhub.com/nutes.haniot/haniot-account-service/1.0.0
   - description: localhost http
     url: 'http://localhost'
 tags:
@@ -728,7 +722,7 @@ paths:
                   example: Elvis Aaron
                 health_area:
                   type: string
-                  example: 'NUTRITION'
+                  example: 'nutrition'
         description: Data of the health professional to be saved.
         required: true
     get:
@@ -1187,7 +1181,7 @@ paths:
         - pilotstudies
       summary: Update pilot sudy data.
       description: Update the pilot study data.
-      operationId: updatePilotStudyById
+      operationId: updatePilotStudy
       parameters:
         - in: path
           name: pilotstudy_id
@@ -1276,7 +1270,7 @@ paths:
         - pilotstudies
       summary: Delete pilot sudy data.
       description: Delete the pilot study data.
-      operationId: deletePilotStudyById
+      operationId: deletePilotStudy
       parameters:
         - in: path
           name: pilotstudy_id
@@ -1601,10 +1595,6 @@ components:
           type: string
           description: Username for admin authentication.
           example: 'admin'
-        # type:
-        #   type: string
-        #   description: Type of user.
-        #   example: ADMIN
         email:
           type: string
           description: Email of admin.
@@ -1630,10 +1620,6 @@ components:
           type: string
           description: Username for health professional authentication.
           example: 'elvisaaron'
-        # type:
-        #   type: string
-        #   description: Type of user.
-        #   example: HEALTH_PROFESSIONAL
         email:
           type: string
           description: Email of health professional.
@@ -1644,30 +1630,8 @@ components:
           example: Elvis Aaron
         health_area:
           type: string
-          description: Area of medical performance of the health professional. Could be NUTRITION or DENTISTRY.
-          enum: ["NUTRITION", "DENTISTRY"]
-    # User:
-    #   type: object
-    #   required:
-    #   - id
-    #   - username
-    #   - password
-    #   - type
-    #   properties:
-    #     id:
-    #       readOnly: true
-    #       type: string
-    #       format: uuid
-    #       description: Automatically generated key field.
-    #       example: 5a62be07de34500146d9c544
-    #     username:
-    #       type: string
-    #       description: Username for user authentication.
-    #       example: elvisaaron
-    #     type:
-    #       type: string
-    #       description: Type of user. Can be ADMIN or HEALTH_PROFESSIONAL.
-    #       enum: ["ADMIN", "HEALTH_PROFESSIONAL"]
+          description: Area of medical performance of the health professional. Could be nutrition or dentistry.
+          enum: ["nutrition", "dentistry"]
     PilotStudy:
       type: object
       required:

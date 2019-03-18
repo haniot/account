@@ -98,12 +98,7 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
             end: this.end,
             health_professionals_id:
                 this.health_professionals_id ?
-                    this.health_professionals_id.map(healthProfessional => {
-                        healthProfessional.toJSON()
-                        healthProfessional.type = undefined
-                        return healthProfessional
-                    }) :
-                    this.health_professionals_id
+                    this.health_professionals_id.map(healthProfessional => healthProfessional.id) : []
         }
     }
 }
