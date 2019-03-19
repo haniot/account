@@ -18,7 +18,11 @@ export class Admin extends User implements IJSONSerializable, IJSONDeserializabl
             'admin:create',
             'admin:deleteAll',
             'admin:readAll',
-            'admin:updateAll'
+            'admin:updateAll',
+            'pilotstudy:create',
+            'pilotstudy:readAll',
+            'pilotstudy:updateAll',
+            'pilotstudy:deleteAll'
         ]
     }
 

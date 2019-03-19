@@ -21,7 +21,9 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
         super.scopes = [
             'healthprofessional:delete',
             'healthprofessional:read',
-            'healthprofessional:update'
+            'healthprofessional:update',
+            'pilotstudy:read',
+            'pilotstudy:update',
         ]
     }
 
