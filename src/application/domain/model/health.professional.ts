@@ -23,7 +23,7 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
             'healthprofessional:read',
             'healthprofessional:update',
             'pilotstudy:read',
-            'pilotstudy:update',
+            'pilotstudy:update'
         ]
     }
 
@@ -63,9 +63,9 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
         }
 
         super.fromJSON(json)
-        if (json.email) this.email = json.email
-        if (json.name) this.name = json.name
-        if (json.health_area) this.health_area = json.health_area
+        if (json.email !== undefined) this.email = json.email
+        if (json.name !== undefined) this.name = json.name
+        if (json.health_area !== undefined) this.health_area = json.health_area
 
         return this
     }

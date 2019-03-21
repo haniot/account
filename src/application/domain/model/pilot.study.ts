@@ -78,12 +78,12 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
             }
         }
 
-        if (json.id) super.id = json.id
-        if (json.name) this.name = json.name
-        if (json.is_active) this.is_active = json.is_active
-        if (json.start) this.start = json.start
-        if (json.end) this.end = json.end
-        if (json.health_professionals_id && json.health_professionals_id instanceof Array)
+        if (json.id !== undefined) super.id = json.id
+        if (json.name !== undefined) this.name = json.name
+        if (json.is_active !== undefined) this.is_active = json.is_active
+        if (json.start !== undefined) this.start = json.start
+        if (json.end !== undefined) this.end = json.end
+        if (json.health_professionals_id !== undefined && json.health_professionals_id instanceof Array)
             this.health_professionals_id =
                 json.health_professionals_id.map(id => new HealthProfessional().fromJSON(id))
         return this
