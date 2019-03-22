@@ -6,8 +6,8 @@ export class UpdatePilotStudyValidator {
     public static validate(item: PilotStudy) {
         const fields: Array<string> = []
 
-        if (item.id) ObjectIdValidator.validate(item.id)
-        if (item.health_professionals_id && item.health_professionals_id.length) {
+        if (item.id !== undefined) ObjectIdValidator.validate(item.id)
+        if (item.health_professionals_id !== undefined && item.health_professionals_id.length) {
             item.health_professionals_id.map(healthProfessional => {
                 if (!healthProfessional.id)
                     fields.push(('Collection with health_professional IDs (ID cannot be empty)'))

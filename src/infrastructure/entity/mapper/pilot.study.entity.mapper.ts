@@ -37,10 +37,8 @@ export class PilotStudyEntityMapper implements IEntityMapper <PilotStudy, PilotS
         if (item.start !== undefined) result.start = item.start
         if (item.end !== undefined) result.end = item.end
         if (item.health_professionals_id !== undefined && item.health_professionals_id.length > 0) {
-            result.health_professionals_id = item.health_professionals_id.map(healthProfessional => {
-                return new HealthProfessional().fromJSON(healthProfessional)
-            })
-        } else result.health_professionals_id = []
+            result.health_professionals_id = item.health_professionals_id
+        }
         return result
     }
 

@@ -85,7 +85,6 @@ export class PilotStudyService implements IPilotStudyService {
         } catch (err) {
             return Promise.reject(err)
         }
-
         return this._pilotStudyRepository.update(item)
     }
 
