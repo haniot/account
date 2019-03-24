@@ -42,6 +42,11 @@ export class AuthRepository implements IAuthRepository {
                             )
                         )
                     }
+
+                    if (!this._userRepository.comparePasswords(password, user.password)) {
+                        return resolve(undefined)
+                    }
+
                     if (user.change_password) {
                         return reject(
                             new ChangePasswordException(
@@ -51,10 +56,7 @@ export class AuthRepository implements IAuthRepository {
                                 `/users/${user._id}/password`))
                     }
 
-                    if (this._userRepository.comparePasswords(password, user.password)) {
-                        return resolve({ token: this.generateAccessToken(this.userMapper.transform(user)) })
-                    }
-                    return resolve(undefined)
+                    return resolve({ token: this.generateAccessToken(this.userMapper.transform(user)) })
                 }).catch(err => reject(new RepositoryException(Strings.ERROR_MESSAGE.UNEXPECTED)))
         })
     }
