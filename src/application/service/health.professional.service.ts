@@ -11,12 +11,16 @@ import { UpdateHealthProfessionalValidator } from '../domain/validator/update.he
 import { ConflictException } from '../domain/exception/conflict.exception'
 import { Strings } from '../../utils/strings'
 import { IUserRepository } from '../port/user.repository.interface'
+import { IPilotStudyRepository } from '../port/pilot.study.repository.interface'
+import { PilotStudy } from '../domain/model/pilot.study'
+import { Query } from '../../infrastructure/repository/query/query'
 
 @injectable()
 export class HealthProfessionalService implements IHealthProfessionalService {
     constructor(
         @inject(Identifier.HEALTH_PROFESSIONAL_REPOSITORY) private readonly _healthProfessionalRepository:
             IHealthProfessionalRepository,
+        @inject(Identifier.PILOT_STUDY_REPOSITORY) private readonly _pilotStudyRepository: IPilotStudyRepository,
         @inject(Identifier.USER_REPOSITORY) private readonly _userRepository: IUserRepository) {
     }
 
@@ -64,7 +68,7 @@ export class HealthProfessionalService implements IHealthProfessionalService {
             UpdateHealthProfessionalValidator.validate(item)
 
             if (item.email) {
-                const hasEmail = await this._userRepository.checkExist( item.email)
+                const hasEmail = await this._userRepository.checkExist(item.email)
                 if (hasEmail) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
             }
         } catch (err) {
@@ -72,5 +76,23 @@ export class HealthProfessionalService implements IHealthProfessionalService {
         }
 
         return this._healthProfessionalRepository.update(item)
+    }
+
+    public async getAllPilotStudies(item: HealthProfessional): Promise<Array<PilotStudy>> {
+        try {
+            const result = await this._pilotStudyRepository.find(new Query().fromJSON({
+                health_professionals_id: { $in: item.id }
+            }))
+
+            if (result.length) {
+                result.forEach(pilotStudy => {
+                    pilotStudy.health_professionals_id = undefined
+                })
+            }
+
+            return result
+        } catch (err) {
+            return Promise.reject(err)
+        }
     }
 }
