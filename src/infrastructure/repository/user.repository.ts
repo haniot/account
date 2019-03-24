@@ -18,11 +18,11 @@ import { Query } from './query/query'
 @injectable()
 export class UserRepository extends BaseRepository<User, UserEntity> implements IUserRepository {
     constructor(
-        @inject(Identifier.USER_REPO_MODEL) protected readonly userModel: any,
-        @inject(Identifier.USER_ENTITY_MAPPER) protected readonly userMapper: IEntityMapper<User, UserEntity>,
-        @inject(Identifier.LOGGER) readonly logger: ILogger
+        @inject(Identifier.USER_REPO_MODEL) protected readonly _userModel: any,
+        @inject(Identifier.USER_ENTITY_MAPPER) protected readonly _userMapper: IEntityMapper<User, UserEntity>,
+        @inject(Identifier.LOGGER) readonly _logger: ILogger
     ) {
-        super(userModel, userMapper, logger)
+        super(_userModel, _userMapper, _logger)
     }
 
     /**
@@ -57,7 +57,7 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
      */
     public changePassword(id: string, old_password: string, new_password: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            this.userModel.findOne({ _id: id })
+            this._userModel.findOne({ _id: id })
                 .then((user) => {
                     if (!user) return resolve(false)
                     if (!this.comparePasswords(old_password, user.password)) {
@@ -68,7 +68,7 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
                     }
                     user.password = this.encryptPassword(new_password)
                     user.change_password = false
-                    this.userModel.findOneAndUpdate({ _id: user.id }, user, { new: true })
+                    this._userModel.findOneAndUpdate({ _id: user.id }, user, { new: true })
                         .exec()
                         .then(result => {
                             if (!result) return resolve(false)
