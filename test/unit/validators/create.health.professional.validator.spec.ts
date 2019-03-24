@@ -12,21 +12,6 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
     })
 
     context('when the user was incomplete or invalid', () => {
-        it('should throw an error for does not pass password', () => {
-            user.password = undefined
-
-            try {
-                CreateHealthProfessionalValidator.validate(user)
-            } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
-                assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'User validation: password required!')
-            } finally {
-                user.password = DefaultEntityMock.HEALTH_PROFESSIONAL.password
-            }
-        })
-
         it('should throw an error for does not pass email', () => {
             user.email = undefined
 
@@ -52,6 +37,21 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
                 assert.equal(err.message, 'Invalid email address!')
             } finally {
                 user.email = DefaultEntityMock.HEALTH_PROFESSIONAL.email
+            }
+        })
+
+        it('should throw an error for does not pass password', () => {
+            user.password = undefined
+
+            try {
+                CreateHealthProfessionalValidator.validate(user)
+            } catch (err) {
+                assert.property(err, 'message')
+                assert.property(err, 'description')
+                assert.equal(err.message, 'Required fields were not provided...')
+                assert.equal(err.description, 'User validation: password required!')
+            } finally {
+                user.password = DefaultEntityMock.HEALTH_PROFESSIONAL.password
             }
         })
 
@@ -107,7 +107,7 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
                 assert.property(err, 'message')
                 assert.property(err, 'description')
                 assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'User validation: password required!')
+                assert.equal(err.description, 'User validation: email, password, name, health_area required!')
             }
         })
     })

@@ -12,21 +12,6 @@ describe('Validators: CreateAdminValidator', () => {
     })
 
     context('when the user was incomplete or invalid', () => {
-        it('should throw an error for does not pass password', () => {
-            user.password = undefined
-
-            try {
-                CreateAdminValidator.validate(user)
-            } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
-                assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'User validation: password required!')
-            } finally {
-                user.password = DefaultEntityMock.ADMIN.password
-            }
-        })
-
         it('should throw an error for does not pass email', () => {
             user.email = undefined
 
@@ -55,6 +40,21 @@ describe('Validators: CreateAdminValidator', () => {
             }
         })
 
+        it('should throw an error for does not pass password', () => {
+            user.password = undefined
+
+            try {
+                CreateAdminValidator.validate(user)
+            } catch (err) {
+                assert.property(err, 'message')
+                assert.property(err, 'description')
+                assert.equal(err.message, 'Required fields were not provided...')
+                assert.equal(err.description, 'User validation: password required!')
+            } finally {
+                user.password = DefaultEntityMock.ADMIN.password
+            }
+        })
+
         it('should throw an error for does not pass any of required parameters', () => {
             try {
                 CreateAdminValidator.validate(new Admin())
@@ -62,7 +62,7 @@ describe('Validators: CreateAdminValidator', () => {
                 assert.property(err, 'message')
                 assert.property(err, 'description')
                 assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'User validation: password required!')
+                assert.equal(err.description, 'User validation: email, password required!')
             }
         })
     })
