@@ -15,7 +15,6 @@ import { IAdminRepository } from '../../application/port/admin.repository.interf
  * database. If there is no, a default user is created with the following
  * data:
  *
- * - username: admin
  * - email: admin@haniot.com
  * - password: admin*123
  * - type: ADMIN
@@ -42,7 +41,6 @@ export class RegisterDefaultAdminTask implements IBackgroundTask {
             const countUser = await this._adminRepository.count(query)
             if (!countUser) {
                 const adminDefault = new Admin()
-                adminDefault.username = 'admin'
                 adminDefault.password = 'admin*123'
                 adminDefault.email = 'admin@haniot.com'
                 adminDefault.type = UserType.ADMIN

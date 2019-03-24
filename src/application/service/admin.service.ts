@@ -24,10 +24,7 @@ export class AdminService implements IAdminService {
         try {
             CreateAdminValidator.validate(item)
 
-            const hasUsername = await this._userRepository.checkExist(item.username!)
-            if (hasUsername) throw new ConflictException(Strings.USER.USERNAME_ALREADY_REGISTERED)
-
-            const hasEmail = await this._userRepository.checkExist(undefined, item.email!)
+            const hasEmail = await this._userRepository.checkExist(item.email!)
             if (hasEmail) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
         } catch (err) {
             return Promise.reject(err)
@@ -64,12 +61,8 @@ export class AdminService implements IAdminService {
         try {
             UpdateAdminValidator.validate(item)
 
-            if (item.username) {
-                const hasUsername = await this._userRepository.checkExist(item.username)
-                if (hasUsername) throw new ConflictException(Strings.USER.USERNAME_ALREADY_REGISTERED)
-            }
             if (item.email) {
-                const hasEmail = await this._userRepository.checkExist(undefined, item.email)
+                const hasEmail = await this._userRepository.checkExist(item.email)
                 if (hasEmail) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
             }
         } catch (err) {

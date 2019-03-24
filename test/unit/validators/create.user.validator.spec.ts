@@ -13,21 +13,6 @@ describe('Validators: CreateUserValidator', () => {
     })
 
     context('when the user was incomplete or invalid', () => {
-        it('should throw an error for does not pass username', () => {
-            user.username = undefined
-
-            try {
-                CreateUserValidator.validate(user)
-            } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
-                assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'User validation: username required!')
-            } finally {
-                user.username = DefaultEntityMock.USER.username
-            }
-        })
-
         it('should throw an error for does not pass password', () => {
             user.password = undefined
 
@@ -50,7 +35,7 @@ describe('Validators: CreateUserValidator', () => {
                 assert.property(err, 'message')
                 assert.property(err, 'description')
                 assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'User validation: username, password required!')
+                assert.equal(err.description, 'User validation: password required!')
             }
         })
     })

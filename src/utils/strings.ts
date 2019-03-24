@@ -15,7 +15,6 @@ export abstract class Strings {
 
     public static readonly USER: any = {
         EMAIL_ALREADY_REGISTERED: 'A user with this email already registered!',
-        USERNAME_ALREADY_REGISTERED: 'A user with this username already registered!',
         NOT_FOUND: 'User not found!',
         NOT_FOUND_DESCRIPTION: 'User not found or already removed. A new operation for the same resource is not required.',
         PASSWORD_NOT_MATCH: 'Password does not match!',

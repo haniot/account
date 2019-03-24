@@ -33,8 +33,6 @@ describe('Repositories: AdminRepository', () => {
                     .then(result => {
                         assert.property(result, 'id')
                         assert.propertyVal(result, 'id', user.id)
-                        assert.property(result, 'username')
-                        assert.propertyVal(result, 'username', user.username)
                         assert.property(result, 'password')
                         assert.propertyVal(result, 'password', user.password)
                         assert.property(result, 'email')

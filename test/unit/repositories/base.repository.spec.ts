@@ -47,8 +47,6 @@ describe('Repositories: BaseRepository', () => {
                     .then(result => {
                         assert.property(result, 'id')
                         assert.propertyVal(result, 'id', user.id)
-                        assert.property(result, 'username')
-                        assert.propertyVal(result, 'username', user.username)
                         assert.property(result, 'password')
                         assert.propertyVal(result, 'password', user.password)
                     })
@@ -113,8 +111,6 @@ describe('Repositories: BaseRepository', () => {
                         assert.lengthOf(result, 1)
                         assert.property(result[0], 'id')
                         assert.propertyVal(result[0], 'id', user.id)
-                        assert.property(result[0], 'username')
-                        assert.propertyVal(result[0], 'username', user.username)
                         assert.property(result[0], 'password')
                         assert.propertyVal(result[0], 'password', user.password)
                     })
@@ -189,8 +185,6 @@ describe('Repositories: BaseRepository', () => {
                     .then(result => {
                         assert.property(result, 'id')
                         assert.propertyVal(result, 'id', user.id)
-                        assert.property(result, 'username')
-                        assert.propertyVal(result, 'username', user.username)
                         assert.property(result, 'password')
                         assert.propertyVal(result, 'password', user.password)
                     })
@@ -255,8 +249,6 @@ describe('Repositories: BaseRepository', () => {
                     .then(result => {
                         assert.property(result, 'id')
                         assert.propertyVal(result, 'id', user.id)
-                        assert.property(result, 'username')
-                        assert.propertyVal(result, 'username', user.username)
                         assert.property(result, 'password')
                         assert.propertyVal(result, 'password', user.password)
                     })

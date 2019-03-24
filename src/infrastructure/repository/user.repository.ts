@@ -26,18 +26,16 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
     }
 
     /**
-     * Checks if an user already has a registration with username or email.
-     * What differs one user to another is your email and username.
+     * Checks if an user already has a registration with email.
+     * What differs one user to another is your email.
      *
      * @return {Promise<boolean>} True if it exists or False, otherwise.
      * @throws {ValidationException | RepositoryException}
-     * @param _username
      * @param _email
      *
      */
-    public async checkExist(_username?: string, _email?: string): Promise<boolean> {
+    public async checkExist(_email?: string): Promise<boolean> {
         const query = new Query()
-        if (_username !== undefined) query.addFilter({ username: _username })
         if (_email !== undefined) query.addFilter({ email: _email })
         return new Promise<boolean>((resolve, reject) => {
             super.findOne(query)

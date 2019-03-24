@@ -5,7 +5,6 @@ export class CreateUserValidator {
     public static validate(user: User): void | ValidationException {
         const fields: Array<string> = []
 
-        if (!user.username) fields.push('username')
         if (!user.password) fields.push('password')
 
         if (fields.length > 0) {

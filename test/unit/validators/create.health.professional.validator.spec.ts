@@ -12,21 +12,6 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
     })
 
     context('when the user was incomplete or invalid', () => {
-        it('should throw an error for does not pass username', () => {
-            user.username = undefined
-
-            try {
-                CreateHealthProfessionalValidator.validate(user)
-            } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
-                assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'User validation: username required!')
-            } finally {
-                user.username = DefaultEntityMock.HEALTH_PROFESSIONAL.username
-            }
-        })
-
         it('should throw an error for does not pass password', () => {
             user.password = undefined
 
@@ -122,7 +107,7 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
                 assert.property(err, 'message')
                 assert.property(err, 'description')
                 assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'User validation: username, password required!')
+                assert.equal(err.description, 'User validation: password required!')
             }
         })
     })

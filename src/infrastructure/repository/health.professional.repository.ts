@@ -41,7 +41,6 @@ export class HealthProfessionalRepository extends BaseRepository<HealthProfessio
 
                 users.forEach((healthProfessional: HealthProfessional) => {
                     if (healthProfessional.id) query.filters = { _id: healthProfessional.id }
-                    else query.filters = { username: healthProfessional.username }
 
                     query.addFilter({ type: UserType.HEALTH_PROFESSIONAL })
 
@@ -59,7 +58,6 @@ export class HealthProfessionalRepository extends BaseRepository<HealthProfessio
                 })
             } else {
                 if (users.id) query.filters = { _id: users.id }
-                else query.filters = { username: users.username }
 
                 query.addFilter({ type: UserType.HEALTH_PROFESSIONAL })
 

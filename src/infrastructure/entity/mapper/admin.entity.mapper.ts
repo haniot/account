@@ -22,7 +22,6 @@ export class AdminEntityMapper implements IEntityMapper<Admin, AdminEntity> {
         const result: AdminEntity = new AdminEntity()
 
         if (item.id !== undefined) result.id = item.id
-        if (item.username !== undefined) result.username = item.username
         if (item.password !== undefined) result.password = item.password
         if (item.type !== undefined) result.type = item.type
         if (item.scopes !== undefined) result.scopes = item.scopes
@@ -55,7 +54,6 @@ export class AdminEntityMapper implements IEntityMapper<Admin, AdminEntity> {
         if (!json) return result
 
         if (json.id !== undefined) result.id = json.id
-        if (json.username !== undefined) result.username = json.username
         if (json.password !== undefined) result.password = json.password
         if (json.type !== undefined) result.type = json.type
         if (json.scopes !== undefined) result.scopes = json.scopes

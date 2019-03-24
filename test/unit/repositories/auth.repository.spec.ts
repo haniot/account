@@ -122,15 +122,16 @@ describe('Repositories: AuthRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs(undefined)
+                    .withArgs({ email: undefined })
                     .chain('exec')
                     .rejects({ message: 'An internal error has occurred in the database!' })
 
                 return repo.authenticate(undefined!, undefined!)
                     .catch(err => {
                         assert.property(err, 'name')
-                        assert.propertyVal(err, 'name', 'ExpectationError')
+                        assert.propertyVal(err, 'name', 'Error')
                         assert.property(err, 'message')
+                        assert.propertyVal(err, 'message', 'An unexpected error has occurred. Please try again later...')
                     })
             })
         })
