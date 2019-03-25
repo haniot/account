@@ -54,11 +54,21 @@ export class PilotStudyService implements IPilotStudyService {
     }
 
     public async getById(id: string, query: IQuery): Promise<PilotStudy> {
+        try {
+            ObjectIdValidator.validate(id)
+        } catch (err) {
+            return Promise.reject(err)
+        }
         query.addFilter({ _id: id })
         return this._pilotStudyRepository.findOne(query)
     }
 
     public async remove(id: string): Promise<boolean> {
+        try {
+            ObjectIdValidator.validate(id)
+        } catch (err) {
+            return Promise.reject(err)
+        }
         return this._pilotStudyRepository.delete(id)
     }
 

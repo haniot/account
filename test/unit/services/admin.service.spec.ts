@@ -128,7 +128,7 @@ describe('Services: AdminService', () => {
         })
     })
 
-    describe('delete()', () => {
+    describe('remove()', () => {
         context('when want delete a user', () => {
             it('should return true', () => {
                 return service.remove(user.id!)
