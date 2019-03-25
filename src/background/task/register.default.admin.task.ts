@@ -9,6 +9,7 @@ import { IConnectionDB } from '../../infrastructure/port/connection.db.interface
 import { IBackgroundTask } from '../../application/port/background.task.interface'
 import { Admin } from '../../application/domain/model/admin'
 import { IAdminRepository } from '../../application/port/admin.repository.interface'
+import { Default } from '../../utils/default'
 
 /**
  * In this class it's checked whether there are any admin users in the
@@ -41,8 +42,8 @@ export class RegisterDefaultAdminTask implements IBackgroundTask {
             const countUser = await this._adminRepository.count(query)
             if (!countUser) {
                 const adminDefault = new Admin()
-                adminDefault.password = 'admin*123'
-                adminDefault.email = 'admin@haniot.com'
+                adminDefault.email = process.env.ADMIN_EMAIL || Default.ADMIN_EMAIL
+                adminDefault.password = process.env.ADMIN_PASSWORD || Default.ADMIN_PASSWORD
                 adminDefault.type = UserType.ADMIN
                 adminDefault.change_password = true
 
@@ -51,8 +52,8 @@ export class RegisterDefaultAdminTask implements IBackgroundTask {
                 this._logger.info('Default admin user created successfully.')
             }
         } catch (err) {
-            this._logger.error(err.description)
-            setTimeout(run, 2000)
+            this._logger.error(`Error trying to create admin user: ${err.description}`)
+            setTimeout(this.createUserAdmin, 2000)
         }
     }
 

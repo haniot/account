@@ -57,7 +57,7 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
      */
     public changePassword(id: string, old_password: string, new_password: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            this._userModel.findOne({ _id: id })
+            this.Model.findOne({ _id: id })
                 .then((user) => {
                     if (!user) return resolve(false)
                     if (!this.comparePasswords(old_password, user.password)) {

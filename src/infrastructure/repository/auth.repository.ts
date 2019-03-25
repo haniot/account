@@ -62,7 +62,7 @@ export class AuthRepository implements IAuthRepository {
     public generateAccessToken(user: User): string {
         const payload: object = {
             sub: user.id,
-            iss: 'haniot',
+            iss: process.env.ISSUER || Default.ISSUER,
             iat: Math.floor(Date.now() / 1000),
             exp: Math.round(Date.now() / 1000 + 24 * 60 * 60),
             scope: user.scopes.join(' ')

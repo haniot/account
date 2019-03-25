@@ -30,4 +30,11 @@ export abstract class Default {
 
     // JWT Secret
     public static readonly JWT_SECRET: string = 's3cr3tk3y'
+
+    // ADMIN USER DEFAULT
+    public static readonly ADMIN_EMAIL: string = 'admin@haniot.com'
+    public static readonly ADMIN_PASSWORD: string = 'admin*123'
+
+    // KEYS
+    public static readonly ISSUER: string = 'haniot'
 }

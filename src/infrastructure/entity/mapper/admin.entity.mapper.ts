@@ -57,7 +57,7 @@ export class AdminEntityMapper implements IEntityMapper<Admin, AdminEntity> {
         if (json.password !== undefined) result.password = json.password
         if (json.type !== undefined) result.type = json.type
         if (json.scopes !== undefined) result.scopes = json.scopes
-        if (json.email) result.email = json.email
+        if (json.email !== undefined) result.email = json.email
         if (json.change_password !== undefined) result.change_password = json.change_password
 
         return result

@@ -49,6 +49,8 @@ import { PilotStudyRepository } from '../infrastructure/repository/pilot.study.r
 import { PilotStudyController } from '../ui/controllers/pilot.study.controller'
 import { IPilotStudyService } from '../application/port/pilot.study.service.interface'
 import { PilotStudyService } from '../application/service/pilot.study.service'
+import { IBackgroundTask } from '../application/port/background.task.interface'
+import { RegisterDefaultAdminTask } from '../background/task/register.default.admin.task'
 
 export class DI {
     private static instance: DI
@@ -156,6 +158,11 @@ export class DI {
         this.container
             .bind(Identifier.BACKGROUND_SERVICE)
             .to(BackgroundService).inSingletonScope()
+
+        // Tasks
+        this.container
+            .bind<IBackgroundTask>(Identifier.REGISTER_DEFAULT_ADMIN_TASK)
+            .to(RegisterDefaultAdminTask).inRequestScope()
 
         // Log
         this.container.bind<ILogger>(Identifier.LOGGER).to(CustomLogger).inSingletonScope()
