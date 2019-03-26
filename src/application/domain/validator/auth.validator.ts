@@ -1,4 +1,5 @@
 import { ValidationException } from '../exception/validation.exception'
+import { EmailValidator } from './email.validator'
 
 export class AuthValidator {
     public static validate(email: string, password: string): void | ValidationException {
@@ -6,6 +7,7 @@ export class AuthValidator {
 
         // validate null
         if (!email) fields.push('email')
+        else EmailValidator.validate(email)
         if (!password) fields.push('password')
 
         if (fields.length > 0) {
