@@ -1,14 +1,12 @@
 import { assert } from 'chai'
 import { AdminService } from '../../../src/application/service/admin.service'
 import { AdminRepositoryMock } from '../../mocks/admin.repository.mock'
-import { UserRepositoryMock } from '../../mocks/user.repository.mock'
 import { Admin } from '../../../src/application/domain/model/admin'
 import { DefaultEntityMock } from '../../mocks/default.entity.mock'
-import { Strings } from '../../../src/utils/strings'
 import { Query } from '../../../src/infrastructure/repository/query/query'
 
 describe('Services: AdminService', () => {
-    const service = new AdminService(new AdminRepositoryMock(), new UserRepositoryMock())
+    const service = new AdminService(new AdminRepositoryMock())
     const user: Admin = new Admin().fromJSON(DefaultEntityMock.ADMIN)
 
     describe('add()', () => {
@@ -46,16 +44,6 @@ describe('Services: AdminService', () => {
                     .catch(err => {
                         assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'Invalid email address!')
-                        user.email = DefaultEntityMock.ADMIN.email
-                    })
-            })
-
-            it('should throw an error for existent email', () => {
-                user.email = 'exists@mail.com'
-                return service.add(user)
-                    .catch(err => {
-                        assert.property(err, 'message')
-                        assert.propertyVal(err, 'message', Strings.USER.EMAIL_ALREADY_REGISTERED)
                         user.email = DefaultEntityMock.ADMIN.email
                     })
             })
@@ -188,19 +176,6 @@ describe('Services: AdminService', () => {
                             ` Access: PATCH /users/${user.id}/password to update your password.`)
                     })
             })
-
-            it('should throw an error for existent email', () => {
-                user.email = 'exists@mail.com'
-                user.password = undefined
-                return service.update(user)
-                    .catch(err => {
-                        assert.property(err, 'message')
-                        assert.propertyVal(err, 'message', Strings.USER.EMAIL_ALREADY_REGISTERED)
-                        user.email = DefaultEntityMock.ADMIN.email
-                        user.password = DefaultEntityMock.ADMIN.password
-                    })
-            })
         })
-
     })
 })
