@@ -8,6 +8,7 @@ import { ApiExceptionManager } from '../exception/api.exception.manager'
 import { ApiException } from '../exception/api.exception'
 import { ILogger } from '../../utils/custom.logger'
 import { ChangePasswordException } from '../../application/domain/exception/change.password.exception'
+import { Strings } from '../../utils/strings'
 
 /**
  * Controller that implements User feature operations.
@@ -66,8 +67,7 @@ export class UserController {
     @httpDelete('/:user_id')
     public async removeUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const result: boolean = await this._userService.remove(req.params.user_id)
-            if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageNotFoundUser())
+            await this._userService.remove(req.params.user_id)
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
@@ -79,8 +79,8 @@ export class UserController {
     private getMessageNotFoundUser(): object {
         return new ApiException(
             HttpStatus.NOT_FOUND,
-            'User not found!',
-            'User not found or already removed. A new operation for the same resource is not required!'
+            Strings.USER.NOT_FOUND,
+            Strings.USER.NOT_FOUND_DESCRIPTION
         ).toJson()
     }
 }

@@ -2,18 +2,15 @@ import { assert } from 'chai'
 import { HealthProfessionalService } from '../../../src/application/service/health.professional.service'
 import { HealthProfessionalRepositoryMock } from '../../mocks/health.professional.repository.mock'
 import { PilotStudyRepositoryMock } from '../../mocks/pilot.study.repository.mock'
-import { UserRepositoryMock } from '../../mocks/user.repository.mock'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
 import { DefaultEntityMock } from '../../mocks/default.entity.mock'
-import { Strings } from '../../../src/utils/strings'
 import { Query } from '../../../src/infrastructure/repository/query/query'
 import { PilotStudy } from '../../../src/application/domain/model/pilot.study'
 
 describe('Services: HealthProfessionalService', () => {
     const service = new HealthProfessionalService(
         new HealthProfessionalRepositoryMock(),
-        new PilotStudyRepositoryMock(),
-        new UserRepositoryMock()
+        new PilotStudyRepositoryMock()
     )
     const user: HealthProfessional = new HealthProfessional().fromJSON(DefaultEntityMock.HEALTH_PROFESSIONAL)
     const pilot: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY)
@@ -56,16 +53,6 @@ describe('Services: HealthProfessionalService', () => {
                     .catch(err => {
                         assert.property(err, 'message')
                         assert.equal(err.message, 'Invalid email address!')
-                        user.email = DefaultEntityMock.HEALTH_PROFESSIONAL.email
-                    })
-            })
-
-            it('should throw an error for existent email', () => {
-                user.email = 'exists@mail.com'
-                return service.add(user)
-                    .catch(err => {
-                        assert.property(err, 'message')
-                        assert.equal(err.message, Strings.USER.EMAIL_ALREADY_REGISTERED)
                         user.email = DefaultEntityMock.HEALTH_PROFESSIONAL.email
                     })
             })
@@ -250,18 +237,6 @@ describe('Services: HealthProfessionalService', () => {
                         assert.equal(err.message, 'This parameter could not be updated.')
                         assert.equal(err.description, 'A specific route to update user password already exists.' +
                             ` Access: PATCH /users/${user.id}/password to update your password.`)
-                    })
-            })
-
-            it('should throw an error for existent email', () => {
-                user.email = 'exists@mail.com'
-                user.password = undefined
-                return service.update(user)
-                    .catch(err => {
-                        assert.property(err, 'message')
-                        assert.propertyVal(err, 'message', Strings.USER.EMAIL_ALREADY_REGISTERED)
-                        user.email = DefaultEntityMock.HEALTH_PROFESSIONAL.email
-                        user.password = DefaultEntityMock.HEALTH_PROFESSIONAL.password
                     })
             })
         })

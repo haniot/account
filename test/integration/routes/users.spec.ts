@@ -1,533 +1,198 @@
-// import { expect } from 'chai'
-// import request from 'supertest'
-// import { App } from '../../../src/app'
-// import { User } from '../../../src/application/domain/model/user'
-// import { UserType } from '../../../src/application/domain/utils/user.type'
-// import { CustomLogger, ILogger } from '../../../src/utils/custom.logger'
-// import { Application } from 'express'
-// import { BackgroundService } from '../../../src/background/background.service'
-// import { DI } from '../../../src/di/di'
-// import { Identifier } from '../../../src/di/identifiers'
-// import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
-// import { ObjectID } from 'bson'
-//
-// const logger: ILogger = new CustomLogger()
-// const app: Application = new App(logger).getExpress()
-// const backgroundServices: BackgroundService = DI.getInstance().getContainer().get(Identifier.BACKGROUND_SERVICE)
-//
-// describe('Routes: User', () => {
-//
-//     const defaultAdminUser: User = new User()
-//     defaultAdminUser.setName('Admin')
-//     defaultAdminUser.setEmail('admin@example.com')
-//     defaultAdminUser.setPassword('admin')
-//
-//     const defaultCaregiverUser: User = new User()
-//     defaultCaregiverUser.setName('Lorem Ipsum')
-//     defaultCaregiverUser.setEmail('loremipsum@mail.com')
-//     defaultCaregiverUser.setPassword('lorem123')
-//
-//     before(() => {
-//         backgroundServices.startServices()
-//             .then(() => UserRepoModel.deleteMany({}))
-//     })
-//
-//     after(() => {
-//         UserRepoModel.deleteMany({})
-//             .then(() => backgroundServices.stopServices())
-//     })
-//
-//     describe('POST /users/admin', () => {
-//         context('when posting a new admin user', () => {
-//             it('should return status code 201 and the saved user', () => {
-//
-//                 return request(app)
-//                     .post('/users/admin')
-//                     .send(defaultAdminUser)
-//                     .set('Content-Type', 'application/json')
-//                     .expect(201)
-//                     .then(res => {
-//                         expect(res.body).to.have.property('id')
-//                         expect(res.body).to.have.property('name')
-//                         expect(res.body.name).to.eql('Admin')
-//                         expect(res.body).to.have.property('email')
-//                         expect(res.body.email).to.eql('admin@example.com')
-//                         expect(res.body).to.have.property('type')
-//                         expect(res.body.type).to.eql(UserType.ADMIN)
-//                         expect(res.body).to.have.property('created_at')
-//                         defaultAdminUser.id = res.body.id
-//                     })
-//             })
-//         })
-//
-//         context('when there are missing or invalid parameters in request', () => {
-//             it('should return status code 400 and info message from invalid email', () => {
-//
-//                 const invalidAdminUser: User = new User()
-//                 invalidAdminUser.setName('Admin')
-//                 invalidAdminUser.setEmail('invalidmail')
-//                 invalidAdminUser.setPassword('admin')
-//
-//                 return request(app)
-//                     .post('/users/admin')
-//                     .send(invalidAdminUser)
-//                     .set('Content-Type', 'application/json')
-//                     .expect(400)
-//                     .then(err => {
-//                         expect(err.body).to.have.property('message')
-//                     })
-//             })
-//
-//             it('should return status code 400 and info message from missing parameters', () => {
-//
-//                 const invalidAdminUser: User = new User()
-//                 invalidAdminUser.setName('Admin')
-//                 invalidAdminUser.setPassword('admin')
-//
-//                 return request(app)
-//                     .post('/users/admin')
-//                     .send(invalidAdminUser)
-//                     .set('Content-Type', 'application/json')
-//                     .expect(400)
-//                     .then(err => {
-//                         expect(err.body).to.have.property('message')
-//                         expect(err.body).to.have.property('description')
-//                     })
-//             })
-//         })
-//
-//         context('when user already exists', () => {
-//             it('should return status code 409 and info message from duplicate data', () => {
-//
-//                 return request(app)
-//                     .post('/users/admin')
-//                     .send(defaultAdminUser)
-//                     .set('Content-Type', 'application/json')
-//                     .expect(409)
-//                     .then(err => {
-//                         expect(err.body).to.have.property('message')
-//                     })
-//             })
-//         })
-//     })
-//
-//     describe('POST /users/caregiver', () => {
-//         context('when posting a new caregiver user', () => {
-//             it('should return status code 201 and the saved user', () => {
-//
-//                 return request(app)
-//                     .post('/users/caregiver')
-//                     .send(defaultCaregiverUser)
-//                     .set('Content-Type', 'application/json')
-//                     .expect(201)
-//                     .then(res => {
-//                         expect(res.body).to.have.property('id')
-//                         expect(res.body).to.have.property('name')
-//                         expect(res.body.name).to.eql('Lorem Ipsum')
-//                         expect(res.body).to.have.property('email')
-//                         expect(res.body.email).to.eql('loremipsum@mail.com')
-//                         expect(res.body).to.have.property('type')
-//                         expect(res.body.type).to.eql(UserType.CAREGIVER)
-//                         expect(res.body).to.have.property('created_at')
-//                         defaultCaregiverUser.id = res.body.id
-//                     })
-//             })
-//         })
-//
-//         context('when there are missing or invalid parameters in request', () => {
-//             it('should return status code 400 and info message from invalid email', () => {
-//
-//                 const invalidCaregiverUser: User = new User()
-//                 invalidCaregiverUser.setName('Lorem Ipsum')
-//                 invalidCaregiverUser.setEmail('invalidmail')
-//                 invalidCaregiverUser.setPassword('loremipsum123')
-//
-//                 return request(app)
-//                     .post('/users/caregiver')
-//                     .send(invalidCaregiverUser)
-//                     .set('Content-Type', 'application/json')
-//                     .expect(400)
-//                     .then(err => {
-//                         expect(err.body).to.have.property('message')
-//                     })
-//             })
-//
-//             it('should return status code 400 and info message from missing parameters', () => {
-//
-//                 const invalidCaregiverUser: User = new User()
-//                 invalidCaregiverUser.setName('Lorem Ipsum')
-//                 invalidCaregiverUser.setPassword('loremipsum123')
-//
-//                 return request(app)
-//                     .post('/users/caregiver')
-//                     .send(invalidCaregiverUser)
-//                     .set('Content-Type', 'application/json')
-//                     .expect(400)
-//                     .then(err => {
-//                         expect(err.body).to.have.property('message')
-//                         expect(err.body).to.have.property('description')
-//                     })
-//             })
-//         })
-//
-//         context('when user already exists', () => {
-//             it('should return status code 409 and info message from duplicate data', () => {
-//
-//                 return request(app)
-//                     .post('/users/caregiver')
-//                     .send(defaultCaregiverUser)
-//                     .set('Content-Type', 'application/json')
-//                     .expect(409)
-//                     .then(err => {
-//                         expect(err.body).to.have.property('message')
-//                     })
-//             })
-//         })
-//     })
-//
-//     describe('GET /users/:user_id', () => {
-//         it('should return status code 200 and a unique user', () => {
-//
-//             return request(app)
-//                 .get(`/users/${defaultAdminUser.id}`)
-//                 .set('Content-Type', 'application/json')
-//                 .expect(200)
-//                 .then(res => {
-//                     expect(res.body).to.have.property('id')
-//                     expect(res.body.id).to.eql(defaultAdminUser.id)
-//                     expect(res.body).to.have.property('name')
-//                     expect(res.body.name).to.eql('Admin')
-//                     expect(res.body).to.have.property('email')
-//                     expect(res.body.email).to.eql('admin@example.com')
-//                     expect(res.body).to.have.property('type')
-//                     expect(res.body.type).to.eql(UserType.ADMIN)
-//                     expect(res.body).to.have.property('created_at')
-//                 })
-//         })
-//
-//         context('when there are no user with id parameter', () => {
-//             it('should return status code 404 and info message from user not found', () => {
-//
-//                 const randomId: ObjectID = new ObjectID()
-//
-//                 return request(app)
-//                     .get(`/users/${randomId}`)
-//                     .set('Content-Type', 'application/json')
-//                     .expect(404)
-//                     .then(err => {
-//                         expect(err.body).to.have.property('message')
-//                         expect(err.body).to.have.property('description')
-//                     })
-//             })
-//         })
-//
-//         context('when there are invalid parameters in request', () => {
-//             it('should return status code 400 and info about invalid user id', () => {
-//
-//                 const invalidId: string = '1a2b3c'
-//
-//                 return request(app)
-//                     .get(`/users/${invalidId}`)
-//                     .set('Content-Type', 'application/json')
-//                     .expect(400)
-//                     .then(err => {
-//                         expect(err.body).to.have.property('message')
-//                         expect(err.body).to.have.property('description')
-//                     })
-//             })
-//         })
-//     })
-//
-//     describe('PATCH /users/:user_id', () => {
-//         it('should return status code 200 and the updated user', () => {
-//
-//             return request(app)
-//                 .patch(`/users/${defaultAdminUser.id}`)
-//                 .send({ name: 'New Admin' })
-//                 .set('Content-Type', 'application/json')
-//                 .then(res => {
-//                     expect(res.body).to.have.property('id')
-//                     expect(res.body.id).to.eql(defaultAdminUser.id)
-//                     expect(res.body).to.have.property('name')
-//                     expect(res.body.name).to.eql('New Admin')
-//                     expect(res.body).to.have.property('email')
-//                     expect(res.body.email).to.eql('admin@example.com')
-//                     expect(res.body).to.have.property('type')
-//                     expect(res.body.type).to.eql(UserType.ADMIN)
-//                     expect(res.body).to.have.property('created_at')
-//                 })
-//         })
-//
-//         context('when there are invalid parameters in request', () => {
-//             it('should return status code 400 and info message from invalid user id', () => {
-//
-//                 const invalidId: string = '1a2b3c'
-//
-//                 return request(app)
-//                     .patch(`/users/${invalidId}`)
-//                     .send({ name: 'New Admin' })
-//                     .set('Content-Type', 'application/json')
-//                     .expect(400)
-//                     .then(err => {
-//                         expect(err.body).to.have.property('message')
-//                         expect(err.body).to.have.property('description')
-//                     })
-//             })
-//         })
-//
-//         context('when there are no user with id parameter', () => {
-//             it('should return status code 404 and info message from user not found', () => {
-//
-//                 const randomId: ObjectID = new ObjectID()
-//
-//                 return request(app)
-//                     .patch(`/users/${randomId}`)
-//                     .send({ name: 'New Admin' })
-//                     .set('Content-Type', 'application/json')
-//                     .expect(404)
-//                     .then(err => {
-//                         expect(err.body).to.have.property('message')
-//                         expect(err.body).to.have.property('description')
-//                     })
-//             })
-//         })
-//
-//         context('when there are parameters that can not be changed', () => {
-//             it('should return the status code 400 and message that the type can not be changed.', () => {
-//
-//                 return request(app)
-//                     .patch(`/users/${defaultAdminUser.id}`)
-//                     .send({ type: UserType.CAREGIVER })
-//                     .set('Content-Type', 'application/json')
-//                     .expect(400)
-//                     .then(err => {
-//                         expect(err.body).to.have.property('message')
-//                         expect(err.body).to.have.property('description')
-//                     })
-//             })
-//
-//             it('should return the status code 400 and message that the password is changed by another route.', () => {
-//
-//                 return request(app)
-//                     .patch(`/users/${defaultAdminUser.id}`)
-//                     .send({ password: 'newpassword123' })
-//                     .set('Content-Type', 'application/json')
-//                     .expect(400)
-//                     .then(err => {
-//                         expect(err.body).to.have.property('message')
-//                         expect(err.body).to.have.property('description')
-//                     })
-//             })
-//         })
-//     })
-//
-//     describe('PATCH /users/:user_id/password', () => {
-//
-//         it('should return status code 204 and no content', () => {
-//
-//             return request(app)
-//                 .patch(`/users/${defaultAdminUser.id}/password`)
-//                 .send({ old_password: 'admin', new_password: 'admin123' })
-//                 .set('Content-Type', 'application/json')
-//                 .expect(204)
-//                 .then(res => {
-//                     expect(res.body).to.be.empty
-//                 })
-//         })
-//
-//         context('when the old password does not match with user password', () => {
-//             it('should return status code 400 and message info about incompatible passwords', () => {
-//
-//                 return request(app)
-//                     .patch(`/users/${defaultAdminUser.id}/password`)
-//                     .send({ old_password: 'admin', new_password: 'admin123' })
-//                     .set('Content-Type', 'application/json')
-//                     .expect(400)
-//                     .then(err => {
-//                         expect(err.body).to.have.property('message')
-//                         expect(err.body).to.have.property('description')
-//                     })
-//             })
-//         })
-//
-//         context('when there are not required parameters in request', () => {
-//             it('should return status code 400 and message info about missing parameters', () => {
-//
-//                 return request(app)
-//                     .patch(`/users/${defaultAdminUser.id}/password`)
-//                     .send({})
-//                     .set('Content-Type', 'application/json')
-//                     .expect(400)
-//                     .then(err => {
-//                         expect(err.body).to.have.property('message')
-//                         expect(err.body).to.have.property('description')
-//                     })
-//             })
-//         })
-//
-//         context('when there are no user with id parameter', () => {
-//             it('should return status code 404 and info message from user not found', () => {
-//
-//                 const randomId: ObjectID = new ObjectID()
-//
-//                 return request(app)
-//                     .patch(`/users/${randomId}/paassword`)
-//                     .send({ old_password: 'admin', new_password: 'admin123' })
-//                     .set('Content-Type', 'application/json')
-//                     .expect(404)
-//                     .then(err => {
-//                         expect(err.body).to.have.property('message')
-//                         expect(err.body).to.have.property('description')
-//                     })
-//             })
-//         })
-//     })
-//
-//     describe('DELETE /users/:user_id', () => {
-//         it('should return status code 204 and no content', () => {
-//
-//             return request(app)
-//                 .delete(`/users/${defaultCaregiverUser.id}`)
-//                 .set('Content-Type', 'application/json')
-//                 .expect(204)
-//                 .then(res => {
-//                     expect(res.body).to.be.empty
-//                 })
-//         })
-//
-//         context('when there are no user with id parameter', () => {
-//             it('should return status code 404 and info message from user not found', () => {
-//
-//                 const randomId: ObjectID = new ObjectID()
-//
-//                 return request(app)
-//                     .delete(`/users/${randomId}`)
-//                     .set('Content-Type', 'application/json')
-//                     .expect(404)
-//                     .then(err => {
-//                         expect(err.body).to.have.property('message')
-//                         expect(err.body).to.have.property('description')
-//                     })
-//             })
-//         })
-//
-//         context('when there are invalid parameters in request', () => {
-//             it('should return status code 400 and info about invalid user id', () => {
-//
-//                 const invalidId: string = '1a2b3c'
-//
-//                 return request(app)
-//                     .delete(`/users/${invalidId}`)
-//                     .set('Content-Type', 'application/json')
-//                     .expect(400)
-//                     .then(err => {
-//                         expect(err.body).to.have.property('message')
-//                         expect(err.body).to.have.property('description')
-//                     })
-//             })
-//         })
-//
-//     })
-//
-//     describe('POST /users/auth', () => {
-//         it('should return a token when auth is successfully', () => {
-//
-//             return request(app)
-//                 .post('/users/auth')
-//                 .send({
-//                     email: defaultAdminUser.getEmail(),
-//                     password: 'admin123'
-//                 })
-//                 .set('Content-Type', 'application/json')
-//                 .expect(200)
-//                 .then(res => {
-//                     expect(res.body).is.not.null
-//                     expect(res.body).to.have.property('token')
-//                 })
-//         })
-//
-//         context('when there are invalid credentials in params', () => {
-//             it('should return status code 401 and info message from invalid credentials', () => {
-//
-//                 return request(app)
-//                     .post('/users/auth')
-//                     .send({
-//                         email: 'anyone@mail.com',
-//                         password: 'anyone'
-//                     })
-//                     .set('Content-Type', 'application/json')
-//                     .expect(401)
-//                     .then(err => {
-//                         expect(err.body).to.have.property('message')
-//                     })
-//             })
-//         })
-//
-//         context('when user needs to update your password', () => {
-//             it('should return status code 403 and info message from change password', () => {
-//
-//                 updateChangeUser(
-//                     { _id: defaultAdminUser.id },
-//                     { change_password: true })
-//
-//                 return request(app)
-//                     .post('/users/auth')
-//                     .send({
-//                         email: defaultAdminUser.getEmail(),
-//                         password: 'admin123'
-//                     })
-//                     .set('Content-Type', 'application/json')
-//                     .expect(403)
-//                     .then(err => {
-//                         expect(err.body).to.have.property('message')
-//                         expect(err.body).to.have.property('description')
-//                         expect(err.body).to.have.property('redirect_link')
-//                     })
-//             })
-//         })
-//     })
-//
-//     describe('GET /users', () => {
-//         it('should return status code 200 and a list of users', () => {
-//
-//             return request(app)
-//                 .get('/users')
-//                 .set('Content-Type', 'application/json')
-//                 .expect(200)
-//                 .then(res => {
-//                     expect(res.body).to.have.lengthOf(2)
-//                     expect(res.body[0]).to.have.property('id')
-//                     expect(res.body[0]).to.have.property('name')
-//                     expect(res.body[0]).to.have.property('email')
-//                     expect(res.body[0]).to.have.property('type')
-//                     expect(res.body[1]).to.have.property('id')
-//                     expect(res.body[1]).to.have.property('name')
-//                     expect(res.body[1]).to.have.property('email')
-//                     expect(res.body[1]).to.have.property('type')
-//                 })
-//         })
-//     })
-//
-//     context('when there are no users in database', () => {
-//         it('should return status code 200 and a empty list', () => {
-//
-//             deleteMany()
-//
-//             return request(app)
-//                 .get('/users')
-//                 .set('Content-Type', 'application/json')
-//                 .expect(200)
-//                 .then(res => {
-//                     expect(res.body).to.be.empty
-//                 })
-//         })
-//     })
-// })
-//
-// async function deleteMany() {
-//     await UserRepoModel.deleteMany({})
-// }
-//
-// async function updateChangeUser(conditions, doc) {
-//     await UserRepoModel.updateOne(conditions, doc).exec()
-// }
+import { expect } from 'chai'
+import { Admin } from '../../../src/application/domain/model/admin'
+import { UserType } from '../../../src/application/domain/utils/user.type'
+import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
+import { Container } from 'inversify'
+import { DI } from '../../../src/di/di'
+import { IConnectionDB } from '../../../src/infrastructure/port/connection.db.interface'
+import { Identifier } from '../../../src/di/identifiers'
+import { IAdminRepository } from '../../../src/application/port/admin.repository.interface'
+import { App } from '../../../src/app'
+import { ObjectID } from 'bson'
+import { Strings } from '../../../src/utils/strings'
+
+const container: Container = DI.getInstance().getContainer()
+const dbConnection: IConnectionDB = container.get(Identifier.MONGODB_CONNECTION)
+const adminRepo: IAdminRepository = container.get(Identifier.ADMIN_REPOSITORY)
+const app: App = container.get(Identifier.APP)
+const request = require('supertest')(app.getExpress())
+
+describe('Routes: Users', () => {
+    const user = new Admin()
+    user.email = 'admin@test.com'
+    user.password = 'password'
+    user.type = UserType.ADMIN
+    user.change_password = false
+
+    before(async () => {
+            try {
+                await dbConnection.tryConnect(0, 500)
+                const result = await adminRepo.create(user)
+                user.id = result.id
+            } catch (err) {
+                throw new Error('Failure on User test: ' + err.message)
+            }
+        }
+    )
+
+    after(async () => {
+        try {
+            await deleteAllUsers({})
+            await dbConnection.dispose()
+        } catch (err) {
+            throw new Error('Failure on User test: ' + err.message)
+        }
+    })
+
+    describe('PATCH /users/:user_id/password', () => {
+        context('when the password is updated', () => {
+            it('should return status code 204 and no content', () => {
+                return request
+                    .patch(`/users/${user.id}/password`)
+                    .send({ old_password: 'password', new_password: 'new@password' })
+                    .set('Content-Type', 'application/json')
+                    .expect(204)
+                    .then(res => {
+                        expect(res.body).to.eql({})
+                    })
+            })
+        })
+
+        context('when the user is not found', () => {
+            it('should return status code 404 and message from user not found', () => {
+                return request
+                    .patch(`/users/${new ObjectID()}/password`)
+                    .send({ old_password: 'password', new_password: 'new@password' })
+                    .set('Content-Type', 'application/json')
+                    .expect(404)
+                    .then(res => {
+                        expect(res.body).to.have.property('message')
+                        expect(res.body.message).to.eql(Strings.USER.NOT_FOUND)
+                        expect(res.body).to.have.property('description')
+                        expect(res.body.description).to.eql(Strings.USER.NOT_FOUND_DESCRIPTION)
+                    })
+            })
+        })
+
+        context('when the old_password does not match', () => {
+            it('should return status code 400 and message from password does not match', () => {
+                return request
+                    .patch(`/users/${user.id}/password`)
+                    .send({ old_password: 'password', new_password: 'new@password' })
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(res => {
+                        expect(res.body).to.have.property('message')
+                        expect(res.body.message).to.eql(Strings.USER.PASSWORD_NOT_MATCH)
+                        expect(res.body).to.have.property('description')
+                        expect(res.body.description).to.eql(Strings.USER.PASSWORD_NOT_MATCH_DESCRIPTION)
+                    })
+            })
+        })
+
+        context('when there are validation errors', () => {
+            it('should return status code 400 and message from invalid id', () => {
+                return request
+                    .patch('/users/123/password')
+                    .send({ old_password: 'password', new_password: 'new@password' })
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(res => {
+                        expect(res.body).to.have.property('message')
+                        expect(res.body.message).to.eql('Some ID provided does not have a valid format!')
+                        expect(res.body).to.have.property('description')
+                        expect(res.body.description).to.eql('A 24-byte hex ID similar to this: 507f191e810c19729de860ea ' +
+                            'is expected.')
+                    })
+            })
+
+            it('should return status code 400 and message from missing old_password', () => {
+                return request
+                    .patch(`/users/${user.id}/password`)
+                    .send({ new_password: 'new@password' })
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(res => {
+                        expect(res.body).to.have.property('message')
+                        expect(res.body.message).to.eql('Required fields were not provided...')
+                        expect(res.body).to.have.property('description')
+                        expect(res.body.description).to.eql('Change password validation: old_password required!')
+                    })
+            })
+
+            it('should return status code 400 and message from missing new_password', () => {
+                return request
+                    .patch(`/users/${user.id}/password`)
+                    .send({ old_password: 'new@password' })
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(res => {
+                        expect(res.body).to.have.property('message')
+                        expect(res.body.message).to.eql('Required fields were not provided...')
+                        expect(res.body).to.have.property('description')
+                        expect(res.body.description).to.eql('Change password validation: new_password required!')
+                    })
+            })
+
+            it('should return status code 400 and message from missing old_password and new_password', () => {
+                return request
+                    .patch(`/users/${user.id}/password`)
+                    .send({})
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(res => {
+                        expect(res.body).to.have.property('message')
+                        expect(res.body.message).to.eql('Required fields were not provided...')
+                        expect(res.body).to.have.property('description')
+                        expect(res.body.description).to.eql('Change password validation: old_password, new_password required!')
+                    })
+            })
+        })
+    })
+
+    describe('DELETE /users/:user_id', () => {
+        context('when the delete was successful', () => {
+            it('should return status code 204 and no content', () => {
+                return request
+                    .delete(`/users/${user.id}`)
+                    .set('Content-Type', 'application/json')
+                    .expect(204)
+                    .then(res => {
+                        expect(res.body).to.eql({})
+                    })
+            })
+        })
+
+        context('when the user is not found', () => {
+            it('should return status code 404 and message from user not found', () => {
+                return request
+                    .delete(`/users/${new ObjectID()}`)
+                    .set('Content-Type', 'application/json')
+                    .expect(204)
+                    .then(res => {
+                        expect(res.body).to.eql({})
+                    })
+
+            })
+        })
+
+        context('when the id is invalid', () => {
+            it('should return status code 400 and message from invalid id', () => {
+                return request
+                    .delete('/users/123')
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(res => {
+                        expect(res.body).to.have.property('message')
+                        expect(res.body.message).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
+                        expect(res.body).to.have.property('description')
+                        expect(res.body.description).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
+                    })
+            })
+        })
+    })
+})
+
+async function deleteAllUsers(doc) {
+    return await UserRepoModel.deleteMany(doc)
+}

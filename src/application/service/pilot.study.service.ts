@@ -22,16 +22,8 @@ export class PilotStudyService implements IPilotStudyService {
     }
 
     public async add(item: PilotStudy): Promise<PilotStudy> {
-
         try {
             CreatePilotStudyValidator.validate(item)
-
-            if (item.name) {
-                const hasName =
-                    await this._pilotStudyRepository.checkExists(item)
-                if (hasName) throw new ValidationException(Strings.PILOT_STUDY.NAME_ALREADY_REGISTERED)
-            }
-
             if (item.health_professionals_id) {
                 const validateHealthList =
                     await this._healthProfessionalRepository.checkExists(item.health_professionals_id)
@@ -42,11 +34,10 @@ export class PilotStudyService implements IPilotStudyService {
                     )
                 }
             }
+            return this._pilotStudyRepository.create(item)
         } catch (err) {
             return Promise.reject(err)
         }
-
-        return this._pilotStudyRepository.create(item)
     }
 
     public async getAll(query: IQuery): Promise<Array<PilotStudy>> {
@@ -56,46 +47,29 @@ export class PilotStudyService implements IPilotStudyService {
     public async getById(id: string, query: IQuery): Promise<PilotStudy> {
         try {
             ObjectIdValidator.validate(id)
+            query.addFilter({ _id: id })
+            return this._pilotStudyRepository.findOne(query)
         } catch (err) {
             return Promise.reject(err)
         }
-        query.addFilter({ _id: id })
-        return this._pilotStudyRepository.findOne(query)
     }
 
     public async remove(id: string): Promise<boolean> {
         try {
             ObjectIdValidator.validate(id)
+            return this._pilotStudyRepository.delete(id)
         } catch (err) {
             return Promise.reject(err)
         }
-        return this._pilotStudyRepository.delete(id)
     }
 
     public async update(item: PilotStudy): Promise<PilotStudy> {
         try {
             UpdatePilotStudyValidator.validate(item)
-
-            if (item.name) {
-                const hasName =
-                    await this._pilotStudyRepository.checkExists(new PilotStudy().fromJSON({ name: item.name }))
-                if (hasName) throw new ValidationException(Strings.PILOT_STUDY.NAME_ALREADY_REGISTERED)
-            }
-
-            if (item.health_professionals_id) {
-                const validateHealthList =
-                    await this._healthProfessionalRepository.checkExists(item.health_professionals_id)
-                if (validateHealthList instanceof ValidationException) {
-                    throw new ValidationException(
-                        Strings.HEALTH_PROFESSIONAL.HEALTH_PROFESSIONAL_REGISTER_REQUIRED,
-                        Strings.HEALTH_PROFESSIONAL.IDS_WITHOUT_REGISTER.concat(' ').concat(validateHealthList.message)
-                    )
-                }
-            }
+            return this._pilotStudyRepository.update(item)
         } catch (err) {
             return Promise.reject(err)
         }
-        return this._pilotStudyRepository.update(item)
     }
 
     public async associateHealthProfessional(pilotId: string, healthId: string): Promise<PilotStudy> {
@@ -112,7 +86,6 @@ export class PilotStudyService implements IPilotStudyService {
             const checkHealthExists =
                 await this._healthProfessionalRepository.checkExists(new HealthProfessional().fromJSON(healthId))
             if (!checkHealthExists) throw new ValidationException(Strings.HEALTH_PROFESSIONAL.ASSOCIATION_FAILURE)
-
             pilotStudy.addHealthProfessional(new HealthProfessional().fromJSON(healthId))
 
             return this._pilotStudyRepository.update(pilotStudy)
