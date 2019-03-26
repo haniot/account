@@ -5,6 +5,7 @@ import { IUserRepository } from '../port/user.repository.interface'
 import { ChangePasswordValidator } from '../domain/validator/change.password.validator'
 import { IQuery } from '../port/query.interface'
 import { User } from '../domain/model/user'
+import { ObjectIdValidator } from '../domain/validator/object.id.validator'
 
 /**
  * Implementing User Service.
@@ -24,7 +25,12 @@ export class UserService implements IUserService {
      * @throws {ValidationException | RepositoryException}
      */
     public async remove(id: string): Promise<boolean> {
-        return this._userRepository.delete(id)
+        try {
+            ObjectIdValidator.validate(id)
+            return this._userRepository.delete(id)
+        } catch (err) {
+            return Promise.reject(err)
+        }
     }
 
     /**
@@ -37,8 +43,13 @@ export class UserService implements IUserService {
      * @throws {ValidationException | RepositoryException}
      */
     public async changePassword(id: string, old_password: string, new_password: string): Promise<boolean> {
-        await ChangePasswordValidator.validate(old_password, new_password)
-        return this._userRepository.changePassword(id, old_password, new_password)
+        try {
+            ObjectIdValidator.validate(id)
+            ChangePasswordValidator.validate(old_password, new_password)
+            return this._userRepository.changePassword(id, old_password, new_password)
+        } catch (err) {
+            return Promise.reject(err)
+        }
     }
 
     public add(item: User): Promise<User> {

@@ -46,7 +46,7 @@ describe('Routes: Auth', () => {
     describe('POST /auth', () => {
         context('when the auth was successful', () => {
             it('should return the access token', () => {
-                request
+                return request
                     .post('/auth')
                     .send({ email: 'admin@test.com', password: 'password' })
                     .set('Content-Type', 'application/json')
@@ -60,7 +60,7 @@ describe('Routes: Auth', () => {
 
         context('when there are validation errors', () => {
             it('should return status code 400 and message from missing email', () => {
-                request
+                return request
                     .post('/auth')
                     .send({ password: 'password' })
                     .set('Content-Type', 'application/json')
@@ -74,7 +74,7 @@ describe('Routes: Auth', () => {
             })
 
             it('should return status code 400 and message from invalid email', () => {
-                request
+                return request
                     .post('/auth')
                     .send({ email: 'invalid.com', password: 'password' })
                     .set('Content-Type', 'application/json')
@@ -86,7 +86,7 @@ describe('Routes: Auth', () => {
             })
 
             it('should return status code 400 and message from missing password', () => {
-                request
+                return request
                     .post('/auth')
                     .send({ email: 'admin@test.com' })
                     .set('Content-Type', 'application/json')
@@ -100,7 +100,7 @@ describe('Routes: Auth', () => {
             })
 
             it('should return status code 400 and message from missing email and password', () => {
-                request
+                return request
                     .post('/auth')
                     .send({})
                     .set('Content-Type', 'application/json')
@@ -116,7 +116,7 @@ describe('Routes: Auth', () => {
 
         context('when the email or password is invalid', () => {
             it('should return status code 401 and message for invalid email ', () => {
-                request
+                return request
                     .post('/auth')
                     .send({ email: 'another@mail.com', password: 'password' })
                     .set('Content-Type', 'application/json')
@@ -129,7 +129,7 @@ describe('Routes: Auth', () => {
             })
 
             it('should return status code 401 and message for invalid password ', () => {
-                request
+                return request
                     .post('/auth')
                     .send({ email: 'admin@test.com', password: '123' })
                     .set('Content-Type', 'application/json')
@@ -147,7 +147,7 @@ describe('Routes: Auth', () => {
                 user.change_password = true
                 await updateUser(user.id, { change_password: true }).then()
 
-                request
+                return request
                     .post('/auth')
                     .send({ email: 'admin@test.com', password: 'password' })
                     .set('Content-Type', 'application/json')
