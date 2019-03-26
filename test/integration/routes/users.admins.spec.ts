@@ -16,7 +16,7 @@ const app: App = container.get(Identifier.APP)
 const request = require('supertest')(app.getExpress())
 
 describe('Routes: UsersAdmins', () => {
-    const user = new Admin().fromJSON(DefaultEntityMock.ADMIN)
+    const user: Admin = new Admin().fromJSON(DefaultEntityMock.ADMIN)
 
     before(async () => {
             try {

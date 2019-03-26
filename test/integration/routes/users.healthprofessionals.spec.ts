@@ -16,7 +16,7 @@ const app: App = container.get(Identifier.APP)
 const request = require('supertest')(app.getExpress())
 
 describe('Routes: UsersHealthProfessionals', () => {
-    const user = new HealthProfessional().fromJSON(DefaultEntityMock.HEALTH_PROFESSIONAL)
+    const user: HealthProfessional = new HealthProfessional().fromJSON(DefaultEntityMock.HEALTH_PROFESSIONAL)
 
     before(async () => {
             try {

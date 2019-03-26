@@ -16,7 +16,7 @@ const app: App = container.get(Identifier.APP)
 const request = require('supertest')(app.getExpress())
 
 describe('Routes: Auth', () => {
-    const user = new Admin()
+    const user: Admin = new Admin()
     user.email = 'admin@test.com'
     user.password = 'password'
     user.type = UserType.ADMIN
