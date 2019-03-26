@@ -65,6 +65,8 @@ export class HealthProfessionalService implements IHealthProfessionalService {
 
     public async getAllPilotStudies(item: HealthProfessional): Promise<Array<PilotStudy>> {
         try {
+
+            if (item.id) ObjectIdValidator.validate(item.id)
             const result = await this._pilotStudyRepository.find(new Query().fromJSON({
                 health_professionals_id: { $in: item.id }
             }))
