@@ -9,6 +9,7 @@ import { Identifier } from '../../../src/di/identifiers'
 import { IAdminRepository } from '../../../src/application/port/admin.repository.interface'
 import { App } from '../../../src/app'
 import { ObjectID } from 'bson'
+import { Strings } from '../../../src/utils/strings'
 
 const container: Container = DI.getInstance().getContainer()
 const dbConnection: IConnectionDB = container.get(Identifier.MONGODB_CONNECTION)
@@ -66,10 +67,9 @@ describe('Routes: Users', () => {
                     .expect(404)
                     .then(res => {
                         expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql('User not found!')
+                        expect(res.body.message).to.eql(Strings.USER.NOT_FOUND)
                         expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql('User not found or already removed. A new operation for the same ' +
-                            'resource is not required!')
+                        expect(res.body.description).to.eql(Strings.USER.NOT_FOUND_DESCRIPTION)
                     })
             })
         })
@@ -83,10 +83,9 @@ describe('Routes: Users', () => {
                     .expect(400)
                     .then(res => {
                         expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql('Password does not match.')
+                        expect(res.body.message).to.eql(Strings.USER.PASSWORD_NOT_MATCH)
                         expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql('The old password parameter does not match with the actual ' +
-                            'user password.')
+                        expect(res.body.description).to.eql(Strings.USER.PASSWORD_NOT_MATCH_DESCRIPTION)
                     })
             })
         })
@@ -169,13 +168,9 @@ describe('Routes: Users', () => {
                 return request
                     .delete(`/users/${new ObjectID()}`)
                     .set('Content-Type', 'application/json')
-                    .expect(404)
+                    .expect(204)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql('User not found!')
-                        expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql('User not found or already removed. A new operation for the same ' +
-                            'resource is not required!')
+                        expect(res.body).to.eql({})
                     })
 
             })
@@ -189,10 +184,9 @@ describe('Routes: Users', () => {
                     .expect(400)
                     .then(res => {
                         expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql('Some ID provided does not have a valid format!')
+                        expect(res.body.message).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
                         expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql('A 24-byte hex ID similar to this: 507f191e810c19729de860ea ' +
-                            'is expected.')
+                        expect(res.body.description).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
                     })
             })
         })

@@ -9,6 +9,7 @@ import { ILogger } from '../../utils/custom.logger'
 import { ChangePasswordException } from '../../application/domain/exception/change.password.exception'
 import bcrypt from 'bcryptjs'
 import { Query } from './query/query'
+import { Strings } from '../../utils/strings'
 
 /**
  * Implementation of the user repository.
@@ -62,8 +63,8 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
                     if (!user) return resolve(false)
                     if (!this.comparePasswords(old_password, user.password)) {
                         return reject(new ChangePasswordException(
-                            'Password does not match.',
-                            'The old password parameter does not match with the actual user password.'
+                            Strings.USER.PASSWORD_NOT_MATCH,
+                            Strings.USER.PASSWORD_NOT_MATCH_DESCRIPTION
                         ))
                     }
                     user.password = this.encryptPassword(new_password)
