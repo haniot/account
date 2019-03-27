@@ -23,7 +23,11 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
             'healthprofessional:read',
             'healthprofessional:update',
             'pilotstudy:read',
-            'pilotstudy:update'
+            'pilotstudy:update',
+            'patient:create',
+            'patient:readAll',
+            'patient:update',
+            'patient:delete'
         ]
     }
 
