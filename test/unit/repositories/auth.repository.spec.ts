@@ -100,7 +100,7 @@ describe('Repositories: AuthRepository', () => {
         })
 
         context('when the password does not match', () => {
-            it('should return undefined', () => {
+            it('should return error for invalid credentials', () => {
                 user.change_password = false
                 sinon
                     .mock(modelFake)
@@ -110,8 +110,10 @@ describe('Repositories: AuthRepository', () => {
                     .resolves(user)
 
                 return repo.authenticate(user.email!, 'anotherpassword')
-                    .then(result => {
-                        assert.equal(result, undefined)
+                    .catch(err => {
+                        assert.property(err, 'message')
+                        assert.propertyVal(
+                            err, 'message', 'Authentication failed due to invalid authentication credentials.')
                     })
             })
         })
