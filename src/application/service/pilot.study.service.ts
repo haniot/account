@@ -72,23 +72,33 @@ export class PilotStudyService implements IPilotStudyService {
         }
     }
 
-    public async associateHealthProfessional(pilotId: string, healthId: string): Promise<PilotStudy> {
+    public async associateHealthProfessional(pilotId: string, healthId: string): Promise<Array<HealthProfessional> | undefined> {
 
         try {
-            ObjectIdValidator.validate(healthId)
             ObjectIdValidator.validate(pilotId)
+            ObjectIdValidator.validate(healthId)
 
-            const pilotStudy: PilotStudy =
-                await this._pilotStudyRepository.findOne(new Query().fromJSON({ _id: pilotId }))
-            if (!pilotStudy)
-                throw new ValidationException(Strings.PILOT_STUDY.NOT_FOUND, Strings.PILOT_STUDY.NOT_FOUND_DESCRIPTION)
+            const query: Query = new Query()
+            query.addFilter({ _id: pilotId })
+
+            const pilotStudy: PilotStudy = await this._pilotStudyRepository.findOne(query)
+            if (!pilotStudy) return Promise.resolve(undefined)
 
             const checkHealthExists =
                 await this._healthProfessionalRepository.checkExists(new HealthProfessional().fromJSON(healthId))
             if (!checkHealthExists) throw new ValidationException(Strings.HEALTH_PROFESSIONAL.ASSOCIATION_FAILURE)
             pilotStudy.addHealthProfessional(new HealthProfessional().fromJSON(healthId))
 
-            return this._pilotStudyRepository.update(pilotStudy)
+            const result = await this._pilotStudyRepository.update(pilotStudy)
+            if (!result) return Promise.resolve(undefined)
+
+            if (result.health_professionals_id && result.health_professionals_id.length) {
+                result.health_professionals_id.forEach(value => {
+                    value.type = undefined
+                })
+            }
+
+            return Promise.resolve(result.health_professionals_id)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -99,10 +109,11 @@ export class PilotStudyService implements IPilotStudyService {
             ObjectIdValidator.validate(healthId)
             ObjectIdValidator.validate(pilotId)
 
-            const pilotStudy: PilotStudy =
-                await this._pilotStudyRepository.findOne(new Query().fromJSON({ _id: pilotId }))
-            if (!pilotStudy)
-                throw new ValidationException(Strings.PILOT_STUDY.NOT_FOUND, Strings.PILOT_STUDY.NOT_FOUND_DESCRIPTION)
+            const query: Query = new Query()
+            query.addFilter({ _id: pilotId })
+
+            const pilotStudy: PilotStudy = await this._pilotStudyRepository.findOne(query)
+            if (!pilotStudy) return Promise.resolve(undefined)
 
             if (pilotStudy.health_professionals_id) {
                 pilotStudy.health_professionals_id =
@@ -127,8 +138,13 @@ export class PilotStudyService implements IPilotStudyService {
 
             const pilotStudy: PilotStudy = await this._pilotStudyRepository.findOne(query)
             if (!pilotStudy) return Promise.resolve(undefined)
+            if (pilotStudy.health_professionals_id && pilotStudy.health_professionals_id.length) {
+                pilotStudy.health_professionals_id.forEach(value => {
+                    value.type = undefined
+                })
+            }
 
-            return Promise.resolve(pilotStudy.health_professionals_id ? pilotStudy.health_professionals_id : [])
+            return Promise.resolve(pilotStudy.health_professionals_id)
         } catch (err) {
             return Promise.reject(err)
         }

@@ -111,7 +111,7 @@ export class PilotStudyController {
             )
 
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessagePilotStudyNotFound())
-            return res.status(HttpStatus.NO_CONTENT).send()
+            return res.status(HttpStatus.CREATED).send(result)
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
             return res.status(handleError.code).send(handleError.toJson())

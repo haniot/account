@@ -7,7 +7,7 @@ export interface IPilotStudyService extends IService<PilotStudy> {
 
     getAllHealthProfessionals(pilotId: string, query: IQuery): Promise<Array<HealthProfessional> | undefined>
 
-    associateHealthProfessional(pilotId: string, healthId: string): Promise<PilotStudy>
+    associateHealthProfessional(pilotId: string, healthId: string): Promise<Array<HealthProfessional> | undefined>
 
     disassociateHealthProfessional(pilotId: string, healthId: string): Promise<boolean | undefined>
 }
