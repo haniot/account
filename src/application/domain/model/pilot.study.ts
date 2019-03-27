@@ -3,6 +3,7 @@ import { IJSONSerializable } from '../utils/json.serializable.interface'
 import { IJSONDeserializable } from '../utils/json.deserializable.interface'
 import { JsonUtils } from '../utils/json.utils'
 import { HealthProfessional } from './health.professional'
+import { DatetimeValidator } from '../validator/date.time.validator'
 
 export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeserializable<PilotStudy> {
     private _name?: string
@@ -67,6 +68,11 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
         })
     }
 
+    public convertDatetimeString(value: string): Date {
+        DatetimeValidator.validate(value)
+        return new Date(value)
+    }
+
     public fromJSON(json: any): PilotStudy {
         if (!json) return this
         if (typeof json === 'string') {
@@ -81,8 +87,8 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
         if (json.id !== undefined) super.id = json.id
         if (json.name !== undefined) this.name = json.name
         if (json.is_active !== undefined) this.is_active = json.is_active
-        if (json.start !== undefined) this.start = json.start
-        if (json.end !== undefined) this.end = json.end
+        if (json.start !== undefined) this.start = this.convertDatetimeString(json.start)
+        if (json.end !== undefined) this.end = this.convertDatetimeString(json.end)
         if (json.health_professionals_id !== undefined && json.health_professionals_id instanceof Array)
             this.health_professionals_id =
                 json.health_professionals_id.map(id => new HealthProfessional().fromJSON(id))

@@ -245,7 +245,7 @@ describe('Services: HealthProfessionalService', () => {
     describe('getAllPilotStudies()', () => {
         context('when want get all pilot studies associated with a health professional', () => {
             it('should return a list of pilot studies', () => {
-                return service.getAllPilotStudies(user)
+                return service.getAllPilotStudies(user.id!, new Query())
                     .then(result => {
                         assert.isArray(result)
                         assert.lengthOf(result, 1)
@@ -254,9 +254,9 @@ describe('Services: HealthProfessionalService', () => {
                         assert.property(result[0], 'is_active')
                         assert.propertyVal(result[0], 'is_active', pilot.is_active)
                         assert.property(result[0], 'start')
-                        assert.propertyVal(result[0], 'start', pilot.start)
+                        assert.equal(result[0].start!.toString(), pilot.start!.toString())
                         assert.property(result[0], 'end')
-                        assert.propertyVal(result[0], 'end', pilot.end)
+                        assert.equal(result[0].end!.toString(), pilot.end!.toString())
                     })
             })
         })
@@ -264,10 +264,10 @@ describe('Services: HealthProfessionalService', () => {
         context('when a repository error occurs', () => {
             it('should reject a error', () => {
                 user.id = undefined
-                return service.getAllPilotStudies(user)
+                return service.getAllPilotStudies(user.id!, new Query())
                     .catch(err => {
                         assert.property(err, 'message')
-                        assert.propertyVal(err, 'message', 'any error')
+                        assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
                     })
             })
         })

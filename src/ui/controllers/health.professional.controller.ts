@@ -81,7 +81,7 @@ export class HealthProfessionalController {
         try {
             const result: any =
                 await this._healthProfessionalService
-                    .getAllPilotStudies(new HealthProfessional().fromJSON({ id: req.params.healthprofessional_id }))
+                    .getAllPilotStudies(req.params.healthprofessional_id, new Query().fromJSON(req.query))
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageHealthProfessionalNotFound())
             return res.status(HttpStatus.OK).send(result)
         } catch (err) {

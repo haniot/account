@@ -42,7 +42,11 @@ export class AuthRepository implements IAuthRepository {
                     }
 
                     if (!this._userRepository.comparePasswords(password, user.password)) {
-                        return resolve(undefined)
+                        return reject(
+                            new AuthenticationException(
+                                'Authentication failed due to invalid authentication credentials.'
+                            )
+                        )
                     }
 
                     if (user.change_password) {

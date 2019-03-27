@@ -136,7 +136,7 @@ describe('Routes: Auth', () => {
                     .expect(401)
                     .then(res => {
                         expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql('Invalid email or password!')
+                        expect(res.body.message).to.eql('Authentication failed due to invalid authentication credentials.')
                     })
 
             })

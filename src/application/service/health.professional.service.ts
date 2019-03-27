@@ -10,7 +10,6 @@ import { ObjectIdValidator } from '../domain/validator/object.id.validator'
 import { UpdateHealthProfessionalValidator } from '../domain/validator/update.health.professional.validator'
 import { IPilotStudyRepository } from '../port/pilot.study.repository.interface'
 import { PilotStudy } from '../domain/model/pilot.study'
-import { Query } from '../../infrastructure/repository/query/query'
 
 @injectable()
 export class HealthProfessionalService implements IHealthProfessionalService {
@@ -63,14 +62,12 @@ export class HealthProfessionalService implements IHealthProfessionalService {
         }
     }
 
-    public async getAllPilotStudies(item: HealthProfessional): Promise<Array<PilotStudy>> {
+    public async getAllPilotStudies(healthProfessionalId: string, query: IQuery): Promise<Array<PilotStudy> | undefined> {
         try {
-
-            if (item.id) ObjectIdValidator.validate(item.id)
-            const query: Query = new Query()
-            query.addFilter({ 'health_professionals_id._id': item.id })
-
+            ObjectIdValidator.validate(healthProfessionalId)
+            query.addFilter({ 'health_professionals_id._id': healthProfessionalId })
             const result = await this._pilotStudyRepository.find(query)
+            if (!result) return Promise.resolve(undefined)
 
             if (result.length) {
                 result.forEach(pilotStudy => {

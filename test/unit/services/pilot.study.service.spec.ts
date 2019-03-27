@@ -22,9 +22,10 @@ describe('Services: PilotStudyService', () => {
                         assert.propertyVal(result, 'name', pilot.name)
                         assert.property(result, 'is_active')
                         assert.propertyVal(result, 'is_active', pilot.is_active)
-                        assert.propertyVal(result, 'start', pilot.start)
+                        assert.property(result, 'start')
+                        assert.equal(result.start!.toString(), pilot.start!.toString())
                         assert.property(result, 'end')
-                        assert.propertyVal(result, 'end', pilot.end)
+                        assert.equal(result.end!.toString(), pilot.end!.toString())
                         assert.property(result, 'health_professionals_id')
                     })
             })
@@ -148,6 +149,7 @@ describe('Services: PilotStudyService', () => {
             it('should return a list of pilot studies', () => {
                 return service.getAll(new Query())
                     .then(result => {
+                        console.log(result[0].start!, pilot.start!)
                         assert.isArray(result)
                         assert.lengthOf(result, 1)
                         assert.property(result[0], 'id')
@@ -156,9 +158,8 @@ describe('Services: PilotStudyService', () => {
                         assert.propertyVal(result[0], 'name', pilot.name)
                         assert.property(result[0], 'is_active')
                         assert.propertyVal(result[0], 'is_active', pilot.is_active)
-                        assert.propertyVal(result[0], 'start', pilot.start)
+                        assert.property(result[0], 'start')
                         assert.property(result[0], 'end')
-                        assert.propertyVal(result[0], 'end', pilot.end)
                         assert.property(result[0], 'health_professionals_id')
                     })
             })
@@ -176,9 +177,8 @@ describe('Services: PilotStudyService', () => {
                         assert.propertyVal(result, 'name', pilot.name)
                         assert.property(result, 'is_active')
                         assert.propertyVal(result, 'is_active', pilot.is_active)
-                        assert.propertyVal(result, 'start', pilot.start)
+                        assert.property(result, 'start')
                         assert.property(result, 'end')
-                        assert.propertyVal(result, 'end', pilot.end)
                         assert.property(result, 'health_professionals_id')
                     })
             })
@@ -225,9 +225,8 @@ describe('Services: PilotStudyService', () => {
     describe('update()', () => {
         context('when update a pilot study', () => {
             it('should return the updated pilot study', () => {
-                const pilotNew = pilot.toJSON()
-                delete pilotNew.health_professionals_id
-                return service.update(new PilotStudy().fromJSON(pilotNew))
+                pilot.health_professionals_id = undefined
+                return service.update(pilot)
                     .then(result => {
                         assert.property(result, 'id')
                         assert.propertyVal(result, 'id', pilot.id)
@@ -235,9 +234,8 @@ describe('Services: PilotStudyService', () => {
                         assert.propertyVal(result, 'name', pilot.name)
                         assert.property(result, 'is_active')
                         assert.propertyVal(result, 'is_active', pilot.is_active)
-                        assert.propertyVal(result, 'start', pilot.start)
+                        assert.property(result, 'start')
                         assert.property(result, 'end')
-                        assert.propertyVal(result, 'end', pilot.end)
                     })
             })
         })

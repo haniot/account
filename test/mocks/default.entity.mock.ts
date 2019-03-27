@@ -28,8 +28,8 @@ export abstract class DefaultEntityMock {
         id: new ObjectId(),
         name: 'pilotstudy',
         is_active: true,
-        start: '2019-03-15T00:00:00',
-        end: '2019-04-15T23:59:59',
+        start: '2019-03-15T00:00:00.000Z',
+        end: '2019-04-15T23:59:59.000Z',
         health_professionals_id: [DefaultEntityMock.HEALTH_PROFESSIONAL]
     }
 }
