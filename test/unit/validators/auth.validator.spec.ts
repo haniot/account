@@ -3,12 +3,12 @@ import { assert } from 'chai'
 
 describe('Validators: AuthValidator', () => {
     it('should return undefined when the validation was successful', () => {
-        const result = AuthValidator.validate('username', 'password')
+        const result = AuthValidator.validate('user@mail.com', 'password')
         assert.equal(result, undefined)
     })
 
     context('when doest not pass username or password', () => {
-        it('should throw an error for does not pass username', () => {
+        it('should throw an error for does not pass email', () => {
             try {
                 AuthValidator.validate('', 'password')
             } catch (err) {
@@ -19,9 +19,18 @@ describe('Validators: AuthValidator', () => {
             }
         })
 
+        it('should throw an error for does pass invalid email', () => {
+            try {
+                AuthValidator.validate('invalid', 'password')
+            } catch (err) {
+                assert.property(err, 'message')
+                assert.equal(err.message, 'Invalid email address!')
+            }
+        })
+
         it('should throw an error for does not pass password', () => {
             try {
-                AuthValidator.validate('username', '')
+                AuthValidator.validate('user@mail.com', '')
             } catch (err) {
                 assert.property(err, 'message')
                 assert.property(err, 'description')

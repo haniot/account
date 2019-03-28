@@ -10,7 +10,6 @@ import { IJSONDeserializable } from '../utils/json.deserializable.interface'
  * @implements {IJSONSerializable, IJSONDeserializable<User>}
  */
 export class User extends Entity implements IJSONSerializable, IJSONDeserializable<User> {
-    private _username?: string // Username for user authentication.
     private _password?: string // Password for user authentication.
     private _type?: string // Type of user. Can be Child, Educator, Health Professional or Family.
     private _scopes!: Array<string> // Scope that signal the types of access the user has.
@@ -18,14 +17,6 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
 
     constructor() {
         super()
-    }
-
-    get username(): string | undefined {
-        return this._username
-    }
-
-    set username(value: string | undefined) {
-        this._username = value
     }
 
     get password(): string | undefined {
@@ -78,7 +69,6 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
         }
 
         if (json.id !== undefined) super.id = json.id
-        if (json.username !== undefined) this.username = json.username
         if (json.password !== undefined) this.password = json.password
         if (json.scope !== undefined) this.scopes = json.scope
 
@@ -88,7 +78,6 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
     public toJSON(): any {
         return {
             id: super.id,
-            username: this.username,
             type: this.type
         }
     }

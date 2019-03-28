@@ -21,14 +21,13 @@ export class HealthProfessionalEntityMapper implements IEntityMapper<HealthProfe
     public modelToModelEntity(item: HealthProfessional): HealthProfessionalEntity {
         const result: HealthProfessionalEntity = new HealthProfessionalEntity()
 
-        if (item.id) result.id = item.id
-        if (item.username) result.username = item.username
-        if (item.password) result.password = item.password
-        if (item.type) result.type = item.type
-        if (item.scopes) result.scopes = item.scopes
-        if (item.email) result.email = item.email
-        if (item.name) result.name = item.name
-        if (item.health_area) result.health_area = item.health_area
+        if (item.id !== undefined) result.id = item.id
+        if (item.password !== undefined) result.password = item.password
+        if (item.type !== undefined) result.type = item.type
+        if (item.scopes !== undefined) result.scopes = item.scopes
+        if (item.email !== undefined) result.email = item.email
+        if (item.name !== undefined) result.name = item.name
+        if (item.health_area !== undefined) result.health_area = item.health_area
         if (item.change_password !== undefined) result.change_password = item.change_password
 
         return result
@@ -57,13 +56,12 @@ export class HealthProfessionalEntityMapper implements IEntityMapper<HealthProfe
         if (!json) return result
 
         if (json.id !== undefined) result.id = json.id
-        if (json.username !== undefined) result.username = json.username
         if (json.password !== undefined) result.password = json.password
         if (json.type !== undefined) result.type = json.type
         if (json.scopes !== undefined) result.scopes = json.scopes
-        if (json.email) result.email = json.email
-        if (json.name) result.name = json.name
-        if (json.health_area) result.health_area = json.health_area
+        if (json.email !== undefined) result.email = json.email
+        if (json.name !== undefined) result.name = json.name
+        if (json.health_area !== undefined) result.health_area = json.health_area
         if (json.change_password !== undefined) result.change_password = json.change_password
 
         return result

@@ -1,10 +1,10 @@
 import { assert } from 'chai'
 import { Admin } from '../../../src/application/domain/model/admin'
 import { UpdateAdminValidator } from '../../../src/application/domain/validator/update.admin.validator'
-import { DefaultUsersMock } from '../../mocks/default.users.mock'
+import { DefaultEntityMock } from '../../mocks/default.entity.mock'
 
 describe('Validators: UpdateAdminValidator', () => {
-    const user: Admin = new Admin().fromJSON(DefaultUsersMock.ADMIN)
+    const user: Admin = new Admin().fromJSON(DefaultEntityMock.ADMIN)
     user.password = undefined
 
     it('should return undefined when the validation was successful', () => {
@@ -22,7 +22,7 @@ describe('Validators: UpdateAdminValidator', () => {
 
     context('when the user parameters was invalid', () => {
         it('should throw an error for invalid email', () => {
-            user.email = 'invalid'
+            user.email = DefaultEntityMock.ADMIN.email
 
             try {
                 UpdateAdminValidator.validate(user)
@@ -30,12 +30,12 @@ describe('Validators: UpdateAdminValidator', () => {
                 assert.property(err, 'message')
                 assert.equal(err.message, 'Invalid email address!')
             } finally {
-                user.email = 'admin@mail.com'
+                user.email = DefaultEntityMock.ADMIN.email
             }
         })
 
         it('should throw an error for try update password', () => {
-            user.password = 'admin123'
+            user.password = DefaultEntityMock.ADMIN.password
 
             try {
                 UpdateAdminValidator.validate(user)

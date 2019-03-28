@@ -26,7 +26,9 @@ describe('Validators: ObjectIdValidator', () => {
                     ObjectIdValidator.validate('123', 'any message')
                 } catch (err) {
                     assert.property(err, 'message')
+                    assert.property(err, 'description')
                     assert.propertyVal(err, 'message', 'any message')
+                    assert.equal(err.description, 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
                 }
             })
         })

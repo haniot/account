@@ -38,7 +38,7 @@ export class AuthController {
             const result: any = await this._authService.authenticate(req.body.email, req.body.password)
             if (result) return res.status(HttpStatus.OK).send(result)
             return res.status(HttpStatus.UNAUTHORIZED)
-                .send(new ApiException(HttpStatus.UNAUTHORIZED, 'Invalid username or password!').toJson())
+                .send(new ApiException(HttpStatus.UNAUTHORIZED, 'Invalid email or password!').toJson())
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)

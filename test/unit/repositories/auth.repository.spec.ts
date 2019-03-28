@@ -4,16 +4,15 @@ import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.
 import { AuthRepository } from '../../../src/infrastructure/repository/auth.repository'
 import { EntityMapperMock } from '../../mocks/entity.mapper.mock'
 import { UserRepositoryMock } from '../../mocks/user.repository.mock'
-import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
 import { Admin } from '../../../src/application/domain/model/admin'
-import { DefaultUsersMock } from '../../mocks/default.users.mock'
+import { DefaultEntityMock } from '../../mocks/default.entity.mock'
 
 require('sinon-mongoose')
 
 describe('Repositories: AuthRepository', () => {
     const modelFake: any = UserRepoModel
-    const repo = new AuthRepository(modelFake, new EntityMapperMock(), new UserRepositoryMock(), new CustomLoggerMock())
-    const user: Admin = new Admin().fromJSON(DefaultUsersMock.ADMIN)
+    const repo = new AuthRepository(modelFake, new EntityMapperMock(), new UserRepositoryMock())
+    const user: Admin = new Admin().fromJSON(DefaultEntityMock.ADMIN)
 
     afterEach(() => {
         sinon.restore()
@@ -101,7 +100,7 @@ describe('Repositories: AuthRepository', () => {
         })
 
         context('when the password does not match', () => {
-            it('should return undefined', () => {
+            it('should return error for invalid credentials', () => {
                 user.change_password = false
                 sinon
                     .mock(modelFake)
@@ -111,8 +110,10 @@ describe('Repositories: AuthRepository', () => {
                     .resolves(user)
 
                 return repo.authenticate(user.email!, 'anotherpassword')
-                    .then(result => {
-                        assert.equal(result, undefined)
+                    .catch(err => {
+                        assert.property(err, 'message')
+                        assert.propertyVal(
+                            err, 'message', 'Authentication failed due to invalid authentication credentials.')
                     })
             })
         })
@@ -122,15 +123,16 @@ describe('Repositories: AuthRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs(undefined)
+                    .withArgs({ email: undefined })
                     .chain('exec')
                     .rejects({ message: 'An internal error has occurred in the database!' })
 
                 return repo.authenticate(undefined!, undefined!)
                     .catch(err => {
                         assert.property(err, 'name')
-                        assert.propertyVal(err, 'name', 'ExpectationError')
+                        assert.propertyVal(err, 'name', 'Error')
                         assert.property(err, 'message')
+                        assert.propertyVal(err, 'message', 'An unexpected error has occurred. Please try again later...')
                     })
             })
         })

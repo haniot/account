@@ -1,11 +1,10 @@
 import { assert } from 'chai'
 import { UpdateHealthProfessionalValidator } from '../../../src/application/domain/validator/update.health.professional.validator'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
-import { HealthAreaTypes } from '../../../src/application/domain/utils/health.area.types'
-import { DefaultUsersMock } from '../../mocks/default.users.mock'
+import { DefaultEntityMock } from '../../mocks/default.entity.mock'
 
 describe('Validators: UpdateHealthProfessionalValidator', () => {
-    const user: HealthProfessional = new HealthProfessional().fromJSON(DefaultUsersMock.HEALTH_PROFESSIONAL)
+    const user: HealthProfessional = new HealthProfessional().fromJSON(DefaultEntityMock.HEALTH_PROFESSIONAL)
     user.password = undefined
 
     it('should return undefined when the validation was successful', () => {
@@ -39,7 +38,7 @@ describe('Validators: UpdateHealthProfessionalValidator', () => {
                 assert.property(err, 'message')
                 assert.equal(err.message, 'Invalid email address!')
             } finally {
-                user.email = 'health@mail.com'
+                user.email = DefaultEntityMock.HEALTH_PROFESSIONAL.email
             }
         })
 
@@ -52,9 +51,9 @@ describe('Validators: UpdateHealthProfessionalValidator', () => {
                 assert.property(err, 'message')
                 assert.property(err, 'description')
                 assert.equal(err.message, 'Health Area not mapped!')
-                assert.equal(err.description, 'The mapped areas are: NUTRITION, DENTISTRY.')
+                assert.equal(err.description, 'The mapped areas are: nutrition, dentistry.')
             } finally {
-                user.health_area = HealthAreaTypes.NUTRITION
+                user.health_area = DefaultEntityMock.HEALTH_PROFESSIONAL.health_area
             }
         })
 

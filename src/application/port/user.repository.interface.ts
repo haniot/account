@@ -10,15 +10,15 @@ import { User } from '../domain/model/user'
  */
 export interface IUserRepository extends IRepository<User> {
     /**
-     * Checks if an user already has a registration with username or email.
-     * What differs one user to another is your email and username.
+     * Checks if an user already has a registration with email.
+     * What differs one user to another is your email.
      *
-     * @param username
+     * @param email
      *
      * @return {Promise<boolean>} True if it exists or False, otherwise.
      * @throws {ValidationException | RepositoryException}
      */
-    checkExist(username?: string, email?: string): Promise<boolean>
+    checkExist(email?: string): Promise<boolean>
 
     /**
      * Change the user password.

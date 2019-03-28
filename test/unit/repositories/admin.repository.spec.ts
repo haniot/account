@@ -4,7 +4,7 @@ import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.
 import { EntityMapperMock } from '../../mocks/entity.mapper.mock'
 import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
 import { Admin } from '../../../src/application/domain/model/admin'
-import { DefaultUsersMock } from '../../mocks/default.users.mock'
+import { DefaultEntityMock } from '../../mocks/default.entity.mock'
 import { AdminRepository } from '../../../src/infrastructure/repository/admin.repository'
 import { UserRepositoryMock } from '../../mocks/user.repository.mock'
 
@@ -14,7 +14,7 @@ describe('Repositories: AdminRepository', () => {
     const modelFake: any = UserRepoModel
     const repo =
         new AdminRepository(modelFake, new EntityMapperMock(), new UserRepositoryMock(), new CustomLoggerMock())
-    const user: Admin = new Admin().fromJSON(DefaultUsersMock.ADMIN)
+    const user: Admin = new Admin().fromJSON(DefaultEntityMock.ADMIN)
 
     afterEach(() => {
         sinon.restore()
@@ -33,8 +33,6 @@ describe('Repositories: AdminRepository', () => {
                     .then(result => {
                         assert.property(result, 'id')
                         assert.propertyVal(result, 'id', user.id)
-                        assert.property(result, 'username')
-                        assert.propertyVal(result, 'username', user.username)
                         assert.property(result, 'password')
                         assert.propertyVal(result, 'password', user.password)
                         assert.property(result, 'email')

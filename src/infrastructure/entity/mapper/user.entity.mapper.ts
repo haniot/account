@@ -24,12 +24,11 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
     public modelToModelEntity(item: User): UserEntity {
         const result: UserEntity = new UserEntity()
 
-        if (item.id) result.id = item.id
-        if (item.username) result.username = item.username
-        if (item.password) result.password = item.password
-        if (item.type) result.type = item.type
-        if (item.scopes) result.scopes = item.scopes
-        if (item.change_password) result.change_password = item.change_password
+        if (item.id !== undefined) result.id = item.id
+        if (item.password !== undefined) result.password = item.password
+        if (item.type !== undefined) result.type = item.type
+        if (item.scopes !== undefined) result.scopes = item.scopes
+        if (item.change_password !== undefined) result.change_password = item.change_password
 
         return result
     }
@@ -57,7 +56,6 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
         if (!json) return result
 
         if (json.id !== undefined) result.id = json.id
-        if (json.username !== undefined) result.username = json.username
         if (json.password !== undefined) result.password = json.password
         if (json.type !== undefined) result.type = json.type
         if (json.scopes !== undefined) result.scopes = json.scopes

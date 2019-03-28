@@ -76,6 +76,21 @@ export class HealthProfessionalController {
         }
     }
 
+    @httpGet('/:healthprofessional_id/pilotstudies')
+    public async getAllPilotStudiesFromHealthProfessional(@request() req: Request, @response() res: Response): Promise<Response> {
+        try {
+            const result: any =
+                await this._healthProfessionalService
+                    .getAllPilotStudies(req.params.healthprofessional_id, new Query().fromJSON(req.query))
+            if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageHealthProfessionalNotFound())
+            return res.status(HttpStatus.OK).send(result)
+        } catch (err) {
+            const handlerError = ApiExceptionManager.build(err)
+            return res.status(handlerError.code)
+                .send(handlerError.toJson())
+        }
+    }
+
     private toJSONView(healthProfessional: HealthProfessional | Array<HealthProfessional>): object {
         if (healthProfessional instanceof Array) {
             return healthProfessional.map(item => {

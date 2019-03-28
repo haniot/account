@@ -40,6 +40,17 @@ import { HealthProfessionalService } from '../application/service/health.profess
 import { AdminService } from '../application/service/admin.service'
 import { AdminController } from '../ui/controllers/admin.controller'
 import { HealthProfessionalController } from '../ui/controllers/health.professional.controller'
+import { PilotStudyRepoModel } from '../infrastructure/database/schema/pilot.study.schema'
+import { PilotStudy } from '../application/domain/model/pilot.study'
+import { PilotStudyEntity } from '../infrastructure/entity/pilot.study.entity'
+import { PilotStudyEntityMapper } from '../infrastructure/entity/mapper/pilot.study.entity.mapper'
+import { IPilotStudyRepository } from '../application/port/pilot.study.repository.interface'
+import { PilotStudyRepository } from '../infrastructure/repository/pilot.study.repository'
+import { PilotStudyController } from '../ui/controllers/pilot.study.controller'
+import { IPilotStudyService } from '../application/port/pilot.study.service.interface'
+import { PilotStudyService } from '../application/service/pilot.study.service'
+import { IBackgroundTask } from '../application/port/background.task.interface'
+import { RegisterDefaultAdminTask } from '../background/task/register.default.admin.task'
 
 export class DI {
     private static instance: DI
@@ -92,6 +103,8 @@ export class DI {
         this.container.bind<AdminController>(Identifier.ADMIN_CONTROLLER).to(AdminController).inSingletonScope()
         this.container.bind<HealthProfessionalController>(Identifier.HEALTH_PROFESSIONAL_CONTROLLER)
             .to(HealthProfessionalController).inSingletonScope()
+        this.container.bind<PilotStudyController>(Identifier.PILOT_STUDY_CONTROLLER)
+            .to(PilotStudyController).inSingletonScope()
 
         // Services
         this.container.bind<IUserService>(Identifier.USER_SERVICE).to(UserService).inSingletonScope()
@@ -101,6 +114,8 @@ export class DI {
             .to(HealthProfessionalService).inSingletonScope()
         this.container.bind<IAdminService>(Identifier.ADMIN_SERVICE)
             .to(AdminService).inSingletonScope()
+        this.container.bind<IPilotStudyService>(Identifier.PILOT_STUDY_SERVICE)
+            .to(PilotStudyService).inSingletonScope()
 
         // Repositories
         this.container
@@ -112,9 +127,12 @@ export class DI {
             .to(HealthProfessionalRepository).inSingletonScope()
         this.container.bind<IAdminRepository>(Identifier.ADMIN_REPOSITORY)
             .to(AdminRepository).inSingletonScope()
+        this.container.bind<IPilotStudyRepository>(Identifier.PILOT_STUDY_REPOSITORY)
+            .to(PilotStudyRepository).inSingletonScope()
 
         // Models
         this.container.bind(Identifier.USER_REPO_MODEL).toConstantValue(UserRepoModel)
+        this.container.bind(Identifier.PILOT_STUDY_REPO_MODEL).toConstantValue(PilotStudyRepoModel)
 
         // Mappers
         this.container
@@ -126,6 +144,9 @@ export class DI {
         this.container
             .bind<IEntityMapper<Admin, AdminEntity>>(Identifier.ADMIN_ENTITY_MAPPER)
             .to(AdminEntityMapper).inSingletonScope()
+        this.container
+            .bind<IEntityMapper<PilotStudy, PilotStudyEntity>>(Identifier.PILOT_STUDY_ENTITY_MAPPER)
+            .to(PilotStudyEntityMapper).inSingletonScope()
 
         // Background Services
         this.container
@@ -137,6 +158,11 @@ export class DI {
         this.container
             .bind(Identifier.BACKGROUND_SERVICE)
             .to(BackgroundService).inSingletonScope()
+
+        // Tasks
+        this.container
+            .bind<IBackgroundTask>(Identifier.REGISTER_DEFAULT_ADMIN_TASK)
+            .to(RegisterDefaultAdminTask).inRequestScope()
 
         // Log
         this.container.bind<ILogger>(Identifier.LOGGER).to(CustomLogger).inSingletonScope()

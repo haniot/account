@@ -21,7 +21,13 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
         super.scopes = [
             'healthprofessional:delete',
             'healthprofessional:read',
-            'healthprofessional:update'
+            'healthprofessional:update',
+            'pilotstudy:read',
+            'pilotstudy:update',
+            'patient:create',
+            'patient:readAll',
+            'patient:update',
+            'patient:delete'
         ]
     }
 
@@ -51,14 +57,19 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
 
     public fromJSON(json: any): HealthProfessional {
         if (!json) return this
-        if (typeof json === 'string' && JsonUtils.isJsonString(json)) {
-            json = JSON.parse(json)
+        if (typeof json === 'string') {
+            if (!JsonUtils.isJsonString(json)) {
+                super.id = json
+                return this
+            } else {
+                json = JSON.parse(json)
+            }
         }
 
         super.fromJSON(json)
-        if (json.email) this.email = json.email
-        if (json.name) this.name = json.name
-        if (json.health_area) this.health_area = json.health_area
+        if (json.email !== undefined) this.email = json.email
+        if (json.name !== undefined) this.name = json.name
+        if (json.health_area !== undefined) this.health_area = json.health_area
 
         return this
     }

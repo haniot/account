@@ -3,7 +3,7 @@ import sinon from 'sinon'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { EntityMapperMock } from '../../mocks/entity.mapper.mock'
 import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
-import { DefaultUsersMock } from '../../mocks/default.users.mock'
+import { DefaultEntityMock } from '../../mocks/default.entity.mock'
 import { UserRepositoryMock } from '../../mocks/user.repository.mock'
 import { HealthProfessionalRepository } from '../../../src/infrastructure/repository/health.professional.repository'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
@@ -14,7 +14,7 @@ describe('Repositories: HealthProfessionalRepository', () => {
     const modelFake: any = UserRepoModel
     const repo =
         new HealthProfessionalRepository(modelFake, new EntityMapperMock(), new UserRepositoryMock(), new CustomLoggerMock())
-    const user: HealthProfessional = new HealthProfessional().fromJSON(DefaultUsersMock.HEALTH_PROFESSIONAL)
+    const user: HealthProfessional = new HealthProfessional().fromJSON(DefaultEntityMock.HEALTH_PROFESSIONAL)
 
     afterEach(() => {
         sinon.restore()
@@ -33,8 +33,6 @@ describe('Repositories: HealthProfessionalRepository', () => {
                     .then(result => {
                         assert.property(result, 'id')
                         assert.propertyVal(result, 'id', user.id)
-                        assert.property(result, 'username')
-                        assert.propertyVal(result, 'username', user.username)
                         assert.property(result, 'password')
                         assert.propertyVal(result, 'password', user.password)
                         assert.property(result, 'email')
@@ -48,7 +46,7 @@ describe('Repositories: HealthProfessionalRepository', () => {
         })
 
         context('when the password is not passed', () => {
-            it('should return something', () => {
+            it('should reject an error', () => {
                 user.password = undefined
                 sinon
                     .mock(modelFake)

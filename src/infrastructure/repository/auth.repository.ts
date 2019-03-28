@@ -8,7 +8,6 @@ import { IAuthRepository } from '../../application/port/auth.repository.interfac
 import { Identifier } from '../../di/identifiers'
 import { User } from '../../application/domain/model/user'
 import { IUserRepository } from '../../application/port/user.repository.interface'
-import { ILogger } from '../../utils/custom.logger'
 import { UserEntity } from '../entity/user.entity'
 import { Default } from '../../utils/default'
 import jwt from 'jsonwebtoken'
@@ -22,16 +21,15 @@ import { IEntityMapper } from '../port/entity.mapper.interface'
 export class AuthRepository implements IAuthRepository {
 
     constructor(
-        @inject(Identifier.USER_REPO_MODEL) readonly userModel: any,
-        @inject(Identifier.USER_ENTITY_MAPPER) readonly userMapper: IEntityMapper<User, UserEntity>,
-        @inject(Identifier.USER_REPOSITORY) private readonly _userRepository: IUserRepository,
-        @inject(Identifier.LOGGER) readonly logger: ILogger
+        @inject(Identifier.USER_REPO_MODEL) readonly _userModel: any,
+        @inject(Identifier.USER_ENTITY_MAPPER) readonly _userMapper: IEntityMapper<User, UserEntity>,
+        @inject(Identifier.USER_REPOSITORY) private readonly _userRepository: IUserRepository
     ) {
     }
 
     public authenticate(_email: string, password: string): Promise<object> {
         return new Promise<object>((resolve, reject) => {
-            this.userModel.findOne({ email: _email })
+            this._userModel.findOne({ email: _email })
                 .exec()
                 .then(user => {
                     /* Validate password and generate access token*/
@@ -42,6 +40,15 @@ export class AuthRepository implements IAuthRepository {
                             )
                         )
                     }
+
+                    if (!this._userRepository.comparePasswords(password, user.password)) {
+                        return reject(
+                            new AuthenticationException(
+                                'Authentication failed due to invalid authentication credentials.'
+                            )
+                        )
+                    }
+
                     if (user.change_password) {
                         return reject(
                             new ChangePasswordException(
@@ -51,10 +58,7 @@ export class AuthRepository implements IAuthRepository {
                                 `/users/${user._id}/password`))
                     }
 
-                    if (this._userRepository.comparePasswords(password, user.password)) {
-                        return resolve({ token: this.generateAccessToken(this.userMapper.transform(user)) })
-                    }
-                    return resolve(undefined)
+                    return resolve({ token: this.generateAccessToken(this._userMapper.transform(user)) })
                 }).catch(err => reject(new RepositoryException(Strings.ERROR_MESSAGE.UNEXPECTED)))
         })
     }
@@ -62,7 +66,7 @@ export class AuthRepository implements IAuthRepository {
     public generateAccessToken(user: User): string {
         const payload: object = {
             sub: user.id,
-            iss: 'haniot',
+            iss: process.env.ISSUER || Default.ISSUER,
             iat: Math.floor(Date.now() / 1000),
             exp: Math.round(Date.now() / 1000 + 24 * 60 * 60),
             scope: user.scopes.join(' ')

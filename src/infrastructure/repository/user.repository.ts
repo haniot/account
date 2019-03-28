@@ -9,6 +9,7 @@ import { ILogger } from '../../utils/custom.logger'
 import { ChangePasswordException } from '../../application/domain/exception/change.password.exception'
 import bcrypt from 'bcryptjs'
 import { Query } from './query/query'
+import { Strings } from '../../utils/strings'
 
 /**
  * Implementation of the user repository.
@@ -18,26 +19,24 @@ import { Query } from './query/query'
 @injectable()
 export class UserRepository extends BaseRepository<User, UserEntity> implements IUserRepository {
     constructor(
-        @inject(Identifier.USER_REPO_MODEL) protected readonly userModel: any,
-        @inject(Identifier.USER_ENTITY_MAPPER) protected readonly userMapper: IEntityMapper<User, UserEntity>,
-        @inject(Identifier.LOGGER) readonly logger: ILogger
+        @inject(Identifier.USER_REPO_MODEL) protected readonly _userModel: any,
+        @inject(Identifier.USER_ENTITY_MAPPER) protected readonly _userMapper: IEntityMapper<User, UserEntity>,
+        @inject(Identifier.LOGGER) readonly _logger: ILogger
     ) {
-        super(userModel, userMapper, logger)
+        super(_userModel, _userMapper, _logger)
     }
 
     /**
-     * Checks if an user already has a registration with username or email.
-     * What differs one user to another is your email and username.
+     * Checks if an user already has a registration with email.
+     * What differs one user to another is your email.
      *
      * @return {Promise<boolean>} True if it exists or False, otherwise.
      * @throws {ValidationException | RepositoryException}
-     * @param _username
      * @param _email
      *
      */
-    public async checkExist(_username?: string, _email?: string): Promise<boolean> {
+    public async checkExist(_email?: string): Promise<boolean> {
         const query = new Query()
-        if (_username !== undefined) query.addFilter({ username: _username })
         if (_email !== undefined) query.addFilter({ email: _email })
         return new Promise<boolean>((resolve, reject) => {
             super.findOne(query)
@@ -59,19 +58,18 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
      */
     public changePassword(id: string, old_password: string, new_password: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            this.userModel.findOne({ _id: id })
+            this.Model.findOne({ _id: id })
                 .then((user) => {
                     if (!user) return resolve(false)
                     if (!this.comparePasswords(old_password, user.password)) {
                         return reject(new ChangePasswordException(
-                            'Password does not match',
-                            'The old password parameter does not match with the actual user password.'
+                            Strings.USER.PASSWORD_NOT_MATCH,
+                            Strings.USER.PASSWORD_NOT_MATCH_DESCRIPTION
                         ))
                     }
                     user.password = this.encryptPassword(new_password)
                     user.change_password = false
-                    this.userModel.findOneAndUpdate({ _id: user.id }, user, { new: true })
-                        .exec()
+                    this._userModel.findOneAndUpdate({ _id: user.id }, user, { new: true })
                         .then(result => {
                             if (!result) return resolve(false)
                             return resolve(true)

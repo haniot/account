@@ -2,20 +2,14 @@ openapi: 3.0.0
 info:
   description: >-
     This is the RESTful API documentation of the microservice for HANIoT platform user account.
-  # description: >-
-  #   This is a **Account Service** RESTful API documentation implemented to
-  #   administer the create, select, update and remove operations from users.
-  version: "v1"
+  version: 1.0.0
   title: HANIoT Account Service
-  # contact:
-  #   email: haniot@nutes.uepb.edu.br
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 servers:
-  # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/haniot/haniot-account-service/v1
+    url: https://virtserver.swaggerhub.com/haniot/haniot-account-service/1.0.0
   - description: localhost http
     url: 'http://localhost'
 tags:
@@ -27,6 +21,8 @@ tags:
     description: Operations for the User Admin resource.
   - name: users.healthprofessionals
     description: Operations for the User HealthProfessional resource.
+  - name: users.healthprofessionals.pilotstudies
+    description: Operations for the User HealthProfessional Pilot Studies resource.
   - name: pilotstudies
     description: Operations for the Pilot Study resource.
   - name: pilotstudies.healthprofessionals
@@ -728,7 +724,7 @@ paths:
                   example: Elvis Aaron
                 health_area:
                   type: string
-                  example: 'NUTRITION'
+                  example: 'nutrition'
         description: Data of the health professional to be saved.
         required: true
     get:
@@ -958,6 +954,107 @@ paths:
         description: Data of the health professional to be updated.
         required: true
 
+  # users.healthprofessionals.pilotstudies
+  /users/healthprofessionals/{healthprofessional_id}/pilotstudies:
+    get:
+      security:
+        - JWTAuth: []
+      tags:
+        -  users.healthprofessionals.pilotstudies
+      summary: Recover all pilot studies from health professional.
+      description: >-
+        Returns list with pilot studies that health professional is associated. The query supports Field Selection, Paging,
+        Sorting, and Filtering.
+      operationId: getAllPilotStudiesFromHealthProfessional
+      parameters:
+        - name: healthprofessional_id
+          in: path
+          required: true
+          description: Id of health professional.
+          example: '5c86d00cfc25e7036d51d652'
+          schema:
+            type: string
+        - $ref: '#/components/parameters/fieldsParam'
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortParam'
+        - $ref: '#/components/parameters/filterParam'
+      responses:
+        '200':
+          description: List of pilot studies.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      readOnly: true
+                      type: string
+                      format: uuid
+                      description: Automatically generated key field.
+                      example: '5c86d00c2239a48ea20a0134'
+                    name:
+                      type: string
+                      description: Name of pilot study.
+                      example: 'Pilot Odonto 01'
+                    is_active:
+                      type: boolean
+                      description: Status of pilot study. The value is true if it is active, false otherwise.
+                      example: true
+                    start:
+                      type: string
+                      description: Start of pilot study in UTC format, according to ISO 8601.
+                      example: '2018-11-19T14:40:00'
+                    end:
+                      type: string
+                      description: End of pilot study in UTC format, according to ISO 8601.
+                      example: '2019-01-23T18:00:00'
+        '401':
+          description: Authentication failed due to invalid authentication credentials.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to get pilot studies.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: >-
+            Specified resource does not exist. Usually when the URI is incorrect
+            or the resource is not found, or even no longer exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '406':
+          description: >-
+            The server is not implementing the media type requested by the client
+            for the application response. Only application/json is currently
+            accepted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: The rate limit for requests exceeded.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: >-
+            An internal server error occurred. Although the client appears to
+            provide a correct request, the server encountered an unexpected
+            condition that prevented it from responding to the request.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
   # pilotstudies
   /pilotstudies:
     post:
@@ -1187,7 +1284,7 @@ paths:
         - pilotstudies
       summary: Update pilot sudy data.
       description: Update the pilot study data.
-      operationId: updatePilotStudyById
+      operationId: updatePilotStudy
       parameters:
         - in: path
           name: pilotstudy_id
@@ -1276,7 +1373,7 @@ paths:
         - pilotstudies
       summary: Delete pilot sudy data.
       description: Delete the pilot study data.
-      operationId: deletePilotStudyById
+      operationId: deletePilotStudy
       parameters:
         - in: path
           name: pilotstudy_id
@@ -1586,9 +1683,6 @@ components:
       type: object
       required:
         - id
-        - username
-        - password
-        - type
         - email
       properties:
         id:
@@ -1597,25 +1691,14 @@ components:
           format: uuid
           description: Automatically generated key field.
           example: '5c86d00c7a8618923481b48b'
-        username:
-          type: string
-          description: Username for admin authentication.
-          example: 'admin'
-        # type:
-        #   type: string
-        #   description: Type of user.
-        #   example: ADMIN
         email:
           type: string
-          description: Email of admin.
+          description: Email of admin for authentication.
           example: admin@haniot.com
     HealthProfessional:
       type: object
       required:
         - id
-        - username
-        - password
-        - type
         - email
         - name
         - health_area
@@ -1626,17 +1709,9 @@ components:
           format: uuid
           description: Automatically generated key field.
           example: '5c86d00cfc25e7036d51d652'
-        username:
-          type: string
-          description: Username for health professional authentication.
-          example: 'elvisaaron'
-        # type:
-        #   type: string
-        #   description: Type of user.
-        #   example: HEALTH_PROFESSIONAL
         email:
           type: string
-          description: Email of health professional.
+          description: Email of health professional for authentication.
           example: elvisaaron@haniot.com
         name:
           type: string
@@ -1644,30 +1719,8 @@ components:
           example: Elvis Aaron
         health_area:
           type: string
-          description: Area of medical performance of the health professional. Could be NUTRITION or DENTISTRY.
-          enum: ["NUTRITION", "DENTISTRY"]
-    # User:
-    #   type: object
-    #   required:
-    #   - id
-    #   - username
-    #   - password
-    #   - type
-    #   properties:
-    #     id:
-    #       readOnly: true
-    #       type: string
-    #       format: uuid
-    #       description: Automatically generated key field.
-    #       example: 5a62be07de34500146d9c544
-    #     username:
-    #       type: string
-    #       description: Username for user authentication.
-    #       example: elvisaaron
-    #     type:
-    #       type: string
-    #       description: Type of user. Can be ADMIN or HEALTH_PROFESSIONAL.
-    #       enum: ["ADMIN", "HEALTH_PROFESSIONAL"]
+          description: Area of medical performance of the health professional. Could be nutrition or dentistry.
+          enum: ["nutrition", "dentistry"]
     PilotStudy:
       type: object
       required:
@@ -1687,7 +1740,7 @@ components:
         name:
           type: string
           description: Name of pilot study.
-          example: 'Pilot_01'
+          example: 'Pilot Odonto 01'
         is_active:
           type: boolean
           description: Status of pilot study. The value is true if it is active, false otherwise.
