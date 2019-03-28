@@ -20,8 +20,6 @@ describe('Services: AdminService', () => {
                         assert.propertyVal(result, 'email', user.email)
                         assert.property(result, 'password')
                         assert.propertyVal(result, 'password', user.password)
-                    }).catch(err => {
-                        console.log(err)
                     })
             })
         })

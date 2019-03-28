@@ -149,7 +149,6 @@ describe('Services: PilotStudyService', () => {
             it('should return a list of pilot studies', () => {
                 return service.getAll(new Query())
                     .then(result => {
-                        console.log(result[0].start!, pilot.start!)
                         assert.isArray(result)
                         assert.lengthOf(result, 1)
                         assert.property(result[0], 'id')

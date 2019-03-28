@@ -54,6 +54,20 @@ describe('Routes: UsersAdmins', () => {
             })
         })
 
+        context('when there are a admin with same unique parameters', () => {
+            it('should return status code 409 and info message from duplicate items', () => {
+                return request
+                    .post('/users/admins')
+                    .send(DefaultEntityMock.ADMIN)
+                    .set('Content-Type', 'application/json')
+                    .expect(409)
+                    .then(res => {
+                        expect(res.body).to.have.property('message')
+                        expect(res.body.message).to.eql('A registration with the same unique data already exists!')
+                    })
+            })
+        })
+
         context('when there are validation errors', () => {
             it('should return status code 400 and message from missing email', () => {
                 return request

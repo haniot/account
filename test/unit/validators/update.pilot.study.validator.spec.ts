@@ -12,6 +12,15 @@ describe('Validators: UpdatePilotStudyValidator', () => {
         assert.equal(result, undefined)
     })
 
+    context('when does not pass the id', () => {
+        pilot.id = undefined
+        it('should return undefined when the validation was successful', () => {
+            const result = UpdatePilotStudyValidator.validate(pilot)
+            assert.equal(result, undefined)
+            pilot.id = DefaultEntityMock.PILOT_STUDY.id
+        })
+    })
+
     context('when the pilot study parameters was invalid', () => {
         it('should return error for pass a invalid id', () => {
             pilot.id = '123'

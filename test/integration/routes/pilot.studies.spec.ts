@@ -71,6 +71,20 @@ describe('Routes: PilotStudies', () => {
             })
         })
 
+        context('when there are a pilot study with same unique parameters', () => {
+            it('should return status code 409 and info message from duplicate items', () => {
+                return request
+                    .post('/pilotstudies')
+                    .send(pilot.toJSON())
+                    .set('Content-Type', 'application/json')
+                    .expect(409)
+                    .then(res => {
+                        expect(res.body).to.have.property('message')
+                        expect(res.body.message).to.eql('A registration with the same unique data already exists!')
+                    })
+            })
+        })
+
         context('when there are validation errors', () => {
             const body = pilot.toJSON()
 
