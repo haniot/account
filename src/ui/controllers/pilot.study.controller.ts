@@ -76,8 +76,7 @@ export class PilotStudyController {
     @httpDelete('/:pilotstudy_id')
     public async deletePilotStudy(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const result: any = await this._pilotStudyService.remove(req.params.pilotstudy_id)
-            if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessagePilotStudyNotFound())
+            await this._pilotStudyService.remove(req.params.pilotstudy_id)
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
@@ -95,7 +94,6 @@ export class PilotStudyController {
                     new Query().fromJSON(req.query))
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessagePilotStudyNotFound())
             return res.status(HttpStatus.OK).send(result)
-
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
             return res.status(handleError.code).send(handleError.toJson())
@@ -109,7 +107,6 @@ export class PilotStudyController {
             const result: any = await this._pilotStudyService.associateHealthProfessional(
                 req.params.pilotstudy_id, req.params.healthprofessional_id
             )
-
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessagePilotStudyNotFound())
             return res.status(HttpStatus.CREATED).send(result)
         } catch (err) {
@@ -125,7 +122,6 @@ export class PilotStudyController {
             const result: any = await this._pilotStudyService.disassociateHealthProfessional(
                 req.params.pilotstudy_id, req.params.healthprofessional_id
             )
-
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessagePilotStudyNotFound())
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
