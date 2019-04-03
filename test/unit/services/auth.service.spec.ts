@@ -1,8 +1,8 @@
 import { assert } from 'chai'
 import { AuthService } from '../../../src/application/service/auth.service'
-import { AuthRepositoryMock } from '../../mocks/auth.repository.mock'
+import { AuthRepositoryMock } from '../../mocks/repositories/auth.repository.mock'
 import { Admin } from '../../../src/application/domain/model/admin'
-import { DefaultEntityMock } from '../../mocks/default.entity.mock'
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 
 describe('Services: AuthService', () => {
     const service = new AuthService(new AuthRepositoryMock())

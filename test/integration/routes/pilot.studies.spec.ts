@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { PilotStudy } from '../../../src/application/domain/model/pilot.study'
-import { DefaultEntityMock } from '../../mocks/default.entity.mock'
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
 import { Container } from 'inversify'
 import { DI } from '../../../src/di/di'
@@ -188,6 +188,25 @@ describe('Routes: PilotStudies', () => {
                         expect(res.body).to.have.property('description')
                         expect(res.body.description).to.eql('Pilot Study validation: Collection with health_professional IDs ' +
                             '(ID cannot be empty) required!')
+                        body.health_professionals_id = [user.id]
+                    })
+            })
+
+            it('should return status code 400 and error for does pass a health professional that does not exists', () => {
+                const randomId = new ObjectID()
+                body.health_professionals_id = [new HealthProfessional().fromJSON({ id: randomId })]
+
+                return request
+                    .post('/pilotstudies')
+                    .send(body)
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(res => {
+                        expect(res.body).to.have.property('message')
+                        expect(res.body.message).to.eql('It is necessary for health professional to be registered' +
+                            ' before proceeding.')
+                        expect(res.body).to.have.property('description')
+                        expect(res.body.description).to.eql(`The following IDs were verified without registration: ${randomId}`)
                         body.health_professionals_id = [user.id]
                     })
             })

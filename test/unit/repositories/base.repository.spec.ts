@@ -1,6 +1,6 @@
 import sinon from 'sinon'
 import { assert } from 'chai'
-import { EntityMapperMock } from '../../mocks/entity.mapper.mock'
+import { EntityMapperMock } from '../../mocks/models/entity.mapper.mock'
 import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { Entity } from '../../../src/application/domain/model/entity'
@@ -8,7 +8,7 @@ import { BaseRepository } from '../../../src/infrastructure/repository/base/base
 import { IEntityMapper } from '../../../src/infrastructure/port/entity.mapper.interface'
 import { ILogger } from '../../../src/utils/custom.logger'
 import { User } from '../../../src/application/domain/model/user'
-import { DefaultEntityMock } from '../../mocks/default.entity.mock'
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { Query } from '../../../src/infrastructure/repository/query/query'
 
 require('sinon-mongoose')

@@ -1,9 +1,9 @@
 import { assert } from 'chai'
 import { HealthProfessionalService } from '../../../src/application/service/health.professional.service'
-import { HealthProfessionalRepositoryMock } from '../../mocks/health.professional.repository.mock'
-import { PilotStudyRepositoryMock } from '../../mocks/pilot.study.repository.mock'
+import { HealthProfessionalRepositoryMock } from '../../mocks/repositories/health.professional.repository.mock'
+import { PilotStudyRepositoryMock } from '../../mocks/repositories/pilot.study.repository.mock'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
-import { DefaultEntityMock } from '../../mocks/default.entity.mock'
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { Query } from '../../../src/infrastructure/repository/query/query'
 import { PilotStudy } from '../../../src/application/domain/model/pilot.study'
 

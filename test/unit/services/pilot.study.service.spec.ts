@@ -1,8 +1,8 @@
 import { PilotStudy } from '../../../src/application/domain/model/pilot.study'
-import { DefaultEntityMock } from '../../mocks/default.entity.mock'
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { PilotStudyService } from '../../../src/application/service/pilot.study.service'
-import { PilotStudyRepositoryMock } from '../../mocks/pilot.study.repository.mock'
-import { HealthProfessionalRepositoryMock } from '../../mocks/health.professional.repository.mock'
+import { PilotStudyRepositoryMock } from '../../mocks/repositories/pilot.study.repository.mock'
+import { HealthProfessionalRepositoryMock } from '../../mocks/repositories/health.professional.repository.mock'
 import { assert } from 'chai'
 import { Query } from '../../../src/infrastructure/repository/query/query'
 import { ObjectID } from 'bson'
@@ -265,8 +265,6 @@ describe('Services: PilotStudyService', () => {
         })
     })
 
-    // describe('associateHealthProfessional()')
-    // describe('disassociateHealthProfessional()')
     describe('getAllHealthProfessionals()', () => {
         context('when want get all health professionals from pilot study', () => {
             it('should return a list of health professionals', () => {

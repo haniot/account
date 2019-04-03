@@ -1,8 +1,8 @@
 import { assert } from 'chai'
 import { AdminService } from '../../../src/application/service/admin.service'
-import { AdminRepositoryMock } from '../../mocks/admin.repository.mock'
+import { AdminRepositoryMock } from '../../mocks/repositories/admin.repository.mock'
 import { Admin } from '../../../src/application/domain/model/admin'
-import { DefaultEntityMock } from '../../mocks/default.entity.mock'
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { Query } from '../../../src/infrastructure/repository/query/query'
 
 describe('Services: AdminService', () => {

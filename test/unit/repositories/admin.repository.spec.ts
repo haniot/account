@@ -1,12 +1,12 @@
 import { assert } from 'chai'
 import sinon from 'sinon'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
-import { EntityMapperMock } from '../../mocks/entity.mapper.mock'
+import { EntityMapperMock } from '../../mocks/models/entity.mapper.mock'
 import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
 import { Admin } from '../../../src/application/domain/model/admin'
-import { DefaultEntityMock } from '../../mocks/default.entity.mock'
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { AdminRepository } from '../../../src/infrastructure/repository/admin.repository'
-import { UserRepositoryMock } from '../../mocks/user.repository.mock'
+import { UserRepositoryMock } from '../../mocks/repositories/user.repository.mock'
 
 require('sinon-mongoose')
 

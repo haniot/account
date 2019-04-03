@@ -1,6 +1,6 @@
 import { assert } from 'chai'
 import { CreatePilotStudyValidator } from '../../../src/application/domain/validator/create.pilot.study.validator'
-import { DefaultEntityMock } from '../../mocks/default.entity.mock'
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { PilotStudy } from '../../../src/application/domain/model/pilot.study'
 
 describe('Validators: CreatePilotStudyValidator', () => {

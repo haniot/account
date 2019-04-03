@@ -1,10 +1,10 @@
 import { assert } from 'chai'
 import sinon from 'sinon'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
-import { EntityMapperMock } from '../../mocks/entity.mapper.mock'
+import { EntityMapperMock } from '../../mocks/models/entity.mapper.mock'
 import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
-import { DefaultEntityMock } from '../../mocks/default.entity.mock'
-import { UserRepositoryMock } from '../../mocks/user.repository.mock'
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
+import { UserRepositoryMock } from '../../mocks/repositories/user.repository.mock'
 import { HealthProfessionalRepository } from '../../../src/infrastructure/repository/health.professional.repository'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
 
