@@ -7,7 +7,7 @@ import { IHealthProfessionalRepository } from '../../../src/application/port/hea
 import { IPilotStudyRepository } from '../../../src/application/port/pilot.study.repository.interface'
 import { App } from '../../../src/app'
 import { PilotStudy } from '../../../src/application/domain/model/pilot.study'
-import { DefaultEntityMock } from '../../mocks/default.entity.mock'
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { PilotStudyRepoModel } from '../../../src/infrastructure/database/schema/pilot.study.schema'

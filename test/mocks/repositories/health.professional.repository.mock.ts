@@ -1,8 +1,8 @@
-import { IHealthProfessionalRepository } from '../../src/application/port/health.professional.repository.interface'
-import { IQuery } from '../../src/application/port/query.interface'
-import { HealthProfessional } from '../../src/application/domain/model/health.professional'
-import { ValidationException } from '../../src/application/domain/exception/validation.exception'
-import { DefaultEntityMock } from './default.entity.mock'
+import { IHealthProfessionalRepository } from '../../../src/application/port/health.professional.repository.interface'
+import { IQuery } from '../../../src/application/port/query.interface'
+import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
+import { ValidationException } from '../../../src/application/domain/exception/validation.exception'
+import { DefaultEntityMock } from '../models/default.entity.mock'
 
 export class HealthProfessionalRepositoryMock implements IHealthProfessionalRepository {
     public checkExists(users: HealthProfessional | Array<HealthProfessional>): Promise<boolean | ValidationException> {

@@ -1,6 +1,6 @@
 import { assert } from 'chai'
 import { Admin } from '../../../src/application/domain/model/admin'
-import { DefaultEntityMock } from '../../mocks/default.entity.mock'
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { UserType } from '../../../src/application/domain/utils/user.type'
 
 describe('Models: Admin', () => {

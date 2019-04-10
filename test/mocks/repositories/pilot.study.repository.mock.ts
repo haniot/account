@@ -1,8 +1,8 @@
-import { IPilotStudyRepository } from '../../src/application/port/pilot.study.repository.interface'
-import { PilotStudy } from '../../src/application/domain/model/pilot.study'
-import { IQuery } from '../../src/application/port/query.interface'
-import { ValidationException } from '../../src/application/domain/exception/validation.exception'
-import { DefaultEntityMock } from './default.entity.mock'
+import { IPilotStudyRepository } from '../../../src/application/port/pilot.study.repository.interface'
+import { PilotStudy } from '../../../src/application/domain/model/pilot.study'
+import { IQuery } from '../../../src/application/port/query.interface'
+import { ValidationException } from '../../../src/application/domain/exception/validation.exception'
+import { DefaultEntityMock } from '../models/default.entity.mock'
 
 export class PilotStudyRepositoryMock implements IPilotStudyRepository {
     public checkExists(pilotStudies: PilotStudy | Array<PilotStudy>): Promise<boolean | ValidationException> {

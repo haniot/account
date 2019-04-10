@@ -1,5 +1,5 @@
 import { PilotStudy } from '../../../src/application/domain/model/pilot.study'
-import { DefaultEntityMock } from '../../mocks/default.entity.mock'
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { assert } from 'chai'
 import { UpdatePilotStudyValidator } from '../../../src/application/domain/validator/update.pilot.study.validator'
 

@@ -1,6 +1,6 @@
-import { IUserRepository } from '../../src/application/port/user.repository.interface'
-import { IQuery } from '../../src/application/port/query.interface'
-import { User } from '../../src/application/domain/model/user'
+import { IUserRepository } from '../../../src/application/port/user.repository.interface'
+import { IQuery } from '../../../src/application/port/query.interface'
+import { User } from '../../../src/application/domain/model/user'
 
 export class UserRepositoryMock implements IUserRepository {
     public changePassword(id: string, old_password: string, new_password: string): Promise<boolean> {

@@ -1,7 +1,7 @@
-import { IAdminRepository } from '../../src/application/port/admin.repository.interface'
-import { IQuery } from '../../src/application/port/query.interface'
-import { Admin } from '../../src/application/domain/model/admin'
-import { DefaultEntityMock } from './default.entity.mock'
+import { IAdminRepository } from '../../../src/application/port/admin.repository.interface'
+import { IQuery } from '../../../src/application/port/query.interface'
+import { Admin } from '../../../src/application/domain/model/admin'
+import { DefaultEntityMock } from '../models/default.entity.mock'
 
 export class AdminRepositoryMock implements IAdminRepository {
     public count(query: IQuery): Promise<number> {

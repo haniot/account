@@ -1,4 +1,4 @@
-import { DefaultEntityMock } from '../../mocks/default.entity.mock'
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { assert } from 'chai'
 import { UserType } from '../../../src/application/domain/utils/user.type'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
@@ -27,6 +27,25 @@ describe('Models: HealthProfessional', () => {
         context('when does not pass a json', () => {
             it('should return a health professional with some undefined parameters', () => {
                 const result = new HealthProfessional().fromJSON(undefined)
+                assert.property(result, 'id')
+                assert.propertyVal(result, 'id', undefined)
+                assert.property(result, 'type')
+                assert.propertyVal(result, 'type', UserType.HEALTH_PROFESSIONAL)
+                assert.property(result, 'scopes')
+                assert.property(result, 'email')
+                assert.propertyVal(result, 'email', undefined)
+                assert.property(result, 'password')
+                assert.propertyVal(result, 'password', undefined)
+                assert.property(result, 'name')
+                assert.propertyVal(result, 'name', undefined)
+                assert.property(result, 'health_area')
+                assert.propertyVal(result, 'health_area', undefined)
+            })
+        })
+
+        context('when does pass a empty json', () => {
+            it('should return a health professional with some undefined parameters', () => {
+                const result = new HealthProfessional().fromJSON({})
                 assert.property(result, 'id')
                 assert.propertyVal(result, 'id', undefined)
                 assert.property(result, 'type')
@@ -76,7 +95,7 @@ describe('Models: HealthProfessional', () => {
                 assert.propertyVal(result, 'health_area', undefined)
             })
 
-            it('should return a health professional with some undefined parameters', () => {
+            it('should return a health professional with some undefined parameters for empty string', () => {
                 const result = new HealthProfessional().fromJSON('')
                 assert.property(result, 'id')
                 assert.propertyVal(result, 'id', undefined)

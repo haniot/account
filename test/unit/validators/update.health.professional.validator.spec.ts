@@ -1,7 +1,7 @@
 import { assert } from 'chai'
 import { UpdateHealthProfessionalValidator } from '../../../src/application/domain/validator/update.health.professional.validator'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
-import { DefaultEntityMock } from '../../mocks/default.entity.mock'
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 
 describe('Validators: UpdateHealthProfessionalValidator', () => {
     const user: HealthProfessional = new HealthProfessional().fromJSON(DefaultEntityMock.HEALTH_PROFESSIONAL)

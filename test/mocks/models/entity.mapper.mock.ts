@@ -1,4 +1,4 @@
-import { IEntityMapper } from '../../src/infrastructure/port/entity.mapper.interface'
+import { IEntityMapper } from '../../../src/infrastructure/port/entity.mapper.interface'
 
 export class EntityMapperMock implements IEntityMapper<any, any> {
 

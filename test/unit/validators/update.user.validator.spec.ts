@@ -1,7 +1,7 @@
 import { assert } from 'chai'
 import { User } from '../../../src/application/domain/model/user'
 import { UpdateUserValidator } from '../../../src/application/domain/validator/update.user.validator'
-import { DefaultEntityMock } from '../../mocks/default.entity.mock'
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 
 describe('Validators: UpdateUserValidator', () => {
     const user: User = new User().fromJSON(DefaultEntityMock.USER)
