@@ -1,51 +1,48 @@
 import { Container, inject, injectable } from 'inversify'
 import { Identifier } from '../di/identifiers'
-import { IDBConnection } from '../infrastructure/port/db.connection.interface'
-import { CustomLogger } from '../utils/custom.logger'
-import { RegisterDefaultAdminTask } from './register.default.admin.task'
+import { IConnectionDB } from '../infrastructure/port/connection.db.interface'
 import { DI } from '../di/di'
+import { RegisterDefaultAdminTask } from './task/register.default.admin.task'
 
 @injectable()
 export class BackgroundService {
-    private readonly _diContainer: Container
+
+    private container: Container
 
     constructor(
-        @inject(Identifier.MONGODB_CONNECTION) private _mongodb: IDBConnection,
-        @inject(Identifier.LOGGER) private _logger: CustomLogger
+        @inject(Identifier.MONGODB_CONNECTION) private readonly _mongodb: IConnectionDB
     ) {
-        this._diContainer = DI.getInstance().getContainer()
+        this.container = DI.getInstance().getContainer()
     }
 
     public async startServices(): Promise<void> {
-        this._logger.debug('startServices()')
         try {
             /**
              * At the time the application goes up, an event is issued if the
              * database is connected, and in this case, a task is run to check
              * if there are registered admin users.
              */
-            this._mongodb.eventConnection.on('connected', () => {
-                const registerDefaultAdminTask: RegisterDefaultAdminTask =
-                    new RegisterDefaultAdminTask(this._diContainer.get(Identifier.USER_REPOSITORY), this._logger)
-                registerDefaultAdminTask.run()
-            })
-
-            await this._mongodb.tryConnect() // Initialize mongodb
+            await new RegisterDefaultAdminTask(this._mongodb,
+                this.container.get(Identifier.ADMIN_REPOSITORY),
+                this.container.get(Identifier.LOGGER)
+            ).run()
 
             /**
-             * Register your events using the event bus instance here.
+             * Trying to connect to mongodb.
+             * Go ahead only when the run is resolved.
+             * Since the application depends on the database connection to work.
              */
+            await this._mongodb.tryConnect(0, 1000)
         } catch (err) {
-            this._logger.error('Error initializing services in background: '.concat(err.message))
+            return Promise.reject(new Error(`Error initializing services in background! ${err.message}`))
         }
     }
 
     public async stopServices(): Promise<void> {
-        this._logger.debug('stopServices()')
         try {
             await this._mongodb.dispose()
         } catch (err) {
-            this._logger.error('Error stopping background services: '.concat(err.message))
+            return Promise.reject(new Error(`Error stopping MongoDB! ${err.message}`))
         }
     }
 }
