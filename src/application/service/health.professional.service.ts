@@ -67,7 +67,6 @@ export class HealthProfessionalService implements IHealthProfessionalService {
             ObjectIdValidator.validate(healthProfessionalId)
             query.addFilter({ 'health_professionals_id._id': healthProfessionalId })
             const result = await this._pilotStudyRepository.find(query)
-            if (!result) return Promise.resolve(undefined)
 
             if (result.length) {
                 result.forEach(pilotStudy => {
