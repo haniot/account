@@ -8,16 +8,26 @@ import { IPatientRepository } from '../port/patient.repository.interface'
 import { CreatePatientValidator } from '../domain/validator/create.patient.validator'
 import { Patient } from '../domain/model/patient'
 import { UpdatePatientValidator } from '../domain/validator/update.patient.validator'
+import { IPilotStudyRepository } from '../port/pilot.study.repository.interface'
+import { PilotStudy } from '../domain/model/pilot.study'
+import { ValidationException } from '../domain/exception/validation.exception'
+import { Strings } from '../../utils/strings'
 
 @injectable()
 export class PatientService implements IPatientService {
     constructor(
-        @inject(Identifier.PATIENT_REPOSITORY) private readonly _patientRepository: IPatientRepository) {
+        @inject(Identifier.PATIENT_REPOSITORY) private readonly _patientRepository: IPatientRepository,
+        @inject(Identifier.PILOT_STUDY_REPOSITORY) private readonly _pilotStudyRepository: IPilotStudyRepository) {
     }
 
     public async add(item: Patient): Promise<Patient> {
         try {
             CreatePatientValidator.validate(item)
+            if (item.pilotstudy_id) {
+                const exists =
+                    await this._pilotStudyRepository.checkExists(new PilotStudy().fromJSON(item.pilotstudy_id))
+                if (!exists) throw new ValidationException(Strings.PILOT_STUDY.ASSOCIATION_FAILURE)
+            }
             return this._patientRepository.create(item)
         } catch (err) {
             return Promise.reject(err)
