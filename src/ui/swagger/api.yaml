@@ -23,6 +23,8 @@ tags:
     description: Operations for the User HealthProfessional resource.
   - name: users.healthprofessionals.pilotstudies
     description: Operations for the User HealthProfessional Pilot Studies resource.
+  - name: users.patients
+    description: Operations for the User Patient resource.
   - name: pilotstudies
     description: Operations for the Pilot Study resource.
   - name: pilotstudies.healthprofessionals
@@ -69,20 +71,9 @@ paths:
                 token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1YWNjYjYyMTViYTQ4NDEzZTgxZTc4NTNlIiwiaXNzIjoiaGFuaW90IiwiZXhwIjoxNTM0MDIwMjAyLCJpYXQiOjE1MzQwMDk0NzQsInNjb3BlcyI6InVzZXJzOnJlYWRBbGwgdXNlcnM6cmVnaXN0ZXIgdXNlcnM6cmVhZCB1c2Vyczp1cGRhdGUgdXNlcnM6cmVtb3ZlIn0.vkan_NyX-PwPwlACkg7PqqTKUEbnBOSBSu_aq3gUZRM
 
         '400':
-          description: >-
-            Request can not be met, syntactically incorrect or violates the
-            schema. Normally it occurs due to validation issues, such as
-            fields that are expected in the request body and not passed.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/400'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
           description: >-
             User password must be changed. It occours when the system requires that user change your password during the auth proccess.
@@ -95,45 +86,15 @@ paths:
                   description: "To ensure information security, the user must change the access password. Access /users/{user_id}/password to update then."
                   redirect_link: /users/{user_id}/password
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect
-            or the resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the client
-            for the application response. Only application/json is currently
-            accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '415':
-          description: >-
-            The server does not support the requested payload format. Only
-            application/json is accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/415'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to
-            provide a correct request, the server encountered an unexpected
-            condition that prevented it from responding to the request."
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
       requestBody:
         content:
           application/json:
@@ -164,51 +125,19 @@ paths:
             type: string
       responses:
         '204':
-          description: >-
-            Operation performed successfully. There is no data to be returned
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/204'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
-          description: User does not have permission to delete users.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect or the
-            resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the client for
-            the application response. Only application/json is currently accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to provide a
-            correct request, the server encountered an unexpected condition that
-            prevented it from responding to the request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
   /users/{user_id}/password:
     patch:
       tags:
@@ -226,69 +155,23 @@ paths:
             type: string
       responses:
         '204':
-          description: >-
-            Operation performed successfully. There is no data to be returned
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/204'
         '400':
-          description: >-
-            Request can not be met, syntactically incorrect or violates the
-            schema. Normally it occurs due to validation issues, such as
-            fields that are expected in the request body and not passed.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/400'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
-          description: User does not have permission to update password.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect
-            or the resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the client
-            for the application response. Only application/json is currently
-            accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '415':
-          description: >-
-            The server does not support the requested payload format. Only
-            application/json is accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/415'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to
-            provide a correct request, the server encountered an unexpected
-            condition that prevented it from responding to the request."
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
       requestBody:
         content:
           application/json:
@@ -322,81 +205,33 @@ paths:
               schema:
                 $ref: '#/components/schemas/Admin'
         '400':
-          description: >-
-            Request can not be met, syntactically incorrect or violates the
-            schema. Normally it occurs due to validation issues, such as
-            fields that are expected in the request body and not passed.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/400'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
-          description: User does not have permission to register admin.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect
-            or the resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the client
-            for the application response. Only application/json is currently
-            accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '415':
-          description: >-
-            The server does not support the requested payload format. Only
-            application/json is accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/415'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to
-            provide a correct request, the server encountered an unexpected
-            condition that prevented it from responding to the request."
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                username:
-                  type: string
-                  example: admin
-                password:
-                  type: string
-                  example: 'admin123'
                 email:
                   type: string
-                  example: admin@mail.com
+                  example: admin@haniot.com
+                password:
+                  type: string
+                  example: 'admin*123'
         description: Data of the user to be saved.
         required: true
     get:
@@ -410,11 +245,11 @@ paths:
         Sorting, and Filtering.
       operationId: getAllAdmins
       parameters:
-        - $ref: '#/components/parameters/fieldsParam'
-        - $ref: '#/components/parameters/pageParam'
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/sortParam'
-        - $ref: '#/components/parameters/filterParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/fieldsParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/pageParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/limitParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/sortParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/filterParam'
       responses:
         '200':
           description: List of admins.
@@ -425,49 +260,17 @@ paths:
                 items:
                   $ref: '#/components/schemas/Admin'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
-          description: User does not have permission to get admins list.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect
-            or the resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the client
-            for the application response. Only application/json is currently
-            accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to
-            provide a correct request, the server encountered an unexpected
-            condition that prevented it from responding to the request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
   /users/admins/{admin_id}:
     get:
       security:
@@ -485,7 +288,7 @@ paths:
           example: '5c86d00c7a8618923481b48b'
           schema:
             type: string
-        - $ref: '#/components/parameters/fieldsParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/fieldsParam'
       responses:
         '200':
           description: Requested user data.
@@ -494,48 +297,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/Admin'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
-          description: User does not have permission to get admin data.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect or the
-            resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the client for
-            the application response. Only application/json is currently accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to provide a
-            correct request, the server encountered an unexpected condition that
-            prevented it from responding to the request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
     patch:
       security:
         - JWTAuth: []
@@ -560,64 +332,21 @@ paths:
               schema:
                 $ref: '#/components/schemas/Admin'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
-          description: User does not have permission to update admin data.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect
-            or the resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the client
-            for the application response. Only application/json is currently
-            accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '409':
-          description: ->
-            Conflicts have probably occurred with data that can not be duplicated.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/409'
         '415':
-          description: >-
-            The server does not support the requested payload format. Only
-            application/json is accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/415'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to
-            provide a correct request, the server encountered an unexpected
-            condition that prevented it from responding to the request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
       requestBody:
         content:
           application/json:
@@ -644,84 +373,36 @@ paths:
               schema:
                 $ref: '#/components/schemas/HealthProfessional'
         '400':
-          description: >-
-            Request can not be met, syntactically incorrect or violates the
-            schema. Normally it occurs due to validation issues, such as
-            fields that are expected in the request body and not passed.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/400'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
-          description: User does not have permission to register health professionals.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect
-            or the resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the client
-            for the application response. Only application/json is currently
-            accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '415':
-          description: >-
-            The server does not support the requested payload format. Only
-            application/json is accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/415'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to
-            provide a correct request, the server encountered an unexpected
-            condition that prevented it from responding to the request."
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                username:
-                  type: string
-                  example: elvisaaron
-                password:
-                  type: string
-                  example: 'lorem123'
-                email:
-                  type: string
-                  example: elvisaaron@mail.com
                 name:
                   type: string
-                  example: Elvis Aaron
+                  example: Isabelle Cordeiro
+                email:
+                  type: string
+                  example: isa@haniot.com
+                password:
+                  type: string
+                  example: isa#uepb
                 health_area:
                   type: string
                   example: 'nutrition'
@@ -738,11 +419,11 @@ paths:
         Sorting, and Filtering.
       operationId: getAllHealthProfessionals
       parameters:
-        - $ref: '#/components/parameters/fieldsParam'
-        - $ref: '#/components/parameters/pageParam'
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/sortParam'
-        - $ref: '#/components/parameters/filterParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/fieldsParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/pageParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/limitParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/sortParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/filterParam'
       responses:
         '200':
           description: List of health professionals.
@@ -753,49 +434,17 @@ paths:
                 items:
                   $ref: '#/components/schemas/HealthProfessional'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
-          description: User does not have permission to get health professionals list.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect
-            or the resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the client
-            for the application response. Only application/json is currently
-            accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to
-            provide a correct request, the server encountered an unexpected
-            condition that prevented it from responding to the request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
   /users/healthprofessionals/{healthprofessional_id}:
     get:
       security:
@@ -813,7 +462,7 @@ paths:
           example: '5c86d00cfc25e7036d51d652'
           schema:
             type: string
-        - $ref: '#/components/parameters/fieldsParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/fieldsParam'
       responses:
         '200':
           description: Requested user data.
@@ -822,48 +471,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/HealthProfessional'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
-          description: User does not have permission to get health professional data.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect or the
-            resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the client for
-            the application response. Only application/json is currently accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to provide a
-            correct request, the server encountered an unexpected condition that
-            prevented it from responding to the request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
     patch:
       security:
         - JWTAuth: []
@@ -888,64 +506,21 @@ paths:
               schema:
                 $ref: '#/components/schemas/HealthProfessional'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
-          description: User does not have permission to update health professional data.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect
-            or the resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the client
-            for the application response. Only application/json is currently
-            accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '409':
-          description: ->
-            Conflicts have probably occurred with data that can not be duplicated.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/409'
         '415':
-          description: >-
-            The server does not support the requested payload format. Only
-            application/json is accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/415'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to
-            provide a correct request, the server encountered an unexpected
-            condition that prevented it from responding to the request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
       requestBody:
         content:
           application/json:
@@ -974,11 +549,11 @@ paths:
           example: '5c86d00cfc25e7036d51d652'
           schema:
             type: string
-        - $ref: '#/components/parameters/fieldsParam'
-        - $ref: '#/components/parameters/pageParam'
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/sortParam'
-        - $ref: '#/components/parameters/filterParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/fieldsParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/pageParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/limitParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/sortParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/filterParam'
       responses:
         '200':
           description: List of pilot studies.
@@ -1012,49 +587,173 @@ paths:
                       description: End of pilot study in UTC format, according to ISO 8601.
                       example: '2019-01-23T18:00:00'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
-          description: User does not have permission to get pilot studies.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect
-            or the resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the client
-            for the application response. Only application/json is currently
-            accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to
-            provide a correct request, the server encountered an unexpected
-            condition that prevented it from responding to the request.
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
+
+    # users.patients
+  /users/patients:
+    post:
+      tags:
+        - users.patients
+      summary: Register patient user.
+      description: Register a new user as patient.
+      operationId: addPatient
+      responses:
+        '201':
+          description: Patient successfully registered.
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Patient'
+        '400':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/400'
+        '401':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
+        '403':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
+        '404':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
+        '406':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
+        '415':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/415'
+        '429':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
+        '500':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
+        description: Data of the patient to be saved.
+        required: true
+    get:
+      tags:
+        - users.patients
+      summary: Recover patients.
+      description: |
+        Returns list with all patients. The query supports Field Selection, Paging, Sorting, and Filtering.
+
+        This API supports filters in the query. Although Swagger does not support query filters, you can get information about filter queries by visiting this [link](https://github.com/nutes-uepb/query-strings-parser/wiki/3.4-Filtering).
+      operationId: getAllPatients
+      parameters:
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/fieldsParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/pageParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/limitParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/sortParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/filterParam'
+      responses:
+        '200':
+          description: List of patients.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Patient'
+        '401':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
+        '403':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
+        '404':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
+        '406':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
+        '429':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
+        '500':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
+  /users/patients/{patient_id}:
+    get:
+      tags:
+        - users.patients
+      summary: Recover patient data.
+      description: Recover the patient data. The query suports Fields param.
+      operationId: getPatientById
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          description: Id of patient.
+          example: '5c9137f2b8d3921ff3028378'
+          schema:
+            type: string
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/fieldsParam'
+      responses:
+        '200':
+          description: Requested patient data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+        '401':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
+        '403':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
+        '404':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
+        '406':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
+        '429':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
+        '500':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
+    patch:
+      tags:
+        - users.patients
+      summary: Update patient data.
+      description: Update the patient data.
+      operationId: updatePatient
+      parameters:
+        - name: patient_id
+          in: path
+          required: true
+          description: Id of patient.
+          example: '5c9137f2b8d3921ff3028378'
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Updated patient data.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Patient'
+        '401':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
+        '403':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
+        '404':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
+        '406':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
+        '409':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/409'
+        '415':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/415'
+        '429':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
+        '500':
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Patient'
+        description: Data of the patient to be updated.
+        required: true
+
+
   # pilotstudies
   /pilotstudies:
     post:
@@ -1073,66 +772,21 @@ paths:
               schema:
                 $ref: '#/components/schemas/PilotStudy'
         '400':
-          description: >-
-            Request can not be met, syntactically incorrect or violates the
-            schema. Normally it occurs due to validation issues, such as
-            fields that are expected in the request body and not passed.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/400'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
-          description: User does not have permission to register pilot studies.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect
-            or the resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the client
-            for the application response. Only application/json is currently
-            accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '415':
-          description: >-
-            The server does not support the requested payload format. Only
-            application/json is accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/415'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to
-            provide a correct request, the server encountered an unexpected
-            condition that prevented it from responding to the request."
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
       requestBody:
         content:
           application/json:
@@ -1151,11 +805,11 @@ paths:
         Sorting, and Filtering.
       operationId: getAllPilotStudies
       parameters:
-        - $ref: '#/components/parameters/fieldsParam'
-        - $ref: '#/components/parameters/pageParam'
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/sortParam'
-        - $ref: '#/components/parameters/filterParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/fieldsParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/pageParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/limitParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/sortParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/filterParam'
       responses:
         '200':
           description: List of pilot studies.
@@ -1166,49 +820,17 @@ paths:
                 items:
                   $ref: '#/components/schemas/PilotStudy'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
-          description: User does not have permission to get pilot studies.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect
-            or the resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the client
-            for the application response. Only application/json is currently
-            accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to
-            provide a correct request, the server encountered an unexpected
-            condition that prevented it from responding to the request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
   /pilotstudies/{pilotstudy_id}:
     get:
       security:
@@ -1226,7 +848,7 @@ paths:
           example: '5c86d00c2239a48ea20a0134'
           schema:
             type: string
-        - $ref: '#/components/parameters/fieldsParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/fieldsParam'
       responses:
         '200':
           description: Requested user data.
@@ -1235,48 +857,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/PilotStudy'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
-          description: User does not have permission to get pilot study data.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect or the
-            resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the client for
-            the application response. Only application/json is currently accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to provide a
-            correct request, the server encountered an unexpected condition that
-            prevented it from responding to the request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
     patch:
       security:
         - JWTAuth: []
@@ -1301,64 +892,21 @@ paths:
               schema:
                 $ref: '#/components/schemas/PilotStudy'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
-          description: User does not have permission to update pilot study data.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect
-            or the resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the client
-            for the application response. Only application/json is currently
-            accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '409':
-          description: ->
-            Conflicts have probably occurred with data that can not be duplicated.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/409'
         '415':
-          description: >-
-            The server does not support the requested payload format. Only
-            application/json is accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/415'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to
-            provide a correct request, the server encountered an unexpected
-            condition that prevented it from responding to the request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
       requestBody:
         content:
           application/json:
@@ -1384,51 +932,19 @@ paths:
             type: string
       responses:
         '204':
-          description: Operation performed successfully. There is no data to be returned.
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/204'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
-          description: User does not have permission to delete pilot study data.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect
-            or the resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the
-            client for the application response. Only application/json is
-            currently accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to
-            provide a correct request, the server encountered an unexpected
-            condition that prevented it from responding to the request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
 
   # pilotstudies.healthprofessionals
   /pilotstudies/{pilotstudy_id}/healthprofessionals:
@@ -1450,11 +966,11 @@ paths:
           example: '5c86d00c2239a48ea20a0134'
           schema:
             type: string
-        - $ref: '#/components/parameters/fieldsParam'
-        - $ref: '#/components/parameters/pageParam'
-        - $ref: '#/components/parameters/limitParam'
-        - $ref: '#/components/parameters/sortParam'
-        - $ref: '#/components/parameters/filterParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/fieldsParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/pageParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/limitParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/sortParam'
+        - $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/parameters/filterParam'
       responses:
         '200':
           description: List of pilot studies.
@@ -1465,49 +981,17 @@ paths:
                 items:
                   $ref: '#/components/schemas/HealthProfessional'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
-          description: User does not have permission to get pilot studies.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect
-            or the resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the client
-            for the application response. Only application/json is currently
-            accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to
-            provide a correct request, the server encountered an unexpected
-            condition that prevented it from responding to the request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
   /pilotstudies/{pilotstudy_id}/healthprofessionals/{healthprofessional_id}:
     post:
       security:
@@ -1542,66 +1026,21 @@ paths:
                 items:
                   $ref: '#/components/schemas/HealthProfessional'
         '400':
-          description: >-
-            Request can not be met, syntactically incorrect or violates the
-            schema. Normally it occurs due to validation issues, such as
-            fields that are expected in the request body and not passed.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/400'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
-          description: User does not have permission to associate health professionals to pilot studies.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect
-            or the resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the client
-            for the application response. Only application/json is currently
-            accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '415':
-          description: >-
-            The server does not support the requested payload format. Only
-            application/json is accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/415'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to
-            provide a correct request, the server encountered an unexpected
-            condition that prevented it from responding to the request."
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
     delete:
       security:
         - JWTAuth: []
@@ -1627,51 +1066,20 @@ paths:
             type: string
       responses:
         '204':
-          description: Operation performed successfully. There is no data to be returned.
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/204'
         '401':
-          description: Authentication failed due to invalid authentication credentials.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/401'
         '403':
-          description: User does not have permission to disassociate health professionals from pilot study.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/403'
         '404':
-          description: >-
-            Specified resource does not exist. Usually when the URI is incorrect
-            or the resource is not found, or even no longer exists.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/404'
         '406':
-          description: >-
-            The server is not implementing the media type requested by the
-            client for the application response. Only application/json is
-            currently accepted.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/406'
         '429':
-          description: The rate limit for requests exceeded.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/429'
         '500':
-          description: >-
-            An internal server error occurred. Although the client appears to
-            provide a correct request, the server encountered an unexpected
-            condition that prevented it from responding to the request.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
+          $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/responses/500'
+
 components:
   securitySchemes:
     JWTAuth:
@@ -1680,215 +1088,10 @@ components:
       bearerFormat: JWT
   schemas:
     Admin:
-      type: object
-      required:
-        - id
-        - email
-      properties:
-        id:
-          readOnly: true
-          type: string
-          format: uuid
-          description: Automatically generated key field.
-          example: '5c86d00c7a8618923481b48b'
-        email:
-          type: string
-          description: Email of admin for authentication.
-          example: admin@haniot.com
+      $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/schemas/Admin'
     HealthProfessional:
-      type: object
-      required:
-        - id
-        - email
-        - name
-        - health_area
-      properties:
-        id:
-          readOnly: true
-          type: string
-          format: uuid
-          description: Automatically generated key field.
-          example: '5c86d00cfc25e7036d51d652'
-        email:
-          type: string
-          description: Email of health professional for authentication.
-          example: elvisaaron@haniot.com
-        name:
-          type: string
-          description: Name of the health professional.
-          example: Elvis Aaron
-        health_area:
-          type: string
-          description: Area of medical performance of the health professional. Could be nutrition or dentistry.
-          enum: ["nutrition", "dentistry"]
+      $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/schemas/HealthProfessional'
+    Patient:
+      $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/schemas/Patient'
     PilotStudy:
-      type: object
-      required:
-        - id
-        - name
-        - is_active
-        - start
-        - end
-        - health_professionals_id
-      properties:
-        id:
-          readOnly: true
-          type: string
-          format: uuid
-          description: Automatically generated key field.
-          example: '5c86d00c2239a48ea20a0134'
-        name:
-          type: string
-          description: Name of pilot study.
-          example: 'Pilot Odonto 01'
-        is_active:
-          type: boolean
-          description: Status of pilot study. The value is true if it is active, false otherwise.
-          example: true
-        start:
-          type: string
-          description: Start of pilot study in UTC format, according to ISO 8601.
-          example: '2018-11-19T14:40:00'
-        end:
-          type: string
-          description: End of pilot study in UTC format, according to ISO 8601.
-          example: '2019-01-23T18:00:00'
-        health_professionals_id:
-          type: array
-          description: List of id of the health professionals who are participating in the pilot study.
-          items:
-            type: string
-          example:
-            - '5c86d00cfc25e7036d51d652'
-    Error:
-      type: object
-      description: >-
-        Default template for error message. All returned errors will follow this
-        template.
-      required:
-        - code
-        - message
-      properties:
-        code:
-          type: integer
-          description: >-
-            Unique API code that indicates specific details of the error, or
-            the actual status code of the response when the unique code is not
-            appropriate.
-        message:
-          type: string
-          description: Readable and short description of the error.
-        description:
-          type: string
-          description: Detailed description of the error.
-        redirect_link:
-          type: string
-  parameters:
-    fieldsParam:
-      in: query
-      name: fields
-      required: false
-      description: >-
-        Allows you to retrieve only the information you want. To do this,
-        simply provide the name of the attributes separated by commas.
-        For example: **_fields=field1,field2_** indicates that only
-        field1 and field2 should be listed in the query result.
-      schema:
-        type: array
-        items:
-          type: string
-    pageParam:
-      in: query
-      name: page
-      required: false
-      description: The page number.
-      schema:
-        type: integer
-        format: int32
-        minimum: 1
-        default: 1
-    limitParam:
-      in: query
-      name: limit
-      required: false
-      description: The number of items to return.
-      schema:
-        type: integer
-        format: int32
-        maximum: 100
-        default: 20
-    sortParam:
-      in: query
-      name: sort
-      required: false
-      description: >-
-        Contains the names of the attributes, separated by commas, that
-        will be used to sort the result of the query. For ascending sort,
-        use the '+' character before the attribute name. For descending
-        sort, use the '-' character before the attribute name. By default,
-        the order is ascending, so the '+' symbol is optional, just enter
-        the attribute.
-      schema:
-        type: array
-        items:
-          type: string
-        default:
-          - created_at
-    filterParam:
-      in: query
-      name: ''
-      required: false
-      description: >-
-        To filter a collection by multiple concurrent attributes or filter
-        multiple values for an attribute, simply use the attribute/property
-        name with an equal sign and the expected values, separated by a comma.
-        **_property=value1,value2,value3_**. The query is not case sensitive.
-        Example: **_?name=elvis,john_** to retrieve exactly the same users with
-        elvis or john name.
-        For filtering with logical operators, just follow the syntax:
-        **_property=operator:value_**. The available operators are:
-         - **gt** -> Defines which value of the attribute is greater than
-                    (that is,>) the specified value.
-         - **gte** -> Defines which attribute value is greater than or equal to
-                    (that is,>=) the specified value.
-         - **lt** -> Define the value of the attribute to be less than (that is, <)
-                    the specified value.
-         - **lte** -> Defines which value of the attribute is less than or equal to
-                    (that is, <=) the specified value.
-
-        Example: **_?field1=gte:80&age=lt:100_** to recover the users with age
-        is greater than or equal to 80 and less then 100.
-      schema:
-        type: string
-    dateStartParam:
-      in: query
-      name: date_start
-      required: false
-      description: >-
-        Define start date in format: YYYY-MM-DD ou YYYY-MM-DD hh:mm:ss. The
-        attribute used for the query will be the registration_date.
-      schema:
-        type: string
-    dateEndParam:
-      in: query
-      name: date_end
-      required: false
-      description: >-
-        Define end date in format: YYYY-MM-DD ou YYYY-MM-DD hh:mm:ss.The
-        attribute used for the query will be the registration_date.
-      schema:
-        type: string
-        default: today
-    periodParam:
-      in: query
-      name: period
-      required: false
-      description: |-
-        Sets the period from the available ones:
-         - **[1..n]d** - Total days (1d, 2d, ...)
-         - **[1..n]w** - Total of weeks (1w, 2w, ...)
-         - **[1..n]m** - Total of months (1m, 2m, ...)
-         - **[1..n]y** - Total of years (1y, 2y, ...)
-        The attribute used for the query will be the registration_date.
-      schema:
-        type: string
+      $ref: 'https://api.swaggerhub.com/domains/haniot/haniot-components/1.0.0#/components/schemas/PilotStudy'
