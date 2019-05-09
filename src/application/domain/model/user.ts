@@ -70,7 +70,7 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
 
         if (json.id !== undefined) super.id = json.id
         if (json.password !== undefined) this.password = json.password
-        if (json.scope !== undefined) this.scopes = json.scope
+        if (json.scopes !== undefined) this.scopes = json.scopes
 
         return this
     }
