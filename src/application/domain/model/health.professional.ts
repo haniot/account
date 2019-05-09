@@ -19,15 +19,36 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
         super()
         super.type = UserType.HEALTH_PROFESSIONAL
         super.scopes = [
-            'healthprofessional:delete',
-            'healthprofessional:read',
-            'healthprofessional:update',
-            'pilotstudy:read',
-            'pilotstudy:update',
-            'patient:create',
-            'patient:readAll',
-            'patient:update',
-            'patient:delete'
+            'healthprofessionals:read',
+            'healthprofessionals:update',
+            'patients:create',
+            'patients:read',
+            'patients:readAll',
+            'patients:update',
+            'patients:delete',
+            'pilots:create',
+            'pilots:readAll',
+            'pilots:update',
+            'pilots:delete',
+            'measurements:create',
+            'measurements:read',
+            'measurements:update',
+            'measurements:delete',
+            'devices:create',
+            'devices:read',
+            'devices:update',
+            'devices:delete',
+            'forms:create',
+            'forms:read',
+            'forms:update',
+            'forms:delete',
+            'evaluations:create',
+            'evaluations:read',
+            'evaluations:update',
+            'evaluations:delete',
+            'notifications:create',
+            'notifications:read',
+            'notifications:delete'
         ]
     }
 

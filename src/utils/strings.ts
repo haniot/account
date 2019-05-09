@@ -13,6 +13,15 @@ export abstract class Strings {
         APP_DESCRIPTION: 'Micro-service for Account.'
     }
 
+    public static readonly PARAMETERS: any = {
+        COULD_NOT_BE_UPDATED: 'This parameter could not be updated!'
+    }
+
+    public static readonly ENUM_VALIDATOR: any = {
+        NOT_MAPPED: 'Value not mapped for ',
+        NOT_MAPPED_DESC: 'The mapped values are: '
+    }
+
     public static readonly USER: any = {
         EMAIL_ALREADY_REGISTERED: 'A user with this email already registered!',
         NOT_FOUND: 'User not found!',
@@ -24,6 +33,11 @@ export abstract class Strings {
     public static readonly ADMIN: any = {
         NOT_FOUND: 'Admin not found!',
         NOT_FOUND_DESCRIPTION: 'Admin not found or already removed. A new operation for the same resource is required.'
+    }
+
+    public static readonly PATIENT: any = {
+        NOT_FOUND: 'Patient not found!',
+        NOT_FOUND_DESCRIPTION: 'Patient not found or already removed. A new operation for the same resource is required.'
     }
 
     public static readonly HEALTH_PROFESSIONAL: any = {
