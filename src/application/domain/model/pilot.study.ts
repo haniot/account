@@ -11,6 +11,7 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
     private _start?: Date
     private _end?: Date
     private _health_professionals_id?: Array<HealthProfessional>
+    private _location?: string
 
     constructor() {
         super()
@@ -56,6 +57,14 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
         this._health_professionals_id = value
     }
 
+    get location(): string | undefined {
+        return this._location
+    }
+
+    set location(value: string | undefined) {
+        this._location = value
+    }
+
     public addHealthProfessional(healthProfessional: HealthProfessional) {
         if (!this.health_professionals_id) this.health_professionals_id = []
         this.health_professionals_id.push(healthProfessional)
@@ -92,6 +101,7 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
         if (json.health_professionals_id !== undefined && json.health_professionals_id instanceof Array)
             this.health_professionals_id =
                 json.health_professionals_id.map(id => new HealthProfessional().fromJSON(id))
+        if (json.location !== undefined) this.location = json.location
         return this
     }
 
@@ -104,7 +114,8 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
             end: this.end,
             health_professionals_id:
                 this.health_professionals_id ?
-                    this.health_professionals_id.map(healthProfessional => healthProfessional.id) : []
+                    this.health_professionals_id.map(healthProfessional => healthProfessional.id) : [],
+            location: this.location
         }
     }
 }
