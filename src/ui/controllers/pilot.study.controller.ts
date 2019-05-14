@@ -100,6 +100,21 @@ export class PilotStudyController {
         }
     }
 
+    @httpGet('/:pilotstudy_id/patients')
+    public async getAllPatientsFromPilotStudy(
+        @request() req: Request, @response() res: Response): Promise<Response> {
+        try {
+            const result: any =
+                await this._pilotStudyService.getAllPatients(
+                    req.params.pilotstudy_id,
+                    new Query().fromJSON(req.query))
+            return res.status(HttpStatus.OK).send(result)
+        } catch (err) {
+            const handleError = ApiExceptionManager.build(err)
+            return res.status(handleError.code).send(handleError.toJson())
+        }
+    }
+
     @httpPost('/:pilotstudy_id/healthprofessionals/:healthprofessional_id')
     public async associateHealthprofessionalToPilotStudy(
         @request() req: Request, @response() res: Response): Promise<Response> {
