@@ -28,6 +28,7 @@ export class Admin extends User implements IJSONSerializable, IJSONDeserializabl
             'patients:delete',
             'pilots:create',
             'pilots:readAll',
+            'pilots:read',
             'pilots:update',
             'pilots:delete',
             'measurements:read',
