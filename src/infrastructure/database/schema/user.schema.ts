@@ -5,8 +5,7 @@ interface IUserModel extends Mongoose.Document {
 
 const userSchema = new Mongoose.Schema({
         password: {
-            type: String,
-            required: 'Password required!'
+            type: String
         },
         type: {
             type: String
