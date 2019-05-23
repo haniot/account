@@ -17,8 +17,7 @@ const userSchema = new Mongoose.Schema({
         scopes: [{ type: String }],
         email: { /* Common parameter between admin, patient and health professional. */
             type: String,
-            index: { unique: true },
-            required: 'Email required!'
+            index: { unique: true }
         }, /* Health Professional parameters*/
         name: {
             type: String
