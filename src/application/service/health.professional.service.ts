@@ -10,18 +10,24 @@ import { ObjectIdValidator } from '../domain/validator/object.id.validator'
 import { UpdateHealthProfessionalValidator } from '../domain/validator/update.health.professional.validator'
 import { IPilotStudyRepository } from '../port/pilot.study.repository.interface'
 import { PilotStudy } from '../domain/model/pilot.study'
+import { ValidationException } from '../domain/exception/validation.exception'
+import { Strings } from '../../utils/strings'
+import { IUserRepository } from '../port/user.repository.interface'
 
 @injectable()
 export class HealthProfessionalService implements IHealthProfessionalService {
     constructor(
         @inject(Identifier.HEALTH_PROFESSIONAL_REPOSITORY) private readonly _healthProfessionalRepository:
             IHealthProfessionalRepository,
+        @inject(Identifier.USER_REPOSITORY) private readonly _userRepository: IUserRepository,
         @inject(Identifier.PILOT_STUDY_REPOSITORY) private readonly _pilotStudyRepository: IPilotStudyRepository) {
     }
 
     public async add(item: HealthProfessional): Promise<HealthProfessional> {
         try {
             CreateHealthProfessionalValidator.validate(item)
+            const exists = await this._userRepository.checkExist(item.email)
+            if (exists) throw new ValidationException(Strings.USER.EMAIL_ALREADY_REGISTERED)
             return this._healthProfessionalRepository.create(item)
         } catch (err) {
             return Promise.reject(err)

@@ -12,11 +12,13 @@ import { IPilotStudyRepository } from '../port/pilot.study.repository.interface'
 import { PilotStudy } from '../domain/model/pilot.study'
 import { ValidationException } from '../domain/exception/validation.exception'
 import { Strings } from '../../utils/strings'
+import { IUserRepository } from '../port/user.repository.interface'
 
 @injectable()
 export class PatientService implements IPatientService {
     constructor(
         @inject(Identifier.PATIENT_REPOSITORY) private readonly _patientRepository: IPatientRepository,
+        @inject(Identifier.USER_REPOSITORY) private readonly _userRepository: IUserRepository,
         @inject(Identifier.PILOT_STUDY_REPOSITORY) private readonly _pilotStudyRepository: IPilotStudyRepository) {
     }
 
@@ -24,9 +26,13 @@ export class PatientService implements IPatientService {
         try {
             CreatePatientValidator.validate(item)
             if (item.pilotstudy_id) {
-                const exists =
+                const pilotExists =
                     await this._pilotStudyRepository.checkExists(new PilotStudy().fromJSON(item.pilotstudy_id))
-                if (!exists) throw new ValidationException(Strings.PILOT_STUDY.ASSOCIATION_FAILURE)
+                if (!pilotExists) throw new ValidationException(Strings.PILOT_STUDY.ASSOCIATION_FAILURE)
+                if (item.email) {
+                    const patientExists = await this._userRepository.checkExist(item.email)
+                    if (patientExists) throw new ValidationException(Strings.USER.EMAIL_ALREADY_REGISTERED)
+                }
             }
             return this._patientRepository.create(item)
         } catch (err) {
