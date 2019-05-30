@@ -10,9 +10,9 @@ import { ObjectIdValidator } from '../domain/validator/object.id.validator'
 import { UpdateHealthProfessionalValidator } from '../domain/validator/update.health.professional.validator'
 import { IPilotStudyRepository } from '../port/pilot.study.repository.interface'
 import { PilotStudy } from '../domain/model/pilot.study'
-import { ValidationException } from '../domain/exception/validation.exception'
 import { Strings } from '../../utils/strings'
 import { IUserRepository } from '../port/user.repository.interface'
+import { ConflictException } from '../domain/exception/conflict.exception'
 
 @injectable()
 export class HealthProfessionalService implements IHealthProfessionalService {
@@ -27,7 +27,7 @@ export class HealthProfessionalService implements IHealthProfessionalService {
         try {
             CreateHealthProfessionalValidator.validate(item)
             const exists = await this._userRepository.checkExist(item.email)
-            if (exists) throw new ValidationException(Strings.USER.EMAIL_ALREADY_REGISTERED)
+            if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
             return this._healthProfessionalRepository.create(item)
         } catch (err) {
             return Promise.reject(err)

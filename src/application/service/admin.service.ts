@@ -9,8 +9,8 @@ import { UserType } from '../domain/utils/user.type'
 import { ObjectIdValidator } from '../domain/validator/object.id.validator'
 import { UpdateAdminValidator } from '../domain/validator/update.admin.validator'
 import { IUserRepository } from '../port/user.repository.interface'
-import { ValidationException } from '../domain/exception/validation.exception'
 import { Strings } from '../../utils/strings'
+import { ConflictException } from '../domain/exception/conflict.exception'
 
 @injectable()
 export class AdminService implements IAdminService {
@@ -23,7 +23,7 @@ export class AdminService implements IAdminService {
         try {
             CreateAdminValidator.validate(item)
             const exists = await this._userRepository.checkExist(item.email)
-            if (exists) throw new ValidationException(Strings.USER.EMAIL_ALREADY_REGISTERED)
+            if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
             return this._adminRepository.create(item)
         } catch (err) {
             return Promise.reject(err)

@@ -13,6 +13,7 @@ import { PilotStudy } from '../domain/model/pilot.study'
 import { ValidationException } from '../domain/exception/validation.exception'
 import { Strings } from '../../utils/strings'
 import { IUserRepository } from '../port/user.repository.interface'
+import { ConflictException } from '../domain/exception/conflict.exception'
 
 @injectable()
 export class PatientService implements IPatientService {
@@ -31,7 +32,7 @@ export class PatientService implements IPatientService {
                 if (!pilotExists) throw new ValidationException(Strings.PILOT_STUDY.ASSOCIATION_FAILURE)
                 if (item.email) {
                     const patientExists = await this._userRepository.checkExist(item.email)
-                    if (patientExists) throw new ValidationException(Strings.USER.EMAIL_ALREADY_REGISTERED)
+                    if (patientExists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
                 }
             }
             return this._patientRepository.create(item)
