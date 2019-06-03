@@ -7,9 +7,9 @@ import { DefaultEntityMock } from '../models/default.entity.mock'
 export class PilotStudyRepositoryMock implements IPilotStudyRepository {
     public checkExists(pilotStudies: PilotStudy | Array<PilotStudy>): Promise<boolean | ValidationException> {
         if (pilotStudies instanceof Array) {
-            return Promise.resolve(pilotStudies[0].name === 'exists')
+            return Promise.resolve(pilotStudies[0].id === DefaultEntityMock.PILOT_STUDY.id)
         }
-        return Promise.resolve(pilotStudies.name === 'exists')
+        return Promise.resolve(pilotStudies.id === DefaultEntityMock.PILOT_STUDY.id)
     }
 
     public count(query: IQuery): Promise<number> {

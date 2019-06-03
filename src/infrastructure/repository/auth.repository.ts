@@ -66,10 +66,11 @@ export class AuthRepository implements IAuthRepository {
     public generateAccessToken(user: User): string {
         const payload: object = {
             sub: user.id,
+            sub_type: user.type,
             iss: process.env.ISSUER || Default.ISSUER,
             iat: Math.floor(Date.now() / 1000),
             exp: Math.round(Date.now() / 1000 + 24 * 60 * 60),
-            scope: user.scopes.join(' ')
+            scopes: user.scopes.join(' ')
         }
 
         const secret: string = process.env.JWT_SECRET || Default.JWT_SECRET

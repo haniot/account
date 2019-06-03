@@ -10,18 +10,24 @@ import { ObjectIdValidator } from '../domain/validator/object.id.validator'
 import { UpdateHealthProfessionalValidator } from '../domain/validator/update.health.professional.validator'
 import { IPilotStudyRepository } from '../port/pilot.study.repository.interface'
 import { PilotStudy } from '../domain/model/pilot.study'
+import { Strings } from '../../utils/strings'
+import { IUserRepository } from '../port/user.repository.interface'
+import { ConflictException } from '../domain/exception/conflict.exception'
 
 @injectable()
 export class HealthProfessionalService implements IHealthProfessionalService {
     constructor(
         @inject(Identifier.HEALTH_PROFESSIONAL_REPOSITORY) private readonly _healthProfessionalRepository:
             IHealthProfessionalRepository,
+        @inject(Identifier.USER_REPOSITORY) private readonly _userRepository: IUserRepository,
         @inject(Identifier.PILOT_STUDY_REPOSITORY) private readonly _pilotStudyRepository: IPilotStudyRepository) {
     }
 
     public async add(item: HealthProfessional): Promise<HealthProfessional> {
         try {
             CreateHealthProfessionalValidator.validate(item)
+            const exists = await this._userRepository.checkExist(item.email)
+            if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
             return this._healthProfessionalRepository.create(item)
         } catch (err) {
             return Promise.reject(err)
@@ -67,7 +73,6 @@ export class HealthProfessionalService implements IHealthProfessionalService {
             ObjectIdValidator.validate(healthProfessionalId)
             query.addFilter({ 'health_professionals_id._id': healthProfessionalId })
             const result = await this._pilotStudyRepository.find(query)
-            if (!result) return Promise.resolve(undefined)
 
             if (result.length) {
                 result.forEach(pilotStudy => {

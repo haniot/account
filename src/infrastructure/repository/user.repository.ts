@@ -69,14 +69,12 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
                     }
                     user.password = this.encryptPassword(new_password)
                     user.change_password = false
-                    this._userModel.findOneAndUpdate({ _id: user.id }, user, { new: true })
+                    this.Model.findOneAndUpdate({ _id: id }, user, { new: true })
                         .then(result => {
                             if (!result) return resolve(false)
                             return resolve(true)
-                        })
-                        .catch(err => reject(this.mongoDBErrorListener(err)))
-                })
-                .catch(err => reject(this.mongoDBErrorListener(err)))
+                        }).catch(err => reject(this.mongoDBErrorListener(err)))
+                }).catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
 

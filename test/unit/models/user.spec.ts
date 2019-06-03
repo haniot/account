@@ -6,7 +6,7 @@ describe('Models: User', () => {
         id: '5ca4b464620630ade4ec517c',
         username: 'user',
         password: 'user123',
-        scope: ['none']
+        scopes: ['none']
     }
 
     const userNew = new User().fromJSON(user)
@@ -20,7 +20,7 @@ describe('Models: User', () => {
                 assert.property(result, 'password')
                 assert.propertyVal(result, 'password', user.password)
                 assert.property(result, 'scopes')
-                assert.deepPropertyVal(result, 'scopes', user.scope)
+                assert.deepPropertyVal(result, 'scopes', user.scopes)
             })
         })
 
@@ -44,7 +44,7 @@ describe('Models: User', () => {
                 assert.property(result, 'password')
                 assert.propertyVal(result, 'password', user.password)
                 assert.property(result, 'scopes')
-                assert.deepPropertyVal(result, 'scopes', user.scope)
+                assert.deepPropertyVal(result, 'scopes', user.scopes)
             })
 
             it('should return a user with some undefined parameters for empty string', () => {
@@ -80,22 +80,22 @@ describe('Models: User', () => {
     })
 
     describe('addScope()', () => {
-        context('when add a scope', () => {
-            it('should add a scope in user scopes', () => {
+        context('when add a scopes', () => {
+            it('should add a scopes in user scopes', () => {
                 userNew.addScope('anyone')
                 assert.lengthOf(userNew.scopes!, 2)
             })
         })
 
-        context('when add a undefined scope', () => {
-            it('should ignore a scope', () => {
+        context('when add a undefined scopes', () => {
+            it('should ignore a scopes', () => {
                 userNew.addScope(undefined!)
                 assert.lengthOf(userNew.scopes!, 2)
             })
         })
 
         context('when the user scopes is undefined', () => {
-            it('should create a empty array before add scope', () => {
+            it('should create a empty array before add scopes', () => {
                 const userWithoutScope: User = new User()
                 userWithoutScope.addScope('none')
                 assert.lengthOf(userWithoutScope.scopes!, 1)
@@ -105,8 +105,8 @@ describe('Models: User', () => {
     })
 
     describe('removeScope()', () => {
-        context('when remove a scope', () => {
-            it('should remove a scope from user scopes', () => {
+        context('when remove a scopes', () => {
+            it('should remove a scopes from user scopes', () => {
                 userNew.removeScope('none')
                 assert.lengthOf(userNew.scopes!, 1)
             })

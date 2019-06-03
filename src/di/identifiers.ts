@@ -11,6 +11,7 @@ export abstract class Identifier {
     public static readonly USER_CONTROLLER: any = Symbol.for('UserController')
     public static readonly AUTH_CONTROLLER: any = Symbol.for('AuthController')
     public static readonly ADMIN_CONTROLLER: any = Symbol.for('AdminController')
+    public static readonly PATIENT_CONTROLLER: any = Symbol.for('PatientController')
     public static readonly HEALTH_PROFESSIONAL_CONTROLLER: any = Symbol.for('HealthProfessionalController')
     public static readonly PILOT_STUDY_CONTROLLER: any = Symbol.for('PilotStudyController')
 
@@ -19,6 +20,7 @@ export abstract class Identifier {
     public static readonly AUTH_SERVICE: any = Symbol.for('AuthService')
     public static readonly HEALTH_PROFESSIONAL_SERVICE: any = Symbol.for('HealthProfessionalService')
     public static readonly ADMIN_SERVICE: any = Symbol.for('AdminService')
+    public static readonly PATIENT_SERVICE: any = Symbol.for('PatientService')
     public static readonly PILOT_STUDY_SERVICE: any = Symbol.for('PilotStudyService')
 
     // Repositories
@@ -26,6 +28,7 @@ export abstract class Identifier {
     public static readonly AUTH_REPOSITORY: any = Symbol.for('AuthRepository')
     public static readonly HEALTH_PROFESSIONAL_REPOSITORY: any = Symbol.for('HealthProfessionalRepository')
     public static readonly ADMIN_REPOSITORY: any = Symbol.for('AdminRepository')
+    public static readonly PATIENT_REPOSITORY: any = Symbol.for('PatientRepository')
     public static readonly PILOT_STUDY_REPOSITORY: any = Symbol.for('PilotStudyRepository')
 
     // Models
@@ -36,6 +39,7 @@ export abstract class Identifier {
     public static readonly USER_ENTITY_MAPPER: any = Symbol.for('UserEntityMapper')
     public static readonly HEALTH_PROFESSIONAL_ENTITY_MAPPER: any = Symbol.for('HealthProfessionalEntityMapper')
     public static readonly ADMIN_ENTITY_MAPPER: any = Symbol.for('AdminEntityMapper')
+    public static readonly PATIENT_ENTITY_MAPPER: any = Symbol.for('PatientEntityMapper')
     public static readonly PILOT_STUDY_ENTITY_MAPPER: any = Symbol.for('PilotStudyEntityMapper')
 
     // Background Services

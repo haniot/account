@@ -4,4 +4,5 @@
 export enum UserType {
     ADMIN = 'admin',
     HEALTH_PROFESSIONAL = 'health_professional',
+    PATIENT = 'patient'
 }

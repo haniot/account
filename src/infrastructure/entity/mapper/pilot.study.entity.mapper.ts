@@ -20,6 +20,7 @@ export class PilotStudyEntityMapper implements IEntityMapper <PilotStudy, PilotS
                 return new HealthProfessional().fromJSON(id)
             })
         }
+        if (json.location !== undefined) result.location = json.location
 
         return result
     }
@@ -39,6 +40,7 @@ export class PilotStudyEntityMapper implements IEntityMapper <PilotStudy, PilotS
         if (item.health_professionals_id !== undefined && item.health_professionals_id.length > 0) {
             result.health_professionals_id = item.health_professionals_id
         }
+        if (item.location !== undefined) result.location = item.location
         return result
     }
 

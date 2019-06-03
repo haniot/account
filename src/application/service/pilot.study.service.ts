@@ -12,13 +12,16 @@ import { Strings } from '../../utils/strings'
 import { HealthProfessional } from '../domain/model/health.professional'
 import { ObjectIdValidator } from '../domain/validator/object.id.validator'
 import { Query } from '../../infrastructure/repository/query/query'
+import { Patient } from '../domain/model/patient'
+import { IPatientRepository } from '../port/patient.repository.interface'
 
 @injectable()
 export class PilotStudyService implements IPilotStudyService {
     constructor(
         @inject(Identifier.PILOT_STUDY_REPOSITORY) private readonly _pilotStudyRepository: IPilotStudyRepository,
         @inject(Identifier.HEALTH_PROFESSIONAL_REPOSITORY)
-        private readonly _healthProfessionalRepository: IHealthProfessionalRepository) {
+        private readonly _healthProfessionalRepository: IHealthProfessionalRepository,
+        @inject(Identifier.PATIENT_REPOSITORY) private readonly _patientRepository: IPatientRepository) {
     }
 
     public async add(item: PilotStudy): Promise<PilotStudy> {
@@ -149,4 +152,16 @@ export class PilotStudyService implements IPilotStudyService {
             return Promise.reject(err)
         }
     }
+
+    public async getAllPatients(pilotId: string, query: IQuery): Promise<Array<Patient> | undefined> {
+        try {
+            ObjectIdValidator.validate(pilotId)
+            query.addFilter({ pilotstudy_id: pilotId })
+            const patients: Array<Patient> = await this._patientRepository.find(query)
+            return Promise.resolve(patients)
+        } catch (err) {
+            return Promise.reject(err)
+        }
+    }
+
 }

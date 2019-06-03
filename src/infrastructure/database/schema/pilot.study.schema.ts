@@ -24,7 +24,10 @@ const pilotStudySchema = new Mongoose.Schema({
         health_professionals_id: [{
             type: Schema.Types.ObjectId,
             ref: 'User'
-        }]
+        }],
+        location: {
+            type: String
+        }
     },
     {
         timestamps: { createdAt: 'created_at', updatedAt: false },
