@@ -1,15 +1,18 @@
 FROM node:10.15.3
 
-# Create a new folder
-RUN mkdir -p /usr/src/ac 
+# Create app directory
+RUN mkdir -p /usr/src/ac
+WORKDIR /usr/src/ac
 
-WORKDIR /usr/src/ac 
-
+# Install app dependencies
 COPY package.json /usr/src/ac/ 
-RUN npm install 
+RUN npm install
+
+# Bundle app source
 COPY . /usr/src/ac 
+RUN npm run build
 
-EXPOSE 5000
-EXPOSE 5001
+EXPOSE 3000
+EXPOSE 3001
 
-ENTRYPOINT  npm run build && npm start
+CMD ["npm", "start"]

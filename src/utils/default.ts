@@ -20,21 +20,26 @@ export abstract class Default {
     public static readonly LOGO_URI: string = 'http://www.ocariot.com.br/wp-content/uploads/2018/08/cropped-512-32x32.png'
 
     // MongoDB
-    public static readonly MONGODB_URI: string = 'mongodb://127.0.0.1:27017/haniot-account-service'
-    public static readonly MONGODB_URI_TEST: string = 'mongodb://127.0.0.1:27017/haniot-account-service-test'
+    public static readonly MONGODB_URI: string = 'mongodb://127.0.0.1:27017/account-service'
+    public static readonly MONGODB_URI_TEST: string = 'mongodb://127.0.0.1:27017/account-service-test'
     public static readonly MONGODB_CON_RETRY_COUNT: number = 0 // infinite
     public static readonly MONGODB_CON_RETRY_INTERVAL: number = 1000 // 1s
 
     // Log
     public static readonly LOG_DIR: string = 'logs'
 
-    // JWT Secret
+    // JWT
     public static readonly JWT_SECRET: string = 's3cr3tk3y'
+    public static readonly ISSUER: string = 'haniot'
 
     // ADMIN USER DEFAULT
     public static readonly ADMIN_EMAIL: string = 'admin@haniot.com'
     public static readonly ADMIN_PASSWORD: string = 'admin*123'
 
-    // KEYS
-    public static readonly ISSUER: string = 'haniot'
+    // Certificate
+    // To generate self-signed certificates, see: https://devcenter.heroku.com/articles/ssl-certificate-self
+    public static readonly SSL_KEY_PATH: string = '.certs/server.key'
+    public static readonly SSL_CERT_PATH: string = '.certs/server.crt'
+
+    public static readonly IP_WHITELIST: Array<string> = ['*']
 }
