@@ -29,6 +29,8 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
         if (item.type !== undefined) result.type = item.type
         if (item.scopes !== undefined) result.scopes = item.scopes
         if (item.change_password !== undefined) result.change_password = item.change_password
+        if (item.phone_number !== undefined) result.phone_number = item.phone_number
+
 
         return result
     }
@@ -59,6 +61,7 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
         if (json.password !== undefined) result.password = json.password
         if (json.type !== undefined) result.type = json.type
         if (json.scopes !== undefined) result.scopes = json.scopes
+        if (json.phone_number !== undefined) result.phone_number = json.phone_number
 
         return result
     }

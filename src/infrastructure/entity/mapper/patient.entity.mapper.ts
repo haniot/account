@@ -24,6 +24,8 @@ export class PatientEntityMapper implements IEntityMapper<Patient, PatientEntity
         if (json.gender !== undefined) result.gender = json.gender
         if (json.birth_date !== undefined) result.birth_date = json.birth_date
         if (json.pilotstudy_id !== undefined) result.pilotstudy_id = json.pilotstudy_id
+        if (json.phone_number !== undefined) result.phone_number = json.phone_number
+        if (json.phone_number !== undefined) result.phone_number = json.phone_number
 
         return result
     }
@@ -45,6 +47,7 @@ export class PatientEntityMapper implements IEntityMapper<Patient, PatientEntity
         if (item.gender !== undefined) result.gender = item.gender
         if (item.birth_date !== undefined) result.birth_date = item.birth_date
         if (item.pilotstudy_id !== undefined) result.pilotstudy_id = item.pilotstudy_id
+        if (item.phone_number !== undefined) result.phone_number = item.phone_number
 
         return result
     }

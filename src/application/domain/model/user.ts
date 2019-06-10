@@ -14,6 +14,7 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
     private _type?: string // Type of user. Can be Child, Educator, Health Professional or Family.
     private _scopes!: Array<string> // Scope that signal the types of access the user has.
     private _change_password?: boolean
+    private _phone_number?: string
 
     constructor() {
         super()
@@ -51,6 +52,14 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
         this._change_password = value
     }
 
+    get phone_number(): string | undefined {
+        return this._phone_number
+    }
+
+    set phone_number(value: string | undefined) {
+        this._phone_number = value
+    }
+
     public addScope(scope: string): void {
         if (!this.scopes) this._scopes = []
         if (scope) this._scopes.push(scope)
@@ -71,6 +80,7 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
         if (json.id !== undefined) super.id = json.id
         if (json.password !== undefined) this.password = json.password
         if (json.scopes !== undefined) this.scopes = json.scopes
+        if (json.phone_number !== undefined) this.phone_number = json.phone_number
 
         return this
     }
@@ -78,7 +88,8 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
     public toJSON(): any {
         return {
             id: super.id,
-            type: this.type
+            type: this.type,
+            phone_number: this.phone_number
         }
     }
 }
