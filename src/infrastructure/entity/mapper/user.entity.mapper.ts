@@ -31,7 +31,6 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
         if (item.change_password !== undefined) result.change_password = item.change_password
         if (item.phone_number !== undefined) result.phone_number = item.phone_number
 
-
         return result
     }
 

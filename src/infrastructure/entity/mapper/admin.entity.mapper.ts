@@ -27,7 +27,7 @@ export class AdminEntityMapper implements IEntityMapper<Admin, AdminEntity> {
         if (item.scopes !== undefined) result.scopes = item.scopes
         if (item.email !== undefined) result.email = item.email
         if (item.change_password !== undefined) result.change_password = item.change_password
-        if (item.phone_number ! == undefined) result.phone_number = item.phone_number
+        if (item.phone_number !== undefined) result.phone_number = item.phone_number
 
         return result
     }
