@@ -10,10 +10,12 @@ import { IJSONDeserializable } from '../utils/json.deserializable.interface'
  * @implements {IJSONSerializable, IJSONDeserializable<User>}
  */
 export class User extends Entity implements IJSONSerializable, IJSONDeserializable<User> {
+
     private _password?: string // Password for user authentication.
     private _type?: string // Type of user. Can be Child, Educator, Health Professional or Family.
     private _scopes!: Array<string> // Scope that signal the types of access the user has.
     private _change_password?: boolean
+    private _email_verified?: boolean
     private _phone_number?: string
 
     constructor() {
@@ -50,6 +52,14 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
 
     set change_password(value: boolean | undefined) {
         this._change_password = value
+    }
+
+    get email_verified(): boolean | undefined {
+        return this._email_verified
+    }
+
+    set email_verified(value: boolean | undefined) {
+        this._email_verified = value
     }
 
     get phone_number(): string | undefined {

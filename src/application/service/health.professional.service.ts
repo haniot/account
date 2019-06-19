@@ -85,4 +85,9 @@ export class HealthProfessionalService implements IHealthProfessionalService {
             return Promise.reject(err)
         }
     }
+
+    public count(query: IQuery): Promise<number> {
+        query.addFilter({ type: UserType.HEALTH_PROFESSIONAL })
+        return this._healthProfessionalRepository.count(query)
+    }
 }

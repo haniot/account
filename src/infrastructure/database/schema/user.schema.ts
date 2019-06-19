@@ -13,6 +13,9 @@ const userSchema = new Mongoose.Schema({
         change_password: {
             type: Boolean
         },
+        email_verified: {
+            type: Boolean
+        },
         scopes: [{ type: String }],
         phone_number: { type: String },
         email: { /* Common parameter between admin, patient and health professional. */

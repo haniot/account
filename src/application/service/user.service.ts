@@ -67,4 +67,8 @@ export class UserService implements IUserService {
     public update(item: User): Promise<User> {
         throw Error('Not implemented!')
     }
+
+    public count(query: IQuery): Promise<number> {
+        throw Error('Not implemented!')
+    }
 }

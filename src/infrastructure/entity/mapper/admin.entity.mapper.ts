@@ -27,6 +27,7 @@ export class AdminEntityMapper implements IEntityMapper<Admin, AdminEntity> {
         if (item.scopes !== undefined) result.scopes = item.scopes
         if (item.email !== undefined) result.email = item.email
         if (item.change_password !== undefined) result.change_password = item.change_password
+        if (item.email_verified !== undefined) result.email_verified = item.email_verified
         if (item.phone_number !== undefined) result.phone_number = item.phone_number
 
         return result
@@ -61,7 +62,7 @@ export class AdminEntityMapper implements IEntityMapper<Admin, AdminEntity> {
         if (json.email !== undefined) result.email = json.email
         if (json.phone_number !== undefined) result.phone_number = json.phone_number
         if (json.change_password !== undefined) result.change_password = json.change_password
-
+        if (json.email_verified !== undefined) result.email_verified = json.email_verified
         return result
     }
 }

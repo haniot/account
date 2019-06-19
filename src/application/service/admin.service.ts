@@ -62,4 +62,9 @@ export class AdminService implements IAdminService {
             return Promise.reject(err)
         }
     }
+
+    public count(query: IQuery): Promise<number> {
+        query.addFilter({ type: UserType.ADMIN })
+        return this._adminRepository.count(query)
+    }
 }

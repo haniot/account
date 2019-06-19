@@ -164,4 +164,8 @@ export class PilotStudyService implements IPilotStudyService {
         }
     }
 
+    public count(query: IQuery): Promise<number> {
+        return this._pilotStudyRepository.count(query)
+    }
+
 }

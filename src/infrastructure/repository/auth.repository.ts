@@ -16,6 +16,7 @@ import { Strings } from '../../utils/strings'
 import { ChangePasswordException } from '../../application/domain/exception/change.password.exception'
 import { AuthenticationException } from '../../application/domain/exception/authentication.exception'
 import { IEntityMapper } from '../port/entity.mapper.interface'
+import { readFileSync } from 'fs'
 
 @injectable()
 export class AuthRepository implements IAuthRepository {
@@ -64,16 +65,18 @@ export class AuthRepository implements IAuthRepository {
     }
 
     public generateAccessToken(user: User): string {
+        const private_key = readFileSync(`${process.env.JWT_PRIVATE_KEY_PATH}`, 'utf-8')
         const payload: object = {
             sub: user.id,
             sub_type: user.type,
             iss: process.env.ISSUER || Default.ISSUER,
+            // exp: Math.round(Date.now() / 1000 + 24 * 60 * 60),
             iat: Math.floor(Date.now() / 1000),
-            exp: Math.round(Date.now() / 1000 + 24 * 60 * 60),
-            scope: user.scopes.join(' ')
+            scope: user.scopes.join(' '),
+            email_verified: user.email_verified,
+            change_password: user.change_password
         }
 
-        const secret: string = process.env.JWT_SECRET || Default.JWT_SECRET
-        return jwt.sign(payload, secret)
+        return jwt.sign(payload, private_key, { expiresIn: '1d', algorithm: 'RS256' })
     }
 }

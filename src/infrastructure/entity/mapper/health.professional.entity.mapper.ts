@@ -29,6 +29,7 @@ export class HealthProfessionalEntityMapper implements IEntityMapper<HealthProfe
         if (item.name !== undefined) result.name = item.name
         if (item.health_area !== undefined) result.health_area = item.health_area
         if (item.change_password !== undefined) result.change_password = item.change_password
+        if (item.email_verified !== undefined) result.email_verified = item.email_verified
         if (item.phone_number !== undefined) result.phone_number = item.phone_number
 
         return result
@@ -64,6 +65,7 @@ export class HealthProfessionalEntityMapper implements IEntityMapper<HealthProfe
         if (json.name !== undefined) result.name = json.name
         if (json.health_area !== undefined) result.health_area = json.health_area
         if (json.change_password !== undefined) result.change_password = json.change_password
+        if (json.email_verified !== undefined) result.email_verified = json.email_verified
         if (json.phone_number !== undefined) result.phone_number = json.phone_number
 
         return result

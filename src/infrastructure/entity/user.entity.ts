@@ -4,5 +4,6 @@ export class UserEntity {
     public type?: string
     public scopes?: Array<string>
     public change_password?: boolean
+    public email_verified?: boolean
     public phone_number?: string
 }
