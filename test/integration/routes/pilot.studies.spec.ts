@@ -213,7 +213,7 @@ describe('Routes: PilotStudies', () => {
         })
     })
 
-    describe('GET /pilotstudies/:pilotstudy_id', () => {
+    describe('GET /pilotstudies/:pilot_studies', () => {
         context('when get a unique pilot study', () => {
             it('should return status code 200 and the pilot study', () => {
                 return request
@@ -267,7 +267,7 @@ describe('Routes: PilotStudies', () => {
         })
     })
 
-    describe('PATCH /pilotstudies/:pilotstudy_id', () => {
+    describe('PATCH /pilotstudies/:pilot_studies', () => {
         const body = pilot.toJSON()
         delete body.id
 
@@ -343,7 +343,7 @@ describe('Routes: PilotStudies', () => {
         })
     })
 
-    describe('DELETE /pilotstudies/:pilotstudy_id', () => {
+    describe('DELETE /pilotstudies/:pilot_studies', () => {
         context('when want delete a pilot study', () => {
             it('should return status code 204 and no content', async () => {
                 const pilotNew: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY)

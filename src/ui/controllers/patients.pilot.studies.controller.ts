@@ -4,12 +4,12 @@ import { controller, httpGet, request, response } from 'inversify-express-utils'
 import { Request, Response } from 'express'
 import { Identifier } from '../../di/identifiers'
 import { ApiExceptionManager } from '../exception/api.exception.manager'
-import { Query } from '../../infrastructure/repository/query/query'
 import { ILogger } from '../../utils/custom.logger'
+import { Query } from '../../infrastructure/repository/query/query'
 import { IPilotStudyService } from '../../application/port/pilot.study.service.interface'
 import { PilotStudy } from '../../application/domain/model/pilot.study'
 
-@controller('/v1/healthprofessionals/:healthprofessional_id/pilotstudies')
+@controller('/v1/patients/:patient_id/pilotstudies')
 export class HealthProfessionalsPilotStudiesController {
     constructor(
         @inject(Identifier.PILOT_STUDY_SERVICE) private readonly _pilotStudyService: IPilotStudyService,

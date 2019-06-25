@@ -26,9 +26,9 @@ export class PatientService implements IPatientService {
     public async add(item: Patient): Promise<Patient> {
         try {
             CreatePatientValidator.validate(item)
-            if (item.pilotstudy_id) {
+            if (item.pilot_studies) {
                 const pilotExists =
-                    await this._pilotStudyRepository.checkExists(new PilotStudy().fromJSON(item.pilotstudy_id))
+                    await this._pilotStudyRepository.checkExists(new PilotStudy().fromJSON(item.pilot_studies))
                 if (!pilotExists) throw new ValidationException(Strings.PILOT_STUDY.ASSOCIATION_FAILURE)
                 if (item.email) {
                     const patientExists = await this._userRepository.checkExist(item.email)

@@ -58,7 +58,7 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
         }
     })
 
-    describe('POST /pilotstudies/:pilotstudy_id/healthprofessionals/:healthprofessional_id', () => {
+    describe('POST /pilotstudies/:pilot_studies/healthprofessionals/:healthprofessional_id', () => {
         context('when associate a health professional with a pilot study', () => {
             it('should return status code 200 and the pilot study', async () => {
                 const result = await healthRepo.create(anotherUser)
@@ -148,7 +148,7 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
         })
     })
 
-    describe('DELETE /pilotstudies/:pilotstudy_id/healthprofessionals/:healthprofessional_id', () => {
+    describe('DELETE /pilotstudies/:pilot_studies/healthprofessionals/:healthprofessional_id', () => {
         context('when disassociate a health professional with a pilot study', () => {
             it('should return status code 204 and no content', async () => {
                 return request
@@ -205,7 +205,7 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
         })
     })
 
-    describe('GET /pilotstudies/:pilotstudy_id/healthprofessionals', () => {
+    describe('GET /pilotstudies/:pilot_studies/healthprofessionals', () => {
         context('when get all health professionals from pilot study', () => {
             it('should return status code 200 and a list of health professionals', () => {
                 return request

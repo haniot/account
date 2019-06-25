@@ -841,7 +841,7 @@ paths:
       description: Recover the pilot study data. The query supports Field Selection.
       operationId: getPilotStudyById
       parameters:
-        - name: pilotstudy_id
+        - name: pilot_studies
           in: path
           required: true
           description: Id of pilot study.
@@ -878,7 +878,7 @@ paths:
       operationId: updatePilotStudy
       parameters:
         - in: path
-          name: pilotstudy_id
+          name: pilot_studies
           required: true
           description: Id of pilot study.
           example: '5c86d00c2239a48ea20a0134'
@@ -924,7 +924,7 @@ paths:
       operationId: deletePilotStudy
       parameters:
         - in: path
-          name: pilotstudy_id
+          name: pilot_studies
           required: true
           description: Id of pilot study.
           example: '5c86d00c2239a48ea20a0134'
@@ -959,7 +959,7 @@ paths:
         Sorting, and Filtering.
       operationId: getAllHealthprofessionalsFromPilotStudy
       parameters:
-        - name: pilotstudy_id
+        - name: pilot_studies
           in: path
           required: true
           description: Id of pilot study.
@@ -1002,7 +1002,7 @@ paths:
       description: Associate a health professionals with a pilot study by id.
       operationId: associateHealthprofessionalToPilotStudy
       parameters:
-        - name: pilotstudy_id
+        - name: pilot_studies
           in: path
           required: true
           description: Id of pilot study.
@@ -1050,7 +1050,7 @@ paths:
       description: Disassociate a health professionals from a pilot study by id.
       operationId: disassociateHealthprofessionalFromPilotStudy
       parameters:
-        - name: pilotstudy_id
+        - name: pilot_studies
           in: path
           required: true
           description: Id of pilot study.

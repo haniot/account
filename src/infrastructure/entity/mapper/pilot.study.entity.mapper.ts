@@ -16,7 +16,7 @@ export class PilotStudyEntityMapper implements IEntityMapper <PilotStudy, PilotS
         if (json.start !== undefined) result.start = json.start
         if (json.end !== undefined) result.end = json.end
         if (json.health_professionals_id !== undefined && json.health_professionals_id.length > 0) {
-            result.health_professionals_id = json.health_professionals_id.map(id => {
+            result.health_professionals = json.health_professionals_id.map(id => {
                 return new HealthProfessional().fromJSON(id)
             })
         }
@@ -37,8 +37,8 @@ export class PilotStudyEntityMapper implements IEntityMapper <PilotStudy, PilotS
         if (item.is_active !== undefined) result.is_active = item.is_active
         if (item.start !== undefined) result.start = item.start
         if (item.end !== undefined) result.end = item.end
-        if (item.health_professionals_id !== undefined && item.health_professionals_id.length > 0) {
-            result.health_professionals_id = item.health_professionals_id
+        if (item.health_professionals !== undefined && item.health_professionals.length > 0) {
+            result.health_professionals = item.health_professionals
         }
         if (item.location !== undefined) result.location = item.location
         return result

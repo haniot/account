@@ -29,7 +29,7 @@ describe('Routes: UsersPatients', () => {
                 const health = await createUser(DefaultEntityMock.HEALTH_PROFESSIONAL)
                 const pilot: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY)
                 pilot.health_professionals_id = [new HealthProfessional().fromJSON(`${health._id}`)]
-                await createPilot(pilot.toJSON()).then(result => user.pilotstudy_id = `${result._id}`)
+                await createPilot(pilot.toJSON()).then(result => user.pilot_studies = `${result._id}`)
             } catch (err) {
                 throw new Error('Failure on Auth test: ' + err.message)
             }

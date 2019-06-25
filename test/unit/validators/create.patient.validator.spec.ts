@@ -12,20 +12,20 @@ describe('Validators: CreatePatientValidator', () => {
     })
 
     context('when there are validation errors', () => {
-        it('should throw an error for does not pass pilotstudy_id', () => {
-            patient.pilotstudy_id = undefined
+        it('should throw an error for does not pass pilot_studies', () => {
+            patient.pilot_studies = undefined
             try {
                 CreatePatientValidator.validate(patient)
             } catch (err) {
                 assert.property(err, 'message')
                 assert.property(err, 'description')
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                assert.propertyVal(err, 'description', 'Patient validation: pilotstudy_id is required!')
+                assert.propertyVal(err, 'description', 'Patient validation: pilot_studies is required!')
             }
         })
 
-        it('should throw an error for does pass invalid pilotstudy_id', () => {
-            patient.pilotstudy_id = '123'
+        it('should throw an error for does pass invalid pilot_studies', () => {
+            patient.pilot_studies = '123'
             try {
                 CreatePatientValidator.validate(patient)
             } catch (err) {
@@ -35,7 +35,7 @@ describe('Validators: CreatePatientValidator', () => {
                 assert.propertyVal(err, 'description', 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea ' +
                     'is expected.')
             } finally {
-                patient.pilotstudy_id = DefaultEntityMock.PATIENT.pilotstudy_id
+                patient.pilot_studies = DefaultEntityMock.PATIENT.pilotstudy_id
             }
         })
 

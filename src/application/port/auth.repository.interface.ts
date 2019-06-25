@@ -19,6 +19,8 @@ export interface IAuthRepository {
      * Generate Access Token by user data.
      *
      * @param user
+     * @return {Promise<string>}
+     * @throws {ValidationException | RepositoryException}
      */
-    generateAccessToken(user: User): string
+    generateAccessToken(user: User): Promise<string>
 }

@@ -21,13 +21,13 @@ export class AdminEntityMapper implements IEntityMapper<Admin, AdminEntity> {
     public modelToModelEntity(item: Admin): AdminEntity {
         const result: AdminEntity = new AdminEntity()
 
-        if (item.id !== undefined) result.id = item.id
-        if (item.password !== undefined) result.password = item.password
         if (item.type !== undefined) result.type = item.type
         if (item.scopes !== undefined) result.scopes = item.scopes
-        if (item.email !== undefined) result.email = item.email
         if (item.change_password !== undefined) result.change_password = item.change_password
         if (item.email_verified !== undefined) result.email_verified = item.email_verified
+        if (item.id !== undefined) result.id = item.id
+        if (item.email !== undefined) result.email = item.email
+        if (item.password !== undefined) result.password = item.password
         if (item.phone_number !== undefined) result.phone_number = item.phone_number
 
         return result
@@ -55,14 +55,14 @@ export class AdminEntityMapper implements IEntityMapper<Admin, AdminEntity> {
         const result: Admin = new Admin()
         if (!json) return result
 
-        if (json.id !== undefined) result.id = json.id
-        if (json.password !== undefined) result.password = json.password
         if (json.type !== undefined) result.type = json.type
         if (json.scopes !== undefined) result.scopes = json.scopes
-        if (json.email !== undefined) result.email = json.email
-        if (json.phone_number !== undefined) result.phone_number = json.phone_number
         if (json.change_password !== undefined) result.change_password = json.change_password
         if (json.email_verified !== undefined) result.email_verified = json.email_verified
+        if (json.id !== undefined) result.id = json.id
+        if (json.password !== undefined) result.password = json.password
+        if (json.email !== undefined) result.email = json.email
+        if (json.phone_number !== undefined) result.phone_number = json.phone_number
         return result
     }
 }

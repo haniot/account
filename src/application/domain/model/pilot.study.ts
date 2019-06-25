@@ -4,14 +4,19 @@ import { IJSONDeserializable } from '../utils/json.deserializable.interface'
 import { JsonUtils } from '../utils/json.utils'
 import { HealthProfessional } from './health.professional'
 import { DatetimeValidator } from '../validator/date.time.validator'
+import { Patient } from './patient'
 
 export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeserializable<PilotStudy> {
     private _name?: string
     private _is_active?: boolean
     private _start?: Date
     private _end?: Date
-    private _health_professionals_id?: Array<HealthProfessional>
+    private _total_health_professionals ?: number
+    private _total_patients ?: number
+    private _health_professionals?: Array<HealthProfessional>
+    private _patients?: Array<Patient>
     private _location?: string
+    private _language?: string
 
     constructor() {
         super()
@@ -49,12 +54,36 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
         this._end = value
     }
 
-    get health_professionals_id(): Array<HealthProfessional> | undefined {
-        return this._health_professionals_id
+    get total_health_professionals(): number | undefined {
+        return this._total_health_professionals
     }
 
-    set health_professionals_id(value: Array<HealthProfessional> | undefined) {
-        this._health_professionals_id = value
+    set total_health_professionals(value: number | undefined) {
+        this._total_health_professionals = value
+    }
+
+    get total_patients(): number | undefined {
+        return this._total_patients
+    }
+
+    set total_patients(value: number | undefined) {
+        this._total_patients = value
+    }
+
+    get health_professionals(): Array<HealthProfessional> | undefined {
+        return this._health_professionals
+    }
+
+    set health_professionals(value: Array<HealthProfessional> | undefined) {
+        this._health_professionals = value
+    }
+
+    get patients(): Array<Patient> | undefined {
+        return this._patients
+    }
+
+    set patients(value: Array<Patient> | undefined) {
+        this._patients = value
     }
 
     get location(): string | undefined {
@@ -65,10 +94,18 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
         this._location = value
     }
 
+    get language(): string | undefined {
+        return this._language
+    }
+
+    set language(value: string | undefined) {
+        this._language = value
+    }
+
     public addHealthProfessional(healthProfessional: HealthProfessional) {
-        if (!this.health_professionals_id) this.health_professionals_id = []
-        this.health_professionals_id.push(healthProfessional)
-        this.health_professionals_id = this.removeRepeatHealthProfessional(this.health_professionals_id)
+        if (!this.health_professionals) this.health_professionals = []
+        this.health_professionals.push(healthProfessional)
+        this.health_professionals = this.removeRepeatHealthProfessional(this.health_professionals)
     }
 
     public removeRepeatHealthProfessional(healthProfessionals: Array<HealthProfessional>) {
@@ -98,10 +135,14 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
         if (json.is_active !== undefined) this.is_active = json.is_active
         if (json.start !== undefined) this.start = this.convertDatetimeString(json.start)
         if (json.end !== undefined) this.end = this.convertDatetimeString(json.end)
-        if (json.health_professionals_id !== undefined && json.health_professionals_id instanceof Array)
-            this.health_professionals_id =
-                json.health_professionals_id.map(id => new HealthProfessional().fromJSON(id))
+        if (json.total_health_professionals !== undefined) this.total_health_professionals = json.total_health_professionals
+        if (json.total_patients !== undefined) this.total_patients = json.total_patients
+        if (json.health_professionals !== undefined && json.health_professionals instanceof Array)
+            this.health_professionals = json.health_professionals.map(id => new HealthProfessional().fromJSON(id))
+        if (json.patients !== undefined && json.patients instanceof Array)
+            this.patients = json.patients.map(id => new Patient().fromJSON(id))
         if (json.location !== undefined) this.location = json.location
+        if (json.language !== undefined) this.language = json.language
         return this
     }
 
@@ -112,10 +153,13 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
             is_active: this.is_active,
             start: this.start,
             end: this.end,
-            health_professionals_id:
-                this.health_professionals_id ?
-                    this.health_professionals_id.map(healthProfessional => healthProfessional.id) : [],
-            location: this.location
+            total_health_professionals: this.total_health_professionals,
+            total_patients: this.total_patients,
+            health_professionals:
+                this.health_professionals ? this.health_professionals.map(healthProfessional => healthProfessional.id) : [],
+            patients: this.patients ? this.patients.map(patient => patient.id) : [],
+            location: this.location,
+            language: this.language
         }
     }
 }

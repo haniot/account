@@ -32,7 +32,7 @@ export class AuthRepository implements IAuthRepository {
         return new Promise<object>((resolve, reject) => {
             this._userModel.findOne({ email: _email })
                 .exec()
-                .then(user => {
+                .then(async user => {
                     /* Validate password and generate access token*/
                     if (!user || !user.password) {
                         return reject(
@@ -59,23 +59,27 @@ export class AuthRepository implements IAuthRepository {
                                 `/users/${user._id}/password`))
                     }
 
-                    return resolve({ access_token: this.generateAccessToken(this._userMapper.transform(user)) })
+                    return resolve({ access_token: await this.generateAccessToken(this._userMapper.transform(user)) })
                 }).catch(err => reject(new RepositoryException(Strings.ERROR_MESSAGE.UNEXPECTED)))
         })
     }
 
-    public generateAccessToken(user: User): string {
-        const private_key = readFileSync(`${process.env.JWT_PRIVATE_KEY_PATH}`, 'utf-8')
-        const payload: object = {
-            sub: user.id,
-            sub_type: user.type,
-            iss: process.env.ISSUER || Default.ISSUER,
-            iat: Math.floor(Date.now() / 1000),
-            scope: user.scopes.join(' '),
-            email_verified: user.email_verified,
-            change_password: user.change_password
+    public generateAccessToken(user: User): Promise<string> {
+        try {
+            const private_key = readFileSync(`${process.env.JWT_PRIVATE_KEY_PATH}`, 'utf-8')
+            const payload: object = {
+                sub: user.id,
+                sub_type: user.type,
+                iss: process.env.ISSUER || Default.ISSUER,
+                iat: Math.floor(Date.now() / 1000),
+                scope: user.scopes.join(' '),
+                email_verified: user.email_verified,
+                change_password: user.change_password
+            }
+            return Promise.resolve(jwt.sign(payload, private_key, { expiresIn: '1d', algorithm: 'RS256' }))
+        } catch (err) {
+            return Promise.reject(
+                new AuthenticationException('Authentication failed due to failure at generate the access token.'))
         }
-
-        return jwt.sign(payload, private_key, { expiresIn: '1d', algorithm: 'RS256' })
     }
 }

@@ -10,7 +10,7 @@ import { Strings } from '../../utils/strings'
 import { ApiExceptionManager } from '../exception/api.exception.manager'
 import { Query } from '../../infrastructure/repository/query/query'
 
-@controller('/v1/pilotstudies/:pilotstudy_id/healthprofessionals')
+@controller('/v1/pilotstudies/:pilot_studies/healthprofessionals')
 export class PilotStudiesHealthProfessionalsController {
     constructor(
         @inject(Identifier.PILOT_STUDY_SERVICE) private readonly _pilotStudyService: IPilotStudyService,
@@ -23,9 +23,9 @@ export class PilotStudiesHealthProfessionalsController {
         @request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: any =
-                await this._pilotStudyService.getAllHealthProfessionals(req.params.pilotstudy_id, new Query().fromJSON(req.query))
+                await this._pilotStudyService.getAllHealthProfessionals(req.params.pilot_studies, new Query().fromJSON(req.query))
             const allHealth: any =
-                await this._pilotStudyService.getAllHealthProfessionals(req.params.pilotstudy_id, new Query())
+                await this._pilotStudyService.getAllHealthProfessionals(req.params.pilot_studies, new Query())
             const count: number = allHealth!.length
             res.setHeader('X-Total-Count', count)
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessagePilotStudyNotFound())
@@ -37,11 +37,11 @@ export class PilotStudiesHealthProfessionalsController {
     }
 
     @httpPost('/:healthprofessional_id')
-    public async associateHealthprofessionalToPilotStudy(
+    public async associateHealthProfessionalToPilotStudy(
         @request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: any = await this._pilotStudyService.associateHealthProfessional(
-                req.params.pilotstudy_id, req.params.healthprofessional_id
+                req.params.pilot_studies, req.params.healthprofessional_id
             )
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessagePilotStudyNotFound())
             return res.status(HttpStatus.CREATED).send(result)
@@ -52,11 +52,11 @@ export class PilotStudiesHealthProfessionalsController {
     }
 
     @httpDelete('/:healthprofessional_id')
-    public async disassociateHealthprofessionalFromPilotStudy(
+    public async disassociateHealthProfessionalFromPilotStudy(
         @request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: any = await this._pilotStudyService.disassociateHealthProfessional(
-                req.params.pilotstudy_id, req.params.healthprofessional_id
+                req.params.pilot_studies, req.params.healthprofessional_id
             )
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessagePilotStudyNotFound())
             return res.status(HttpStatus.NO_CONTENT).send()

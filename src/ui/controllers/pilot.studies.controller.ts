@@ -46,11 +46,11 @@ export class PilotStudiesController {
         }
     }
 
-    @httpGet('/:pilotstudy_id')
+    @httpGet('/:pilot_studies')
     public async getPilotStudyById(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: PilotStudy =
-                await this._pilotStudyService.getById(req.params.pilotstudy_id, new Query().fromJSON(req.query))
+                await this._pilotStudyService.getById(req.params.pilot_studies, new Query().fromJSON(req.query))
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessagePilotStudyNotFound())
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
@@ -61,11 +61,11 @@ export class PilotStudiesController {
         }
     }
 
-    @httpPatch('/:pilotstudy_id')
+    @httpPatch('/:pilot_studies')
     public async updatePilotStudy(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const pilot: PilotStudy = new PilotStudy().fromJSON(req.body)
-            pilot.id = req.params.pilotstudy_id
+            pilot.id = req.params.pilot_studies
             const result: PilotStudy = await this._pilotStudyService.update(pilot)
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessagePilotStudyNotFound())
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
@@ -75,10 +75,10 @@ export class PilotStudiesController {
         }
     }
 
-    @httpDelete('/:pilotstudy_id')
+    @httpDelete('/:pilot_studies')
     public async deletePilotStudy(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            await this._pilotStudyService.remove(req.params.pilotstudy_id)
+            await this._pilotStudyService.remove(req.params.pilot_studies)
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
@@ -87,11 +87,7 @@ export class PilotStudiesController {
     }
 
     private toJSONView(pilot: PilotStudy | Array<PilotStudy>): object {
-        if (pilot instanceof Array) {
-            return pilot.map(item => {
-                return item.toJSON()
-            })
-        }
+        if (pilot instanceof Array) return pilot.map(item => item.toJSON())
         return pilot.toJSON()
     }
 

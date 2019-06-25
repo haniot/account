@@ -20,8 +20,8 @@ describe('Services: PatientService', () => {
                     .then(result => {
                         assert.property(result, 'id')
                         assert.propertyVal(result, 'id', patient.id)
-                        assert.property(result, 'pilotstudy_id')
-                        assert.propertyVal(result, 'pilotstudy_id', patient.pilotstudy_id)
+                        assert.property(result, 'pilot_studies')
+                        assert.propertyVal(result, 'pilot_studies', patient.pilot_studies)
                         assert.property(result, 'name')
                         assert.propertyVal(result, 'name', patient.name)
                         assert.property(result, 'email')
@@ -42,7 +42,7 @@ describe('Services: PatientService', () => {
                         assert.property(err, 'description')
                         assert.propertyVal(err, 'message', 'Required fields were not provided...')
                         assert.propertyVal(err, 'description', 'Patient validation: name, email, password, ' +
-                            'gender, birth_date, pilotstudy_id is required!')
+                            'gender, birth_date, pilot_studies is required!')
                     })
             })
         })
@@ -52,7 +52,7 @@ describe('Services: PatientService', () => {
         context('when get all patients', () => {
             it('should return a list of patients', () => {
                 const query: Query = new Query()
-                query.addFilter({ pilotstudy_id: patient.pilotstudy_id })
+                query.addFilter({ pilotstudy_id: patient.pilot_studies })
 
                 return service
                     .getAll(query)
@@ -61,8 +61,8 @@ describe('Services: PatientService', () => {
                         assert.lengthOf(result, 1)
                         assert.property(result[0], 'id')
                         assert.propertyVal(result[0], 'id', patient.id)
-                        assert.property(result[0], 'pilotstudy_id')
-                        assert.propertyVal(result[0], 'pilotstudy_id', patient.pilotstudy_id)
+                        assert.property(result[0], 'pilot_studies')
+                        assert.propertyVal(result[0], 'pilot_studies', patient.pilot_studies)
                         assert.property(result[0], 'name')
                         assert.propertyVal(result[0], 'name', patient.name)
                         assert.property(result[0], 'email')
@@ -94,15 +94,15 @@ describe('Services: PatientService', () => {
         context('when get a unique patient', () => {
             it('should return a patient', () => {
                 const query: Query = new Query()
-                query.addFilter({ pilotstudy_id: patient.pilotstudy_id })
+                query.addFilter({ pilotstudy_id: patient.pilot_studies })
 
                 return service
                     .getById(patient.id!, query)
                     .then(result => {
                         assert.property(result, 'id')
                         assert.propertyVal(result, 'id', patient.id)
-                        assert.property(result, 'pilotstudy_id')
-                        assert.propertyVal(result, 'pilotstudy_id', patient.pilotstudy_id)
+                        assert.property(result, 'pilot_studies')
+                        assert.propertyVal(result, 'pilot_studies', patient.pilot_studies)
                         assert.property(result, 'name')
                         assert.propertyVal(result, 'name', patient.name)
                         assert.property(result, 'email')
@@ -161,7 +161,7 @@ describe('Services: PatientService', () => {
         context('when update a patient', () => {
             it('should return the updated patient', () => {
                 patient.id = undefined
-                patient.pilotstudy_id = undefined
+                patient.pilot_studies = undefined
                 patient.password = undefined
                 return service
                     .update(patient)
@@ -181,7 +181,7 @@ describe('Services: PatientService', () => {
         context('when there are validation errors', () => {
             it('should reject a validation error', () => {
                 patient.id = '123'
-                patient.pilotstudy_id = '123'
+                patient.pilot_studies = '123'
                 return service
                     .update(patient)
                     .catch(err => {

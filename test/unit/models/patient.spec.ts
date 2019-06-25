@@ -7,7 +7,7 @@ describe('Models: Patient', () => {
         context('when the json contain all parameters', () => {
             it('should return the class with parameters set', () => {
                 const result = new Patient().fromJSON(DefaultEntityMock.PATIENT)
-                assert.equal(result.pilotstudy_id, DefaultEntityMock.PATIENT.pilotstudy_id)
+                assert.equal(result.pilot_studies, DefaultEntityMock.PATIENT.pilotstudy_id)
                 assert.equal(result.name, DefaultEntityMock.PATIENT.name)
             })
         })
@@ -16,7 +16,7 @@ describe('Models: Patient', () => {
             it('should return the class without parameters', () => {
                 const result = new Patient().fromJSON(undefined)
                 assert.equal(result.id, undefined)
-                assert.equal(result.pilotstudy_id, undefined)
+                assert.equal(result.pilot_studies, undefined)
                 assert.equal(result.name, undefined)
             })
         })
@@ -25,7 +25,7 @@ describe('Models: Patient', () => {
             it('should return the class without parameters', () => {
                 const result = new Patient().fromJSON({})
                 assert.equal(result.id, undefined)
-                assert.equal(result.pilotstudy_id, undefined)
+                assert.equal(result.pilot_studies, undefined)
                 assert.equal(result.name, undefined)
             })
         })
@@ -33,7 +33,7 @@ describe('Models: Patient', () => {
         context('when pass json as string', () => {
             it('should return the object with json parameters set', () => {
                 const result = new Patient().fromJSON(JSON.stringify(DefaultEntityMock.PATIENT))
-                assert.equal(result.pilotstudy_id, DefaultEntityMock.PATIENT.pilotstudy_id)
+                assert.equal(result.pilot_studies, DefaultEntityMock.PATIENT.pilotstudy_id)
                 assert.equal(result.name, DefaultEntityMock.PATIENT.name)
             })
 
@@ -41,18 +41,18 @@ describe('Models: Patient', () => {
                 it('should return the class without parameters', () => {
                     const result = new Patient().fromJSON('')
                     assert.equal(result.id, undefined)
-                    assert.equal(result.pilotstudy_id, undefined)
+                    assert.equal(result.pilot_studies, undefined)
                     assert.equal(result.name, undefined)
                 })
             })
         })
 
         context('when pass the parameters', () => {
-            it('should return the object with set pilotstudy_id', () => {
+            it('should return the object with set pilot_studies', () => {
                 const result = new Patient().fromJSON({
                     pilotstudy_id: DefaultEntityMock.PATIENT.pilotstudy_id
                 })
-                assert.equal(result.pilotstudy_id, DefaultEntityMock.PATIENT.pilotstudy_id)
+                assert.equal(result.pilot_studies, DefaultEntityMock.PATIENT.pilotstudy_id)
                 assert.equal(result.name, undefined)
             })
 
@@ -61,7 +61,7 @@ describe('Models: Patient', () => {
                     pilotstudy_id: DefaultEntityMock.PATIENT.pilotstudy_id,
                     name: DefaultEntityMock.PATIENT.name
                 })
-                assert.equal(result.pilotstudy_id, DefaultEntityMock.PATIENT.pilotstudy_id)
+                assert.equal(result.pilot_studies, DefaultEntityMock.PATIENT.pilotstudy_id)
                 assert.equal(result.name, DefaultEntityMock.PATIENT.name)
             })
 
@@ -71,7 +71,7 @@ describe('Models: Patient', () => {
                     name: DefaultEntityMock.PATIENT.name,
                     email: DefaultEntityMock.PATIENT.email
                 })
-                assert.equal(result.pilotstudy_id, DefaultEntityMock.PATIENT.pilotstudy_id)
+                assert.equal(result.pilot_studies, DefaultEntityMock.PATIENT.pilotstudy_id)
                 assert.equal(result.name, DefaultEntityMock.PATIENT.name)
                 assert.equal(result.email, DefaultEntityMock.PATIENT.email)
             })
@@ -83,7 +83,7 @@ describe('Models: Patient', () => {
                     email: DefaultEntityMock.PATIENT.email,
                     gender: DefaultEntityMock.PATIENT.gender
                 })
-                assert.equal(result.pilotstudy_id, DefaultEntityMock.PATIENT.pilotstudy_id)
+                assert.equal(result.pilot_studies, DefaultEntityMock.PATIENT.pilotstudy_id)
                 assert.equal(result.name, DefaultEntityMock.PATIENT.name)
                 assert.equal(result.email, DefaultEntityMock.PATIENT.email)
                 assert.equal(result.gender, DefaultEntityMock.PATIENT.gender)
@@ -97,7 +97,7 @@ describe('Models: Patient', () => {
                     gender: DefaultEntityMock.PATIENT.gender,
                     birth_date: DefaultEntityMock.PATIENT.birth_date
                 })
-                assert.equal(result.pilotstudy_id, DefaultEntityMock.PATIENT.pilotstudy_id)
+                assert.equal(result.pilot_studies, DefaultEntityMock.PATIENT.pilotstudy_id)
                 assert.equal(result.name, DefaultEntityMock.PATIENT.name)
                 assert.equal(result.email, DefaultEntityMock.PATIENT.email)
                 assert.equal(result.gender, DefaultEntityMock.PATIENT.gender)

@@ -10,8 +10,8 @@ export class UpdatePatientValidator {
     public static validate(item: Patient): void | ValidationException {
         UpdateUserValidator.validate(item)
         if (item.id) ObjectIdValidator.validate(item.id)
-        if (item.pilotstudy_id) {
-            throw new ValidationException('pilotstudy_id: '.concat(Strings.PARAMETERS.COULD_NOT_BE_UPDATED))
+        if (item.pilot_studies) {
+            throw new ValidationException('pilot_studies: '.concat(Strings.PARAMETERS.COULD_NOT_BE_UPDATED))
         }
         if (item.gender) GenderTypesValidator.validate(item.gender)
         if (item.birth_date) DateValidator.validate(item.birth_date)

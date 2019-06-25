@@ -7,7 +7,7 @@ import { Strings } from '../../../src/utils/strings'
 describe('Validators: UpdatePatientValidator', () => {
     const patient: Patient = new Patient().fromJSON(DefaultEntityMock.PATIENT)
     patient.id = undefined
-    patient.pilotstudy_id = undefined
+    patient.pilot_studies = undefined
     patient.password = undefined
 
     it('should return undefined when the validation is successful', () => {
@@ -30,15 +30,15 @@ describe('Validators: UpdatePatientValidator', () => {
             }
         })
 
-        it('should throw an error for does pass pilotstudy_id', () => {
-            patient.pilotstudy_id = DefaultEntityMock.PATIENT.pilotstudy_id
+        it('should throw an error for does pass pilot_studies', () => {
+            patient.pilot_studies = DefaultEntityMock.PATIENT.pilotstudy_id
             try {
                 UpdatePatientValidator.validate(patient)
             } catch (err) {
                 assert.property(err, 'message')
-                assert.propertyVal(err, 'message', 'pilotstudy_id: '.concat(Strings.PARAMETERS.COULD_NOT_BE_UPDATED))
+                assert.propertyVal(err, 'message', 'pilot_studies: '.concat(Strings.PARAMETERS.COULD_NOT_BE_UPDATED))
             } finally {
-                patient.pilotstudy_id = undefined
+                patient.pilot_studies = undefined
             }
         })
 
