@@ -11,8 +11,8 @@ import { Strings } from '../../utils/strings'
 import { IHealthProfessionalService } from '../../application/port/health.professional.service.interface'
 import { HealthProfessional } from '../../application/domain/model/health.professional'
 
-@controller('/users/healthprofessionals')
-export class HealthProfessionalController {
+@controller('/v1/healthprofessionals')
+export class HealthProfessionalsController {
     constructor(
         @inject(Identifier.HEALTH_PROFESSIONAL_SERVICE)
         private readonly _healthProfessionalService: IHealthProfessionalService,
@@ -39,6 +39,8 @@ export class HealthProfessionalController {
         try {
             const result: Array<HealthProfessional> = await this._healthProfessionalService
                 .getAll(new Query().fromJSON(req.query))
+            const count: number = await this._healthProfessionalService.count(new Query())
+            res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
@@ -69,21 +71,6 @@ export class HealthProfessionalController {
             const result: HealthProfessional = await this._healthProfessionalService.update(healthProfessional)
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageHealthProfessionalNotFound())
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
-        } catch (err) {
-            const handlerError = ApiExceptionManager.build(err)
-            return res.status(handlerError.code)
-                .send(handlerError.toJson())
-        }
-    }
-
-    @httpGet('/:healthprofessional_id/pilotstudies')
-    public async getAllPilotStudiesFromHealthProfessional(@request() req: Request, @response() res: Response): Promise<Response> {
-        try {
-            const result: any =
-                await this._healthProfessionalService
-                    .getAllPilotStudies(req.params.healthprofessional_id, new Query().fromJSON(req.query))
-            if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessageHealthProfessionalNotFound())
-            return res.status(HttpStatus.OK).send(result)
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)

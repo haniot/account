@@ -16,11 +16,11 @@ import { Strings } from '../../utils/strings'
  * @remarks To define paths, we use library inversify-express-utils.
  * @see {@link https://github.com/inversify/inversify-express-utils} for further information.
  */
-@controller('/users')
-export class UserController {
+@controller('/v1/users')
+export class UsersController {
 
     /**
-     * Creates an instance of UserController.
+     * Creates an instance of UsersController.
      *
      * @param {IUserService} _userService
      * @param {ILogger} _logger

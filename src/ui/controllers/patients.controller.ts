@@ -11,8 +11,8 @@ import { ILogger } from '../../utils/custom.logger'
 import { IPatientService } from '../../application/port/patient.service.interface'
 import { Patient } from '../../application/domain/model/patient'
 
-@controller('/users/patients')
-export class PatientController {
+@controller('/v1/patients')
+export class PatientsController {
     constructor(
         @inject(Identifier.PATIENT_SERVICE) private readonly _patientService: IPatientService,
         @inject(Identifier.LOGGER) readonly _logger: ILogger
@@ -36,6 +36,8 @@ export class PatientController {
     public async getAllPatients(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: Array<Patient> = await this._patientService.getAll(new Query().fromJSON(req.query))
+            const count: number = await this._patientService.count(new Query())
+            res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)

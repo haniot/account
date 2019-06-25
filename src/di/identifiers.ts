@@ -8,12 +8,18 @@ export abstract class Identifier {
 
     // Controllers
     public static readonly HOME_CONTROLLER: any = Symbol.for('HomeController')
-    public static readonly USER_CONTROLLER: any = Symbol.for('UserController')
+    public static readonly USERS_CONTROLLER: any = Symbol.for('UsersController')
     public static readonly AUTH_CONTROLLER: any = Symbol.for('AuthController')
-    public static readonly ADMIN_CONTROLLER: any = Symbol.for('AdminController')
-    public static readonly PATIENT_CONTROLLER: any = Symbol.for('PatientController')
-    public static readonly HEALTH_PROFESSIONAL_CONTROLLER: any = Symbol.for('HealthProfessionalController')
-    public static readonly PILOT_STUDY_CONTROLLER: any = Symbol.for('PilotStudyController')
+    public static readonly ADMINS_CONTROLLER: any = Symbol.for('AdminsController')
+    public static readonly PATIENTS_CONTROLLER: any = Symbol.for('PatientsController')
+    public static readonly HEALTH_PROFESSIONALS_CONTROLLER: any = Symbol.for('HealthProfessionalsController')
+    public static readonly HEALTH_PROFESSIONALS_PILOT_STUDIES_CONTROLLER: any =
+        Symbol.for('HealthProfessionalsPilotStudiesController')
+    public static readonly PILOT_STUDIES_CONTROLLER: any = Symbol.for('PilotStudiesController')
+    public static readonly PILOT_STUDIES_HEALTH_PROFESSIONALS_CONTROLLER: any =
+        Symbol.for('PilotStudiesHealthProfessionalsController')
+    public static readonly PILOT_STUDIES_PATIENTS_CONTROLLER: any =
+        Symbol.for('PilotStudiesPatientsController')
 
     // Services
     public static readonly USER_SERVICE: any = Symbol.for('UserService')

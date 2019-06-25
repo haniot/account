@@ -11,8 +11,8 @@ import { Strings } from '../../utils/strings'
 import { ApiExceptionManager } from '../exception/api.exception.manager'
 import { Query } from '../../infrastructure/repository/query/query'
 
-@controller('/pilotstudies')
-export class PilotStudyController {
+@controller('/v1/pilotstudies')
+export class PilotStudiesController {
     constructor(
         @inject(Identifier.PILOT_STUDY_SERVICE) private readonly _pilotStudyService: IPilotStudyService,
         @inject(Identifier.LOGGER) readonly _logger: ILogger
@@ -35,6 +35,8 @@ export class PilotStudyController {
     public async getAllPilotStudies(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: Array<PilotStudy> = await this._pilotStudyService.getAll(new Query().fromJSON(req.query))
+            const count: number = await this._pilotStudyService.count(new Query())
+            res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
@@ -77,67 +79,6 @@ export class PilotStudyController {
     public async deletePilotStudy(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             await this._pilotStudyService.remove(req.params.pilotstudy_id)
-            return res.status(HttpStatus.NO_CONTENT).send()
-        } catch (err) {
-            const handleError = ApiExceptionManager.build(err)
-            return res.status(handleError.code).send(handleError.toJson())
-        }
-    }
-
-    @httpGet('/:pilotstudy_id/healthprofessionals')
-    public async getAllHealthprofessionalsFromPilotStudy(
-        @request() req: Request, @response() res: Response): Promise<Response> {
-        try {
-            const result: any =
-                await this._pilotStudyService.getAllHealthProfessionals(
-                    req.params.pilotstudy_id,
-                    new Query().fromJSON(req.query))
-            if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessagePilotStudyNotFound())
-            return res.status(HttpStatus.OK).send(result)
-        } catch (err) {
-            const handleError = ApiExceptionManager.build(err)
-            return res.status(handleError.code).send(handleError.toJson())
-        }
-    }
-
-    @httpGet('/:pilotstudy_id/patients')
-    public async getAllPatientsFromPilotStudy(
-        @request() req: Request, @response() res: Response): Promise<Response> {
-        try {
-            const result: any =
-                await this._pilotStudyService.getAllPatients(
-                    req.params.pilotstudy_id,
-                    new Query().fromJSON(req.query))
-            return res.status(HttpStatus.OK).send(result)
-        } catch (err) {
-            const handleError = ApiExceptionManager.build(err)
-            return res.status(handleError.code).send(handleError.toJson())
-        }
-    }
-
-    @httpPost('/:pilotstudy_id/healthprofessionals/:healthprofessional_id')
-    public async associateHealthprofessionalToPilotStudy(
-        @request() req: Request, @response() res: Response): Promise<Response> {
-        try {
-            const result: any = await this._pilotStudyService.associateHealthProfessional(
-                req.params.pilotstudy_id, req.params.healthprofessional_id
-            )
-            if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessagePilotStudyNotFound())
-            return res.status(HttpStatus.CREATED).send(result)
-        } catch (err) {
-            const handleError = ApiExceptionManager.build(err)
-            return res.status(handleError.code).send(handleError.toJson())
-        }
-    }
-
-    @httpDelete('/:pilotstudy_id/healthprofessionals/:healthprofessional_id')
-    public async disassociateHealthprofessionalFromPilotStudy(
-        @request() req: Request, @response() res: Response): Promise<Response> {
-        try {
-            const result: any = await this._pilotStudyService.disassociateHealthProfessional(
-                req.params.pilotstudy_id, req.params.healthprofessional_id
-            )
-            if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessagePilotStudyNotFound())
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)

@@ -11,8 +11,8 @@ import { Strings } from '../../utils/strings'
 import { Query } from '../../infrastructure/repository/query/query'
 import { ILogger } from '../../utils/custom.logger'
 
-@controller('/users/admins')
-export class AdminController {
+@controller('/v1/admins')
+export class AdminsController {
     constructor(
         @inject(Identifier.ADMIN_SERVICE) private readonly _adminService: IAdminService,
         @inject(Identifier.LOGGER) readonly _logger: ILogger
@@ -36,6 +36,8 @@ export class AdminController {
     public async getAllAdmins(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: Array<Admin> = await this._adminService.getAll(new Query().fromJSON(req.query))
+            const count: number = await this._adminService.count(new Query())
+            res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)

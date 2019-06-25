@@ -6,11 +6,11 @@ import { Patient } from '../domain/model/patient'
 
 export interface IPilotStudyService extends IService<PilotStudy> {
 
-    getAllHealthProfessionals(pilotId: string, query: IQuery): Promise<Array<HealthProfessional> | undefined>
+    getAllHealthProfessionals(pilotId: string, query: IQuery): Promise<Array<HealthProfessional>>
 
-    getAllPatients(pilotId: string, query: IQuery): Promise<Array<Patient> | undefined>
+    getAllPatients(pilotId: string, query: IQuery): Promise<Array<Patient>>
 
-    associateHealthProfessional(pilotId: string, healthId: string): Promise<Array<HealthProfessional> | undefined>
+    associateHealthProfessional(pilotId: string, healthId: string): Promise<Array<HealthProfessional>>
 
-    disassociateHealthProfessional(pilotId: string, healthId: string): Promise<boolean | undefined>
+    disassociateHealthProfessional(pilotId: string, healthId: string): Promise<boolean >
 }

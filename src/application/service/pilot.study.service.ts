@@ -75,7 +75,7 @@ export class PilotStudyService implements IPilotStudyService {
         }
     }
 
-    public async associateHealthProfessional(pilotId: string, healthId: string): Promise<Array<HealthProfessional> | undefined> {
+    public async associateHealthProfessional(pilotId: string, healthId: string): Promise<Array<HealthProfessional>> {
 
         try {
             ObjectIdValidator.validate(pilotId)
@@ -85,7 +85,7 @@ export class PilotStudyService implements IPilotStudyService {
             query.addFilter({ _id: pilotId })
 
             const pilotStudy: PilotStudy = await this._pilotStudyRepository.findOne(query)
-            if (!pilotStudy) return Promise.resolve(undefined)
+            if (!pilotStudy) return Promise.resolve([])
 
             const checkHealthExists =
                 await this._healthProfessionalRepository.checkExists(new HealthProfessional().fromJSON(healthId))
@@ -93,21 +93,19 @@ export class PilotStudyService implements IPilotStudyService {
             pilotStudy.addHealthProfessional(new HealthProfessional().fromJSON(healthId))
 
             const result = await this._pilotStudyRepository.update(pilotStudy)
-            if (!result) return Promise.resolve(undefined)
+            if (!result) return Promise.resolve([])
 
             if (result.health_professionals_id && result.health_professionals_id.length) {
-                result.health_professionals_id.forEach(value => {
-                    value.type = undefined
-                })
+                result.health_professionals_id.forEach(value => value.type = undefined)
             }
 
-            return Promise.resolve(result.health_professionals_id)
+            return Promise.resolve(result.health_professionals_id ? result.health_professionals_id : [])
         } catch (err) {
             return Promise.reject(err)
         }
     }
 
-    public async disassociateHealthProfessional(pilotId: string, healthId: string): Promise<boolean | undefined> {
+    public async disassociateHealthProfessional(pilotId: string, healthId: string): Promise<boolean> {
         try {
             ObjectIdValidator.validate(healthId)
             ObjectIdValidator.validate(pilotId)
@@ -116,15 +114,13 @@ export class PilotStudyService implements IPilotStudyService {
             query.addFilter({ _id: pilotId })
 
             const pilotStudy: PilotStudy = await this._pilotStudyRepository.findOne(query)
-            if (!pilotStudy) return Promise.resolve(undefined)
+            if (!pilotStudy) return Promise.resolve(false)
 
             if (pilotStudy.health_professionals_id) {
                 pilotStudy.health_professionals_id =
-                    await pilotStudy.health_professionals_id.filter(healthProfessional => {
-                        return healthProfessional.id !== healthId
-                    })
-
-                return await this._pilotStudyRepository.update(pilotStudy) !== undefined
+                    await pilotStudy.health_professionals_id.filter(healthProfessional => healthProfessional.id !== healthId)
+                const result = await this._pilotStudyRepository.update(pilotStudy)
+                return Promise.resolve(result !== undefined)
             }
 
             return await Promise.resolve(true)
@@ -133,27 +129,25 @@ export class PilotStudyService implements IPilotStudyService {
         }
     }
 
-    public async getAllHealthProfessionals(pilotId: string, query: IQuery): Promise<Array<HealthProfessional> | undefined> {
+    public async getAllHealthProfessionals(pilotId: string, query: IQuery): Promise<Array<HealthProfessional>> {
         try {
             ObjectIdValidator.validate(pilotId)
 
             query.addFilter({ _id: pilotId })
 
             const pilotStudy: PilotStudy = await this._pilotStudyRepository.findOne(query)
-            if (!pilotStudy) return Promise.resolve(undefined)
+            if (!pilotStudy) return Promise.resolve([])
             if (pilotStudy.health_professionals_id && pilotStudy.health_professionals_id.length) {
-                pilotStudy.health_professionals_id.forEach(value => {
-                    value.type = undefined
-                })
+                pilotStudy.health_professionals_id.forEach(value => value.type = undefined)
             }
 
-            return Promise.resolve(pilotStudy.health_professionals_id)
+            return Promise.resolve(pilotStudy.health_professionals_id ? pilotStudy.health_professionals_id : [])
         } catch (err) {
             return Promise.reject(err)
         }
     }
 
-    public async getAllPatients(pilotId: string, query: IQuery): Promise<Array<Patient> | undefined> {
+    public async getAllPatients(pilotId: string, query: IQuery): Promise<Array<Patient>> {
         try {
             ObjectIdValidator.validate(pilotId)
             query.addFilter({ pilotstudy_id: pilotId })
