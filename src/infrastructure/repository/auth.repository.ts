@@ -70,7 +70,6 @@ export class AuthRepository implements IAuthRepository {
             sub: user.id,
             sub_type: user.type,
             iss: process.env.ISSUER || Default.ISSUER,
-            // exp: Math.round(Date.now() / 1000 + 24 * 60 * 60),
             iat: Math.floor(Date.now() / 1000),
             scope: user.scopes.join(' '),
             email_verified: user.email_verified,

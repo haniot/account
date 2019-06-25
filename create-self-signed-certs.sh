@@ -6,6 +6,10 @@ DIR="$(pwd)/.certs"
 rm -rf "${DIR}"
 mkdir -p "${DIR}"
 
+# Create JWT certs
+ssh-keygen -t rsa -P "" -b 4096 -m PEM -f "${DIR}/jwt.key"
+ssh-keygen -e -m PEM -f "${DIR}/jwt.key" > "${DIR}/jwt.key.pub"
+
 # Create the openssl configuration file. This is used for both generating
 # the certificate as well as for specifying the extensions. It aims in favor
 # of automation, so the DN is encoding and not prompted.
@@ -41,16 +45,16 @@ extendedKeyUsage     = clientAuth, serverAuth
 subjectAltName       = @alt_names
 
 # Alternative names are specified as IP.# and DNS.# for IP addresses and
-# DNS accordingly. 
+# DNS accordingly.
 [alt_names]
 IP.1  = 127.0.0.1
 DNS.1 = localhost
 EOF
 
 # Create the certificate authority (CA). This will be a self-signed CA, and this
-# command generates both the private key and the certificate. You may want to 
+# command generates both the private key and the certificate. You may want to
 # adjust the number of bits (4096 is a bit more secure, but not supported in all
-# places at the time of this publication). 
+# places at the time of this publication).
 #
 # To put a password on the key, remove the -nodes option.
 #
@@ -79,7 +83,7 @@ openssl req \
   -new -key "${DIR}/server.key" \
   -out "${DIR}/server.csr" \
   -config "${DIR}/openssl.cnf"
-  
+
 # Sign the CSR with our CA. This will generate a new certificate that is signed
 # by our CA.
 openssl x509 \
