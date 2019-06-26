@@ -8,9 +8,6 @@ import { IPatientRepository } from '../port/patient.repository.interface'
 import { CreatePatientValidator } from '../domain/validator/create.patient.validator'
 import { Patient } from '../domain/model/patient'
 import { UpdatePatientValidator } from '../domain/validator/update.patient.validator'
-import { IPilotStudyRepository } from '../port/pilot.study.repository.interface'
-import { PilotStudy } from '../domain/model/pilot.study'
-import { ValidationException } from '../domain/exception/validation.exception'
 import { Strings } from '../../utils/strings'
 import { IUserRepository } from '../port/user.repository.interface'
 import { ConflictException } from '../domain/exception/conflict.exception'
@@ -19,22 +16,14 @@ import { ConflictException } from '../domain/exception/conflict.exception'
 export class PatientService implements IPatientService {
     constructor(
         @inject(Identifier.PATIENT_REPOSITORY) private readonly _patientRepository: IPatientRepository,
-        @inject(Identifier.USER_REPOSITORY) private readonly _userRepository: IUserRepository,
-        @inject(Identifier.PILOT_STUDY_REPOSITORY) private readonly _pilotStudyRepository: IPilotStudyRepository) {
+        @inject(Identifier.USER_REPOSITORY) private readonly _userRepository: IUserRepository) {
     }
 
     public async add(item: Patient): Promise<Patient> {
         try {
             CreatePatientValidator.validate(item)
-            if (item.pilot_studies) {
-                const pilotExists =
-                    await this._pilotStudyRepository.checkExists(new PilotStudy().fromJSON(item.pilot_studies))
-                if (!pilotExists) throw new ValidationException(Strings.PILOT_STUDY.ASSOCIATION_FAILURE)
-                if (item.email) {
-                    const patientExists = await this._userRepository.checkExist(item.email)
-                    if (patientExists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
-                }
-            }
+            const exists = await this._userRepository.checkExist(item.email)
+            if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
             return this._patientRepository.create(item)
         } catch (err) {
             return Promise.reject(err)

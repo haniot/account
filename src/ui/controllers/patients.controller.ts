@@ -79,12 +79,7 @@ export class PatientsController {
     }
 
     private toJSONView(patient: Patient | Array<Patient>): object {
-        if (patient instanceof Array) {
-            return patient.map(item => {
-                item.type = undefined
-                return item.toJSON()
-            })
-        }
+        if (patient instanceof Array) return patient.map(item => this.toJSONView(item))
         patient.type = undefined
         return patient.toJSON()
     }

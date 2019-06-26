@@ -3,10 +3,8 @@ import { IJSONSerializable } from '../utils/json.serializable.interface'
 import { JsonUtils } from '../utils/json.utils'
 import { User } from './user'
 import { UserType } from '../utils/user.type'
-import { PilotStudy } from './pilot.study'
 
 export class Patient extends User implements IJSONSerializable, IJSONDeserializable<Patient> {
-    private _pilot_studies?: Array<PilotStudy>
     private _name?: string
     private _gender?: string
 
@@ -37,14 +35,6 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
         ]
     }
 
-    get pilot_studies(): Array<PilotStudy> | undefined {
-        return this._pilot_studies
-    }
-
-    set pilot_studies(value: Array<PilotStudy> | undefined) {
-        this._pilot_studies = value
-    }
-
     get name(): string | undefined {
         return this._name
     }
@@ -71,9 +61,7 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
         if (json.name !== undefined) this.name = json.name
         if (json.email !== undefined) this.email = json.email
         if (json.gender !== undefined) this.gender = json.gender
-        if (json.pilot_studies !== undefined && json.pilot_studies instanceof Array) {
-            this.pilot_studies = json.pilot_studies.map(item => new PilotStudy().fromJSON(item))
-        }
+
         return this
     }
 
@@ -82,8 +70,7 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
             ...super.toJSON(),
             ...{
                 name: this.name,
-                gender: this.gender,
-                pilot_studies: this.pilot_studies ? this.pilot_studies.map(item => item.toJSON()) : []
+                gender: this.gender
             }
         }
     }

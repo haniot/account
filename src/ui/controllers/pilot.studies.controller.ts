@@ -87,8 +87,11 @@ export class PilotStudiesController {
     }
 
     private toJSONView(pilot: PilotStudy | Array<PilotStudy>): object {
-        if (pilot instanceof Array) return pilot.map(item => item.toJSON())
-        return pilot.toJSON()
+        if (pilot instanceof Array) return pilot.map(item => this.toJSONView(item))
+        const result = pilot.toJSON()
+        delete result.patients
+        delete result.health_professionals
+        return result
     }
 
     private getMessagePilotStudyNotFound(): object {

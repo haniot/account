@@ -21,7 +21,7 @@ export class HealthProfessionalsPilotStudiesController {
     public async getAllPilotStudiesFromHealthProfessional(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const query: Query = new Query().fromJSON(req.body)
-            query.addFilter({ patients: req.params.patient_id })
+            query.addFilter({ health_professionals: req.params.health_professional })
 
             const result: Array<PilotStudy> = await this._pilotStudyService.getAll(query)
             const count: number =
@@ -37,7 +37,10 @@ export class HealthProfessionalsPilotStudiesController {
     }
 
     private toJSONView(pilot: PilotStudy | Array<PilotStudy>): object {
-        if (pilot instanceof Array) return pilot.map(item => item.toJSON())
-        return pilot.toJSON()
+        if (pilot instanceof Array) return pilot.map(item => this.toJSONView(item))
+        const result = pilot.toJSON()
+        delete result.patients
+        delete result.health_professionals
+        return result
     }
 }

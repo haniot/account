@@ -32,12 +32,12 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
      *
      * @return {Promise<boolean>} True if it exists or False, otherwise.
      * @throws {ValidationException | RepositoryException}
-     * @param _email
+     * @param userEmail
      *
      */
-    public async checkExist(_email?: string): Promise<boolean> {
+    public async checkExist(userEmail?: string): Promise<boolean> {
         const query = new Query()
-        if (_email !== undefined) query.addFilter({ email: _email })
+        if (userEmail !== undefined) query.addFilter({ email: userEmail })
         return new Promise<boolean>((resolve, reject) => {
             super.findOne(query)
                 .then((result: User) => {
@@ -50,30 +50,28 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
     /**
      * Change the user password.
      *
-     * @param id
-     * @param old_password
-     * @param new_password
+     * @param userEmail
+     * @param oldPassword
+     * @param newPassword
      * @return {Promise<boolean>} True if the password was changed or False, otherwise.
      * @throws {ValidationException | RepositoryException}
      */
-    public changePassword(id: string, old_password: string, new_password: string): Promise<boolean> {
+    public changePassword(userEmail: string, oldPassword: string, newPassword: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            this.Model.findOne({ _id: id })
-                .then((user) => {
+            this.Model.findOne({ email: userEmail })
+                .then((user: { password: string | undefined; change_password: boolean; }) => {
                     if (!user) return resolve(false)
-                    if (!this.comparePasswords(old_password, user.password)) {
+                    if (!this.comparePasswords(oldPassword, user.password)) {
                         return reject(new ChangePasswordException(
                             Strings.USER.PASSWORD_NOT_MATCH,
                             Strings.USER.PASSWORD_NOT_MATCH_DESCRIPTION
                         ))
                     }
-                    user.password = this.encryptPassword(new_password)
+                    user.password = this.encryptPassword(newPassword)
                     user.change_password = false
-                    this.Model.findOneAndUpdate({ _id: id }, user, { new: true })
-                        .then(result => {
-                            if (!result) return resolve(false)
-                            return resolve(true)
-                        }).catch(err => reject(this.mongoDBErrorListener(err)))
+                    this.Model.findOneAndUpdate({ email: userEmail }, user, { new: true })
+                        .then(result => resolve(!!result))
+                        .catch(err => reject(this.mongoDBErrorListener(err)))
                 }).catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
@@ -92,11 +90,11 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
     /**
      * Compare if two passwords match.
      *
-     * @param password_one The not hash password
-     * @param password_two The hash password
+     * @param passwordOne The not hash password
+     * @param passwordTwo The hash password
      * @return True if the passwords matches, false otherwise.
      */
-    public comparePasswords(password_one: string, password_two: string | undefined): boolean {
-        return bcrypt.compareSync(password_one, password_two)
+    public comparePasswords(passwordOne: string, passwordTwo: string | undefined): boolean {
+        return bcrypt.compareSync(passwordOne, passwordTwo)
     }
 }

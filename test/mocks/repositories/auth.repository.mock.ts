@@ -6,8 +6,8 @@ export class AuthRepositoryMock implements IAuthRepository {
         return Promise.resolve({ token: 'token' })
     }
 
-    public generateAccessToken(user: User): string {
-        return 'token'
+    public generateAccessToken(user: User): Promise<string> {
+        return Promise.resolve('token')
     }
 
 }

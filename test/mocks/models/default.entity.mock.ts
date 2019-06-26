@@ -24,8 +24,7 @@ export abstract class DefaultEntityMock {
         email: 'elvis@mail.com',
         password: 'patient123',
         gender: GenderTypes.MALE,
-        birth_date: '1935-01-08',
-        pilotstudy_id: '5ca4b464f497945cb2041774'
+        birth_date: '1935-01-08'
     }
 
     public static readonly USER: any = {
@@ -39,7 +38,6 @@ export abstract class DefaultEntityMock {
         name: 'pilotstudy',
         is_active: true,
         start: '2019-03-15T00:00:00.000Z',
-        end: '2019-04-15T23:59:59.000Z',
-        health_professionals_id: [DefaultEntityMock.HEALTH_PROFESSIONAL]
+        end: '2019-04-15T23:59:59.000Z'
     }
 }

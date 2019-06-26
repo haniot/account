@@ -58,14 +58,10 @@ export class HealthProfessionalRepository extends BaseRepository<HealthProfessio
                 })
             } else {
                 if (users.id) query.filters = { _id: users.id }
-
                 query.addFilter({ type: UserType.HEALTH_PROFESSIONAL })
-
                 this.findOne(query)
-                    .then(result => {
-                        if (!result) return resolve(false)
-                        return resolve(true)
-                    }).catch(err => reject(super.mongoDBErrorListener(err)))
+                    .then(result => resolve(!!result))
+                    .catch(err => reject(super.mongoDBErrorListener(err)))
             }
         })
     }

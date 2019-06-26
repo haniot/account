@@ -8,8 +8,6 @@ import { CreateHealthProfessionalValidator } from '../domain/validator/create.he
 import { UserType } from '../domain/utils/user.type'
 import { ObjectIdValidator } from '../domain/validator/object.id.validator'
 import { UpdateHealthProfessionalValidator } from '../domain/validator/update.health.professional.validator'
-import { IPilotStudyRepository } from '../port/pilot.study.repository.interface'
-import { PilotStudy } from '../domain/model/pilot.study'
 import { Strings } from '../../utils/strings'
 import { IUserRepository } from '../port/user.repository.interface'
 import { ConflictException } from '../domain/exception/conflict.exception'
@@ -19,8 +17,7 @@ export class HealthProfessionalService implements IHealthProfessionalService {
     constructor(
         @inject(Identifier.HEALTH_PROFESSIONAL_REPOSITORY) private readonly _healthProfessionalRepository:
             IHealthProfessionalRepository,
-        @inject(Identifier.USER_REPOSITORY) private readonly _userRepository: IUserRepository,
-        @inject(Identifier.PILOT_STUDY_REPOSITORY) private readonly _pilotStudyRepository: IPilotStudyRepository) {
+        @inject(Identifier.USER_REPOSITORY) private readonly _userRepository: IUserRepository) {
     }
 
     public async add(item: HealthProfessional): Promise<HealthProfessional> {
@@ -63,24 +60,6 @@ export class HealthProfessionalService implements IHealthProfessionalService {
         try {
             UpdateHealthProfessionalValidator.validate(item)
             return this._healthProfessionalRepository.update(item)
-        } catch (err) {
-            return Promise.reject(err)
-        }
-    }
-
-    public async getAllPilotStudies(healthProfessionalId: string, query: IQuery): Promise<Array<PilotStudy> | undefined> {
-        try {
-            ObjectIdValidator.validate(healthProfessionalId)
-            query.addFilter({ 'health_professionals_id._id': healthProfessionalId })
-            const result = await this._pilotStudyRepository.find(query)
-
-            if (result.length) {
-                result.forEach(pilotStudy => {
-                    pilotStudy.health_professionals_id = undefined
-                })
-            }
-
-            return result
         } catch (err) {
             return Promise.reject(err)
         }

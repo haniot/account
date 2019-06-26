@@ -114,6 +114,18 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
         })
     }
 
+    public addPatient(patient: Patient) {
+        if (!this.patients) this.patients = []
+        this.patients.push(patient)
+        this.patients = this.removeRepeatPatient(this.patients)
+    }
+
+    public removeRepeatPatient(patients: Array<Patient>) {
+        return patients.filter((obj, pos, arr) => {
+            return arr.map(group => group.id).indexOf(obj.id) === pos
+        })
+    }
+
     public convertDatetimeString(value: string): Date {
         DatetimeValidator.validate(value)
         return new Date(value)
@@ -137,10 +149,12 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
         if (json.end !== undefined) this.end = this.convertDatetimeString(json.end)
         if (json.total_health_professionals !== undefined) this.total_health_professionals = json.total_health_professionals
         if (json.total_patients !== undefined) this.total_patients = json.total_patients
-        if (json.health_professionals !== undefined && json.health_professionals instanceof Array)
+        if (json.health_professionals !== undefined && json.health_professionals instanceof Array) {
             this.health_professionals = json.health_professionals.map(id => new HealthProfessional().fromJSON(id))
-        if (json.patients !== undefined && json.patients instanceof Array)
+        }
+        if (json.patients !== undefined && json.patients instanceof Array) {
             this.patients = json.patients.map(id => new Patient().fromJSON(id))
+        }
         if (json.location !== undefined) this.location = json.location
         if (json.language !== undefined) this.language = json.language
         return this

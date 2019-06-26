@@ -7,6 +7,7 @@ import { ILogger } from '../../utils/custom.logger'
 import { Request, Response } from 'express'
 import { ApiExceptionManager } from '../exception/api.exception.manager'
 import { Query } from '../../infrastructure/repository/query/query'
+import { Patient } from '../../application/domain/model/patient'
 
 @controller('/v1/pilotstudies/:pilot_studies/patients')
 export class PilotStudiesPatientsController {
@@ -53,6 +54,12 @@ export class PilotStudiesPatientsController {
             const handleError = ApiExceptionManager.build(err)
             return res.status(handleError.code).send(handleError.toJson())
         }
+    }
+
+    private toJSONView(patient: Patient | Array<Patient>): object {
+        if (patient instanceof Array) return patient.map(item => this.toJSONView(item))
+        patient.type = undefined
+        return patient.toJSON()
     }
 
 }

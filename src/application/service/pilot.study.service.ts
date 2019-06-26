@@ -11,9 +11,9 @@ import { ValidationException } from '../domain/exception/validation.exception'
 import { Strings } from '../../utils/strings'
 import { HealthProfessional } from '../domain/model/health.professional'
 import { ObjectIdValidator } from '../domain/validator/object.id.validator'
-import { Query } from '../../infrastructure/repository/query/query'
 import { Patient } from '../domain/model/patient'
 import { IPatientRepository } from '../port/patient.repository.interface'
+import { UserType } from '../domain/utils/user.type'
 
 @injectable()
 export class PilotStudyService implements IPilotStudyService {
@@ -26,10 +26,11 @@ export class PilotStudyService implements IPilotStudyService {
 
     public async add(item: PilotStudy): Promise<PilotStudy> {
         try {
+            if (item.patients) item.patients = undefined
             CreatePilotStudyValidator.validate(item)
-            if (item.health_professionals_id) {
+            if (item.health_professionals) {
                 const validateHealthList =
-                    await this._healthProfessionalRepository.checkExists(item.health_professionals_id)
+                    await this._healthProfessionalRepository.checkExists(item.health_professionals)
                 if (validateHealthList instanceof ValidationException) {
                     throw new ValidationException(
                         Strings.HEALTH_PROFESSIONAL.HEALTH_PROFESSIONAL_REGISTER_REQUIRED,
@@ -75,31 +76,24 @@ export class PilotStudyService implements IPilotStudyService {
         }
     }
 
-    public async associateHealthProfessional(pilotId: string, healthId: string): Promise<Array<HealthProfessional>> {
+    public count(query: IQuery): Promise<number> {
+        return this._pilotStudyRepository.count(query)
+    }
 
+    public async associateHealthProfessional(pilotId: string, healthId: string): Promise<Array<HealthProfessional>> {
         try {
             ObjectIdValidator.validate(pilotId)
             ObjectIdValidator.validate(healthId)
 
-            const query: Query = new Query()
-            query.addFilter({ _id: pilotId })
+            const pilotExist: boolean = await this._pilotStudyRepository.checkExists(new PilotStudy().fromJSON(pilotId))
+            if (!pilotExist) throw new ValidationException(Strings.PILOT_STUDY.ASSOCIATION_FAILURE)
 
-            const pilotStudy: PilotStudy = await this._pilotStudyRepository.findOne(query)
-            if (!pilotStudy) return Promise.resolve([])
+            const healthExists = await this._healthProfessionalRepository.checkExists(new HealthProfessional().fromJSON(healthId))
+            if (!healthExists) throw new ValidationException(Strings.HEALTH_PROFESSIONAL.ASSOCIATION_FAILURE)
 
-            const checkHealthExists =
-                await this._healthProfessionalRepository.checkExists(new HealthProfessional().fromJSON(healthId))
-            if (!checkHealthExists) throw new ValidationException(Strings.HEALTH_PROFESSIONAL.ASSOCIATION_FAILURE)
-            pilotStudy.addHealthProfessional(new HealthProfessional().fromJSON(healthId))
-
-            const result = await this._pilotStudyRepository.update(pilotStudy)
-            if (!result) return Promise.resolve([])
-
-            if (result.health_professionals_id && result.health_professionals_id.length) {
-                result.health_professionals_id.forEach(value => value.type = undefined)
-            }
-
-            return Promise.resolve(result.health_professionals_id ? result.health_professionals_id : [])
+            const result: PilotStudy =
+                await this._pilotStudyRepository.associateUser(pilotId, healthId, UserType.HEALTH_PROFESSIONAL)
+            return Promise.resolve(result && result.health_professionals ? result.health_professionals : [])
         } catch (err) {
             return Promise.reject(err)
         }
@@ -107,23 +101,12 @@ export class PilotStudyService implements IPilotStudyService {
 
     public async disassociateHealthProfessional(pilotId: string, healthId: string): Promise<boolean> {
         try {
-            ObjectIdValidator.validate(healthId)
             ObjectIdValidator.validate(pilotId)
+            ObjectIdValidator.validate(healthId)
 
-            const query: Query = new Query()
-            query.addFilter({ _id: pilotId })
-
-            const pilotStudy: PilotStudy = await this._pilotStudyRepository.findOne(query)
-            if (!pilotStudy) return Promise.resolve(false)
-
-            if (pilotStudy.health_professionals_id) {
-                pilotStudy.health_professionals_id =
-                    await pilotStudy.health_professionals_id.filter(healthProfessional => healthProfessional.id !== healthId)
-                const result = await this._pilotStudyRepository.update(pilotStudy)
-                return Promise.resolve(result !== undefined)
-            }
-
-            return await Promise.resolve(true)
+            const result: PilotStudy =
+                await this._pilotStudyRepository.disassociateUser(pilotId, healthId, UserType.HEALTH_PROFESSIONAL)
+            return Promise.resolve(!!result)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -132,16 +115,41 @@ export class PilotStudyService implements IPilotStudyService {
     public async getAllHealthProfessionals(pilotId: string, query: IQuery): Promise<Array<HealthProfessional>> {
         try {
             ObjectIdValidator.validate(pilotId)
-
             query.addFilter({ _id: pilotId })
 
-            const pilotStudy: PilotStudy = await this._pilotStudyRepository.findOne(query)
-            if (!pilotStudy) return Promise.resolve([])
-            if (pilotStudy.health_professionals_id && pilotStudy.health_professionals_id.length) {
-                pilotStudy.health_professionals_id.forEach(value => value.type = undefined)
-            }
+            const result: PilotStudy = await this._pilotStudyRepository.findOneAndPopulate(query)
+            return Promise.resolve(result && result.health_professionals ? result.health_professionals : [])
+        } catch (err) {
+            return Promise.reject(err)
+        }
+    }
 
-            return Promise.resolve(pilotStudy.health_professionals_id ? pilotStudy.health_professionals_id : [])
+    public async associatePatient(pilotId: string, patientId: string): Promise<Array<Patient>> {
+        try {
+            ObjectIdValidator.validate(pilotId)
+            ObjectIdValidator.validate(patientId)
+
+            const pilotExist: boolean = await this._pilotStudyRepository.checkExists(new PilotStudy().fromJSON(pilotId))
+            if (!pilotExist) throw new ValidationException(Strings.PILOT_STUDY.ASSOCIATION_FAILURE)
+
+            const patientExists = await this._patientRepository.checkExists(new Patient().fromJSON(patientId))
+            if (!patientExists) throw new ValidationException(Strings.PATIENT.ASSOCIATION_FAILURE)
+
+            const result: PilotStudy = await this._pilotStudyRepository.associateUser(pilotId, patientId, UserType.PATIENT)
+            return Promise.resolve(result && result.patients ? result.patients : [])
+        } catch (err) {
+            return Promise.reject(err)
+        }
+    }
+
+    public async disassociatePatient(pilotId: string, patientId: string): Promise<boolean> {
+        try {
+            ObjectIdValidator.validate(pilotId)
+            ObjectIdValidator.validate(patientId)
+
+            const result: PilotStudy =
+                await this._pilotStudyRepository.disassociateUser(pilotId, patientId, UserType.HEALTH_PROFESSIONAL)
+            return Promise.resolve(!!result)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -150,16 +158,12 @@ export class PilotStudyService implements IPilotStudyService {
     public async getAllPatients(pilotId: string, query: IQuery): Promise<Array<Patient>> {
         try {
             ObjectIdValidator.validate(pilotId)
-            query.addFilter({ pilotstudy_id: pilotId })
-            const patients: Array<Patient> = await this._patientRepository.find(query)
-            return Promise.resolve(patients)
+            query.addFilter({ _id: pilotId })
+
+            const result: PilotStudy = await this._pilotStudyRepository.findOneAndPopulate(query)
+            return Promise.resolve(result && result.patients ? result.patients : [])
         } catch (err) {
             return Promise.reject(err)
         }
     }
-
-    public count(query: IQuery): Promise<number> {
-        return this._pilotStudyRepository.count(query)
-    }
-
 }

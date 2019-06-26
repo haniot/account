@@ -11,12 +11,15 @@ import { UpdateAdminValidator } from '../domain/validator/update.admin.validator
 import { IUserRepository } from '../port/user.repository.interface'
 import { Strings } from '../../utils/strings'
 import { ConflictException } from '../domain/exception/conflict.exception'
+import { Query } from '../../infrastructure/repository/query/query'
+import { IPilotStudyRepository } from '../port/pilot.study.repository.interface'
 
 @injectable()
 export class AdminService implements IAdminService {
     constructor(
         @inject(Identifier.ADMIN_REPOSITORY) private readonly _adminRepository: IAdminRepository,
-        @inject(Identifier.USER_REPOSITORY) private readonly _userRepository: IUserRepository) {
+        @inject(Identifier.USER_REPOSITORY) private readonly _userRepository: IUserRepository,
+        @inject(Identifier.PILOT_STUDY_REPOSITORY) private readonly _pilotStudyRepository: IPilotStudyRepository) {
     }
 
     public async add(item: Admin): Promise<Admin> {
@@ -24,22 +27,27 @@ export class AdminService implements IAdminService {
             CreateAdminValidator.validate(item)
             const exists = await this._userRepository.checkExist(item.email)
             if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
-            return this._adminRepository.create(item)
+
+            const result: Admin = await this._adminRepository.create(item)
+            return Promise.resolve(this.addInformation(result))
         } catch (err) {
             return Promise.reject(err)
         }
     }
 
-    public getAll(query: IQuery): Promise<Array<Admin>> {
+    public async getAll(query: IQuery): Promise<Array<Admin>> {
         query.addFilter({ type: UserType.ADMIN })
-        return this._adminRepository.find(query)
+        const result = await this._adminRepository.find(query)
+        return Promise.resolve(this.addMultipleInformation(result))
     }
 
-    public getById(id: string, query: IQuery): Promise<Admin> {
+    public async getById(id: string, query: IQuery): Promise<Admin> {
         try {
             ObjectIdValidator.validate(id)
             query.addFilter({ _id: id, type: UserType.ADMIN })
-            return this._adminRepository.findOne(query)
+
+            const result: Admin = await this._adminRepository.findOne(query)
+            return Promise.resolve(this.addInformation(result))
         } catch (err) {
             return Promise.reject(err)
         }
@@ -66,5 +74,29 @@ export class AdminService implements IAdminService {
     public count(query: IQuery): Promise<number> {
         query.addFilter({ type: UserType.ADMIN })
         return this._adminRepository.count(query)
+    }
+
+    private async addMultipleInformation(item: Array<Admin>): Promise<Array<Admin>> {
+        try {
+            for (let i = 0; i < item.length; i++) item[i] = await this.addInformation(item[i])
+        } catch (err) {
+            return Promise.reject(err)
+        }
+        return Promise.resolve(item)
+    }
+
+    private async addInformation(item: Admin): Promise<Admin> {
+        try {
+            item.total_admins = await this._adminRepository.count(new Query())
+            item.total_health_professionals =
+                await this._userRepository.count(new Query().fromJSON({ filters: { type: UserType.HEALTH_PROFESSIONAL } }))
+            item.total_patients =
+                await this._userRepository.count(new Query().fromJSON({ filters: { type: UserType.PATIENT } }))
+            item.total_pilot_studies =
+                await this._pilotStudyRepository.count(new Query())
+        } catch (err) {
+            return Promise.reject(err)
+        }
+        return item
     }
 }

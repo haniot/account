@@ -6,6 +6,7 @@ import { ChangePasswordValidator } from '../domain/validator/change.password.val
 import { IQuery } from '../port/query.interface'
 import { User } from '../domain/model/user'
 import { ObjectIdValidator } from '../domain/validator/object.id.validator'
+import { EmailValidator } from '../domain/validator/email.validator'
 
 /**
  * Implementing User Service.
@@ -36,17 +37,17 @@ export class UserService implements IUserService {
     /**
      * Change the user password.
      *
-     * @param id - Unique identifier.
+     * @param email - Email of user
      * @param old_password - Old user password.
      * @param new_password - New user password.
      * @return {Promise<boolean>}
      * @throws {ValidationException | RepositoryException}
      */
-    public async changePassword(id: string, old_password: string, new_password: string): Promise<boolean> {
+    public async changePassword(email: string, old_password: string, new_password: string): Promise<boolean> {
         try {
-            ObjectIdValidator.validate(id)
+            EmailValidator.validate(email)
             ChangePasswordValidator.validate(old_password, new_password)
-            return this._userRepository.changePassword(id, old_password, new_password)
+            return this._userRepository.changePassword(email, old_password, new_password)
         } catch (err) {
             return Promise.reject(err)
         }

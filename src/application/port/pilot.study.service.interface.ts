@@ -13,4 +13,8 @@ export interface IPilotStudyService extends IService<PilotStudy> {
     associateHealthProfessional(pilotId: string, healthId: string): Promise<Array<HealthProfessional>>
 
     disassociateHealthProfessional(pilotId: string, healthId: string): Promise<boolean >
+
+    associatePatient(pilotId: string, patientId: string): Promise<Array<Patient>>
+
+    disassociatePatient(pilotId: string, patientId: string): Promise<boolean >
 }

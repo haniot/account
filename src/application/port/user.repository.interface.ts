@@ -13,23 +13,23 @@ export interface IUserRepository extends IRepository<User> {
      * Checks if an user already has a registration with email.
      * What differs one user to another is your email.
      *
-     * @param email
+     * @param userEmail
      *
      * @return {Promise<boolean>} True if it exists or False, otherwise.
      * @throws {ValidationException | RepositoryException}
      */
-    checkExist(email?: string): Promise<boolean>
+    checkExist(userEmail?: string): Promise<boolean>
 
     /**
      * Change the user password.
      *
-     * @param id
-     * @param old_password
-     * @param new_password
+     * @param userEmail
+     * @param oldPassword
+     * @param newPassword
      * @return {Promise<boolean>} True if the password was changed or False, otherwise.
      * @throws {ValidationException | RepositoryException}
      */
-    changePassword(id: string, old_password: string, new_password: string): Promise<boolean>
+    changePassword(userEmail: string, oldPassword: string, newPassword: string): Promise<boolean>
 
     /**
      * Encrypt the user password
@@ -42,9 +42,9 @@ export interface IUserRepository extends IRepository<User> {
     /**
      * Compare if two passwords match.,
      *
-     * @param password_one
-     * @param password_two
+     * @param passwordOne
+     * @param passwordTwo
      * @return True if the passwords matches, false otherwise.
      */
-    comparePasswords(password_one: string, password_two: string): boolean
+    comparePasswords(passwordOne: string, passwordTwo: string): boolean
 }

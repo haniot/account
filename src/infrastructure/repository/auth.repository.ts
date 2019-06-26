@@ -65,6 +65,7 @@ export class AuthRepository implements IAuthRepository {
     }
 
     public generateAccessToken(user: User): Promise<string> {
+        console.log(user)
         try {
             const private_key = readFileSync(`${process.env.JWT_PRIVATE_KEY_PATH}`, 'utf-8')
             const payload: object = {
