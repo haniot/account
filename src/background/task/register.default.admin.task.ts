@@ -45,7 +45,7 @@ export class RegisterDefaultAdminTask implements IBackgroundTask {
                 adminDefault.email = process.env.ADMIN_EMAIL || Default.ADMIN_EMAIL
                 adminDefault.password = process.env.ADMIN_PASSWORD || Default.ADMIN_PASSWORD
                 adminDefault.type = UserType.ADMIN
-                adminDefault.change_password = true
+                adminDefault.change_password = false
                 adminDefault.email_verified = false
                 adminDefault.language = 'pt-br'
 

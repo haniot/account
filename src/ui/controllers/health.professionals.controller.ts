@@ -24,7 +24,7 @@ export class HealthProfessionalsController {
     public async saveHealthProfessional(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const healthProfessional: HealthProfessional = new HealthProfessional().fromJSON(req.body)
-            healthProfessional.change_password = true
+            healthProfessional.change_password = false
             healthProfessional.email_verified = false
             healthProfessional.language = healthProfessional.language ? healthProfessional.language : 'pt-br'
 

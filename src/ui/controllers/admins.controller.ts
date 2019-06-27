@@ -23,7 +23,7 @@ export class AdminsController {
     public async addAdminUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const admin: Admin = new Admin().fromJSON(req.body)
-            admin.change_password = true
+            admin.change_password = false
             admin.email_verified = false
             admin.language = admin.language ? admin.language : 'pt-br'
 

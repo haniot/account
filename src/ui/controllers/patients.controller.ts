@@ -23,7 +23,7 @@ export class PatientsController {
     public async addPatientUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const patient: Patient = new Patient().fromJSON(req.body)
-            patient.change_password = true
+            patient.change_password = false
             patient.email_verified = false
             patient.language = patient.language ? patient.language : 'pt-br'
 

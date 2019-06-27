@@ -38,21 +38,24 @@ export class PilotStudyService implements IPilotStudyService {
                     )
                 }
             }
-            return this._pilotStudyRepository.create(item)
+            const result: PilotStudy = await this._pilotStudyRepository.create(item)
+            return Promise.resolve(result ? this.addInformation(result) : result)
         } catch (err) {
             return Promise.reject(err)
         }
     }
 
     public async getAll(query: IQuery): Promise<Array<PilotStudy>> {
-        return this._pilotStudyRepository.find(query)
+        const result: Array<PilotStudy> = await this._pilotStudyRepository.find(query)
+        return Promise.resolve(result ? this.addMultipleInformation(result) : result)
     }
 
     public async getById(id: string, query: IQuery): Promise<PilotStudy> {
         try {
             ObjectIdValidator.validate(id)
             query.addFilter({ _id: id })
-            return this._pilotStudyRepository.findOne(query)
+            const result: PilotStudy = await this._pilotStudyRepository.findOne(query)
+            return Promise.resolve(result ? this.addInformation(result) : result)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -70,7 +73,8 @@ export class PilotStudyService implements IPilotStudyService {
     public async update(item: PilotStudy): Promise<PilotStudy> {
         try {
             UpdatePilotStudyValidator.validate(item)
-            return this._pilotStudyRepository.update(item)
+            const result: PilotStudy = await this._pilotStudyRepository.update(item)
+            return Promise.resolve(result ? this.addInformation(result) : result)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -165,5 +169,24 @@ export class PilotStudyService implements IPilotStudyService {
         } catch (err) {
             return Promise.reject(err)
         }
+    }
+
+    private async addMultipleInformation(item: Array<PilotStudy>): Promise<Array<PilotStudy>> {
+        try {
+            for (let i = 0; i < item.length; i++) item[i] = await this.addInformation(item[i])
+        } catch (err) {
+            return Promise.reject(err)
+        }
+        return Promise.resolve(item)
+    }
+
+    private async addInformation(item: PilotStudy): Promise<PilotStudy> {
+        try {
+            item.total_health_professionals = item.health_professionals!.length
+            item.total_patients = item.patients!.length
+        } catch (err) {
+            return Promise.reject(err)
+        }
+        return item
     }
 }
