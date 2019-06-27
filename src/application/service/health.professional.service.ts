@@ -94,7 +94,8 @@ export class HealthProfessionalService implements IHealthProfessionalService {
                 await this._pilotStudyRepository.find(new Query().fromJSON({ filters: { health_professionals: item.id } }))
             item.total_pilot_studies = allPilots.length
             item.total_patients = 0
-            allPilots.forEach(pilot => item.total_patients! += pilot.patients!.length)
+            await allPilots
+                .forEach(pilot => item.total_patients! += pilot.patients && pilot.patients.length ? pilot.patients.length : 0)
         } catch (err) {
             return Promise.reject(err)
         }

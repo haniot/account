@@ -182,8 +182,9 @@ export class PilotStudyService implements IPilotStudyService {
 
     private async addInformation(item: PilotStudy): Promise<PilotStudy> {
         try {
-            item.total_health_professionals = item.health_professionals!.length
-            item.total_patients = item.patients!.length
+            item.total_health_professionals =
+                item.health_professionals && item.health_professionals.length ? item.health_professionals.length : 0
+            item.total_patients = item.patients && item.patients.length ? item.patients.length : 0
         } catch (err) {
             return Promise.reject(err)
         }
