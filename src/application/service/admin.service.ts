@@ -27,9 +27,8 @@ export class AdminService implements IAdminService {
             CreateAdminValidator.validate(item)
             const exists = await this._userRepository.checkExist(item.email)
             if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
-
             const result: Admin = await this._adminRepository.create(item)
-            return Promise.resolve(this.addInformation(result))
+            return Promise.resolve(result ? this.addInformation(result) : result)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -38,7 +37,7 @@ export class AdminService implements IAdminService {
     public async getAll(query: IQuery): Promise<Array<Admin>> {
         query.addFilter({ type: UserType.ADMIN })
         const result = await this._adminRepository.find(query)
-        return Promise.resolve(this.addMultipleInformation(result))
+        return Promise.resolve(result && result.length ? this.addMultipleInformation(result) : result)
     }
 
     public async getById(id: string, query: IQuery): Promise<Admin> {
@@ -47,7 +46,7 @@ export class AdminService implements IAdminService {
             query.addFilter({ _id: id, type: UserType.ADMIN })
 
             const result: Admin = await this._adminRepository.findOne(query)
-            return Promise.resolve(this.addInformation(result))
+            return Promise.resolve(result ? this.addInformation(result) : result)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -65,7 +64,9 @@ export class AdminService implements IAdminService {
     public async update(item: Admin): Promise<Admin> {
         try {
             UpdateAdminValidator.validate(item)
-            return this._adminRepository.update(item)
+            item.last_login = undefined
+            const result = await this._adminRepository.update(item)
+            return Promise.resolve(result ? this.addInformation(result) : result)
         } catch (err) {
             return Promise.reject(err)
         }

@@ -57,6 +57,7 @@ export class PatientService implements IPatientService {
     public async update(item: Patient): Promise<Patient> {
         try {
             UpdatePatientValidator.validate(item)
+            item.last_login = undefined
             return this._patientRepository.update(item)
         } catch (err) {
             return Promise.reject(err)
