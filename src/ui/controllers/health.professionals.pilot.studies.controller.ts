@@ -21,11 +21,12 @@ export class HealthProfessionalsPilotStudiesController {
     public async getAllPilotStudiesFromHealthProfessional(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const query: Query = new Query().fromJSON(req.body)
-            query.addFilter({ health_professionals: req.params.health_professional })
+            query.addFilter({ health_professionals: req.params.healthprofessional_id })
 
             const result: Array<PilotStudy> = await this._pilotStudyService.getAll(query)
             const count: number =
-                await this._pilotStudyService.count(new Query().fromJSON({ filters: { patients: req.params.patient_id } }))
+                await this._pilotStudyService
+                    .count(new Query().fromJSON({ filters: { health_professionals: req.params.healthprofessional_id } }))
 
             res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))

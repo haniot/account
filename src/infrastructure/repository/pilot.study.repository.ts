@@ -9,6 +9,7 @@ import { IEntityMapper } from '../port/entity.mapper.interface'
 import { IQuery } from '../../application/port/query.interface'
 import { Query } from './query/query'
 import { UserType } from '../../application/domain/utils/user.type'
+import { ObjectId } from 'bson'
 
 @injectable()
 export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyEntity> implements IPilotStudyRepository {
@@ -104,20 +105,26 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
 
     public associateUser(pilotId: string, userId: string, userType: string): Promise<PilotStudy> {
         return new Promise<PilotStudy>((resolve, reject) => {
-            const update: any = { $push: {} }
-            update.$push = userType === UserType.PATIENT ? { patients: userId } : { health_professionals: userId }
+            const update: any = { $addToSet: {} }
+            update.$addToSet = userType === UserType.PATIENT ?
+                { patients: new ObjectId(userId) } : { health_professionals: new ObjectId(userId) }
             this.Model.findOneAndUpdate({ _id: pilotId }, update)
                 .exec()
                 .then(result => {
                     if (!result) return resolve(undefined)
-                    return resolve(this.mapper.transform(result))
+
+                    const query: Query = new Query()
+                    query.addFilter({ _id: pilotId })
+
+                    return resolve(this.findOneAndPopulate(query))
                 }).catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
 
     public disassociateUser(pilotId: string, userId: string, userType: string): Promise<PilotStudy> {
         const update: any = { $pull: {} }
-        update.$push = userType === UserType.PATIENT ? { patients: userId } : { health_professionals: userId }
+        update.$pull = userType === UserType.PATIENT ?
+            { patients: new ObjectId(userId) } : { health_professionals: new ObjectId(userId) }
         return new Promise<PilotStudy>((resolve, reject) => {
             this.Model.findOneAndUpdate({ _id: pilotId }, update)
                 .exec()

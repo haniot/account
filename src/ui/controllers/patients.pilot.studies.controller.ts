@@ -10,7 +10,7 @@ import { IPilotStudyService } from '../../application/port/pilot.study.service.i
 import { PilotStudy } from '../../application/domain/model/pilot.study'
 
 @controller('/v1/patients/:patient_id/pilotstudies')
-export class HealthProfessionalsPilotStudiesController {
+export class PatientsPilotStudiesController {
     constructor(
         @inject(Identifier.PILOT_STUDY_SERVICE) private readonly _pilotStudyService: IPilotStudyService,
         @inject(Identifier.LOGGER) readonly _logger: ILogger

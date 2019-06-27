@@ -25,6 +25,9 @@ export class HealthProfessionalsController {
         try {
             const healthProfessional: HealthProfessional = new HealthProfessional().fromJSON(req.body)
             healthProfessional.change_password = true
+            healthProfessional.email_verified = false
+            healthProfessional.language = healthProfessional.language ? healthProfessional.language : 'pt-br'
+
             const result: HealthProfessional = await this._healthProfessionalService.add(healthProfessional)
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
         } catch (err) {

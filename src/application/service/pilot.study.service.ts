@@ -148,7 +148,7 @@ export class PilotStudyService implements IPilotStudyService {
             ObjectIdValidator.validate(patientId)
 
             const result: PilotStudy =
-                await this._pilotStudyRepository.disassociateUser(pilotId, patientId, UserType.HEALTH_PROFESSIONAL)
+                await this._pilotStudyRepository.disassociateUser(pilotId, patientId, UserType.PATIENT)
             return Promise.resolve(!!result)
         } catch (err) {
             return Promise.reject(err)

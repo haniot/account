@@ -24,6 +24,9 @@ export class AdminsController {
         try {
             const admin: Admin = new Admin().fromJSON(req.body)
             admin.change_password = true
+            admin.email_verified = false
+            admin.language = admin.language ? admin.language : 'pt-br'
+
             const result: Admin = await this._adminService.add(admin)
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
         } catch (err) {

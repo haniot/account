@@ -24,6 +24,9 @@ export class PatientsController {
         try {
             const patient: Patient = new Patient().fromJSON(req.body)
             patient.change_password = true
+            patient.email_verified = false
+            patient.language = patient.language ? patient.language : 'pt-br'
+
             const result: Patient = await this._patientService.add(patient)
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
         } catch (err) {

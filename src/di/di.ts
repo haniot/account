@@ -62,6 +62,7 @@ import { PatientsController } from '../ui/controllers/patients.controller'
 import { HealthProfessionalsPilotStudiesController } from '../ui/controllers/health.professionals.pilot.studies.controller'
 import { PilotStudiesHealthProfessionalsController } from '../ui/controllers/pilot.studies.health.professionals.controller'
 import { PilotStudiesPatientsController } from '../ui/controllers/pilot.studies.patients.controller'
+import { PatientsPilotStudiesController } from '../ui/controllers/patients.pilot.studies.controller'
 
 export class DI {
     private static instance: DI
@@ -113,6 +114,8 @@ export class DI {
             .to(AuthController).inSingletonScope()
         this.container.bind<AdminsController>(Identifier.ADMINS_CONTROLLER).to(AdminsController).inSingletonScope()
         this.container.bind<PatientsController>(Identifier.PATIENTS_CONTROLLER).to(PatientsController).inSingletonScope()
+        this.container.bind<PatientsPilotStudiesController>(Identifier.PATIENTS_PILOT_STUDIES_CONTROLLER)
+            .to(PatientsPilotStudiesController).inSingletonScope()
         this.container.bind<HealthProfessionalsController>(Identifier.HEALTH_PROFESSIONALS_CONTROLLER)
             .to(HealthProfessionalsController).inSingletonScope()
         this.container.bind<HealthProfessionalsPilotStudiesController>(Identifier.HEALTH_PROFESSIONALS_PILOT_STUDIES_CONTROLLER)

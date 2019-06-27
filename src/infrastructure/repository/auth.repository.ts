@@ -58,14 +58,13 @@ export class AuthRepository implements IAuthRepository {
                                 `To change it, access PATCH /users/${user._id}/password.`,
                                 `/users/${user._id}/password`))
                     }
-
+                    await this._userModel.findOneAndUpdate({ _id: user.id }, { last_login: new Date().toISOString() })
                     return resolve({ access_token: await this.generateAccessToken(this._userMapper.transform(user)) })
                 }).catch(err => reject(new RepositoryException(Strings.ERROR_MESSAGE.UNEXPECTED)))
         })
     }
 
     public generateAccessToken(user: User): Promise<string> {
-        console.log(user)
         try {
             const private_key = readFileSync(`${process.env.JWT_PRIVATE_KEY_PATH}`, 'utf-8')
             const payload: object = {
@@ -73,7 +72,7 @@ export class AuthRepository implements IAuthRepository {
                 sub_type: user.type,
                 iss: process.env.ISSUER || Default.ISSUER,
                 iat: Math.floor(Date.now() / 1000),
-                scope: user.scopes.join(' '),
+                scopes: user.scopes.join(' '),
                 email_verified: user.email_verified,
                 change_password: user.change_password
             }

@@ -36,7 +36,7 @@ export class AuthController {
             return res.status(HttpStatus.ACCEPTED)
                 .send({
                     message: 'If a matching account is found, an email has been sent ' +
-                        `to ${req.body.email} to allow you to reset your password`
+                        `to ${req.body.email} to allow you to reset your password.`
                 })
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)

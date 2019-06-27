@@ -12,6 +12,7 @@ export abstract class Identifier {
     public static readonly AUTH_CONTROLLER: any = Symbol.for('AuthController')
     public static readonly ADMINS_CONTROLLER: any = Symbol.for('AdminsController')
     public static readonly PATIENTS_CONTROLLER: any = Symbol.for('PatientsController')
+    public static readonly PATIENTS_PILOT_STUDIES_CONTROLLER: any = Symbol.for('PatientsPilotStudiesController')
     public static readonly HEALTH_PROFESSIONALS_CONTROLLER: any = Symbol.for('HealthProfessionalsController')
     public static readonly HEALTH_PROFESSIONALS_PILOT_STUDIES_CONTROLLER: any =
         Symbol.for('HealthProfessionalsPilotStudiesController')
