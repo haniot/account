@@ -7,7 +7,6 @@ import { inject, injectable } from 'inversify'
 import { IAuthRepository } from '../../application/port/auth.repository.interface'
 import { Identifier } from '../../di/identifiers'
 import { User } from '../../application/domain/model/user'
-import { IUserRepository } from '../../application/port/user.repository.interface'
 import { UserEntity } from '../entity/user.entity'
 import { Default } from '../../utils/default'
 import jwt from 'jsonwebtoken'
@@ -17,15 +16,70 @@ import { ChangePasswordException } from '../../application/domain/exception/chan
 import { AuthenticationException } from '../../application/domain/exception/authentication.exception'
 import { IEntityMapper } from '../port/entity.mapper.interface'
 import { readFileSync } from 'fs'
+import bcrypt from 'bcryptjs'
+import { BaseRepository } from './base/base.repository'
+import { ILogger } from '../../utils/custom.logger'
 
 @injectable()
-export class AuthRepository implements IAuthRepository {
+export class AuthRepository extends BaseRepository<User, UserEntity> implements IAuthRepository {
 
     constructor(
         @inject(Identifier.USER_REPO_MODEL) readonly _userModel: any,
         @inject(Identifier.USER_ENTITY_MAPPER) readonly _userMapper: IEntityMapper<User, UserEntity>,
-        @inject(Identifier.USER_REPOSITORY) private readonly _userRepository: IUserRepository
+        @inject(Identifier.LOGGER) _logger: ILogger
     ) {
+        super(_userModel, _userMapper, _logger)
+    }
+
+    /**
+     * Change the user password.
+     *
+     * @param userEmail
+     * @param oldPassword
+     * @param newPassword
+     * @return {Promise<boolean>} True if the password was changed or False, otherwise.
+     * @throws {ValidationException | RepositoryException}
+     */
+    public changePassword(userEmail: string, oldPassword: string, newPassword: string): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            this.Model.findOne({ email: userEmail })
+                .then((user: { password: string | undefined; change_password: boolean; }) => {
+                    if (!user) return resolve(false)
+                    if (!this.comparePasswords(oldPassword, user.password)) {
+                        return reject(new ChangePasswordException(
+                            Strings.USER.PASSWORD_NOT_MATCH,
+                            Strings.USER.PASSWORD_NOT_MATCH_DESCRIPTION
+                        ))
+                    }
+                    user.password = this.encryptPassword(newPassword)
+                    user.change_password = false
+                    this.Model.findOneAndUpdate({ email: userEmail }, user, { new: true })
+                        .then(result => resolve(!!result))
+                        .catch(err => reject(this.mongoDBErrorListener(err)))
+                }).catch(err => reject(this.mongoDBErrorListener(err)))
+        })
+    }
+
+    /**
+     * Encrypt the user password.
+     *
+     * @param password
+     * @return {string} Encrypted password if the encrypt was successfully.
+     */
+    public encryptPassword(password: string | undefined): string {
+        const salt = bcrypt.genSaltSync(10)
+        return bcrypt.hashSync(password, salt)
+    }
+
+    /**
+     * Compare if two passwords match.
+     *
+     * @param passwordOne The not hash password
+     * @param passwordTwo The hash password
+     * @return True if the passwords matches, false otherwise.
+     */
+    public comparePasswords(passwordOne: string, passwordTwo: string | undefined): boolean {
+        return bcrypt.compareSync(passwordOne, passwordTwo)
     }
 
     public authenticate(_email: string, password: string): Promise<object> {
@@ -42,7 +96,7 @@ export class AuthRepository implements IAuthRepository {
                         )
                     }
 
-                    if (!this._userRepository.comparePasswords(password, user.password)) {
+                    if (!this.comparePasswords(password, user.password)) {
                         return reject(
                             new AuthenticationException(
                                 'Authentication failed due to invalid authentication credentials.'

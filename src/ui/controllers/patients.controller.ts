@@ -39,7 +39,7 @@ export class PatientsController {
     public async getAllPatients(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: Array<Patient> = await this._patientService.getAll(new Query().fromJSON(req.query))
-            const count: number = await this._patientService.count(new Query())
+            const count: number = await this._patientService.count()
             res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {

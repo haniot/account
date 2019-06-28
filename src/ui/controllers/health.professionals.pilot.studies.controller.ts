@@ -25,8 +25,7 @@ export class HealthProfessionalsPilotStudiesController {
 
             const result: Array<PilotStudy> = await this._pilotStudyService.getAll(query)
             const count: number =
-                await this._pilotStudyService
-                    .count(new Query().fromJSON({ filters: { health_professionals: req.params.healthprofessional_id } }))
+                await this._pilotStudyService.countPilotStudiesFromHealthProfessional(req.params.healthprofessional_id)
 
             res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))

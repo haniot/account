@@ -11,9 +11,7 @@ import { UpdateHealthProfessionalValidator } from '../domain/validator/update.he
 import { Strings } from '../../utils/strings'
 import { IUserRepository } from '../port/user.repository.interface'
 import { ConflictException } from '../domain/exception/conflict.exception'
-import { Query } from '../../infrastructure/repository/query/query'
 import { IPilotStudyRepository } from '../port/pilot.study.repository.interface'
-import { PilotStudy } from '../domain/model/pilot.study'
 
 @injectable()
 export class HealthProfessionalService implements IHealthProfessionalService {
@@ -30,7 +28,7 @@ export class HealthProfessionalService implements IHealthProfessionalService {
             const exists = await this._userRepository.checkExist(item.email)
             if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
             const result: HealthProfessional = await this._healthProfessionalRepository.create(item)
-            return Promise.resolve(result ? this.addInformation(result) : result)
+            return Promise.resolve(result ? this.addReadOnlyInformation(result) : result)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -40,7 +38,7 @@ export class HealthProfessionalService implements IHealthProfessionalService {
     public async getAll(query: IQuery): Promise<Array<HealthProfessional>> {
         query.addFilter({ type: UserType.HEALTH_PROFESSIONAL })
         const result: Array<HealthProfessional> = await this._healthProfessionalRepository.find(query)
-        return Promise.resolve(result && result.length ? this.addMultipleInformation(result) : result)
+        return Promise.resolve(result && result.length ? this.addMultipleReadOnlyInformation(result) : result)
     }
 
     public async getById(id: string, query: IQuery): Promise<HealthProfessional> {
@@ -48,7 +46,7 @@ export class HealthProfessionalService implements IHealthProfessionalService {
             ObjectIdValidator.validate(id)
             query.addFilter({ _id: id, type: UserType.HEALTH_PROFESSIONAL })
             const result: HealthProfessional = await this._healthProfessionalRepository.findOne(query)
-            return Promise.resolve(result ? this.addInformation(result) : result)
+            return Promise.resolve(result ? this.addReadOnlyInformation(result) : result)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -68,34 +66,29 @@ export class HealthProfessionalService implements IHealthProfessionalService {
             UpdateHealthProfessionalValidator.validate(item)
             item.last_login = undefined
             const result: HealthProfessional = await this._healthProfessionalRepository.update(item)
-            return Promise.resolve(result ? this.addInformation(result) : result)
+            return Promise.resolve(result ? this.addReadOnlyInformation(result) : result)
         } catch (err) {
             return Promise.reject(err)
         }
     }
 
-    public count(query: IQuery): Promise<number> {
-        query.addFilter({ type: UserType.HEALTH_PROFESSIONAL })
-        return this._healthProfessionalRepository.count(query)
+    public count(): Promise<number> {
+        return this._healthProfessionalRepository.count()
     }
 
-    private async addMultipleInformation(item: Array<HealthProfessional>): Promise<Array<HealthProfessional>> {
+    private async addMultipleReadOnlyInformation(item: Array<HealthProfessional>): Promise<Array<HealthProfessional>> {
         try {
-            for (let i = 0; i < item.length; i++) item[i] = await this.addInformation(item[i])
+            for (let i = 0; i < item.length; i++) item[i] = await this.addReadOnlyInformation(item[i])
         } catch (err) {
             return Promise.reject(err)
         }
         return Promise.resolve(item)
     }
 
-    private async addInformation(item: HealthProfessional): Promise<HealthProfessional> {
+    private async addReadOnlyInformation(item: HealthProfessional): Promise<HealthProfessional> {
         try {
-            const allPilots: Array<PilotStudy> =
-                await this._pilotStudyRepository.find(new Query().fromJSON({ filters: { health_professionals: item.id } }))
-            item.total_pilot_studies = allPilots.length
-            item.total_patients = 0
-            await allPilots
-                .forEach(pilot => item.total_patients! += pilot.patients && pilot.patients.length ? pilot.patients.length : 0)
+            item.total_pilot_studies = await this._pilotStudyRepository.countPilotStudiesFromHealthProfessional(item.id!)
+            item.total_patients = await this._pilotStudyRepository.countPatientsFromHealthProfessional(item.id!)
         } catch (err) {
             return Promise.reject(err)
         }

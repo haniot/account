@@ -42,7 +42,7 @@ export class HealthProfessionalsController {
         try {
             const result: Array<HealthProfessional> = await this._healthProfessionalService
                 .getAll(new Query().fromJSON(req.query))
-            const count: number = await this._healthProfessionalService.count(new Query())
+            const count: number = await this._healthProfessionalService.count()
             res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {

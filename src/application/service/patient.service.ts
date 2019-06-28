@@ -64,8 +64,7 @@ export class PatientService implements IPatientService {
         }
     }
 
-    public count(query: IQuery): Promise<number> {
-        query.addFilter({ type: UserType.PATIENT })
-        return this._patientRepository.count(query)
+    public count(): Promise<number> {
+        return this._patientRepository.count()
     }
 }

@@ -39,7 +39,7 @@ export class AdminsController {
     public async getAllAdmins(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: Array<Admin> = await this._adminService.getAll(new Query().fromJSON(req.query))
-            const count: number = await this._adminService.count(new Query())
+            const count: number = await this._adminService.count()
             res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {

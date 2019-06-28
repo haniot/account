@@ -39,7 +39,7 @@ export class PilotStudyService implements IPilotStudyService {
                 }
             }
             const result: PilotStudy = await this._pilotStudyRepository.create(item)
-            return Promise.resolve(result ? this.addInformation(result) : result)
+            return Promise.resolve(result ? this.addReadOnlyInformation(result) : result)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -47,7 +47,7 @@ export class PilotStudyService implements IPilotStudyService {
 
     public async getAll(query: IQuery): Promise<Array<PilotStudy>> {
         const result: Array<PilotStudy> = await this._pilotStudyRepository.find(query)
-        return Promise.resolve(result ? this.addMultipleInformation(result) : result)
+        return Promise.resolve(result ? this.addMultipleReadOnlyInformation(result) : result)
     }
 
     public async getById(id: string, query: IQuery): Promise<PilotStudy> {
@@ -55,7 +55,7 @@ export class PilotStudyService implements IPilotStudyService {
             ObjectIdValidator.validate(id)
             query.addFilter({ _id: id })
             const result: PilotStudy = await this._pilotStudyRepository.findOne(query)
-            return Promise.resolve(result ? this.addInformation(result) : result)
+            return Promise.resolve(result ? this.addReadOnlyInformation(result) : result)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -74,17 +74,17 @@ export class PilotStudyService implements IPilotStudyService {
         try {
             UpdatePilotStudyValidator.validate(item)
             const result: PilotStudy = await this._pilotStudyRepository.update(item)
-            return Promise.resolve(result ? this.addInformation(result) : result)
+            return Promise.resolve(result ? this.addReadOnlyInformation(result) : result)
         } catch (err) {
             return Promise.reject(err)
         }
     }
 
-    public count(query: IQuery): Promise<number> {
-        return this._pilotStudyRepository.count(query)
+    public count(): Promise<number> {
+        return this._pilotStudyRepository.count()
     }
 
-    public async associateHealthProfessional(pilotId: string, healthId: string): Promise<Array<HealthProfessional>> {
+    public async associateHealthProfessional(pilotId: string, healthId: string): Promise<boolean> {
         try {
             ObjectIdValidator.validate(pilotId)
             ObjectIdValidator.validate(healthId)
@@ -97,7 +97,7 @@ export class PilotStudyService implements IPilotStudyService {
 
             const result: PilotStudy =
                 await this._pilotStudyRepository.associateUser(pilotId, healthId, UserType.HEALTH_PROFESSIONAL)
-            return Promise.resolve(result && result.health_professionals ? result.health_professionals : [])
+            return Promise.resolve(!!result)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -128,7 +128,7 @@ export class PilotStudyService implements IPilotStudyService {
         }
     }
 
-    public async associatePatient(pilotId: string, patientId: string): Promise<Array<Patient>> {
+    public async associatePatient(pilotId: string, patientId: string): Promise<boolean> {
         try {
             ObjectIdValidator.validate(pilotId)
             ObjectIdValidator.validate(patientId)
@@ -140,7 +140,7 @@ export class PilotStudyService implements IPilotStudyService {
             if (!patientExists) throw new ValidationException(Strings.PATIENT.ASSOCIATION_FAILURE)
 
             const result: PilotStudy = await this._pilotStudyRepository.associateUser(pilotId, patientId, UserType.PATIENT)
-            return Promise.resolve(result && result.patients ? result.patients : [])
+            return Promise.resolve(!!result)
         } catch (err) {
             return Promise.reject(err)
         }
@@ -151,8 +151,7 @@ export class PilotStudyService implements IPilotStudyService {
             ObjectIdValidator.validate(pilotId)
             ObjectIdValidator.validate(patientId)
 
-            const result: PilotStudy =
-                await this._pilotStudyRepository.disassociateUser(pilotId, patientId, UserType.PATIENT)
+            const result: PilotStudy = await this._pilotStudyRepository.disassociateUser(pilotId, patientId, UserType.PATIENT)
             return Promise.resolve(!!result)
         } catch (err) {
             return Promise.reject(err)
@@ -171,16 +170,24 @@ export class PilotStudyService implements IPilotStudyService {
         }
     }
 
-    private async addMultipleInformation(item: Array<PilotStudy>): Promise<Array<PilotStudy>> {
+    public countPilotStudiesFromHealthProfessional(healthId: string): Promise<number> {
+        return this._pilotStudyRepository.countPilotStudiesFromHealthProfessional(healthId)
+    }
+
+    public countPilotStudiesFromPatient(patientId: string): Promise<number> {
+        return this._pilotStudyRepository.countPilotStudiesFromPatient(patientId)
+    }
+
+    private async addMultipleReadOnlyInformation(item: Array<PilotStudy>): Promise<Array<PilotStudy>> {
         try {
-            for (let i = 0; i < item.length; i++) item[i] = await this.addInformation(item[i])
+            for (let i = 0; i < item.length; i++) item[i] = await this.addReadOnlyInformation(item[i])
         } catch (err) {
             return Promise.reject(err)
         }
         return Promise.resolve(item)
     }
 
-    private async addInformation(item: PilotStudy): Promise<PilotStudy> {
+    private async addReadOnlyInformation(item: PilotStudy): Promise<PilotStudy> {
         try {
             item.total_health_professionals =
                 item.health_professionals && item.health_professionals.length ? item.health_professionals.length : 0

@@ -6,10 +6,10 @@ import { IHealthProfessionalRepository } from '../../application/port/health.pro
 import { IEntityMapper } from '../port/entity.mapper.interface'
 import { Identifier } from '../../di/identifiers'
 import { ILogger } from '../../utils/custom.logger'
-import { IUserRepository } from '../../application/port/user.repository.interface'
 import { ValidationException } from '../../application/domain/exception/validation.exception'
 import { Query } from './query/query'
 import { UserType } from '../../application/domain/utils/user.type'
+import { IAuthRepository } from '../../application/port/auth.repository.interface'
 
 @injectable()
 export class HealthProfessionalRepository extends BaseRepository<HealthProfessional, HealthProfessionalEntity>
@@ -19,15 +19,19 @@ export class HealthProfessionalRepository extends BaseRepository<HealthProfessio
         @inject(Identifier.USER_REPO_MODEL) readonly _healthProfessionalModel: any,
         @inject(Identifier.HEALTH_PROFESSIONAL_ENTITY_MAPPER) readonly _healthProfessionalMapper:
             IEntityMapper<HealthProfessional, HealthProfessionalEntity>,
-        @inject(Identifier.USER_REPOSITORY) private readonly _userRepository: IUserRepository,
+        @inject(Identifier.AUTH_REPOSITORY) private readonly _authRepository: IAuthRepository,
         @inject(Identifier.LOGGER) readonly _logger: ILogger
     ) {
         super(_healthProfessionalModel, _healthProfessionalMapper, _logger)
     }
 
     public create(item: HealthProfessional): Promise<HealthProfessional> {
-        if (item.password) item.password = this._userRepository.encryptPassword(item.password)
+        if (item.password) item.password = this._authRepository.encryptPassword(item.password)
         return super.create(item)
+    }
+
+    public count(): Promise<number> {
+        return super.count(new Query())
     }
 
     public checkExists(users: HealthProfessional | Array<HealthProfessional>): Promise<boolean | ValidationException> {
@@ -65,4 +69,5 @@ export class HealthProfessionalRepository extends BaseRepository<HealthProfessio
             }
         })
     }
+
 }

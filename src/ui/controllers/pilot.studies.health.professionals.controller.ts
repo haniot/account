@@ -5,8 +5,6 @@ import { IPilotStudyService } from '../../application/port/pilot.study.service.i
 import { inject } from 'inversify'
 import { ILogger } from '../../utils/custom.logger'
 import { Request, Response } from 'express'
-import { ApiException } from '../exception/api.exception'
-import { Strings } from '../../utils/strings'
 import { ApiExceptionManager } from '../exception/api.exception.manager'
 import { Query } from '../../infrastructure/repository/query/query'
 import { HealthProfessional } from '../../application/domain/model/health.professional'
@@ -41,10 +39,9 @@ export class PilotStudiesHealthProfessionalsController {
     public async associateHealthProfessionalToPilotStudy(
         @request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const result: Array<HealthProfessional> = await this._pilotStudyService.associateHealthProfessional(
+            await this._pilotStudyService.associateHealthProfessional(
                 req.params.pilot_studies, req.params.healthprofessional_id)
-            if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessagePilotStudyNotFound())
-            return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
+            return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
             return res.status(handleError.code).send(handleError.toJson())
@@ -68,13 +65,5 @@ export class PilotStudiesHealthProfessionalsController {
         if (healthProfessional instanceof Array) return healthProfessional.map(item => this.toJSONView(item))
         healthProfessional.type = undefined
         return healthProfessional.toJSON()
-    }
-
-    private getMessagePilotStudyNotFound(): object {
-        return new ApiException(
-            HttpStatus.NOT_FOUND,
-            Strings.PILOT_STUDY.NOT_FOUND,
-            Strings.PILOT_STUDY.NOT_FOUND_DESCRIPTION
-        ).toJson()
     }
 }

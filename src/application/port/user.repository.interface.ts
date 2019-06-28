@@ -20,31 +20,9 @@ export interface IUserRepository extends IRepository<User> {
      */
     checkExist(userEmail?: string): Promise<boolean>
 
-    /**
-     * Change the user password.
-     *
-     * @param userEmail
-     * @param oldPassword
-     * @param newPassword
-     * @return {Promise<boolean>} True if the password was changed or False, otherwise.
-     * @throws {ValidationException | RepositoryException}
-     */
-    changePassword(userEmail: string, oldPassword: string, newPassword: string): Promise<boolean>
+    countAdmins(): Promise<number>
 
-    /**
-     * Encrypt the user password
-     *
-     * @param password
-     * @return {string} Encrypted password if the encrypt was successfully.
-     */
-    encryptPassword(password: string): string
+    countPatients(): Promise<number>
 
-    /**
-     * Compare if two passwords match.,
-     *
-     * @param passwordOne
-     * @param passwordTwo
-     * @return True if the passwords matches, false otherwise.
-     */
-    comparePasswords(passwordOne: string, passwordTwo: string): boolean
+    countHealthProfessionals(): Promise<number>
 }

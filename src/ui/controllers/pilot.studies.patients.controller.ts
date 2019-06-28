@@ -8,8 +8,6 @@ import { Request, Response } from 'express'
 import { ApiExceptionManager } from '../exception/api.exception.manager'
 import { Query } from '../../infrastructure/repository/query/query'
 import { Patient } from '../../application/domain/model/patient'
-import { ApiException } from '../exception/api.exception'
-import { Strings } from '../../utils/strings'
 
 @controller('/v1/pilotstudies/:pilotstudy_id/patients')
 export class PilotStudiesPatientsController {
@@ -39,10 +37,9 @@ export class PilotStudiesPatientsController {
     @httpPost('/:patient_id')
     public async associateHealthProfessionalToPilotStudy(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const result: Array<Patient> = await this._pilotStudyService.associatePatient(
+            await this._pilotStudyService.associatePatient(
                 req.params.pilotstudy_id, req.params.patient_id)
-            if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessagePilotStudyNotFound())
-            return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
+            return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
             return res.status(handleError.code).send(handleError.toJson())
@@ -66,13 +63,5 @@ export class PilotStudiesPatientsController {
         if (patient instanceof Array) return patient.map(item => this.toJSONView(item))
         patient.type = undefined
         return patient.toJSON()
-    }
-
-    private getMessagePilotStudyNotFound(): object {
-        return new ApiException(
-            HttpStatus.NOT_FOUND,
-            Strings.PILOT_STUDY.NOT_FOUND,
-            Strings.PILOT_STUDY.NOT_FOUND_DESCRIPTION
-        ).toJson()
     }
 }

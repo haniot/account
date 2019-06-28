@@ -10,7 +10,7 @@ import { ValidationException } from '../domain/exception/validation.exception'
  * @extends {IRepository<HealthProfessional>}
  */
 export interface IHealthProfessionalRepository extends IRepository<HealthProfessional> {
+    count(): Promise<number>
 
     checkExists(users: HealthProfessional | Array<HealthProfessional>): Promise<boolean | ValidationException>
-
 }

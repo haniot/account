@@ -6,10 +6,8 @@ import { UserEntity } from '../entity/user.entity'
 import { IEntityMapper } from '../port/entity.mapper.interface'
 import { BaseRepository } from './base/base.repository'
 import { ILogger } from '../../utils/custom.logger'
-import { ChangePasswordException } from '../../application/domain/exception/change.password.exception'
-import bcrypt from 'bcryptjs'
 import { Query } from './query/query'
-import { Strings } from '../../utils/strings'
+import { UserType } from '../../application/domain/utils/user.type'
 
 /**
  * Implementation of the user repository.
@@ -47,54 +45,18 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
         })
     }
 
-    /**
-     * Change the user password.
-     *
-     * @param userEmail
-     * @param oldPassword
-     * @param newPassword
-     * @return {Promise<boolean>} True if the password was changed or False, otherwise.
-     * @throws {ValidationException | RepositoryException}
-     */
-    public changePassword(userEmail: string, oldPassword: string, newPassword: string): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
-            this.Model.findOne({ email: userEmail })
-                .then((user: { password: string | undefined; change_password: boolean; }) => {
-                    if (!user) return resolve(false)
-                    if (!this.comparePasswords(oldPassword, user.password)) {
-                        return reject(new ChangePasswordException(
-                            Strings.USER.PASSWORD_NOT_MATCH,
-                            Strings.USER.PASSWORD_NOT_MATCH_DESCRIPTION
-                        ))
-                    }
-                    user.password = this.encryptPassword(newPassword)
-                    user.change_password = false
-                    this.Model.findOneAndUpdate({ email: userEmail }, user, { new: true })
-                        .then(result => resolve(!!result))
-                        .catch(err => reject(this.mongoDBErrorListener(err)))
-                }).catch(err => reject(this.mongoDBErrorListener(err)))
-        })
+    public countAdmins(): Promise<number> {
+        const query: Query = new Query().fromJSON({ filters: { type: UserType.ADMIN } })
+        return super.count(query)
     }
 
-    /**
-     * Encrypt the user password.
-     *
-     * @param password
-     * @return {string} Encrypted password if the encrypt was successfully.
-     */
-    public encryptPassword(password: string | undefined): string {
-        const salt = bcrypt.genSaltSync(10)
-        return bcrypt.hashSync(password, salt)
+    public countHealthProfessionals(): Promise<number> {
+        const query: Query = new Query().fromJSON({ filters: { type: UserType.HEALTH_PROFESSIONAL } })
+        return super.count(query)
     }
 
-    /**
-     * Compare if two passwords match.
-     *
-     * @param passwordOne The not hash password
-     * @param passwordTwo The hash password
-     * @return True if the passwords matches, false otherwise.
-     */
-    public comparePasswords(passwordOne: string, passwordTwo: string | undefined): boolean {
-        return bcrypt.compareSync(passwordOne, passwordTwo)
+    public countPatients(): Promise<number> {
+        const query: Query = new Query().fromJSON({ filters: { type: UserType.PATIENT } })
+        return super.count(query)
     }
 }

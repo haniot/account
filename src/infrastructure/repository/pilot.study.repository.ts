@@ -134,4 +134,39 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
                 }).catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
+
+    public count(): Promise<number> {
+        return super.count(new Query())
+    }
+
+    public countHealthProfessionalsFromPilotStudy(pilotId: string): Promise<number> {
+        return new Promise<number>((resolve, reject) => {
+            super.findOne(new Query().fromJSON({ filters: { _id: pilotId } }))
+                .then(result => resolve(result && result.health_professionals ? result.health_professionals.length : 0))
+                .catch(err => this.mongoDBErrorListener(err))
+        })
+    }
+
+    public countPatientsFromPilotStudy(pilotId: string): Promise<number> {
+        return new Promise<number>((resolve, reject) => {
+            super.findOne(new Query().fromJSON({ filters: { _id: pilotId } }))
+                .then(result => resolve(result && result.patients ? result.patients.length : 0))
+                .catch(err => this.mongoDBErrorListener(err))
+        })
+    }
+
+    public async countPatientsFromHealthProfessional(healthId: string): Promise<number> {
+        const pilots = await this.find(new Query().fromJSON({ filters: { health_professionals: healthId } }))
+        let allPatients: Array<any> = []
+        await pilots.forEach(pilot => allPatients = [...allPatients, ...pilot.patients!])
+        return Promise.resolve(new Set(allPatients).size)
+    }
+
+    public countPilotStudiesFromPatient(patientId: string): Promise<number> {
+        return super.count(new Query().fromJSON({ filters: { patients: new ObjectId(patientId) } }))
+    }
+
+    public countPilotStudiesFromHealthProfessional(healthId: string): Promise<number> {
+        return super.count(new Query().fromJSON({ filters: { health_professionals: new ObjectId(healthId) } }))
+    }
 }

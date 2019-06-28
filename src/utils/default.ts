@@ -15,8 +15,7 @@ export abstract class Default {
     public static readonly PORT_HTTP: number = 80
     public static readonly PORT_HTTPS: number = 443
     public static readonly SWAGGER_PATH: string = './src/ui/swagger/api.yaml'
-    public static readonly SWAGGER_URI: string = 'https://api.swaggerhub.com/apis/haniot/haniot-account-service/1.0.0/' +
-        'swagger.json'
+    public static readonly SWAGGER_URI: string = 'https://api.swaggerhub.com/apis/haniot/account-service/v1/swagger.json'
     public static readonly LOGO_URI: string = 'http://www.ocariot.com.br/wp-content/uploads/2018/08/cropped-512-32x32.png'
 
     // MongoDB
