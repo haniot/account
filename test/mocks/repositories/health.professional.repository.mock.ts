@@ -14,7 +14,7 @@ export class HealthProfessionalRepositoryMock implements IHealthProfessionalRepo
         return Promise.resolve(users.email === health.email)
     }
 
-    public count(query: IQuery): Promise<number> {
+    public count(): Promise<number> {
         return Promise.resolve(1)
     }
 

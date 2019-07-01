@@ -11,7 +11,7 @@ export class PatientRepositoryMock implements IPatientRepository {
         return Promise.resolve(item.id === patient.id)
     }
 
-    public count(query: IQuery): Promise<number> {
+    public count(): Promise<number> {
         return Promise.resolve(1)
     }
 

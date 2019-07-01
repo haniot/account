@@ -35,7 +35,7 @@ export class PilotStudiesController {
     public async getAllPilotStudies(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: Array<PilotStudy> = await this._pilotStudyService.getAll(new Query().fromJSON(req.query))
-            const count: number = await this._pilotStudyService.count(new Query())
+            const count: number = await this._pilotStudyService.count()
             res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
@@ -46,11 +46,11 @@ export class PilotStudiesController {
         }
     }
 
-    @httpGet('/:pilot_studies')
+    @httpGet('/:pilotstudy_id')
     public async getPilotStudyById(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: PilotStudy =
-                await this._pilotStudyService.getById(req.params.pilot_studies, new Query().fromJSON(req.query))
+                await this._pilotStudyService.getById(req.params.pilotstudy_id, new Query().fromJSON(req.query))
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessagePilotStudyNotFound())
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
@@ -61,11 +61,11 @@ export class PilotStudiesController {
         }
     }
 
-    @httpPatch('/:pilot_studies')
+    @httpPatch('/:pilotstudy_id')
     public async updatePilotStudy(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const pilot: PilotStudy = new PilotStudy().fromJSON(req.body)
-            pilot.id = req.params.pilot_studies
+            pilot.id = req.params.pilotstudy_id
             const result: PilotStudy = await this._pilotStudyService.update(pilot)
             if (!result) return res.status(HttpStatus.NOT_FOUND).send(this.getMessagePilotStudyNotFound())
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
@@ -75,10 +75,10 @@ export class PilotStudiesController {
         }
     }
 
-    @httpDelete('/:pilot_studies')
+    @httpDelete('/:pilotstudy_id')
     public async deletePilotStudy(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            await this._pilotStudyService.remove(req.params.pilot_studies)
+            await this._pilotStudyService.remove(req.params.pilotstudy_id)
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)

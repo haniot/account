@@ -42,4 +42,16 @@ export class UserRepositoryMock implements IUserRepository {
     public update(item: User): Promise<User> {
         return Promise.resolve(new User())
     }
+
+    public countAdmins(): Promise<number> {
+        return Promise.resolve(1)
+    }
+
+    public countHealthProfessionals(): Promise<number> {
+        return Promise.resolve(1)
+    }
+
+    public countPatients(): Promise<number> {
+        return Promise.resolve(1)
+    }
 }

@@ -16,7 +16,6 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
     private _health_professionals?: Array<HealthProfessional>
     private _patients?: Array<Patient>
     private _location?: string
-    private _language?: string
 
     constructor() {
         super()
@@ -94,14 +93,6 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
         this._location = value
     }
 
-    get language(): string | undefined {
-        return this._language
-    }
-
-    set language(value: string | undefined) {
-        this._language = value
-    }
-
     public addHealthProfessional(healthProfessional: HealthProfessional) {
         if (!this.health_professionals) this.health_professionals = []
         this.health_professionals.push(healthProfessional)
@@ -156,7 +147,6 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
             this.patients = json.patients.map(id => new Patient().fromJSON(id))
         }
         if (json.location !== undefined) this.location = json.location
-        if (json.language !== undefined) this.language = json.language
         return this
     }
 
@@ -172,8 +162,7 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
             health_professionals:
                 this.health_professionals ? this.health_professionals.map(healthProfessional => healthProfessional.id) : [],
             patients: this.patients ? this.patients.map(patient => patient.id) : [],
-            location: this.location,
-            language: this.language
+            location: this.location
         }
     }
 }

@@ -10,6 +10,7 @@ import { IQuery } from '../../application/port/query.interface'
 import { Query } from './query/query'
 import { UserType } from '../../application/domain/utils/user.type'
 import { ObjectId } from 'bson'
+import { Patient } from '../../application/domain/model/patient'
 
 @injectable()
 export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyEntity> implements IPilotStudyRepository {
@@ -156,10 +157,12 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
     }
 
     public async countPatientsFromHealthProfessional(healthId: string): Promise<number> {
-        const pilots = await this.find(new Query().fromJSON({ filters: { health_professionals: healthId } }))
-        let allPatients: Array<any> = []
-        await pilots.forEach(pilot => allPatients = [...allPatients, ...pilot.patients!])
-        return Promise.resolve(new Set(allPatients).size)
+        let allPatients: Array<Patient> = []
+        const pilots = await this.findAndPopulate(new Query().fromJSON({ filters: { health_professionals: healthId } }))
+        pilots.forEach(pilot => allPatients = allPatients.concat(pilot.patients!))
+        const unique = {}
+        const filteredPatients = allPatients.filter(obj => !unique[obj.id!] && (unique[obj.id!] = true))
+        return Promise.resolve(filteredPatients.length)
     }
 
     public countPilotStudiesFromPatient(patientId: string): Promise<number> {

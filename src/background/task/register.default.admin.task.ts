@@ -39,7 +39,7 @@ export class RegisterDefaultAdminTask implements IBackgroundTask {
         const query: IQuery = new Query()
         query.filters = { type: UserType.ADMIN }
         try {
-            const countUser = await this._adminRepository.count(query)
+            const countUser = await this._adminRepository.count()
             if (!countUser) {
                 const adminDefault = new Admin()
                 adminDefault.email = process.env.ADMIN_EMAIL || Default.ADMIN_EMAIL

@@ -6,6 +6,7 @@ import { Identifier } from '../../di/identifiers'
 import { ApiExceptionManager } from '../exception/api.exception.manager'
 import { IAuthService } from '../../application/port/auth.service.interface'
 import { ApiException } from '../exception/api.exception'
+import { Strings } from '../../utils/strings'
 
 @controller('/v1/auth')
 export class AuthController {
@@ -57,8 +58,9 @@ export class AuthController {
     @httpPatch('/password')
     public async changePassword(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            if (req.body && req.body.email && req.body.old_password && req.body.new_password)
+            const result: boolean =
                 await this._authService.changePassword(req.body.email, req.body.old_password, req.body.new_password)
+            if (!result) return res.status(HttpStatus.BAD_REQUEST).send(this.getMessageInvalidOperation())
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
@@ -66,4 +68,13 @@ export class AuthController {
                 .send(handlerError.toJson())
         }
     }
+
+    private getMessageInvalidOperation(): object {
+        return new ApiException(
+            HttpStatus.BAD_REQUEST,
+            Strings.ERROR_MESSAGE.OPERATION_CANT_BE_COMPLETED,
+            Strings.ERROR_MESSAGE.OPERATION_CANT_BE_COMPLETED_DESC
+        ).toJson()
+    }
+
 }

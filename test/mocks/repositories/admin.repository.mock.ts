@@ -8,7 +8,7 @@ admin.id = DefaultEntityMock.ADMIN.id
 
 export class AdminRepositoryMock implements IAdminRepository {
 
-    public count(query: IQuery): Promise<number> {
+    public count(): Promise<number> {
         return Promise.resolve(1)
     }
 

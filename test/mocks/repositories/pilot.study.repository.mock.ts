@@ -5,7 +5,7 @@ import { DefaultEntityMock } from '../models/default.entity.mock'
 
 export class PilotStudyRepositoryMock implements IPilotStudyRepository {
 
-    public count(query: IQuery): Promise<number> {
+    public count(): Promise<number> {
         return Promise.resolve(1)
     }
 
@@ -48,5 +48,25 @@ export class PilotStudyRepositoryMock implements IPilotStudyRepository {
 
     public findOneAndPopulate(query: IQuery): Promise<PilotStudy> {
         return Promise.resolve(new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY))
+    }
+
+    public countHealthProfessionalsFromPilotStudy(pilotId: string): Promise<number> {
+        return Promise.resolve(1)
+    }
+
+    public countPatientsFromHealthProfessional(healthId: string): Promise<number> {
+        return Promise.resolve(1)
+    }
+
+    public countPatientsFromPilotStudy(pilotId: string): Promise<number> {
+        return Promise.resolve(1)
+    }
+
+    public countPilotStudiesFromHealthProfessional(healthId: string): Promise<number> {
+        return Promise.resolve(1)
+    }
+
+    public countPilotStudiesFromPatient(patientId: string): Promise<number> {
+        return Promise.resolve(1)
     }
 }

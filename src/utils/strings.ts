@@ -57,7 +57,9 @@ export abstract class Strings {
         UUID_NOT_VALID_FORMAT: 'Some ID provided does not have a valid format!',
         UUID_NOT_VALID_FORMAT_DESC: 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.',
         PARAMETER_COULD_NOT_BE_UPDATED: 'This parameter could not be updated.',
-        DATE_NOT_VALID_FORMAT_DESC: 'Date must be in the format: yyyy-MM-dd'
+        DATE_NOT_VALID_FORMAT_DESC: 'Date must be in the format: yyyy-MM-dd',
+        OPERATION_CANT_BE_COMPLETED: 'The operation could not be performed successfully.',
+        OPERATION_CANT_BE_COMPLETED_DESC: 'Probably one or more of the request parameters are incorrect.'
     }
 
     public static readonly PILOT_STUDY: any = {
@@ -66,7 +68,7 @@ export abstract class Strings {
             'A new operation for the same resource is required.',
         ASSOCIATION_FAILURE: 'The association could not be performed because the pilot study does not have a record.',
         DISASSOCIATION_FAILURE: 'The disassociation could not be performed because the pilot study does not have a record.',
-        NAME_ALREADY_REGISTERED: 'A ṕilot study with this name already registered!'
+        NAME_ALREADY_REGISTERED: 'A pilot study with this name already registered!'
     }
 
 }

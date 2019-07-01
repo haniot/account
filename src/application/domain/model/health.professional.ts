@@ -85,6 +85,7 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
     }
 
     public fromJSON(json: any): HealthProfessional {
+
         if (!json) return this
         if (typeof json === 'string') {
             if (!JsonUtils.isJsonString(json)) {

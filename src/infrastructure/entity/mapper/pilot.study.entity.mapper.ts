@@ -23,7 +23,6 @@ export class PilotStudyEntityMapper implements IEntityMapper <PilotStudy, PilotS
             result.patients = json.patients.map(item => new Patient().fromJSON(item))
         }
         if (json.location !== undefined) result.location = json.location
-        if (json.language !== undefined) result.language = json.language
 
         return result
     }
@@ -47,7 +46,6 @@ export class PilotStudyEntityMapper implements IEntityMapper <PilotStudy, PilotS
             result.patients = item.patients.map(value => value.toJSON())
         }
         if (item.location !== undefined) result.location = item.location
-        if (item.language !== undefined) result.language = item.language
         return result
     }
 
