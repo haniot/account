@@ -8,7 +8,7 @@ import { Identifier } from '../../../src/di/identifiers'
 import { App } from '../../../src/app'
 import { PilotStudyRepoModel } from '../../../src/infrastructure/database/schema/pilot.study.schema'
 import { Strings } from '../../../src/utils/strings'
-import { ObjectId } from 'bson'
+import { ObjectID } from 'bson'
 
 const container: Container = DI.getInstance().getContainer()
 const dbConnection: IConnectionDB = container.get(Identifier.MONGODB_CONNECTION)
@@ -175,7 +175,7 @@ describe('Routes: PilotStudies', () => {
         context('when the pilot study is not founded', () => {
             it('should return status code 404 and message from pilot study not found', () => {
                 return request
-                    .get(`/v1/pilotstudies/${new ObjectId()}`)
+                    .get(`/v1/pilotstudies/${new ObjectID()}`)
                     .set('Content-Type', 'application/json')
                     .expect(404)
                     .then(res => {
@@ -227,7 +227,7 @@ describe('Routes: PilotStudies', () => {
             it('should return status code 400 and message from try update health professionals id list', () => {
                 return request
                     .patch(`/v1/pilotstudies/${pilot.id}`)
-                    .send({ health_professionals: [`${new ObjectId()}`] })
+                    .send({ health_professionals: [`${new ObjectID()}`] })
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
@@ -242,7 +242,7 @@ describe('Routes: PilotStudies', () => {
         context('when the pilot study is not founded', () => {
             it('should return status code 404 and message from pilot not found', () => {
                 return request
-                    .patch(`/v1/pilotstudies/${new ObjectId()}`)
+                    .patch(`/v1/pilotstudies/${new ObjectID()}`)
                     .send({})
                     .set('Content-Type', 'application/json')
                     .expect(404)
@@ -294,7 +294,7 @@ describe('Routes: PilotStudies', () => {
             it('should return status code 204 and no content', () => {
                 it('should return status code 204 and no content', () => {
                     return request
-                        .delete(`/v1/pilotstudies/${new ObjectId()}`)
+                        .delete(`/v1/pilotstudies/${new ObjectID()}`)
                         .set('Content-Type', 'application/json')
                         .expect(204)
                         .then(res => {

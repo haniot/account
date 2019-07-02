@@ -14,7 +14,7 @@ export class UpdateUserValidator {
         if (user.password) {
             throw new ValidationException(Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED,
                 'A specific route to update user password already exists. ' +
-                `Access: PATCH /users/${user.id}/password to update your password.`)
+                `Access: PATCH /v1/auth/password to update your password.`)
         }
     }
 }

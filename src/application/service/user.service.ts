@@ -35,7 +35,7 @@ export class UserService implements IUserService {
             const user: User =
                 await this._userRepository.findOne(new Query().fromJSON({ filters: { _id: id } }))
             const result: boolean = await this._userRepository.delete(id)
-            if (user.type !== UserType.ADMIN) {
+            if (user && user.type !== UserType.ADMIN) {
                 const query: Query = new Query()
                 query.addFilter(user.type === UserType.PATIENT ? { patients: user.id } : { health_professionals: user.id })
                 const pilots: Array<PilotStudy> = await this._pilotStudyRepository.find(query)
