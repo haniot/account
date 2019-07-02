@@ -12,33 +12,6 @@ describe('Validators: CreatePatientValidator', () => {
     })
 
     context('when there are validation errors', () => {
-        it('should throw an error for does not pass pilot_studies', () => {
-            patient.pilot_studies = undefined
-            try {
-                CreatePatientValidator.validate(patient)
-            } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
-                assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                assert.propertyVal(err, 'description', 'Patient validation: pilot_studies is required!')
-            }
-        })
-
-        it('should throw an error for does pass invalid pilot_studies', () => {
-            patient.pilot_studies = '123'
-            try {
-                CreatePatientValidator.validate(patient)
-            } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
-                assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
-                assert.propertyVal(err, 'description', 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea ' +
-                    'is expected.')
-            } finally {
-                patient.pilot_studies = DefaultEntityMock.PATIENT.pilotstudy_id
-            }
-        })
-
         it('should throw an error for does not pass name', () => {
             patient.name = undefined
             try {
@@ -66,6 +39,21 @@ describe('Validators: CreatePatientValidator', () => {
                 patient.email = DefaultEntityMock.PATIENT.email
             }
         })
+
+        it('should throw an error for does not pass password', () => {
+            patient.password = undefined
+            try {
+                CreatePatientValidator.validate(patient)
+            } catch (err) {
+                assert.property(err, 'message')
+                assert.property(err, 'description')
+                assert.propertyVal(err, 'message', 'Required fields were not provided...')
+                assert.propertyVal(err, 'description', 'Patient validation: password is required!')
+            } finally {
+                patient.password = DefaultEntityMock.PATIENT.password
+            }
+        })
+
 
         it('should throw an error for does not pass gender', () => {
             patient.gender = undefined

@@ -7,15 +7,13 @@ describe('Validators: AuthValidator', () => {
         assert.equal(result, undefined)
     })
 
-    context('when doest not pass username or password', () => {
+    context('when there are missing or invalid parameters', () => {
         it('should throw an error for does not pass email', () => {
             try {
                 AuthValidator.validate('', 'password')
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
-                assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'Authentication validation: email is required!')
+                assert.propertyVal(err, 'message', 'Required fields were not provided...')
+                assert.propertyVal(err, 'description', 'Authentication validation: email is required!')
             }
         })
 
@@ -23,8 +21,7 @@ describe('Validators: AuthValidator', () => {
             try {
                 AuthValidator.validate('invalid', 'password')
             } catch (err) {
-                assert.property(err, 'message')
-                assert.equal(err.message, 'Invalid email address!')
+                assert.propertyVal(err, 'message', 'Invalid email address!')
             }
         })
 
@@ -32,10 +29,8 @@ describe('Validators: AuthValidator', () => {
             try {
                 AuthValidator.validate('user@mail.com', '')
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
-                assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'Authentication validation: password is required!')
+                assert.propertyVal(err, 'message', 'Required fields were not provided...')
+                assert.propertyVal(err, 'description', 'Authentication validation: password is required!')
             }
         })
 
@@ -43,10 +38,8 @@ describe('Validators: AuthValidator', () => {
             try {
                 AuthValidator.validate('', '')
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
-                assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'Authentication validation: email, password is required!')
+                assert.propertyVal(err, 'message', 'Required fields were not provided...')
+                assert.propertyVal(err, 'description', 'Authentication validation: email, password is required!')
             }
         })
     })

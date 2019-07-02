@@ -2,6 +2,7 @@ import { assert } from 'chai'
 import { CreatePilotStudyValidator } from '../../../src/application/domain/validator/create.pilot.study.validator'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { PilotStudy } from '../../../src/application/domain/model/pilot.study'
+import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
 
 describe('Validators: CreatePilotStudyValidator', () => {
     const pilot: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY)
@@ -18,10 +19,8 @@ describe('Validators: CreatePilotStudyValidator', () => {
             try {
                 CreatePilotStudyValidator.validate(pilot)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
-                assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'Pilot Study validation: name required!')
+                assert.propertyVal(err, 'message', 'Required fields were not provided...')
+                assert.propertyVal(err, 'description', 'Pilot Study validation: name required!')
             } finally {
                 pilot.name = DefaultEntityMock.PILOT_STUDY.name
             }
@@ -33,10 +32,8 @@ describe('Validators: CreatePilotStudyValidator', () => {
             try {
                 CreatePilotStudyValidator.validate(pilot)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
-                assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'Pilot Study validation: is_active required!')
+                assert.propertyVal(err, 'message', 'Required fields were not provided...')
+                assert.propertyVal(err, 'description', 'Pilot Study validation: is_active required!')
             } finally {
                 pilot.is_active = DefaultEntityMock.PILOT_STUDY.is_active
             }
@@ -48,10 +45,8 @@ describe('Validators: CreatePilotStudyValidator', () => {
             try {
                 CreatePilotStudyValidator.validate(pilot)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
-                assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'Pilot Study validation: start required!')
+                assert.propertyVal(err, 'message', 'Required fields were not provided...')
+                assert.propertyVal(err, 'description', 'Pilot Study validation: start required!')
             } finally {
                 pilot.start = DefaultEntityMock.PILOT_STUDY.start
             }
@@ -63,74 +58,35 @@ describe('Validators: CreatePilotStudyValidator', () => {
             try {
                 CreatePilotStudyValidator.validate(pilot)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
-                assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'Pilot Study validation: end required!')
+                assert.propertyVal(err, 'message', 'Required fields were not provided...')
+                assert.propertyVal(err, 'description', 'Pilot Study validation: end required!')
             } finally {
                 pilot.end = DefaultEntityMock.PILOT_STUDY.end
             }
         })
 
-        it('should throw error for does not pass health_professionals_id', () => {
-            pilot.health_professionals_id = undefined
-
+        it('should throw error for does pass health professional without id', () => {
+            pilot.health_professionals = [new HealthProfessional()]
             try {
                 CreatePilotStudyValidator.validate(pilot)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
-                assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'Pilot Study validation: Collection with health_professional IDs required!')
-            } finally {
-                pilot.health_professionals_id = DefaultEntityMock.PILOT_STUDY.health_professionals_id
-            }
-        })
-
-        it('should throw error for does pass health_professionals_id as empty list', () => {
-            pilot.health_professionals_id = []
-
-            try {
-                CreatePilotStudyValidator.validate(pilot)
-            } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
-                assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'Pilot Study validation: Collection with health_professional IDs required!')
-            } finally {
-                pilot.health_professionals_id = DefaultEntityMock.PILOT_STUDY.health_professionals_id
-            }
-        })
-
-        it('should throw error for does pass a health professional in health_professionals_id without id', () => {
-            pilot.health_professionals_id![0].id = undefined
-
-            try {
-                CreatePilotStudyValidator.validate(pilot)
-            } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
-                assert.equal(err.message, 'Required fields were not provided...')
-                assert.equal(err.description, 'Pilot Study validation: Collection with health_professional IDs ' +
+                assert.propertyVal(err, 'message', 'Required fields were not provided...')
+                assert.propertyVal(err, 'description', 'Pilot Study validation: Collection with health_professional IDs ' +
                     '(ID cannot be empty) required!')
-            } finally {
-                pilot.health_professionals_id = DefaultEntityMock.PILOT_STUDY.health_professionals_id
             }
         })
 
-        it('should throw error for does pass a health professional in health_professionals_id with invalid id', () => {
-            pilot.health_professionals_id![0].id = '123'
-
+        it('should throw error for does pass health professional with invalid id', () => {
+            pilot.health_professionals = [new HealthProfessional().fromJSON('1a2b3c')]
             try {
                 CreatePilotStudyValidator.validate(pilot)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
-                assert.equal(err.message, 'Some ID provided does not have a valid format!')
-                assert.equal(err.description, 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
+                assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
+                assert.propertyVal(err, 'description', 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.')
             } finally {
-                pilot.health_professionals_id = DefaultEntityMock.PILOT_STUDY.health_professionals_id
+                pilot.health_professionals = undefined
             }
+
         })
     })
 })
