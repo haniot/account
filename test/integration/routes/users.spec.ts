@@ -24,7 +24,7 @@ describe('Routes: Users', () => {
                 await deleteAllUsers({})
                 await UserRepoModel.create(DefaultEntityMock.ADMIN).then(res => user.id = res.id)
             } catch (err) {
-                throw new Error('Failure on User test: ' + err.message)
+                throw new Error('Failure on Users test: ' + err.message)
             }
         }
     )
@@ -34,7 +34,7 @@ describe('Routes: Users', () => {
             await deleteAllUsers({})
             await dbConnection.dispose()
         } catch (err) {
-            throw new Error('Failure on User test: ' + err.message)
+            throw new Error('Failure on Users test: ' + err.message)
         }
     })
 

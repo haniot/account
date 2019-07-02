@@ -4,33 +4,33 @@ import { IConnectionDB } from '../../../src/infrastructure/port/connection.db.in
 import { Identifier } from '../../../src/di/identifiers'
 import { PilotStudy } from '../../../src/application/domain/model/pilot.study'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
-import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { PilotStudyRepoModel } from '../../../src/infrastructure/database/schema/pilot.study.schema'
 import { expect } from 'chai'
 import { App } from '../../../src/app'
 import { Strings } from '../../../src/utils/strings'
 import { ObjectID } from 'bson'
+import { Patient } from '../../../src/application/domain/model/patient'
 
 const container: Container = DI.getInstance().getContainer()
 const dbConnection: IConnectionDB = container.get(Identifier.MONGODB_CONNECTION)
 const app: App = container.get(Identifier.APP)
 const request = require('supertest')(app.getExpress())
 
-describe('Routes: PilotStudiesHealthProfessionals', () => {
+describe('Routes: PilotStudiesPatients', () => {
     const pilot: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY)
-    const health: HealthProfessional = new HealthProfessional().fromJSON(DefaultEntityMock.HEALTH_PROFESSIONAL)
+    const patient: Patient = new Patient().fromJSON(DefaultEntityMock.PATIENT)
 
     before(async () => {
             try {
                 await dbConnection.tryConnect(0, 500)
                 await deleteAllPilots({})
                 await deleteAllUsers({})
-                await UserRepoModel.create(DefaultEntityMock.HEALTH_PROFESSIONAL).then(res => health.id = res.id)
+                await UserRepoModel.create(DefaultEntityMock.PATIENT).then(res => patient.id = res.id)
                 await PilotStudyRepoModel.create(DefaultEntityMock.PILOT_STUDY).then(res => pilot.id = res.id)
             } catch (err) {
                 console.log(err)
-                throw new Error('Failure on PilotStudiesHealthProfessionals test: ' + err.message)
+                throw new Error('Failure on PilotStudiesPatients test: ' + err.message)
             }
         }
     )
@@ -41,15 +41,15 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
             await deleteAllUsers({})
             await dbConnection.dispose()
         } catch (err) {
-            throw new Error('Failure on PilotStudiesHealthProfessionals test: ' + err.message)
+            throw new Error('Failure on PilotStudiesPatients test: ' + err.message)
         }
     })
 
-    describe('POST /v1/pilotstudies/:pilotstudy_id/healthprofessionals/:healthprofessional_id', () => {
-        context('when associate a health professional with a pilot study', () => {
+    describe('POST /v1/pilotstudies/:pilotstudy_id/patients/:patient_id', () => {
+        context('when associate a patient with a pilot study', () => {
             it('should return status code 200 and the pilot study', async () => {
                 return request
-                    .post(`/v1/pilotstudies/${pilot.id}/healthprofessionals/${health.id}`)
+                    .post(`/v1/pilotstudies/${pilot.id}/patients/${patient.id}`)
                     .set('Content-Type', 'application/json')
                     .expect(204)
                     .then(res => {
@@ -61,7 +61,7 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
         context('when there are validation errors', () => {
             it('should return status code 400 and message from invalid pilot study id', () => {
                 return request
-                    .post(`/v1/pilotstudies/123/healthprofessionals/${health.id}`)
+                    .post(`/v1/pilotstudies/123/patients/${patient.id}`)
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
@@ -72,7 +72,7 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
 
             it('should return status code 400 and message from invalid health professionaç id', () => {
                 return request
-                    .post(`/v1/pilotstudies/${pilot.id}/healthprofessionals/123`)
+                    .post(`/v1/pilotstudies/${pilot.id}/patients/123`)
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
@@ -85,7 +85,7 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
         context('when the pilot study does not have a record', () => {
             it('should return status code 400 and message from pilot study without record', () => {
                 return request
-                    .post(`/v1/pilotstudies/${new ObjectID()}/healthprofessionals/${health.id}`)
+                    .post(`/v1/pilotstudies/${new ObjectID()}/patients/${patient.id}`)
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
@@ -94,24 +94,24 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
             })
         })
 
-        context('when the health professional does not have a record', () => {
-            it('should return status code 400 and info message from health professional without record', () => {
+        context('when the patient does not have a record', () => {
+            it('should return status code 400 and info message from patient without record', () => {
                 return request
-                    .post(`/v1/pilotstudies/${pilot.id}/healthprofessionals/${new ObjectID()}`)
+                    .post(`/v1/pilotstudies/${pilot.id}/patients/${new ObjectID()}`)
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
-                        expect(res.body).to.have.property('message', Strings.HEALTH_PROFESSIONAL.ASSOCIATION_FAILURE)
+                        expect(res.body).to.have.property('message', Strings.PATIENT.ASSOCIATION_FAILURE)
                     })
             })
         })
     })
 
-    describe('DELETE /v1/pilotstudies/:pilotstudy_id/healthprofessionals/:healthprofessional_id', () => {
-        context('when disassociate a health professional with a pilot study', () => {
+    describe('DELETE /v1/pilotstudies/:pilotstudy_id/patients/:patient_id', () => {
+        context('when disassociate a patient with a pilot study', () => {
             it('should return status code 204 and no content', () => {
                 return request
-                    .delete(`/v1/pilotstudies/${pilot.id}/healthprofessionals/${health.id}`)
+                    .delete(`/v1/pilotstudies/${pilot.id}/patients/${patient.id}`)
                     .set('Content-Type', 'application/json')
                     .expect(204)
                     .then(res => {
@@ -123,7 +123,7 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
         context('when there are validation errors', () => {
             it('should return status code 400 and message from invalid pilot id', () => {
                 return request
-                    .delete(`/v1/pilotstudies/123/healthprofessionals/${health.id}`)
+                    .delete(`/v1/pilotstudies/123/patients/${patient.id}`)
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
@@ -134,9 +134,9 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
                     })
             })
 
-            it('should return status code 400 and message from invalid health professional id', () => {
+            it('should return status code 400 and message from invalid patient id', () => {
                 return request
-                    .delete(`/v1/pilotstudies/${pilot.id}/healthprofessionals/123`)
+                    .delete(`/v1/pilotstudies/${pilot.id}/patients/123`)
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
@@ -151,7 +151,7 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
         context('when the pilot study does not have a record', () => {
             it('should return status code 204 and no content', () => {
                 return request
-                    .delete(`/v1/pilotstudies/${new ObjectID()}/healthprofessionals/${health.id}`)
+                    .delete(`/v1/pilotstudies/${new ObjectID()}/patients/${patient.id}`)
                     .set('Content-Type', 'application/json')
                     .expect(204)
                     .then(res => {
@@ -160,10 +160,10 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
             })
         })
 
-        context('when the health professional does not have a record', () => {
+        context('when the patient does not have a record', () => {
             it('should return status code 204 and no content', () => {
                 return request
-                    .delete(`/v1/pilotstudies/${pilot.id}/healthprofessionals/${new ObjectID()}`)
+                    .delete(`/v1/pilotstudies/${pilot.id}/patients/${new ObjectID()}`)
                     .set('Content-Type', 'application/json')
                     .expect(204)
                     .then(res => {
@@ -173,26 +173,26 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
         })
     })
 
-    describe('GET /v1/pilotstudies/:pilotstudy_id/healthprofessionals', () => {
-        context('when get all health professionals from pilot study', () => {
-            it('should return status code 200 and a list of health professionals', async () => {
+    describe('GET /v1/pilotstudies/:pilotstudy_id/patients', () => {
+        context('when get all patients from pilot study', () => {
+            it('should return status code 200 and a list of patients', async () => {
                 await PilotStudyRepoModel
-                    .findOneAndUpdate({ _id: pilot.id }, { $addToSet: { health_professionals: health.id } })
+                    .findOneAndUpdate({ _id: pilot.id }, { $addToSet: { patients: patient.id } })
                     .then()
                 return request
-                    .get(`/v1/pilotstudies/${pilot.id}/healthprofessionals`)
+                    .get(`/v1/pilotstudies/${pilot.id}/patients`)
                     .set('Content-Type', 'application/json')
                     .expect(200)
                     .then(res => {
                         expect(res.body).to.be.an.instanceof(Array)
                         expect(res.body).to.have.lengthOf(1)
-                        expect(res.body[0]).to.have.property('id', health.id)
-                        expect(res.body[0]).to.have.property('email', health.email)
-                        expect(res.body[0]).to.have.property('birth_date', health.birth_date)
-                        expect(res.body[0]).to.have.property('phone_number', health.phone_number)
-                        expect(res.body[0]).to.have.property('selected_pilot_study', health.selected_pilot_study)
-                        expect(res.body[0]).to.have.property('name', health.name)
-                        expect(res.body[0]).to.have.property('health_area', health.health_area)
+                        expect(res.body[0]).to.have.property('id', patient.id)
+                        expect(res.body[0]).to.have.property('email', patient.email)
+                        expect(res.body[0]).to.have.property('birth_date', patient.birth_date)
+                        expect(res.body[0]).to.have.property('phone_number', patient.phone_number)
+                        expect(res.body[0]).to.have.property('selected_pilot_study', patient.selected_pilot_study)
+                        expect(res.body[0]).to.have.property('name', patient.name)
+                        expect(res.body[0]).to.have.property('gender', patient.gender)
                     })
             })
         })
@@ -200,7 +200,7 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
         context('when the id is invalid', () => {
             it('should return status code 400 and message from invalid id', () => {
                 return request
-                    .get('/v1/pilotstudies/123/healthprofessionals')
+                    .get('/v1/pilotstudies/123/patients')
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
@@ -213,7 +213,7 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
         context('when the pilot study is not founded', () => {
             it('should return status code 200 and a empty array', () => {
                 return request
-                    .get(`/v1/pilotstudies/${new ObjectID()}/healthprofessionals`)
+                    .get(`/v1/pilotstudies/${new ObjectID()}/patients`)
                     .set('Content-Type', 'application/json')
                     .expect(200)
                     .then(res => {

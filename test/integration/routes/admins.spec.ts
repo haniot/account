@@ -15,7 +15,7 @@ const dbConnection: IConnectionDB = container.get(Identifier.MONGODB_CONNECTION)
 const app: App = container.get(Identifier.APP)
 const request = require('supertest')(app.getExpress())
 
-describe('Routes: UsersAdmins', () => {
+describe('Routes: Admins', () => {
     const user: Admin = new Admin().fromJSON(DefaultEntityMock.ADMIN)
 
     before(async () => {
@@ -23,7 +23,7 @@ describe('Routes: UsersAdmins', () => {
                 await dbConnection.tryConnect(0, 500)
                 await deleteAllUsers({})
             } catch (err) {
-                throw new Error('Failure on Auth test: ' + err.message)
+                throw new Error('Failure on Admins test: ' + err.message)
             }
         }
     )
@@ -33,7 +33,7 @@ describe('Routes: UsersAdmins', () => {
             await deleteAllUsers({})
             await dbConnection.dispose()
         } catch (err) {
-            throw new Error('Failure on Auth test: ' + err.message)
+            throw new Error('Failure on Admins test: ' + err.message)
         }
     })
 

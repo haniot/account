@@ -83,10 +83,14 @@ export class Admin extends User implements IJSONSerializable, IJSONDeserializabl
 
     public fromJSON(json: any): Admin {
         if (!json) return this
-        if (typeof json === 'string' && JsonUtils.isJsonString(json)) {
-            json = JSON.parse(json)
+        if (typeof json === 'string') {
+            if (!JsonUtils.isJsonString(json)) {
+                super.id = json
+                return this
+            } else {
+                json = JSON.parse(json)
+            }
         }
-
         super.fromJSON(json)
         if (json.total_pilot_studies !== undefined) this.total_pilot_studies = json.total_pilot_studies
         if (json.total_admins !== undefined) this.total_admins = json.total_admins

@@ -27,7 +27,7 @@ export class PilotStudiesPatientsController {
                 await this._pilotStudyService.getAllPatients(req.params.pilotstudy_id, new Query())
             const count: number = allPatients!.length
             res.setHeader('X-Total-Count', count)
-            return res.status(HttpStatus.OK).send(result)
+            return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
             return res.status(handleError.code).send(handleError.toJson())

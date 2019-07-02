@@ -138,6 +138,7 @@ export class PilotStudyService implements IPilotStudyService {
 
             const patientExists = await this._patientRepository.checkExists(new Patient().fromJSON(patientId))
             if (!patientExists) throw new ValidationException(Strings.PATIENT.ASSOCIATION_FAILURE)
+            console.log('i was called and patient exists = ', patientExists)
 
             const result: PilotStudy = await this._pilotStudyRepository.associateUser(pilotId, patientId, UserType.PATIENT)
             return Promise.resolve(!!result)

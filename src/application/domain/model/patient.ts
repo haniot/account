@@ -53,8 +53,13 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
 
     public fromJSON(json: any): Patient {
         if (!json) return this
-        if (typeof json === 'string' && JsonUtils.isJsonString(json)) {
-            json = JSON.parse(json)
+        if (typeof json === 'string') {
+            if (!JsonUtils.isJsonString(json)) {
+                super.id = json
+                return this
+            } else {
+                json = JSON.parse(json)
+            }
         }
         super.fromJSON(json)
         if (json.id !== undefined) super.id = json.id

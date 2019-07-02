@@ -15,7 +15,7 @@ const dbConnection: IConnectionDB = container.get(Identifier.MONGODB_CONNECTION)
 const app: App = container.get(Identifier.APP)
 const request = require('supertest')(app.getExpress())
 
-describe('Routes: UsersHealthProfessionals', () => {
+describe('Routes: HealthProfessionals', () => {
     const user: HealthProfessional = new HealthProfessional().fromJSON(DefaultEntityMock.HEALTH_PROFESSIONAL)
 
     before(async () => {
@@ -23,7 +23,7 @@ describe('Routes: UsersHealthProfessionals', () => {
                 await dbConnection.tryConnect(0, 500)
                 await deleteAllUsers({})
             } catch (err) {
-                throw new Error('Failure on Auth test: ' + err.message)
+                throw new Error('Failure on HealthProfessionals test: ' + err.message)
             }
         }
     )
@@ -33,7 +33,7 @@ describe('Routes: UsersHealthProfessionals', () => {
             await deleteAllUsers({})
             await dbConnection.dispose()
         } catch (err) {
-            throw new Error('Failure on Auth test: ' + err.message)
+            throw new Error('Failure on HealthProfessionals test: ' + err.message)
         }
     })
 
