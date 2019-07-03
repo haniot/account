@@ -81,8 +81,8 @@ describe('Routes: Patients', () => {
                     .expect(400)
                     .then(res => {
                         expect(res.body).to.have.property('message', 'Required fields were not provided...')
-                        expect(res.body).to.have.property('description', 'Patient validation: name, gender, birth_date is ' +
-                            'required!')
+                        expect(res.body).to.have.property('description', 'Patient validation: name, email, password, gender, ' +
+                            'birth_date is required!')
                     })
             })
 

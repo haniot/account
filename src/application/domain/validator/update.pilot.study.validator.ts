@@ -12,7 +12,7 @@ export class UpdatePilotStudyValidator {
         }
         if (item.patients) {
             throw new ValidationException(Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED,
-                'A specific route to manage health_professionals already exists.')
+                'A specific route to manage patients already exists.')
         }
     }
 }

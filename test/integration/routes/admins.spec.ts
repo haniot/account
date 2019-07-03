@@ -80,7 +80,7 @@ describe('Routes: Admins', () => {
                     .expect(400)
                     .then(res => {
                         expect(res.body).to.have.property('message', 'Required fields were not provided...')
-                        expect(res.body).to.have.property('description', 'User validation: email, password required!')
+                        expect(res.body).to.have.property('description', 'User validation: email, password, birth_date required!')
                     })
             })
 
