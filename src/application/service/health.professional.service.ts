@@ -28,7 +28,7 @@ export class HealthProfessionalService implements IHealthProfessionalService {
             const exists = await this._userRepository.checkExist(item.email)
             if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
             const result: HealthProfessional = await this._healthProfessionalRepository.create(item)
-            return Promise.resolve(result ? this.addReadOnlyInformation(result) : result)
+            return Promise.resolve(this.addReadOnlyInformation(result))
         } catch (err) {
             return Promise.reject(err)
         }
@@ -38,7 +38,7 @@ export class HealthProfessionalService implements IHealthProfessionalService {
     public async getAll(query: IQuery): Promise<Array<HealthProfessional>> {
         query.addFilter({ type: UserType.HEALTH_PROFESSIONAL })
         const result: Array<HealthProfessional> = await this._healthProfessionalRepository.find(query)
-        return Promise.resolve(result && result.length ? this.addMultipleReadOnlyInformation(result) : result)
+        return Promise.resolve(this.addMultipleReadOnlyInformation(result))
     }
 
     public async getById(id: string, query: IQuery): Promise<HealthProfessional> {
@@ -46,7 +46,7 @@ export class HealthProfessionalService implements IHealthProfessionalService {
             ObjectIdValidator.validate(id)
             query.addFilter({ _id: id, type: UserType.HEALTH_PROFESSIONAL })
             const result: HealthProfessional = await this._healthProfessionalRepository.findOne(query)
-            return Promise.resolve(result ? this.addReadOnlyInformation(result) : result)
+            return Promise.resolve(this.addReadOnlyInformation(result))
         } catch (err) {
             return Promise.reject(err)
         }
@@ -66,7 +66,7 @@ export class HealthProfessionalService implements IHealthProfessionalService {
             UpdateHealthProfessionalValidator.validate(item)
             item.last_login = undefined
             const result: HealthProfessional = await this._healthProfessionalRepository.update(item)
-            return Promise.resolve(result ? this.addReadOnlyInformation(result) : result)
+            return Promise.resolve(this.addReadOnlyInformation(result))
         } catch (err) {
             return Promise.reject(err)
         }
@@ -77,20 +77,24 @@ export class HealthProfessionalService implements IHealthProfessionalService {
     }
 
     private async addMultipleReadOnlyInformation(item: Array<HealthProfessional>): Promise<Array<HealthProfessional>> {
-        try {
-            for (let i = 0; i < item.length; i++) item[i] = await this.addReadOnlyInformation(item[i])
-        } catch (err) {
-            return Promise.reject(err)
+        if (item && item.length) {
+            try {
+                for (let i = 0; i < item.length; i++) item[i] = await this.addReadOnlyInformation(item[i])
+            } catch (err) {
+                return Promise.reject(err)
+            }
         }
         return Promise.resolve(item)
     }
 
     private async addReadOnlyInformation(item: HealthProfessional): Promise<HealthProfessional> {
-        try {
-            item.total_pilot_studies = await this._pilotStudyRepository.countPilotStudiesFromHealthProfessional(item.id!)
-            item.total_patients = await this._pilotStudyRepository.countPatientsFromHealthProfessional(item.id!)
-        } catch (err) {
-            return Promise.reject(err)
+        if (item) {
+            try {
+                item.total_pilot_studies = await this._pilotStudyRepository.countPilotStudiesFromHealthProfessional(item.id!)
+                item.total_patients = await this._pilotStudyRepository.countPatientsFromHealthProfessional(item.id!)
+            } catch (err) {
+                return Promise.reject(err)
+            }
         }
         return item
     }

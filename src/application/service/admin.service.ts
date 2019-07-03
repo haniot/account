@@ -27,7 +27,7 @@ export class AdminService implements IAdminService {
             const exists = await this._userRepository.checkExist(item.email)
             if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
             const result: Admin = await this._adminRepository.create(item)
-            return Promise.resolve(result ? this.addReadOnlyInformation(result) : result)
+            return Promise.resolve(this.addReadOnlyInformation(result))
         } catch (err) {
             return Promise.reject(err)
         }
@@ -36,7 +36,7 @@ export class AdminService implements IAdminService {
     public async getAll(query: IQuery): Promise<Array<Admin>> {
         query.addFilter({ type: UserType.ADMIN })
         const result = await this._adminRepository.find(query)
-        return Promise.resolve(result && result.length ? this.addMultipleReadOnlyInformation(result) : result)
+        return Promise.resolve(this.addMultipleReadOnlyInformation(result))
     }
 
     public async getById(id: string, query: IQuery): Promise<Admin> {
@@ -45,7 +45,7 @@ export class AdminService implements IAdminService {
             query.addFilter({ _id: id, type: UserType.ADMIN })
 
             const result: Admin = await this._adminRepository.findOne(query)
-            return Promise.resolve(result ? this.addReadOnlyInformation(result) : result)
+            return Promise.resolve(this.addReadOnlyInformation(result))
         } catch (err) {
             return Promise.reject(err)
         }
@@ -65,7 +65,7 @@ export class AdminService implements IAdminService {
             UpdateAdminValidator.validate(item)
             item.last_login = undefined
             const result = await this._adminRepository.update(item)
-            return Promise.resolve(result ? this.addReadOnlyInformation(result) : result)
+            return Promise.resolve(this.addReadOnlyInformation(result))
         } catch (err) {
             return Promise.reject(err)
         }
@@ -76,22 +76,26 @@ export class AdminService implements IAdminService {
     }
 
     private async addMultipleReadOnlyInformation(item: Array<Admin>): Promise<Array<Admin>> {
-        try {
-            for (let i = 0; i < item.length; i++) item[i] = await this.addReadOnlyInformation(item[i])
-        } catch (err) {
-            return Promise.reject(err)
+        if (item && item.length) {
+            try {
+                for (let i = 0; i < item.length; i++) item[i] = await this.addReadOnlyInformation(item[i])
+            } catch (err) {
+                return Promise.reject(err)
+            }
         }
         return Promise.resolve(item)
     }
 
     private async addReadOnlyInformation(item: Admin): Promise<Admin> {
-        try {
-            item.total_admins = await this._userRepository.countAdmins()
-            item.total_health_professionals = await this._userRepository.countHealthProfessionals()
-            item.total_patients = await this._userRepository.countPatients()
-            item.total_pilot_studies = await this._pilotStudyRepository.count()
-        } catch (err) {
-            return Promise.reject(err)
+        if (item) {
+            try {
+                item.total_admins = await this._userRepository.countAdmins()
+                item.total_health_professionals = await this._userRepository.countHealthProfessionals()
+                item.total_patients = await this._userRepository.countPatients()
+                item.total_pilot_studies = await this._pilotStudyRepository.count()
+            } catch (err) {
+                return Promise.reject(err)
+            }
         }
         return item
     }

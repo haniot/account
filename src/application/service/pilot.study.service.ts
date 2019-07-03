@@ -39,7 +39,7 @@ export class PilotStudyService implements IPilotStudyService {
                 }
             }
             const result: PilotStudy = await this._pilotStudyRepository.create(item)
-            return Promise.resolve(result ? this.addReadOnlyInformation(result) : result)
+            return Promise.resolve(this.addReadOnlyInformation(result))
         } catch (err) {
             return Promise.reject(err)
         }
@@ -47,7 +47,7 @@ export class PilotStudyService implements IPilotStudyService {
 
     public async getAll(query: IQuery): Promise<Array<PilotStudy>> {
         const result: Array<PilotStudy> = await this._pilotStudyRepository.find(query)
-        return Promise.resolve(result ? this.addMultipleReadOnlyInformation(result) : result)
+        return Promise.resolve(this.addMultipleReadOnlyInformation(result))
     }
 
     public async getById(id: string, query: IQuery): Promise<PilotStudy> {
@@ -55,7 +55,7 @@ export class PilotStudyService implements IPilotStudyService {
             ObjectIdValidator.validate(id)
             query.addFilter({ _id: id })
             const result: PilotStudy = await this._pilotStudyRepository.findOne(query)
-            return Promise.resolve(result ? this.addReadOnlyInformation(result) : result)
+            return Promise.resolve(this.addReadOnlyInformation(result))
         } catch (err) {
             return Promise.reject(err)
         }
@@ -74,7 +74,7 @@ export class PilotStudyService implements IPilotStudyService {
         try {
             UpdatePilotStudyValidator.validate(item)
             const result: PilotStudy = await this._pilotStudyRepository.update(item)
-            return Promise.resolve(result ? this.addReadOnlyInformation(result) : result)
+            return Promise.resolve(this.addReadOnlyInformation(result))
         } catch (err) {
             return Promise.reject(err)
         }
@@ -138,7 +138,6 @@ export class PilotStudyService implements IPilotStudyService {
 
             const patientExists = await this._patientRepository.checkExists(new Patient().fromJSON(patientId))
             if (!patientExists) throw new ValidationException(Strings.PATIENT.ASSOCIATION_FAILURE)
-            console.log('i was called and patient exists = ', patientExists)
 
             const result: PilotStudy = await this._pilotStudyRepository.associateUser(pilotId, patientId, UserType.PATIENT)
             return Promise.resolve(!!result)
@@ -180,21 +179,25 @@ export class PilotStudyService implements IPilotStudyService {
     }
 
     private async addMultipleReadOnlyInformation(item: Array<PilotStudy>): Promise<Array<PilotStudy>> {
-        try {
-            for (let i = 0; i < item.length; i++) item[i] = await this.addReadOnlyInformation(item[i])
-        } catch (err) {
-            return Promise.reject(err)
+        if (item && item.length) {
+            try {
+                for (let i = 0; i < item.length; i++) item[i] = await this.addReadOnlyInformation(item[i])
+            } catch (err) {
+                return Promise.reject(err)
+            }
         }
         return Promise.resolve(item)
     }
 
     private async addReadOnlyInformation(item: PilotStudy): Promise<PilotStudy> {
-        try {
-            item.total_health_professionals =
-                item.health_professionals && item.health_professionals.length ? item.health_professionals.length : 0
-            item.total_patients = item.patients && item.patients.length ? item.patients.length : 0
-        } catch (err) {
-            return Promise.reject(err)
+        if (item) {
+            try {
+                item.total_health_professionals =
+                    item.health_professionals && item.health_professionals.length ? item.health_professionals.length : 0
+                item.total_patients = item.patients && item.patients.length ? item.patients.length : 0
+            } catch (err) {
+                return Promise.reject(err)
+            }
         }
         return item
     }
