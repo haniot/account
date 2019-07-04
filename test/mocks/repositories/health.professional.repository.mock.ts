@@ -10,8 +10,8 @@ health.id = DefaultEntityMock.HEALTH_PROFESSIONAL.id
 export class HealthProfessionalRepositoryMock implements IHealthProfessionalRepository {
     public checkExists(users: HealthProfessional | Array<HealthProfessional>): Promise<boolean | ValidationException> {
         if (users instanceof Array)
-            return Promise.resolve(users[0].email === health.email)
-        return Promise.resolve(users.email === health.email)
+            return Promise.resolve(users[0].email === health.email || users[0].id === health.id)
+        return Promise.resolve(users.email === health.email || users.id === health.id)
     }
 
     public count(): Promise<number> {
