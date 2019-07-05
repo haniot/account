@@ -31,7 +31,7 @@ export class HealthProfessionalRepository extends BaseRepository<HealthProfessio
     }
 
     public count(): Promise<number> {
-        return super.count(new Query())
+        return super.count(new Query().fromJSON({ filters: { type: UserType.HEALTH_PROFESSIONAL } }))
     }
 
     public checkExists(users: HealthProfessional | Array<HealthProfessional>): Promise<boolean | ValidationException> {

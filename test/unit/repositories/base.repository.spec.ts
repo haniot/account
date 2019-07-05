@@ -65,7 +65,7 @@ describe('Repositories: BaseRepository', () => {
 
                 return repo.create(user)
                     .then(res => {
-                        assert.equal(res, undefined)
+                        assert.isUndefined(res)
                     })
             })
         })
@@ -74,15 +74,14 @@ describe('Repositories: BaseRepository', () => {
             it('should reject a error', () => {
                 sinon
                     .mock(modelFake)
-                    .expects('findOne')
+                    .expects('create')
                     .withArgs(user)
                     .chain('exec')
                     .rejects({ message: 'An internal error has occurred in the database!' })
 
                 return repo.create(user)
                     .catch(err => {
-                        assert.propertyVal(err, 'name', 'Error')
-                        assert.propertyVal(err, 'message', 'Required fields were not provided!')
+                        assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
         })
@@ -158,7 +157,6 @@ describe('Repositories: BaseRepository', () => {
 
                 return repo.find(new Query())
                     .catch(err => {
-                        assert.propertyVal(err, 'name', 'Error')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
@@ -207,7 +205,7 @@ describe('Repositories: BaseRepository', () => {
 
                 return repo.findOne(query)
                     .then(res => {
-                        assert.equal(res, undefined)
+                        assert.isUndefined(res)
                     })
             })
         })
@@ -227,7 +225,6 @@ describe('Repositories: BaseRepository', () => {
 
                 return repo.findOne(query)
                     .catch(err => {
-                        assert.propertyVal(err, 'name', 'Error')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
@@ -266,7 +263,7 @@ describe('Repositories: BaseRepository', () => {
 
                 return repo.update(user)
                     .then(res => {
-                        assert.equal(res, undefined)
+                        assert.isUndefined(res)
                     })
             })
         })
@@ -282,7 +279,6 @@ describe('Repositories: BaseRepository', () => {
 
                 return repo.update(user)
                     .catch(err => {
-                        assert.propertyVal(err, 'name', 'Error')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
@@ -373,6 +369,68 @@ describe('Repositories: BaseRepository', () => {
                     .catch(err => {
                         assert.propertyVal(err, 'name', 'Error')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
+                    })
+            })
+        })
+    })
+
+    describe('mongoDBErrorListener()', () => {
+        context('when the database throw exceptions', () => {
+            it('should throw error for ValidationError', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('create')
+                    .withArgs(user)
+                    .chain('exec')
+                    .rejects({ name: 'ValidationError' })
+
+                return repo.create(user)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'Required fields were not provided!')
+                    })
+            })
+            it('should throw error for CastError', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('create')
+                    .withArgs(user)
+                    .chain('exec')
+                    .rejects({ name: 'CastError' })
+
+                return repo.create(user)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'The given ID is in invalid format.')
+                        assert.propertyVal(err, 'description', 'A 12 bytes hexadecimal ID similar to this')
+                    })
+            })
+            it('should throw error for MongoError', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('create')
+                    .withArgs(user)
+                    .chain('exec')
+                    .rejects({ name: 'MongoError', code: 11000 })
+
+                return repo.create(user)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'A registration with the same unique data already exists!')
+                    })
+            })
+            it('should throw error for ObjectParameterError', () => {
+                const query = new Query()
+                query.addFilter({ _id: user.id })
+
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({ _id: user.id })
+                    .chain('select')
+                    .chain('exec')
+                    .rejects({ name: 'ObjectParameterError' })
+
+                return repo.findOne(query)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'Invalid query parameters!')
                     })
             })
         })

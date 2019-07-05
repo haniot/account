@@ -25,66 +25,27 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
 
     public findAndPopulate(query: IQuery): Promise<Array<PilotStudy>> {
         const q: any = query.toJSON()
-        const populate_health_professionals: any = { path: 'health_professionals', select: {}, match: {} }
-        const populate_patients: any = { path: 'patients', select: {}, match: {} }
-
-        for (const key in q.filters) {
-            if (key.startsWith('health_professionals.')) {
-                populate_health_professionals.match[key.split('.')[1]] = q.filters[key]
-                delete q.filters[key]
-            } else if (key.startsWith('patients.')) {
-                populate_patients.match[key.split('.')[1]] = q.filters[key]
-                delete q.filters[key]
-            }
-        }
-
-        for (const key in q.fields) {
-            if (key.startsWith('health_professionals.')) {
-                populate_health_professionals.select[key.split('.')[1]] = 1
-                delete q.fields[key]
-            } else if (key.startsWith('patients.')) {
-                populate_patients.select[key.split('.')[1]] = 1
-                delete q.fields[key]
-            }
-        }
-
         return new Promise<Array<PilotStudy>>((resolve, reject) => {
             this.Model.find(q.filters)
                 .select(q.fields)
                 .sort(q.ordination)
                 .skip(Number((q.pagination.limit * q.pagination.page) - q.pagination.limit))
                 .limit(Number(q.pagination.limit))
-                .populate(populate_health_professionals)
-                .populate(populate_patients)
+                .populate('health_professionals')
+                .populate('patients')
                 .exec()
-                .then((result: Array<PilotStudy>) => resolve(
-                    result
-                        .filter(item => item.health_professionals!.length > 0)
-                        .filter(item => item.patients!.length > 0)
-                        .map(item => this.mapper.transform(item)))
-                ).catch(err => reject(this.mongoDBErrorListener(err)))
+                .then((result: Array<PilotStudy>) => resolve(result.map(item => this.mapper.transform(item))))
+                .catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
 
     public findOneAndPopulate(query: IQuery): Promise<PilotStudy> {
         const q: any = query.toJSON()
-        const populate_health_professionals: any = { path: 'health_professionals', select: {}, match: {} }
-        const populate_patients: any = { path: 'patients', select: {}, match: {} }
-
-        for (const key in q.fields) {
-            if (key.startsWith('health_professionals.')) {
-                populate_health_professionals.select[key.split('.')[1]] = 1
-                delete q.fields[key]
-            } else if (key.startsWith('patients.')) {
-                populate_patients.select[key.split('.')[1]] = 1
-                delete q.fields[key]
-            }
-        }
         return new Promise<PilotStudy>((resolve, reject) => {
             this.Model.findOne(q.filters)
                 .select(q.fields)
-                .populate(populate_health_professionals)
-                .populate(populate_patients)
+                .populate('health_professionals')
+                .populate('patients')
                 .exec()
                 .then((result: PilotStudy) => {
                     if (!result) return resolve(undefined)
@@ -111,14 +72,8 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
                 { patients: new ObjectId(userId) } : { health_professionals: new ObjectId(userId) }
             this.Model.findOneAndUpdate({ _id: pilotId }, update)
                 .exec()
-                .then(result => {
-                    if (!result) return resolve(undefined)
-
-                    const query: Query = new Query()
-                    query.addFilter({ _id: pilotId })
-
-                    return resolve(this.findOneAndPopulate(query))
-                }).catch(err => reject(this.mongoDBErrorListener(err)))
+                .then(result => resolve(!result ? undefined : this.mapper.transform(result)))
+                .catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
 
@@ -129,10 +84,8 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
         return new Promise<PilotStudy>((resolve, reject) => {
             this.Model.findOneAndUpdate({ _id: pilotId }, update)
                 .exec()
-                .then(result => {
-                    if (!result) return resolve(undefined)
-                    return resolve(this.mapper.transform(result))
-                }).catch(err => reject(this.mongoDBErrorListener(err)))
+                .then(result => resolve(!result ? undefined : this.mapper.transform(result)))
+                .catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
 
@@ -144,7 +97,7 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
         return new Promise<number>((resolve, reject) => {
             super.findOne(new Query().fromJSON({ filters: { _id: pilotId } }))
                 .then(result => resolve(result && result.health_professionals ? result.health_professionals.length : 0))
-                .catch(err => this.mongoDBErrorListener(err))
+                .catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
 
@@ -152,7 +105,7 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
         return new Promise<number>((resolve, reject) => {
             super.findOne(new Query().fromJSON({ filters: { _id: pilotId } }))
                 .then(result => resolve(result && result.patients ? result.patients.length : 0))
-                .catch(err => this.mongoDBErrorListener(err))
+                .catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
 

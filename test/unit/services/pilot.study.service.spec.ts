@@ -31,9 +31,9 @@ describe('Services: PilotStudyService', () => {
                         assert.propertyVal(res, 'is_active', pilot.is_active)
                         assert.property(res, 'start')
                         assert.property(res, 'end')
+                        assert.propertyVal(res, 'location', pilot.location)
                         assert.propertyVal(res, 'total_health_professionals', 0)
                         assert.propertyVal(res, 'total_patients', 0)
-                        assert.propertyVal(res, 'location', pilot.location)
                     })
             })
 

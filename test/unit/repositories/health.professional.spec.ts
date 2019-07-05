@@ -7,6 +7,7 @@ import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { HealthProfessionalRepository } from '../../../src/infrastructure/repository/health.professional.repository'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
 import { AuthRepositoryMock } from '../../mocks/repositories/auth.repository.mock'
+import { UserType } from '../../../src/application/domain/utils/user.type'
 
 require('sinon-mongoose')
 
@@ -70,7 +71,7 @@ describe('Repositories: HealthProfessionalRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('countDocuments')
-                    .withArgs({})
+                    .withArgs({ type: UserType.HEALTH_PROFESSIONAL })
                     .chain('exec')
                     .resolves(1)
 

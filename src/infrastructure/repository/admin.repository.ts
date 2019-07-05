@@ -7,6 +7,7 @@ import { IAdminRepository } from '../../application/port/admin.repository.interf
 import { IEntityMapper } from '../port/entity.mapper.interface'
 import { IAuthRepository } from '../../application/port/auth.repository.interface'
 import { Query } from './query/query'
+import { UserType } from '../../application/domain/utils/user.type'
 
 @injectable()
 export class AdminRepository extends BaseRepository<Admin, AdminEntity> implements IAdminRepository {
@@ -25,6 +26,6 @@ export class AdminRepository extends BaseRepository<Admin, AdminEntity> implemen
     }
 
     public count(): Promise<number> {
-        return super.count(new Query())
+        return super.count(new Query().fromJSON({ filters: { type: UserType.ADMIN } }))
     }
 }

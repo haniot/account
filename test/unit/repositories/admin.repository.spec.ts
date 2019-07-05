@@ -7,6 +7,7 @@ import { Admin } from '../../../src/application/domain/model/admin'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { AdminRepository } from '../../../src/infrastructure/repository/admin.repository'
 import { AuthRepositoryMock } from '../../mocks/repositories/auth.repository.mock'
+import { UserType } from '../../../src/application/domain/utils/user.type'
 
 require('sinon-mongoose')
 
@@ -67,7 +68,7 @@ describe('Repositories: AdminRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('countDocuments')
-                    .withArgs({})
+                    .withArgs({ type: UserType.ADMIN })
                     .chain('exec')
                     .resolves(1)
 

@@ -65,6 +65,7 @@ export abstract class DefaultEntityMock {
     public static readonly USER: any = {
         id: '5ca4b4648e20e14f9a8feef0',
         type: 'user',
+        scopes: ['all'],
         email: 'user@mail.com',
         password: 'user123',
         birth_date: '1992-01-08',
@@ -72,6 +73,8 @@ export abstract class DefaultEntityMock {
         email_verified: true,
         phone_number: '(88) 98888-8888',
         selected_pilot_study: '5ca23b9af04e7c28223cb590',
-        language: 'pt-br'
+        language: 'pt-br',
+        last_sync: '2019-03-15T00:00:00.000Z',
+        last_login: '2019-03-15T00:00:00.000Z'
     }
 }
