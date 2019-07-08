@@ -73,6 +73,41 @@ describe('Repositories: User', () => {
         })
     })
 
+    describe('updateLastLogin()', () => {
+        context('when update a last login from user', () => {
+            it('should return true', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOneAndUpdate')
+                    .withArgs({ email: user.email }, { last_login: new Date().toISOString() })
+                    .chain('exec')
+                    .resolves(user)
+
+                return repo.updateLastLogin(user.email!)
+                    .then(res => {
+                        assert.isTrue(res)
+                    })
+            })
+        })
+
+        context('when there are a database error', () => {
+            it('should reject a error', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOneAndUpdate')
+                    .withArgs({ email: user.email }, { last_login: new Date().toISOString() })
+                    .chain('exec')
+                    .rejects({ message: 'An internal error has occurred in the database!' })
+
+                return repo.updateLastLogin(user.email!)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
+                    })
+
+            })
+        })
+    })
+
     describe('countAdmins()', () => {
         context('when count all admins in platform', () => {
             it('should return a number', () => {
@@ -125,6 +160,24 @@ describe('Repositories: User', () => {
                     .then(res => {
                         assert.isNumber(res)
                         assert.equal(res, 1)
+                    })
+            })
+        })
+    })
+
+    describe('changePassword()', () => {
+        context('when a database error occurs', () => {
+            it('should reject an error', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({ email: user.email })
+                    .chain('exec')
+                    .rejects({ message: 'An internal error has occurred in the database!' })
+
+                return repo.changePassword(user.email!, user.password!, user.password!)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
         })

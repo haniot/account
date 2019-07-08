@@ -57,7 +57,7 @@ export class AuthRepository extends BaseRepository<User, UserEntity> implements 
         })
     }
 
-    public generateAccessToken(user: User): Promise<string> {
+    private generateAccessToken(user: User): Promise<string> {
         try {
             const private_key = readFileSync(`${process.env.JWT_PRIVATE_KEY_PATH}`, 'utf-8')
             const payload: object = {

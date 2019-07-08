@@ -37,5 +37,58 @@ describe('Repositories: AuthRepository', () => {
                     })
             })
         })
+
+        context('when the user is not found', () => {
+            it('should reject an error', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({ email: user.email })
+                    .chain('exec')
+                    .resolves(undefined)
+
+                return repo.authenticate(user.email!, user.password!)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'Authentication failed due to invalid authentication credentials.')
+                    })
+            })
+        })
+
+        context('when user needs to change password', () => {
+            it('should reject a error', () => {
+                user.change_password = true
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({ email: user.email })
+                    .chain('exec')
+                    .resolves(user)
+
+                return repo.authenticate(user.email!, user.password!)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'Change password is necessary.')
+                        assert.propertyVal(err, 'description', 'To ensure information security, the user must change the access' +
+                            ' password. To change it, access PATCH /v1/auth/password.')
+                        assert.propertyVal(err, 'link', '/v1/auth/password')
+                        user.change_password = false
+                    })
+            })
+        })
+
+        context('when a database error occurs', () => {
+            it('should reject an error', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({ email: user.email })
+                    .chain('exec')
+                    .rejects({ message: 'An unexpected error has occurred. Please try again later...' })
+
+                return repo.authenticate(user.email!, user.password!)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'An unexpected error has occurred. Please try again later...')
+                    })
+            })
+        })
     })
 })
