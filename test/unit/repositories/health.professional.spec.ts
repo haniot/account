@@ -6,15 +6,15 @@ import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { HealthProfessionalRepository } from '../../../src/infrastructure/repository/health.professional.repository'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
-import { AuthRepositoryMock } from '../../mocks/repositories/auth.repository.mock'
 import { UserType } from '../../../src/application/domain/utils/user.type'
+import { UserRepositoryMock } from '../../mocks/repositories/user.repository.mock'
 
 require('sinon-mongoose')
 
 describe('Repositories: HealthProfessionalRepository', () => {
     const modelFake: any = UserRepoModel
     const repo =
-        new HealthProfessionalRepository(modelFake, new EntityMapperMock(), new AuthRepositoryMock(), new CustomLoggerMock())
+        new HealthProfessionalRepository(modelFake, new EntityMapperMock(), new UserRepositoryMock(), new CustomLoggerMock())
     const user: HealthProfessional = new HealthProfessional().fromJSON(DefaultEntityMock.HEALTH_PROFESSIONAL)
     user.id = DefaultEntityMock.HEALTH_PROFESSIONAL.id
 

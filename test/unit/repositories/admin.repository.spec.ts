@@ -1,19 +1,19 @@
 import { assert } from 'chai'
-import sinon from 'sinon'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { EntityMapperMock } from '../../mocks/models/entity.mapper.mock'
 import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
 import { Admin } from '../../../src/application/domain/model/admin'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { AdminRepository } from '../../../src/infrastructure/repository/admin.repository'
-import { AuthRepositoryMock } from '../../mocks/repositories/auth.repository.mock'
 import { UserType } from '../../../src/application/domain/utils/user.type'
+import { UserRepositoryMock } from '../../mocks/repositories/user.repository.mock'
+import sinon from 'sinon'
 
 require('sinon-mongoose')
 
 describe('Repositories: AdminRepository', () => {
     const modelFake: any = UserRepoModel
-    const repo = new AdminRepository(modelFake, new EntityMapperMock(), new AuthRepositoryMock(), new CustomLoggerMock())
+    const repo = new AdminRepository(modelFake, new EntityMapperMock(), new UserRepositoryMock(), new CustomLoggerMock())
     const user: Admin = new Admin().fromJSON(DefaultEntityMock.ADMIN)
     user.id = DefaultEntityMock.ADMIN.id
 

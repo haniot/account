@@ -6,14 +6,14 @@ import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { Patient } from '../../../src/application/domain/model/patient'
 import { PatientRepository } from '../../../src/infrastructure/repository/patient.repository'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
-import { AuthRepositoryMock } from '../../mocks/repositories/auth.repository.mock'
 import { UserType } from '../../../src/application/domain/utils/user.type'
+import { UserRepositoryMock } from '../../mocks/repositories/user.repository.mock'
 
 require('sinon-mongoose')
 
 describe('Repositories: PatientRepository', () => {
     const modelFake: any = UserRepoModel
-    const repo = new PatientRepository(modelFake, new EntityMapperMock(), new AuthRepositoryMock(), new CustomLoggerMock())
+    const repo = new PatientRepository(modelFake, new EntityMapperMock(), new UserRepositoryMock(), new CustomLoggerMock())
     const user: Patient = new Patient().fromJSON(DefaultEntityMock.PATIENT)
 
     afterEach(() => {

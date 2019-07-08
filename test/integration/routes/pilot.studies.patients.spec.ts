@@ -18,7 +18,7 @@ const app: App = container.get(Identifier.APP)
 const request = require('supertest')(app.getExpress())
 
 describe('Routes: PilotStudiesPatients', () => {
-    const pilot: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY)
+    const pilot: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY_BASIC)
     const patient: Patient = new Patient().fromJSON(DefaultEntityMock.PATIENT)
 
     before(async () => {
@@ -27,9 +27,8 @@ describe('Routes: PilotStudiesPatients', () => {
                 await deleteAllPilots({})
                 await deleteAllUsers({})
                 await UserRepoModel.create(DefaultEntityMock.PATIENT).then(res => patient.id = res.id)
-                await PilotStudyRepoModel.create(DefaultEntityMock.PILOT_STUDY).then(res => pilot.id = res.id)
+                await PilotStudyRepoModel.create(DefaultEntityMock.PILOT_STUDY_BASIC).then(res => pilot.id = res.id)
             } catch (err) {
-                console.log(err)
                 throw new Error('Failure on PilotStudiesPatients test: ' + err.message)
             }
         }

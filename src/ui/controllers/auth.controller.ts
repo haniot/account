@@ -7,11 +7,13 @@ import { ApiExceptionManager } from '../exception/api.exception.manager'
 import { IAuthService } from '../../application/port/auth.service.interface'
 import { ApiException } from '../exception/api.exception'
 import { Strings } from '../../utils/strings'
+import { IUserService } from '../../application/port/user.service.interface'
 
 @controller('/v1/auth')
 export class AuthController {
     constructor(
-        @inject(Identifier.AUTH_SERVICE) private readonly _authService: IAuthService
+        @inject(Identifier.AUTH_SERVICE) private readonly _authService: IAuthService,
+        @inject(Identifier.USER_SERVICE) private readonly _userService: IUserService
     ) {
     }
 
@@ -59,7 +61,7 @@ export class AuthController {
     public async changePassword(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: boolean =
-                await this._authService.changePassword(req.body.email, req.body.old_password, req.body.new_password)
+                await this._userService.changePassword(req.body.email, req.body.old_password, req.body.new_password)
             if (!result) return res.status(HttpStatus.BAD_REQUEST).send(this.getMessageInvalidOperation())
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {

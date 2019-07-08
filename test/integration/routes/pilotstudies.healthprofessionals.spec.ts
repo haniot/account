@@ -18,7 +18,7 @@ const app: App = container.get(Identifier.APP)
 const request = require('supertest')(app.getExpress())
 
 describe('Routes: PilotStudiesHealthProfessionals', () => {
-    const pilot: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY)
+    const pilot: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY_BASIC)
     const health: HealthProfessional = new HealthProfessional().fromJSON(DefaultEntityMock.HEALTH_PROFESSIONAL)
 
     before(async () => {
@@ -27,7 +27,7 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
                 await deleteAllPilots({})
                 await deleteAllUsers({})
                 await UserRepoModel.create(DefaultEntityMock.HEALTH_PROFESSIONAL).then(res => health.id = res.id)
-                await PilotStudyRepoModel.create(DefaultEntityMock.PILOT_STUDY).then(res => pilot.id = res.id)
+                await PilotStudyRepoModel.create(DefaultEntityMock.PILOT_STUDY_BASIC).then(res => pilot.id = res.id)
             } catch (err) {
                 console.log(err)
                 throw new Error('Failure on PilotStudiesHealthProfessionals test: ' + err.message)
@@ -177,8 +177,11 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
         context('when get all health professionals from pilot study', () => {
             it('should return status code 200 and a list of health professionals', async () => {
                 await PilotStudyRepoModel
-                    .findOneAndUpdate({ _id: pilot.id }, { $addToSet: { health_professionals: health.id } })
+                    .findOneAndUpdate(
+                        { _id: pilot.id },
+                        { $addToSet: { health_professionals: new ObjectID(health.id) } })
                     .then()
+
                 return request
                     .get(`/v1/pilotstudies/${pilot.id}/healthprofessionals`)
                     .set('Content-Type', 'application/json')

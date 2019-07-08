@@ -1,25 +1,13 @@
 import { IAuthRepository } from '../../../src/application/port/auth.repository.interface'
 import { User } from '../../../src/application/domain/model/user'
+import { DefaultEntityMock } from '../models/default.entity.mock'
 
 export class AuthRepositoryMock implements IAuthRepository {
     public authenticate(userMail: string, password: string): Promise<object> {
-        return Promise.resolve({ token: 'token' })
+        return Promise.resolve(userMail === DefaultEntityMock.USER.email ? { access_token: 'token' } : undefined!)
     }
 
     public generateAccessToken(user: User): Promise<string> {
         return Promise.resolve('token')
     }
-
-    public changePassword(userEmail: string, oldPassword: string, newPassword: string): Promise<boolean> {
-        return Promise.resolve(true)
-    }
-
-    public comparePasswords(passwordOne: string, passwordTwo: string): boolean {
-        return passwordOne === passwordTwo
-    }
-
-    public encryptPassword(password: string): string {
-        return password
-    }
-
 }

@@ -16,7 +16,7 @@ const app: App = container.get(Identifier.APP)
 const request = require('supertest')(app.getExpress())
 
 describe('Routes: PilotStudies', () => {
-    const pilot: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY)
+    const pilot: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY_BASIC)
 
     before(async () => {
             try {
@@ -42,7 +42,7 @@ describe('Routes: PilotStudies', () => {
             it('should return status code 201 and the saved pilot study', () => {
                 return request
                     .post('/v1/pilotstudies')
-                    .send(pilot.toJSON())
+                    .send(DefaultEntityMock.PILOT_STUDY_BASIC)
                     .set('Content-Type', 'application/json')
                     .expect(201)
                     .then(res => {
@@ -76,7 +76,7 @@ describe('Routes: PilotStudies', () => {
             it('should return status code 400 and message from missing parameters', () => {
                 return request
                     .post('/v1/pilotstudies')
-                    .send(new PilotStudy().toJSON())
+                    .send({})
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
@@ -87,7 +87,7 @@ describe('Routes: PilotStudies', () => {
             })
 
             it('should return status code 400 and message from invalid parameters', () => {
-                const body: any = JSON.parse(JSON.stringify(DefaultEntityMock.PILOT_STUDY))
+                const body: any = JSON.parse(JSON.stringify(DefaultEntityMock.PILOT_STUDY_BASIC))
                 body.start = '02/02/2019'
                 body.end = '02/03/2019'
 
@@ -103,7 +103,7 @@ describe('Routes: PilotStudies', () => {
             })
 
             it('should return status code 400 and message from invalid health professionals', () => {
-                const body: any = JSON.parse(JSON.stringify(DefaultEntityMock.PILOT_STUDY))
+                const body: any = JSON.parse(JSON.stringify(DefaultEntityMock.PILOT_STUDY_BASIC))
                 body.health_professionals = ['1a2b3c']
 
                 return request
@@ -118,7 +118,7 @@ describe('Routes: PilotStudies', () => {
             })
 
             it('should return status code 400 and message from not registered health professionals', () => {
-                const body: any = JSON.parse(JSON.stringify(DefaultEntityMock.PILOT_STUDY))
+                const body: any = JSON.parse(JSON.stringify(DefaultEntityMock.PILOT_STUDY_BASIC))
                 const randomId: string = '5d1a5c972bb4b946d7b5158e'
                 body.health_professionals = [randomId]
 
@@ -164,10 +164,8 @@ describe('Routes: PilotStudies', () => {
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
-                        expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
+                        expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
+                        expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
                     })
             })
         })
@@ -179,10 +177,8 @@ describe('Routes: PilotStudies', () => {
                     .set('Content-Type', 'application/json')
                     .expect(404)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql(Strings.PILOT_STUDY.NOT_FOUND)
-                        expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql(Strings.PILOT_STUDY.NOT_FOUND_DESCRIPTION)
+                        expect(res.body).to.have.property('message', Strings.PILOT_STUDY.NOT_FOUND)
+                        expect(res.body).to.have.property('description', Strings.PILOT_STUDY.NOT_FOUND_DESCRIPTION)
                     })
             })
         })
@@ -217,10 +213,8 @@ describe('Routes: PilotStudies', () => {
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
-                        expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
+                        expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
+                        expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
                     })
             })
 
@@ -231,10 +225,9 @@ describe('Routes: PilotStudies', () => {
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql(Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED)
-                        expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql('A specific route to manage health_professionals already exists.')
+                        expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED)
+                        expect(res.body).to.have.property('description',
+                            'A specific route to manage health_professionals already exists.')
                     })
             })
         })
@@ -247,10 +240,8 @@ describe('Routes: PilotStudies', () => {
                     .set('Content-Type', 'application/json')
                     .expect(404)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql(Strings.PILOT_STUDY.NOT_FOUND)
-                        expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql(Strings.PILOT_STUDY.NOT_FOUND_DESCRIPTION)
+                        expect(res.body).to.have.property('message', Strings.PILOT_STUDY.NOT_FOUND)
+                        expect(res.body).to.have.property('description', Strings.PILOT_STUDY.NOT_FOUND_DESCRIPTION)
                     })
             })
         })
@@ -282,10 +273,8 @@ describe('Routes: PilotStudies', () => {
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
-                        expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql(Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
+                        expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
+                        expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
                     })
             })
         })

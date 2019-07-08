@@ -37,9 +37,8 @@ describe('Services: PilotStudyService', () => {
                     })
             })
 
-            it('should return a saved pilot study with pilot study', () => {
-                pilot.health_professionals = [new HealthProfessional().fromJSON(DefaultEntityMock.HEALTH_PROFESSIONAL)]
-                return service.add(pilot)
+            it('should return a saved pilot study without health professionals', () => {
+                return service.add(new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY_BASIC))
                     .then(res => {
                         assert.property(res, 'id')
                         assert.propertyVal(res, 'name', pilot.name)

@@ -4,6 +4,7 @@ import { GenderTypes } from '../../../src/application/domain/utils/gender.types'
 export abstract class DefaultEntityMock {
     public static readonly ADMIN: any = {
         id: '5ca4b4648e20e14f9a8feef0',
+        scopes: ['any'],
         type: 'admin',
         email: 'admin@mail.com',
         password: 'admin123',
@@ -16,11 +17,14 @@ export abstract class DefaultEntityMock {
         total_admins: 1,
         total_health_professionals: 1,
         selected_pilot_study: '5ca23b9af04e7c28223cb590',
-        language: 'pt-br'
+        language: 'pt-br',
+        last_login: '2019-03-15T00:00:00.000Z',
+        last_sync: '2019-04-15T23:59:59.000Z',
     }
 
     public static readonly HEALTH_PROFESSIONAL: any = {
         id: '5ca4b4648c9d775c7eb9f8a2',
+        scopes: ['all'],
         type: 'health_professional',
         name: 'Health Mock',
         email: 'health@mail.com',
@@ -33,11 +37,15 @@ export abstract class DefaultEntityMock {
         total_pilot_studies: 1,
         total_patients: 1,
         selected_pilot_study: '5ca23b9af04e7c28223cb590',
+        last_login: '2019-03-15T00:00:00.000Z',
+        last_sync: '2019-04-15T23:59:59.000Z',
         language: 'pt-br'
+
     }
 
     public static readonly PATIENT: any = {
         id: '5ca23b9af04e7c28223cb590',
+        scopes: ['all'],
         type: 'patient',
         name: 'Elvis Aaron',
         email: 'elvis@mail.com',
@@ -48,6 +56,8 @@ export abstract class DefaultEntityMock {
         gender: GenderTypes.MALE,
         phone_number: '(88) 98888-8888',
         selected_pilot_study: '5ca23b9af04e7c28223cb590',
+        last_login: '2019-03-15T00:00:00.000Z',
+        last_sync: '2019-04-15T23:59:59.000Z',
         language: 'pt-br'
     }
 
@@ -59,7 +69,20 @@ export abstract class DefaultEntityMock {
         end: '2019-04-15T23:59:59.000Z',
         total_patients: 1,
         total_health_professionals: 1,
-        location: 'Mock Land'
+        location: 'Mock Land',
+        health_professionals: [DefaultEntityMock.HEALTH_PROFESSIONAL.id],
+        patients: [DefaultEntityMock.PATIENT.id]
+    }
+
+    public static readonly PILOT_STUDY_BASIC: any = {
+        id: '5ca4b464f497945cb2041774',
+        name: 'pilotstudy',
+        is_active: true,
+        start: '2019-03-15T00:00:00.000Z',
+        end: '2019-04-15T23:59:59.000Z',
+        total_patients: 0,
+        total_health_professionals: 0,
+        location: 'Mock Land',
     }
 
     public static readonly USER: any = {

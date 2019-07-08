@@ -117,7 +117,8 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
         })
     }
 
-    public convertDatetimeString(value: string): Date {
+    public convertDatetimeString(value: any): Date {
+        if (typeof value !== 'string') value = new Date(value).toISOString()
         DatetimeValidator.validate(value)
         return new Date(value)
     }

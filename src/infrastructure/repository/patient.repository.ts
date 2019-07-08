@@ -7,21 +7,21 @@ import { IPatientRepository } from '../../application/port/patient.repository.in
 import { ValidationException } from '../../application/domain/exception/validation.exception'
 import { Query } from './query/query'
 import { UserType } from '../../application/domain/utils/user.type'
-import { IAuthRepository } from '../../application/port/auth.repository.interface'
+import { IUserRepository } from '../../application/port/user.repository.interface'
 
 @injectable()
 export class PatientRepository extends BaseRepository<Patient, PatientRepository> implements IPatientRepository {
     constructor(
         @inject(Identifier.USER_REPO_MODEL) readonly _userRepoModel: any,
         @inject(Identifier.PATIENT_ENTITY_MAPPER) readonly _patientEntityMapper: IEntityMapper<Patient, PatientRepository>,
-        @inject(Identifier.AUTH_REPOSITORY) private readonly _authRepository: IAuthRepository,
+        @inject(Identifier.USER_REPOSITORY) private readonly _userRepository: IUserRepository,
         @inject(Identifier.LOGGER) readonly _logger: any
     ) {
         super(_userRepoModel, _patientEntityMapper, _logger)
     }
 
     public create(item: Patient): Promise<Patient> {
-        if (item.password) item.password = this._authRepository.encryptPassword(item.password)
+        if (item.password) item.password = this._userRepository.encryptPassword(item.password)
         return super.create(item)
     }
 

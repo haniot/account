@@ -136,15 +136,21 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
         }
     }
 
-    public convertDatetimeString(value: string): Date {
+    public convertDatetimeString(value: any): Date {
+        if (typeof value !== 'string') value = new Date(value).toISOString()
         DatetimeValidator.validate(value)
         return new Date(value)
     }
 
     public fromJSON(json: any): User {
         if (!json) return this
-        if (typeof json === 'string' && JsonUtils.isJsonString(json)) {
-            json = JSON.parse(json)
+        if (typeof json === 'string') {
+            if (!JsonUtils.isJsonString(json)) {
+                super.id = json
+                return this
+            } else {
+                json = JSON.parse(json)
+            }
         }
 
         if (json.id !== undefined) super.id = json.id

@@ -55,7 +55,7 @@ describe('Routes: HealthProfessionals', () => {
                         expect(res.body).to.have.property('name', user.name)
                         expect(res.body).to.have.property('health_area', user.health_area)
                         user.id = res.body.id
-                    })
+                    }).catch(err => console.log(err))
             })
         })
 
@@ -106,11 +106,9 @@ describe('Routes: HealthProfessionals', () => {
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql('Required fields were not provided...')
-                        expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql('User validation: email, password, name, health_area, birth_date' +
-                            ' required!')
+                        expect(res.body).to.have.property('message', 'Required fields were not provided...')
+                        expect(res.body).to.have.property('description',
+                            'User validation: email, password, name, health_area, birth_date required!')
                     })
             })
         })
@@ -119,6 +117,7 @@ describe('Routes: HealthProfessionals', () => {
     describe('GET /v1/healthprofessionals/:healthprofessional_id', () => {
         context('when get a unique user', () => {
             it('should return status code 200 and the user', () => {
+                console.log('user id is', user.id)
                 return request
                     .get(`/v1/healthprofessionals/${user.id}`)
                     .set('Content-Type', 'application/json')

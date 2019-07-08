@@ -65,8 +65,7 @@ describe('Routes: Admins', () => {
                     .set('Content-Type', 'application/json')
                     .expect(409)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql('A user with this email already registered!')
+                        expect(res.body).to.have.property('message', 'A user with this email already registered!')
                     })
             })
         })

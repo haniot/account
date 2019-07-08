@@ -9,6 +9,7 @@ import { IPilotStudyRepository } from '../port/pilot.study.repository.interface'
 import { Query } from '../../infrastructure/repository/query/query'
 import { PilotStudy } from '../domain/model/pilot.study'
 import { UserType } from '../domain/utils/user.type'
+import { ChangePasswordValidator } from '../domain/validator/change.password.validator'
 
 /**
  * Implementing User Service.
@@ -48,6 +49,24 @@ export class UserService implements IUserService {
         } catch (err) {
             return Promise.reject(err)
         }
+    }
+
+    /**
+     * Change the user password.
+     *
+     * @param email - Email of user
+     * @param old_password - Old user password.
+     * @param new_password - New user password.
+     * @return {Promise<boolean>}
+     * @throws {ValidationException | RepositoryException}
+     */
+    public async changePassword(email: string, old_password: string, new_password: string): Promise<boolean> {
+        try {
+            ChangePasswordValidator.validate(email, old_password, new_password)
+        } catch (err) {
+            return Promise.reject(err)
+        }
+        return this._userRepository.changePassword(email, old_password, new_password)
     }
 
     public add(item: User): Promise<User> {

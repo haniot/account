@@ -68,10 +68,8 @@ describe('Routes: Auth', () => {
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql('Required fields were not provided...')
-                        expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql('Authentication validation: email is required!')
+                        expect(res.body).to.have.property('message', 'Required fields were not provided...')
+                        expect(res.body).to.have.property('description', 'Authentication validation: email is required!')
                     })
             })
 
@@ -94,10 +92,8 @@ describe('Routes: Auth', () => {
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql('Required fields were not provided...')
-                        expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql('Authentication validation: password is required!')
+                        expect(res.body).to.have.property('message', 'Required fields were not provided...')
+                        expect(res.body).to.have.property('description', 'Authentication validation: password is required!')
                     })
             })
 
@@ -108,10 +104,9 @@ describe('Routes: Auth', () => {
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql('Required fields were not provided...')
-                        expect(res.body).to.have.property('description')
-                        expect(res.body.description).to.eql('Authentication validation: email, password is required!')
+                        expect(res.body).to.have.property('message', 'Required fields were not provided...')
+                        expect(res.body).to.have.property('description',
+                            'Authentication validation: email, password is required!')
                     })
             })
         })
@@ -124,8 +119,8 @@ describe('Routes: Auth', () => {
                     .set('Content-Type', 'application/json')
                     .expect(401)
                     .then(res => {
-                        expect(res.body).to.have.property('message')
-                        expect(res.body.message).to.eql('Authentication failed due to invalid authentication credentials.')
+                        expect(res.body).to.have.property('message',
+                            'Authentication failed due to invalid authentication credentials.')
                     })
 
             })
@@ -157,8 +152,8 @@ describe('Routes: Auth', () => {
                     .then(res => {
                         expect(res.body).to.have.property('message', 'Change password is necessary.')
                         expect(res.body).to.have.property('description', 'To ensure information security, the user must change ' +
-                            `the access password. To change it, access PATCH /users/${user.id}/password.`)
-                        expect(res.body).to.have.property('redirect_link', `/users/${user.id}/password`)
+                            'the access password. To change it, access PATCH /v1/auth/password.')
+                        expect(res.body).to.have.property('redirect_link', '/v1/auth/password')
                     })
             })
         })

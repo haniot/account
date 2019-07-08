@@ -54,4 +54,8 @@ export class UserRepositoryMock implements IUserRepository {
     public countPatients(): Promise<number> {
         return Promise.resolve(1)
     }
+
+    public updateLastLogin(userId: string): Promise<boolean> {
+        return Promise.resolve(true)
+    }
 }

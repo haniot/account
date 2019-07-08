@@ -80,4 +80,28 @@ describe('Services: UserService', () => {
             }
         })
     })
+
+    describe('changePassword()', () => {
+        context('when change the password', () => {
+            it('should return true', () => {
+                return service
+                    .changePassword(user.email!, user.password!, user.password!)
+                    .then(result => {
+                        assert.isBoolean(result)
+                        assert.isTrue(result)
+                    })
+            })
+        })
+
+        context('when there are validation errors', () => {
+            it('should reject a validation error', () => {
+                return service
+                    .changePassword('invalid', user.password!, user.password!)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'Invalid email address!')
+                    })
+            })
+        })
+    })
+
 })
