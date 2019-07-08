@@ -80,7 +80,6 @@ describe('Repositories: User', () => {
                     .mock(modelFake)
                     .expects('findOneAndUpdate')
                     .withArgs({ email: user.email }, { last_login: new Date().toISOString() })
-                    .chain('exec')
                     .resolves(user)
 
                 return repo.updateLastLogin(user.email!)
@@ -96,7 +95,6 @@ describe('Repositories: User', () => {
                     .mock(modelFake)
                     .expects('findOneAndUpdate')
                     .withArgs({ email: user.email }, { last_login: new Date().toISOString() })
-                    .chain('exec')
                     .rejects({ message: 'An internal error has occurred in the database!' })
 
                 return repo.updateLastLogin(user.email!)
