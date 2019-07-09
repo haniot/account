@@ -73,8 +73,9 @@ describe('Routes: PatientsPilotStudies', () => {
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
-                        expect(res.body).to.have.property('message', 'The given ID is in invalid format.')
-                        expect(res.body).to.have.property('description', 'A 12 bytes hexadecimal ID similar to this')
+                        expect(res.body).to.have.property('message', 'Some ID provided does not have a valid format!')
+                        expect(res.body).to.have.property('description', 'A 24-byte hex ID similar to this: ' +
+                            '507f191e810c19729de860ea is expected.')
                     })
             })
         })

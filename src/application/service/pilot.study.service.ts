@@ -94,6 +94,16 @@ export class PilotStudyService implements IPilotStudyService {
         return this.getAll(query)
     }
 
+    public async getAllPilotStudiesFromPatient(patientId: string, query: IQuery): Promise<Array<PilotStudy>> {
+        try {
+            ObjectIdValidator.validate(patientId)
+        } catch (err) {
+            return Promise.reject(err)
+        }
+        query.addFilter({ patients: patientId })
+        return this.getAll(query)
+    }
+
     public async associateHealthProfessional(pilotId: string, healthId: string): Promise<boolean> {
         try {
             ObjectIdValidator.validate(pilotId)

@@ -20,7 +20,7 @@ export class HealthProfessionalsPilotStudiesController {
     @httpGet('/')
     public async getAllPilotStudiesFromHealthProfessional(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const query: Query = new Query().fromJSON(req.body)
+            const query: Query = new Query().fromJSON(req.query)
             const result: Array<PilotStudy> =
                 await this._pilotStudyService.getAllPilotStudiesFromHealthProfessional(req.params.healthprofessional_id, query)
             const count: number =

@@ -28,7 +28,7 @@ export class HealthProfessionalService implements IHealthProfessionalService {
             const exists = await this._userRepository.checkExist(item.email)
             if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
             const result: HealthProfessional = await this._healthProfessionalRepository.create(item)
-            return Promise.resolve(this.addReadOnlyInformation(result))
+            return Promise.resolve(await this.addReadOnlyInformation(result))
         } catch (err) {
             return Promise.reject(err)
         }
@@ -38,7 +38,7 @@ export class HealthProfessionalService implements IHealthProfessionalService {
     public async getAll(query: IQuery): Promise<Array<HealthProfessional>> {
         query.addFilter({ type: UserType.HEALTH_PROFESSIONAL })
         const result: Array<HealthProfessional> = await this._healthProfessionalRepository.find(query)
-        return Promise.resolve(this.addMultipleReadOnlyInformation(result))
+        return Promise.resolve(await this.addMultipleReadOnlyInformation(result))
     }
 
     public async getById(id: string, query: IQuery): Promise<HealthProfessional> {
@@ -46,7 +46,7 @@ export class HealthProfessionalService implements IHealthProfessionalService {
             ObjectIdValidator.validate(id)
             query.addFilter({ _id: id, type: UserType.HEALTH_PROFESSIONAL })
             const result: HealthProfessional = await this._healthProfessionalRepository.findOne(query)
-            return Promise.resolve(this.addReadOnlyInformation(result))
+            return Promise.resolve(await this.addReadOnlyInformation(result))
         } catch (err) {
             return Promise.reject(err)
         }
@@ -55,10 +55,10 @@ export class HealthProfessionalService implements IHealthProfessionalService {
     public remove(id: string): Promise<boolean> {
         try {
             ObjectIdValidator.validate(id)
-            return Promise.resolve(this._healthProfessionalRepository.delete(id))
         } catch (err) {
             return Promise.reject(err)
         }
+        return this._healthProfessionalRepository.delete(id)
     }
 
     public async update(item: HealthProfessional): Promise<HealthProfessional> {
@@ -96,6 +96,6 @@ export class HealthProfessionalService implements IHealthProfessionalService {
                 return Promise.reject(err)
             }
         }
-        return item
+        return Promise.resolve(item)
     }
 }

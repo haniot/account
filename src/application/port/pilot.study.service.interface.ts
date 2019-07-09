@@ -9,6 +9,8 @@ export interface IPilotStudyService extends IService<PilotStudy> {
 
     getAllPilotStudiesFromHealthProfessional(healthId: string, query: IQuery): Promise<Array<PilotStudy>>
 
+    getAllPilotStudiesFromPatient(patientId: string, query: IQuery): Promise<Array<PilotStudy>>
+
     getAllHealthProfessionals(pilotId: string, query: IQuery): Promise<Array<HealthProfessional>>
 
     getAllPatients(pilotId: string, query: IQuery): Promise<Array<Patient>>
