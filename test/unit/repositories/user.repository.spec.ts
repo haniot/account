@@ -74,21 +74,6 @@ describe('Repositories: User', () => {
     })
 
     describe('updateLastLogin()', () => {
-        context('when update a last login from user', () => {
-            it('should return true', () => {
-                sinon
-                    .mock(modelFake)
-                    .expects('findOneAndUpdate')
-                    .withArgs({ email: user.email }, { last_login: new Date().toISOString() })
-                    .resolves(user)
-
-                return repo.updateLastLogin(user.email!)
-                    .then(res => {
-                        assert.isTrue(res)
-                    })
-            })
-        })
-
         context('when there are a database error', () => {
             it('should reject a error', () => {
                 sinon

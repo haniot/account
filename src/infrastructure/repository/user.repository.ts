@@ -50,7 +50,7 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
 
     public updateLastLogin(_email: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            this.Model.findOneAndUpdate({ email: _email}, { last_login: new Date().toISOString() })
+            this.Model.findOneAndUpdate({ email: _email }, { last_login: new Date().toISOString() })
                 .then(result => resolve(!!result))
                 .catch(err => reject(super.mongoDBErrorListener(err)))
         })
