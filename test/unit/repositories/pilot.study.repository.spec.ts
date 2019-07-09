@@ -10,7 +10,6 @@ import { assert } from 'chai'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
 import { Patient } from '../../../src/application/domain/model/patient'
 import { UserType } from '../../../src/application/domain/utils/user.type'
-import { ObjectId, ObjectID } from 'bson'
 
 require('sinon-mongoose')
 
@@ -235,7 +234,7 @@ describe('Repositories: PilotStudyRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOneAndUpdate')
-                    .withArgs({ _id: pilot.id }, { $addToSet: { patients: new ObjectID(DefaultEntityMock.PATIENT.id) } })
+                    .withArgs({ _id: pilot.id }, { $addToSet: { patients: (DefaultEntityMock.PATIENT.id) } })
                     .chain('exec')
                     .resolves(pilot)
 
@@ -260,7 +259,7 @@ describe('Repositories: PilotStudyRepository', () => {
                     .expects('findOneAndUpdate')
                     .withArgs(
                         { _id: pilot.id },
-                        { $addToSet: { health_professionals: new ObjectID(DefaultEntityMock.HEALTH_PROFESSIONAL.id) } })
+                        { $addToSet: { health_professionals: (DefaultEntityMock.HEALTH_PROFESSIONAL.id) } })
                     .chain('exec')
                     .resolves(pilot)
 
@@ -283,7 +282,7 @@ describe('Repositories: PilotStudyRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOneAndUpdate')
-                    .withArgs({ _id: pilot.id }, { $addToSet: { patients: new ObjectID(DefaultEntityMock.PATIENT.id) } })
+                    .withArgs({ _id: pilot.id }, { $addToSet: { patients: (DefaultEntityMock.PATIENT.id) } })
                     .chain('exec')
                     .resolves(undefined)
 
@@ -300,7 +299,7 @@ describe('Repositories: PilotStudyRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOneAndUpdate')
-                    .withArgs({ _id: pilot.id }, { $addToSet: { patients: new ObjectID(DefaultEntityMock.PATIENT.id) } })
+                    .withArgs({ _id: pilot.id }, { $addToSet: { patients: (DefaultEntityMock.PATIENT.id) } })
                     .chain('exec')
                     .rejects({ message: 'An internal error has occurred in the database!' })
 
@@ -318,7 +317,7 @@ describe('Repositories: PilotStudyRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOneAndUpdate')
-                    .withArgs({ _id: pilot.id }, { $pull: { patients: new ObjectID(DefaultEntityMock.PATIENT.id) } })
+                    .withArgs({ _id: pilot.id }, { $pull: { patients: (DefaultEntityMock.PATIENT.id) } })
                     .chain('exec')
                     .resolves(pilot)
 
@@ -343,7 +342,7 @@ describe('Repositories: PilotStudyRepository', () => {
                     .expects('findOneAndUpdate')
                     .withArgs(
                         { _id: pilot.id },
-                        { $pull: { health_professionals: new ObjectID(DefaultEntityMock.HEALTH_PROFESSIONAL.id) } })
+                        { $pull: { health_professionals: (DefaultEntityMock.HEALTH_PROFESSIONAL.id) } })
                     .chain('exec')
                     .resolves(pilot)
 
@@ -366,7 +365,7 @@ describe('Repositories: PilotStudyRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOneAndUpdate')
-                    .withArgs({ _id: pilot.id }, { $pull: { patients: new ObjectID(DefaultEntityMock.PATIENT.id) } })
+                    .withArgs({ _id: pilot.id }, { $pull: { patients: (DefaultEntityMock.PATIENT.id) } })
                     .chain('exec')
                     .resolves(undefined)
 
@@ -383,7 +382,7 @@ describe('Repositories: PilotStudyRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOneAndUpdate')
-                    .withArgs({ _id: pilot.id }, { $pull: { patients: new ObjectID(DefaultEntityMock.PATIENT.id) } })
+                    .withArgs({ _id: pilot.id }, { $pull: { patients: (DefaultEntityMock.PATIENT.id) } })
                     .chain('exec')
                     .rejects({ message: 'An internal error has occurred in the database!' })
 
@@ -552,7 +551,7 @@ describe('Repositories: PilotStudyRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('countDocuments')
-                    .withArgs({ patients: new ObjectId(DefaultEntityMock.PATIENT.id) })
+                    .withArgs({ patients: (DefaultEntityMock.PATIENT.id) })
                     .chain('exec')
                     .resolves(1)
 
@@ -571,7 +570,7 @@ describe('Repositories: PilotStudyRepository', () => {
                 sinon
                     .mock(modelFake)
                     .expects('countDocuments')
-                    .withArgs({ health_professionals: new ObjectId(DefaultEntityMock.HEALTH_PROFESSIONAL.id) })
+                    .withArgs({ health_professionals: (DefaultEntityMock.HEALTH_PROFESSIONAL.id) })
                     .chain('exec')
                     .resolves(1)
 

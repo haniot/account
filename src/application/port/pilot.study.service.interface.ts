@@ -7,6 +7,8 @@ import { Patient } from '../domain/model/patient'
 export interface IPilotStudyService extends IService<PilotStudy> {
     count(): Promise<number>
 
+    getAllPilotStudiesFromHealthProfessional(healthId: string, query: IQuery): Promise<Array<PilotStudy>>
+
     getAllHealthProfessionals(pilotId: string, query: IQuery): Promise<Array<HealthProfessional>>
 
     getAllPatients(pilotId: string, query: IQuery): Promise<Array<Patient>>

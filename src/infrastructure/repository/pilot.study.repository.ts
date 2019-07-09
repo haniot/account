@@ -9,7 +9,6 @@ import { IEntityMapper } from '../port/entity.mapper.interface'
 import { IQuery } from '../../application/port/query.interface'
 import { Query } from './query/query'
 import { UserType } from '../../application/domain/utils/user.type'
-import { ObjectId } from 'bson'
 import { Patient } from '../../application/domain/model/patient'
 
 @injectable()
@@ -68,8 +67,7 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
     public associateUser(pilotId: string, userId: string, userType: string): Promise<PilotStudy> {
         return new Promise<PilotStudy>((resolve, reject) => {
             const update: any = { $addToSet: {} }
-            update.$addToSet = userType === UserType.PATIENT ?
-                { patients: new ObjectId(userId) } : { health_professionals: new ObjectId(userId) }
+            update.$addToSet = userType === UserType.PATIENT ? { patients: userId } : { health_professionals: userId }
             this.Model.findOneAndUpdate({ _id: pilotId }, update)
                 .exec()
                 .then(result => resolve(!result ? undefined : this.mapper.transform(result)))
@@ -79,8 +77,7 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
 
     public disassociateUser(pilotId: string, userId: string, userType: string): Promise<PilotStudy> {
         const update: any = { $pull: {} }
-        update.$pull = userType === UserType.PATIENT ?
-            { patients: new ObjectId(userId) } : { health_professionals: new ObjectId(userId) }
+        update.$pull = userType === UserType.PATIENT ? { patients: userId } : { health_professionals: userId }
         return new Promise<PilotStudy>((resolve, reject) => {
             this.Model.findOneAndUpdate({ _id: pilotId }, update)
                 .exec()
@@ -119,10 +116,10 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
     }
 
     public countPilotStudiesFromPatient(patientId: string): Promise<number> {
-        return super.count(new Query().fromJSON({ filters: { patients: new ObjectId(patientId) } }))
+        return super.count(new Query().fromJSON({ filters: { patients: patientId } }))
     }
 
     public countPilotStudiesFromHealthProfessional(healthId: string): Promise<number> {
-        return super.count(new Query().fromJSON({ filters: { health_professionals: new ObjectId(healthId) } }))
+        return super.count(new Query().fromJSON({ filters: { health_professionals: healthId } }))
     }
 }

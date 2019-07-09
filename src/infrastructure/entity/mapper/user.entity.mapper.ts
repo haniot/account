@@ -25,6 +25,7 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
         const result: UserEntity = new UserEntity()
 
         if (item.id !== undefined) result.id = item.id
+        if (item.type !== undefined) result.type = item.type
         if (item.scopes !== undefined) result.scopes = item.scopes
         if (item.email !== undefined) result.email = item.email
         if (item.password !== undefined) result.password = item.password
@@ -63,6 +64,7 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
         if (!json) return result
 
         if (json.id !== undefined) result.id = json.id
+        if (json.type !== undefined) result.type = json.type
         if (json.scopes !== undefined) result.scopes = json.scopes
         if (json.email !== undefined) result.email = json.email
         if (json.password !== undefined) result.password = json.password

@@ -29,7 +29,6 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
                 await UserRepoModel.create(DefaultEntityMock.HEALTH_PROFESSIONAL).then(res => health.id = res.id)
                 await PilotStudyRepoModel.create(DefaultEntityMock.PILOT_STUDY_BASIC).then(res => pilot.id = res.id)
             } catch (err) {
-                console.log(err)
                 throw new Error('Failure on PilotStudiesHealthProfessionals test: ' + err.message)
             }
         }

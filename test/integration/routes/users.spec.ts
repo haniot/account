@@ -1,4 +1,3 @@
-import { expect } from 'chai'
 import { Admin } from '../../../src/application/domain/model/admin'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { Container } from 'inversify'
@@ -6,23 +5,27 @@ import { DI } from '../../../src/di/di'
 import { IConnectionDB } from '../../../src/infrastructure/port/connection.db.interface'
 import { Identifier } from '../../../src/di/identifiers'
 import { App } from '../../../src/app'
-import { Strings } from '../../../src/utils/strings'
-import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
+import { expect } from 'chai'
 import { ObjectID } from 'bson'
+import { Strings } from '../../../src/utils/strings'
+import { IAdminRepository } from '../../../src/application/port/admin.repository.interface'
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 
 const container: Container = DI.getInstance().getContainer()
+const adminRepo: IAdminRepository = container.get(Identifier.ADMIN_REPOSITORY)
 const dbConnection: IConnectionDB = container.get(Identifier.MONGODB_CONNECTION)
 const app: App = container.get(Identifier.APP)
 const request = require('supertest')(app.getExpress())
 
 describe('Routes: Users', () => {
-    const user: Admin = new Admin().fromJSON(DefaultEntityMock.ADMIN)
+    const user = new Admin().fromJSON(DefaultEntityMock.ADMIN)
 
     before(async () => {
             try {
                 await dbConnection.tryConnect(0, 500)
                 await deleteAllUsers({})
-                await UserRepoModel.create(DefaultEntityMock.ADMIN).then(res => user.id = res.id)
+                const result = await adminRepo.create(user)
+                user.id = result.id
             } catch (err) {
                 throw new Error('Failure on Users test: ' + err.message)
             }

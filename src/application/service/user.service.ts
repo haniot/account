@@ -33,8 +33,7 @@ export class UserService implements IUserService {
     public async remove(id: string): Promise<boolean> {
         try {
             ObjectIdValidator.validate(id)
-            const user: User =
-                await this._userRepository.findOne(new Query().fromJSON({ filters: { _id: id } }))
+            const user: User = await this._userRepository.findOne(new Query().fromJSON({ filters: { _id: id } }))
             const result: boolean = await this._userRepository.delete(id)
             if (user && user.type !== UserType.ADMIN) {
                 const query: Query = new Query()

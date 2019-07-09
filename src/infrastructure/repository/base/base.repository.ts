@@ -45,7 +45,7 @@ export abstract class BaseRepository<T extends Entity, TModel> implements IRepos
                 .skip(Number((q.pagination.limit * q.pagination.page) - q.pagination.limit))
                 .limit(Number(q.pagination.limit))
                 .exec() // execute query
-                .then((result: Array<TModel>) => resolve(result.map(item => this.mapper.transform(item))))
+                .then((result: Array<TModel>) =>  resolve(result.map(item => this.mapper.transform(item))))
                 .catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
@@ -81,10 +81,7 @@ export abstract class BaseRepository<T extends Entity, TModel> implements IRepos
         return new Promise<boolean>((resolve, reject) => {
             this.Model.findOneAndDelete({ _id: id })
                 .exec()
-                .then((result: TModel) => {
-                    if (!result) return resolve(false)
-                    resolve(true)
-                })
+                .then((result: TModel) => resolve(!!result))
                 .catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }

@@ -21,9 +21,8 @@ export class HealthProfessionalsPilotStudiesController {
     public async getAllPilotStudiesFromHealthProfessional(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const query: Query = new Query().fromJSON(req.body)
-            query.addFilter({ health_professionals: req.params.healthprofessional_id })
-
-            const result: Array<PilotStudy> = await this._pilotStudyService.getAll(query)
+            const result: Array<PilotStudy> =
+                await this._pilotStudyService.getAllPilotStudiesFromHealthProfessional(req.params.healthprofessional_id, query)
             const count: number =
                 await this._pilotStudyService.countPilotStudiesFromHealthProfessional(req.params.healthprofessional_id)
 

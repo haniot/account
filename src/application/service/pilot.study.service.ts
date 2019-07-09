@@ -84,6 +84,16 @@ export class PilotStudyService implements IPilotStudyService {
         return this._pilotStudyRepository.count()
     }
 
+    public async getAllPilotStudiesFromHealthProfessional(healthId: string, query: IQuery): Promise<Array<PilotStudy>> {
+        try {
+            ObjectIdValidator.validate(healthId)
+        } catch (err) {
+            return Promise.reject(err)
+        }
+        query.addFilter({ health_professionals: healthId })
+        return this.getAll(query)
+    }
+
     public async associateHealthProfessional(pilotId: string, healthId: string): Promise<boolean> {
         try {
             ObjectIdValidator.validate(pilotId)
