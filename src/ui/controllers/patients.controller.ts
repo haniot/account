@@ -22,11 +22,7 @@ export class PatientsController {
     @httpPost('/')
     public async addPatientUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const patient: Patient = new Patient().fromJSON(req.body)
-            patient.change_password = false
-            patient.email_verified = false
-            patient.language = patient.language ? patient.language : 'pt-br'
-
+            const patient: Patient = new Patient().fromJSON({ ...req.body, change_password: false, email_verified: false })
             const result: Patient = await this._patientService.add(patient)
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
         } catch (err) {

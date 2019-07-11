@@ -191,11 +191,39 @@ export class PilotStudyService implements IPilotStudyService {
     }
 
     public countPilotStudiesFromHealthProfessional(healthId: string): Promise<number> {
+        try {
+            ObjectIdValidator.validate(healthId)
+        } catch (err) {
+            return Promise.reject(err)
+        }
         return this._pilotStudyRepository.countPilotStudiesFromHealthProfessional(healthId)
     }
 
     public countPilotStudiesFromPatient(patientId: string): Promise<number> {
+        try {
+            ObjectIdValidator.validate(patientId)
+        } catch (err) {
+            return Promise.reject(err)
+        }
         return this._pilotStudyRepository.countPilotStudiesFromPatient(patientId)
+    }
+
+    public countPatientsFromPilotStudy(pilotId: string): Promise<number> {
+        try {
+            ObjectIdValidator.validate(pilotId)
+        } catch (err) {
+            return Promise.reject(err)
+        }
+        return this._pilotStudyRepository.countPatientsFromPilotStudy(pilotId)
+    }
+
+    public countHealthProfessionalsFromPilotStudy(pilotId: string): Promise<number> {
+        try {
+            ObjectIdValidator.validate(pilotId)
+        } catch (err) {
+            return Promise.reject(err)
+        }
+        return this._pilotStudyRepository.countHealthProfessionalsFromPilotStudy(pilotId)
     }
 
     private async addMultipleReadOnlyInformation(item: Array<PilotStudy>): Promise<Array<PilotStudy>> {

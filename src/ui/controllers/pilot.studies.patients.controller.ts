@@ -23,9 +23,7 @@ export class PilotStudiesPatientsController {
         try {
             const result: any =
                 await this._pilotStudyService.getAllPatients(req.params.pilotstudy_id, new Query().fromJSON(req.query))
-            const allPatients: any =
-                await this._pilotStudyService.getAllPatients(req.params.pilotstudy_id, new Query())
-            const count: number = allPatients!.length
+            const count: number = await this._pilotStudyService.countPatientsFromPilotStudy(req.params.pilotstudy_id)
             res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
@@ -37,8 +35,7 @@ export class PilotStudiesPatientsController {
     @httpPost('/:patient_id')
     public async associateHealthProfessionalToPilotStudy(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            await this._pilotStudyService.associatePatient(
-                req.params.pilotstudy_id, req.params.patient_id)
+            await this._pilotStudyService.associatePatient(req.params.pilotstudy_id, req.params.patient_id)
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
@@ -50,8 +47,7 @@ export class PilotStudiesPatientsController {
     public async disassociateHealthProfessionalFromPilotStudy(
         @request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            await this._pilotStudyService.disassociatePatient(
-                req.params.pilotstudy_id, req.params.patient_id)
+            await this._pilotStudyService.disassociatePatient(req.params.pilotstudy_id, req.params.patient_id)
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)

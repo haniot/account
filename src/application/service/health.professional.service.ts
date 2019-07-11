@@ -28,7 +28,9 @@ export class HealthProfessionalService implements IHealthProfessionalService {
             const exists = await this._userRepository.checkExist(item.email)
             if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
             const result: HealthProfessional = await this._healthProfessionalRepository.create(item)
-            return Promise.resolve(await this.addReadOnlyInformation(result))
+            result.total_pilot_studies = 0
+            result.total_patients = 0
+            return Promise.resolve(result)
         } catch (err) {
             return Promise.reject(err)
         }

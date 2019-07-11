@@ -39,8 +39,7 @@ export class PilotStudiesHealthProfessionalsController {
     public async associateHealthProfessionalToPilotStudy(
         @request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            await this._pilotStudyService.associateHealthProfessional(
-                req.params.pilot_studies, req.params.healthprofessional_id)
+            await this._pilotStudyService.associateHealthProfessional(req.params.pilot_studies, req.params.healthprofessional_id)
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)

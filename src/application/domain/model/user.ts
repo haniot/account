@@ -159,6 +159,8 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
         if (json.birth_date !== undefined) this.birth_date = json.birth_date
         if (json.scopes !== undefined) this.scopes = json.scopes
         if (json.phone_number !== undefined) this.phone_number = json.phone_number
+        if (json.change_password !== undefined) this.change_password = json.change_password
+        if (json.email_verified !== undefined) this.email_verified = json.email_verified
         if (json.last_login !== undefined) this.last_login = this.convertDatetimeString(json.last_login)
         if (json.last_sync !== undefined) this.last_sync = this.convertDatetimeString(json.last_sync)
         if (json.selected_pilot_study !== undefined) this.selected_pilot_study = json.selected_pilot_study

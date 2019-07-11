@@ -5,9 +5,9 @@ import { PilotStudyRepositoryMock } from '../../mocks/repositories/pilot.study.r
 import { HealthProfessionalRepositoryMock } from '../../mocks/repositories/health.professional.repository.mock'
 import { assert } from 'chai'
 import { PatientRepositoryMock } from '../../mocks/repositories/patient.repository.mock'
-import { Query } from '../../../src/infrastructure/repository/query/query'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
 import { Patient } from '../../../src/application/domain/model/patient'
+import { Query } from '../../../src/infrastructure/repository/query/query'
 import { ObjectID } from 'bson'
 
 describe('Services: PilotStudyService', () => {

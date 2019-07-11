@@ -11,7 +11,10 @@ const userSchema = new Mongoose.Schema({
         last_login: { type: Date },
         last_sync: { type: Date },
         selected_pilot_study: { type: String },
-        language: { type: String },
+        language: {
+            type: String,
+            default: 'pt-br'
+        },
         email: {
             type: String,
             required: 'Email of user is required!',

@@ -23,12 +23,13 @@ export class HealthProfessionalsController {
     @httpPost('/')
     public async saveHealthProfessional(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const healthProfessional: HealthProfessional = new HealthProfessional().fromJSON(req.body)
-            healthProfessional.change_password = false
-            healthProfessional.email_verified = false
-            healthProfessional.language = healthProfessional.language ? healthProfessional.language : 'pt-br'
-
-            const result: HealthProfessional = await this._healthProfessionalService.add(healthProfessional)
+            const health: HealthProfessional =
+                new HealthProfessional().fromJSON({
+                    ...req.body,
+                    change_password: false,
+                    email_verified: false
+                })
+            const result: HealthProfessional = await this._healthProfessionalService.add(health)
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
@@ -43,7 +44,6 @@ export class HealthProfessionalsController {
             const result: Array<HealthProfessional> =
                 await this._healthProfessionalService.getAll(new Query().fromJSON(req.query))
             const count: number = await this._healthProfessionalService.count()
-
             res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {

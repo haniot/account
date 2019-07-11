@@ -9,7 +9,6 @@ import { IEntityMapper } from '../port/entity.mapper.interface'
 import { IQuery } from '../../application/port/query.interface'
 import { Query } from './query/query'
 import { UserType } from '../../application/domain/utils/user.type'
-import { Patient } from '../../application/domain/model/patient'
 
 @injectable()
 export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyEntity> implements IPilotStudyRepository {
@@ -107,12 +106,11 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
     }
 
     public async countPatientsFromHealthProfessional(healthId: string): Promise<number> {
-        let allPatients: Array<Patient> = []
-        const pilots = await this.findAndPopulate(new Query().fromJSON({ filters: { health_professionals: healthId } }))
-        pilots.forEach(pilot => allPatients = allPatients.concat(pilot.patients!))
-        const unique = {}
-        const filteredPatients = allPatients.filter(obj => !unique[obj.id!] && (unique[obj.id!] = true))
-        return Promise.resolve(filteredPatients.length)
+        return new Promise<number>((resolve, reject) => {
+            return this.Model.distinct('patients', { health_professionals: healthId })
+                .then(result => resolve(result && result.length ? result.length : 0))
+                .catch(err => this.mongoDBErrorListener(err))
+        })
     }
 
     public countPilotStudiesFromPatient(patientId: string): Promise<number> {

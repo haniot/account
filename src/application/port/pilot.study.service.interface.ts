@@ -5,8 +5,6 @@ import { HealthProfessional } from '../domain/model/health.professional'
 import { Patient } from '../domain/model/patient'
 
 export interface IPilotStudyService extends IService<PilotStudy> {
-    count(): Promise<number>
-
     getAllPilotStudiesFromHealthProfessional(healthId: string, query: IQuery): Promise<Array<PilotStudy>>
 
     getAllPilotStudiesFromPatient(patientId: string, query: IQuery): Promise<Array<PilotStudy>>
@@ -22,6 +20,12 @@ export interface IPilotStudyService extends IService<PilotStudy> {
     associatePatient(pilotId: string, patientId: string): Promise<boolean>
 
     disassociatePatient(pilotId: string, patientId: string): Promise<boolean>
+
+    count(): Promise<number>
+
+    countPatientsFromPilotStudy(pilotId: string): Promise<number>
+
+    countHealthProfessionalsFromPilotStudy(pilotId: string): Promise<number>
 
     countPilotStudiesFromHealthProfessional(healthId: string): Promise<number>
 

@@ -22,11 +22,7 @@ export class AdminsController {
     @httpPost('/')
     public async addAdminUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const admin: Admin = new Admin().fromJSON(req.body)
-            admin.change_password = false
-            admin.email_verified = false
-            admin.language = admin.language ? admin.language : 'pt-br'
-
+            const admin: Admin = new Admin().fromJSON({ ...req.body, change_password: false, email_verified: false })
             const result: Admin = await this._adminService.add(admin)
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
         } catch (err) {

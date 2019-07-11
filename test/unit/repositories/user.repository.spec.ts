@@ -73,24 +73,6 @@ describe('Repositories: User', () => {
         })
     })
 
-    describe('updateLastLogin()', () => {
-        context('when there are a database error', () => {
-            it('should reject a error', () => {
-                sinon
-                    .mock(modelFake)
-                    .expects('findOneAndUpdate')
-                    .withArgs({ email: user.email }, { last_login: new Date().toISOString() })
-                    .rejects({ message: 'An internal error has occurred in the database!' })
-
-                return repo.updateLastLogin(user.email!)
-                    .catch(err => {
-                        assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
-                    })
-
-            })
-        })
-    })
-
     describe('countAdmins()', () => {
         context('when count all admins in platform', () => {
             it('should return a number', () => {

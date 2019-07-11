@@ -7,8 +7,8 @@ import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
 import { expect } from 'chai'
-import { Strings } from '../../../src/utils/strings'
 import { ObjectID } from 'bson'
+import { Strings } from '../../../src/utils/strings'
 
 const container: Container = DI.getInstance().getContainer()
 const dbConnection: IConnectionDB = container.get(Identifier.MONGODB_CONNECTION)
@@ -96,19 +96,6 @@ describe('Routes: HealthProfessionals', () => {
                     .then(res => {
                         expect(res.body).to.have.property('message')
                         expect(res.body.message).to.eql('Invalid email address!')
-                    })
-            })
-
-            it('should return status code 400 and message from missing all required parameters', () => {
-                return request
-                    .post('/v1/healthprofessionals')
-                    .send({})
-                    .set('Content-Type', 'application/json')
-                    .expect(400)
-                    .then(res => {
-                        expect(res.body).to.have.property('message', 'Required fields were not provided...')
-                        expect(res.body).to.have.property('description',
-                            'User validation: email, password, name, health_area, birth_date required!')
                     })
             })
         })
