@@ -64,6 +64,12 @@ export class PilotStudyService implements IPilotStudyService {
     public async remove(id: string): Promise<boolean> {
         try {
             ObjectIdValidator.validate(id)
+            const associatedHealths: number = await this._pilotStudyRepository.countHealthProfessionalsFromPilotStudy(id)
+            const associatedPatients: number = await this._pilotStudyRepository.countPatientsFromPilotStudy(id)
+
+            if (associatedHealths || associatedPatients) {
+                throw new ValidationException(Strings.PILOT_STUDY.HAS_ASSOCIATION)
+            }
             return this._pilotStudyRepository.delete(id)
         } catch (err) {
             return Promise.reject(err)

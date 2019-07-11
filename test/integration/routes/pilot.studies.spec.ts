@@ -250,7 +250,7 @@ describe('Routes: PilotStudies', () => {
     describe('DELETE /v1/pilotstudies/:pilotstudy_id', () => {
         context('when want delete a pilot study', () => {
             it('should return status code 204 and no content', async () => {
-                const pilotNew: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY)
+                const pilotNew: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY_BASIC)
                 pilotNew.name = 'Another Pilot'
 
                 const result = await PilotStudyRepoModel.create(pilotNew.toJSON())
@@ -262,6 +262,25 @@ describe('Routes: PilotStudies', () => {
                     .expect(204)
                     .then(res => {
                         expect(res.body).to.eql({})
+                    })
+            })
+        })
+
+        context('when the pilot study has association with users', () => {
+            it('should return status code 400 and message from has association', async () => {
+                const pilotNew: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY)
+                pilotNew.name = 'Another Pilot'
+
+                const result = await PilotStudyRepoModel.create(pilotNew.toJSON())
+                pilotNew.id = result.id
+
+                return request
+                    .delete(`/v1/pilotstudies/${pilotNew.id}`)
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(async res => {
+                        expect(res.body).to.have.property('message', Strings.PILOT_STUDY.HAS_ASSOCIATION)
+                        await PilotStudyRepoModel.findOneAndDelete({ _id: pilotNew.id })
                     })
             })
         })

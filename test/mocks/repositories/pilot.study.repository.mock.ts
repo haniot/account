@@ -25,7 +25,7 @@ export class PilotStudyRepositoryMock implements IPilotStudyRepository {
     }
 
     public delete(id: string): Promise<boolean> {
-        return Promise.resolve(id === DefaultEntityMock.PILOT_STUDY.id)
+        return Promise.resolve(true)
     }
 
     public find(query: IQuery): Promise<Array<PilotStudy>> {
@@ -77,7 +77,7 @@ export class PilotStudyRepositoryMock implements IPilotStudyRepository {
     }
 
     public countHealthProfessionalsFromPilotStudy(pilotId: string): Promise<number> {
-        return Promise.resolve(1)
+        return Promise.resolve(pilotId === pilotStudy.id ? 1 : 0)
     }
 
     public countPatientsFromHealthProfessional(healthId: string): Promise<number> {
@@ -85,7 +85,7 @@ export class PilotStudyRepositoryMock implements IPilotStudyRepository {
     }
 
     public countPatientsFromPilotStudy(pilotId: string): Promise<number> {
-        return Promise.resolve(1)
+        return Promise.resolve(pilotId === pilotStudy.id ? 1 : 0)
     }
 
     public countPilotStudiesFromHealthProfessional(healthId: string): Promise<number> {

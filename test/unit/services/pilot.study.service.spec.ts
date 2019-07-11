@@ -9,6 +9,7 @@ import { HealthProfessional } from '../../../src/application/domain/model/health
 import { Patient } from '../../../src/application/domain/model/patient'
 import { Query } from '../../../src/infrastructure/repository/query/query'
 import { ObjectID } from 'bson'
+import { Strings } from '../../../src/utils/strings'
 
 describe('Services: PilotStudyService', () => {
     const service = new PilotStudyService(
@@ -130,10 +131,21 @@ describe('Services: PilotStudyService', () => {
     describe('remove()', () => {
         context('when remove a pilot study', () => {
             it('should return true', () => {
-                return service.remove(pilot.id!)
+                const pilotWithoutAssociations: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY_BASIC)
+                pilotWithoutAssociations.id = `${new ObjectID()}`
+                return service.remove(pilotWithoutAssociations.id)
                     .then(res => {
                         assert.isBoolean(res)
                         assert.isTrue(res)
+                    })
+            })
+        })
+
+        context('when the pilot study has association with patients or health professionals', () => {
+            it('should trown an error for have association with users', () => {
+                return service.remove(pilot.id!)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', Strings.PILOT_STUDY.HAS_ASSOCIATION)
                     })
             })
         })

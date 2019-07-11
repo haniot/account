@@ -68,7 +68,8 @@ export abstract class Strings {
             'A new operation for the same resource is required.',
         ASSOCIATION_FAILURE: 'The association could not be performed because the pilot study does not have a record.',
         DISASSOCIATION_FAILURE: 'The disassociation could not be performed because the pilot study does not have a record.',
-        NAME_ALREADY_REGISTERED: 'A pilot study with this name already registered!'
+        NAME_ALREADY_REGISTERED: 'A pilot study with this name already registered!',
+        HAS_ASSOCIATION: 'The pilot study is associated with one or more users.'
     }
 
 }
