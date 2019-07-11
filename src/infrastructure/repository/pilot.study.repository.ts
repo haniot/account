@@ -109,7 +109,7 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
         return new Promise<number>((resolve, reject) => {
             return this.Model.distinct('patients', { health_professionals: healthId })
                 .then(result => resolve(result && result.length ? result.length : 0))
-                .catch(err => this.mongoDBErrorListener(err))
+                .catch(err => reject (this.mongoDBErrorListener(err)))
         })
     }
 

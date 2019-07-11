@@ -522,24 +522,42 @@ describe('Repositories: PilotStudyRepository', () => {
             })
         })
     })
-//
-//     describe('countPatientsFromHealthProfessional()', () => {
-//         context('when count a number of patients from health professional', () => {
-//             sinon
-//                 .mock(modelFake)
-//                 .expects('distinct').withArgs('patients', { health_professionals: DefaultEntityMock.HEALTH_PROFESSIONAL.id })
-//                 .resolves([DefaultEntityMock.PILOT_STUDY_BASIC.id])
-//
-//             return repo.countPatientsFromHealthProfessional(DefaultEntityMock.HEALTH_PROFESSIONAL.id)
-//                 .then(res => {
-//                     assert.isNumber(res)
-//                     assert.equal(res, 1)
-//                 })
-//         })
-//     })
+
+    describe('countPatientsFromHealthProfessional()', () => {
+        context('when count a number of patients from health professional', () => {
+            it('should return a number', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('distinct')
+                    .withArgs('patients', { health_professionals: DefaultEntityMock.HEALTH_PROFESSIONAL.id })
+                    .resolves([DefaultEntityMock.PILOT_STUDY_BASIC.id])
+
+                return repo.countPatientsFromHealthProfessional(DefaultEntityMock.HEALTH_PROFESSIONAL.id)
+                    .then(res => {
+                        assert.isNumber(res)
+                        assert.equal(res, 1)
+                    })
+            })
+        })
+
+        context('when a database error occurs', () => {
+            it('should reject a error', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('distinct')
+                    .withArgs('patients', { health_professionals: DefaultEntityMock.HEALTH_PROFESSIONAL.id })
+                    .rejects({ message: 'An internal error has occurred in the database!' })
+
+                return repo.countPatientsFromHealthProfessional(DefaultEntityMock.HEALTH_PROFESSIONAL.id)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
+                    })
+            })
+        })
+    })
 
     describe('countPilotStudiesFromPatient()', () => {
-        context('when count a number of pilot studies from patient', () => {
+        context('when count a number of pilot studies from p    atient', () => {
             it('should return a number', () => {
                 sinon
                     .mock(modelFake)

@@ -41,6 +41,22 @@ describe('Models: PilotStudy', () => {
         })
     })
 
+    describe('convertDatetimeString()', () => {
+        const pilot: PilotStudy = new PilotStudy()
+        context('when the param is a date string in iso format', () => {
+            it('should return a new date', () => {
+                const date = pilot.convertDatetimeString('2019-04-09T00:01:02')
+                assert.equal(typeof date, 'object')
+            })
+        })
+        context('when the param is a date but is not a string', () => {
+            it('should return a new date', () => {
+                const date = pilot.convertDatetimeString(new Date())
+                assert.equal(typeof date, 'object')
+            })
+        })
+    })
+
     describe('fromJSON()', () => {
         context('when pass a complete json', () => {
             it('should return a complete pilot study model', () => {

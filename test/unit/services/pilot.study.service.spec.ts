@@ -194,6 +194,68 @@ describe('Services: PilotStudyService', () => {
         })
     })
 
+    describe('getAllPilotStudiesFromHealthProfessional()', () => {
+        context('when get all pilot studies from health professional', () => {
+            it('should return a list of pilots', () => {
+                return service.getAllPilotStudiesFromHealthProfessional(health.id!, new Query())
+                    .then(res => {
+                        assert.isArray(res)
+                        assert.lengthOf(res, 1)
+                        assert.propertyVal(res[0], 'id', pilot.id)
+                        assert.propertyVal(res[0], 'name', pilot.name)
+                        assert.propertyVal(res[0], 'is_active', pilot.is_active)
+                        assert.property(res[0], 'start')
+                        assert.property(res[0], 'end')
+                        assert.propertyVal(res[0], 'total_health_professionals', 0)
+                        assert.propertyVal(res[0], 'total_patients', 0)
+                        assert.propertyVal(res[0], 'location', pilot.location)
+                    })
+            })
+        })
+
+        context('when there are validation errors', () => {
+            it('should throw an error for invalid health id', () => {
+                return service.getAllPilotStudiesFromHealthProfessional('123', new Query())
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
+                        assert.propertyVal(err, 'description', 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is ' +
+                            'expected.')
+                    })
+            })
+        })
+    })
+
+    describe('getAllPilotStudiesFromPatient()', () => {
+        context('when get all pilot studies from patient', () => {
+            it('should return a list of pilots', () => {
+                return service.getAllPilotStudiesFromPatient(patient.id!, new Query())
+                    .then(res => {
+                        assert.isArray(res)
+                        assert.lengthOf(res, 1)
+                        assert.propertyVal(res[0], 'id', pilot.id)
+                        assert.propertyVal(res[0], 'name', pilot.name)
+                        assert.propertyVal(res[0], 'is_active', pilot.is_active)
+                        assert.property(res[0], 'start')
+                        assert.property(res[0], 'end')
+                        assert.propertyVal(res[0], 'total_health_professionals', 0)
+                        assert.propertyVal(res[0], 'total_patients', 0)
+                        assert.propertyVal(res[0], 'location', pilot.location)
+                    })
+            })
+        })
+
+        context('when there are validation errors', () => {
+            it('should throw an error for invalid health id', () => {
+                return service.getAllPilotStudiesFromPatient('123', new Query())
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
+                        assert.propertyVal(err, 'description', 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is ' +
+                            'expected.')
+                    })
+            })
+        })
+    })
+
     describe('associateHealthProfessional()', () => {
         context('when associate a health professional with a pilot study', () => {
             it('should return true', () => {
@@ -549,6 +611,17 @@ describe('Services: PilotStudyService', () => {
                     })
             })
         })
+
+        context('when there are validation errors', () => {
+            it('should throw an error for invalid pilot id', () => {
+                return service.countPilotStudiesFromHealthProfessional('123')
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
+                        assert.propertyVal(err, 'description', 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea ' +
+                            'is expected.')
+                    })
+            })
+        })
     })
 
     describe('countPilotStudiesFromPatient', () => {
@@ -559,6 +632,63 @@ describe('Services: PilotStudyService', () => {
                         assert.isNumber(res)
                         assert.equal(res, 1)
                     })
+            })
+
+            context('when there are validation errors', () => {
+                it('should throw an error for invalid pilot id', () => {
+                    return service.countPilotStudiesFromPatient('123')
+                        .catch(err => {
+                            assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
+                            assert.propertyVal(err, 'description', 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea ' +
+                                'is expected.')
+                        })
+                })
+            })
+        })
+    })
+
+    describe('countPatientsFromPilotStudy', () => {
+        context('when get the quantity of patients from pilot study', () => {
+            it('should return a number', () => {
+                return service.countPatientsFromPilotStudy(pilot.id!)
+                    .then(res => {
+                        assert.isNumber(res)
+                        assert.equal(res, 1)
+                    })
+            })
+
+            context('when there are validation errors', () => {
+                it('should throw an error for invalid pilot id', () => {
+                    return service.countPatientsFromPilotStudy('123')
+                        .catch(err => {
+                            assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
+                            assert.propertyVal(err, 'description', 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea ' +
+                                'is expected.')
+                        })
+                })
+            })
+        })
+    })
+
+    describe('countHealthProfessionalsFromPilotStudy', () => {
+        context('when get the quantity of health professionals from pilot study', () => {
+            it('should return a number', () => {
+                return service.countHealthProfessionalsFromPilotStudy(pilot.id!)
+                    .then(res => {
+                        assert.isNumber(res)
+                        assert.equal(res, 1)
+                    })
+            })
+
+            context('when there are validation errors', () => {
+                it('should throw an error for invalid pilot id', () => {
+                    return service.countHealthProfessionalsFromPilotStudy('123')
+                        .catch(err => {
+                            assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
+                            assert.propertyVal(err, 'description', 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea ' +
+                                'is expected.')
+                        })
+                })
             })
         })
     })

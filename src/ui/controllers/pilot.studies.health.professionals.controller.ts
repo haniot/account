@@ -9,7 +9,7 @@ import { ApiExceptionManager } from '../exception/api.exception.manager'
 import { Query } from '../../infrastructure/repository/query/query'
 import { HealthProfessional } from '../../application/domain/model/health.professional'
 
-@controller('/v1/pilotstudies/:pilot_studies/healthprofessionals')
+@controller('/v1/pilotstudies/:pilotstudy_id/healthprofessionals')
 export class PilotStudiesHealthProfessionalsController {
     constructor(
         @inject(Identifier.PILOT_STUDY_SERVICE) private readonly _pilotStudyService: IPilotStudyService,
@@ -22,12 +22,9 @@ export class PilotStudiesHealthProfessionalsController {
         @request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: Array<HealthProfessional> =
-                await this._pilotStudyService.getAllHealthProfessionals(req.params.pilot_studies, new Query().fromJSON(req.query))
-
-            const allHealth: Array<HealthProfessional> =
-                await this._pilotStudyService.getAllHealthProfessionals(req.params.pilot_studies, new Query())
-
-            res.setHeader('X-Total-Count', allHealth.length)
+                await this._pilotStudyService.getAllHealthProfessionals(req.params.pilotstudy_id, new Query().fromJSON(req.query))
+            const count: number = await this._pilotStudyService.countHealthProfessionalsFromPilotStudy(req.params.pilotstudy_id)
+            res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
@@ -39,7 +36,7 @@ export class PilotStudiesHealthProfessionalsController {
     public async associateHealthProfessionalToPilotStudy(
         @request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            await this._pilotStudyService.associateHealthProfessional(req.params.pilot_studies, req.params.healthprofessional_id)
+            await this._pilotStudyService.associateHealthProfessional(req.params.pilotstudy_id, req.params.healthprofessional_id)
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
@@ -52,7 +49,7 @@ export class PilotStudiesHealthProfessionalsController {
         @request() req: Request, @response() res: Response): Promise<Response> {
         try {
             await this._pilotStudyService.disassociateHealthProfessional(
-                req.params.pilot_studies, req.params.healthprofessional_id)
+                req.params.pilotstudy_id, req.params.healthprofessional_id)
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
