@@ -8,7 +8,7 @@ patient.id = DefaultEntityMock.PATIENT.id
 
 export class PatientRepositoryMock implements IPatientRepository {
     public checkExists(item: Patient): Promise<boolean> {
-        return Promise.resolve(item.id === patient.id)
+        return Promise.resolve(item.id !== patient.id)
     }
 
     public count(): Promise<number> {

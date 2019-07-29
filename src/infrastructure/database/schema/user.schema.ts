@@ -17,13 +17,10 @@ const userSchema = new Mongoose.Schema({
         },
         email: {
             type: String,
-            required: 'Email of user is required!',
-            unique: true
+            unique: true,
+            sparse: true
         },
-        password: {
-            type: String,
-            required: 'Password for user authentication is required!'
-        },
+        password: { type: String },
         phone_number: { type: String },
         birth_date: { type: String },
         name: { type: String }, /* Patient and Health Professional Parameters */

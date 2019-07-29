@@ -36,15 +36,13 @@ export class UserRepository extends BaseRepository<User, UserEntity> implements 
      * @param userEmail
      *
      */
-    public async checkExist(userEmail?: string): Promise<boolean> {
+    public async checkExistByEmail(userEmail?: string): Promise<boolean> {
         const query = new Query()
         if (userEmail !== undefined) query.addFilter({ email: userEmail })
         return new Promise<boolean>((resolve, reject) => {
             super.findOne(query)
-                .then((result: User) => {
-                    if (result) return resolve(true)
-                    return resolve(false)
-                }).catch(err => reject(super.mongoDBErrorListener(err)))
+                .then((result: User) => resolve(!!result))
+                .catch(err => reject(super.mongoDBErrorListener(err)))
         })
     }
 

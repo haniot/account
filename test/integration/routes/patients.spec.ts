@@ -81,7 +81,7 @@ describe('Routes: Patients', () => {
                     .expect(400)
                     .then(res => {
                         expect(res.body).to.have.property('message', 'Required fields were not provided...')
-                        expect(res.body).to.have.property('description', 'Patient validation: name, email, password, gender, ' +
+                        expect(res.body).to.have.property('description', 'Patient validation: name, gender, ' +
                             'birth_date is required!')
                     })
             })
@@ -212,7 +212,7 @@ describe('Routes: Patients', () => {
             it('should return status code 404 and message from user not found', () => {
                 return request
                     .patch(`/v1/patients/${new ObjectID()}`)
-                    .send({ email: user.email })
+                    .send({ email: 'any@mail.com' })
                     .set('Content-Type', 'application/json')
                     .expect(404)
                     .then(res => {

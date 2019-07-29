@@ -30,7 +30,7 @@ describe('Repositories: User', () => {
                     .chain('exec')
                     .resolves(user)
 
-                return repo.checkExist(user.email)
+                return repo.checkExistByEmail(user.email)
                     .then(result => {
                         assert.isBoolean(result)
                         assert.isTrue(result)
@@ -47,7 +47,7 @@ describe('Repositories: User', () => {
                     .chain('exec')
                     .resolves(undefined)
 
-                return repo.checkExist('unknown@mail.com')
+                return repo.checkExistByEmail('unknown@mail.com')
                     .then(result => {
                         assert.isBoolean(result)
                         assert.isFalse(result)
@@ -64,7 +64,7 @@ describe('Repositories: User', () => {
                     .chain('exec')
                     .rejects({ message: 'An internal error has occurred in the database!' })
 
-                return repo.checkExist(undefined)
+                return repo.checkExistByEmail(undefined)
                     .catch(err => {
                         assert.equal(err.message, 'An internal error has occurred in the database!')
                         assert.equal(err.description, 'Please try again later...')

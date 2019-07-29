@@ -20,7 +20,7 @@ describe('Services: PilotStudyService', () => {
 
     pilot.id = DefaultEntityMock.PILOT_STUDY.id
     health.id = DefaultEntityMock.HEALTH_PROFESSIONAL.id
-    patient.id = DefaultEntityMock.PATIENT.id
+    patient.id = `${new ObjectID()}`
 
     describe('add()', () => {
         context('when add new a pilot study without pilot study', () => {

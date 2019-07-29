@@ -22,8 +22,12 @@ export class PatientService implements IPatientService {
     public async add(item: Patient): Promise<Patient> {
         try {
             CreatePatientValidator.validate(item)
-            const exists = await this._userRepository.checkExist(item.email)
-            if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
+            if (item.email) {
+                const exists = await this._userRepository.checkExistByEmail(item.email)
+                if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
+            }
+            const patientExists = await this._patientRepository.checkExists(item)
+            if (patientExists) throw new ConflictException('A patient with the same name and birth date already exists')
             return this._patientRepository.create(item)
         } catch (err) {
             return Promise.reject(err)
@@ -57,6 +61,10 @@ export class PatientService implements IPatientService {
     public async update(item: Patient): Promise<Patient> {
         try {
             UpdatePatientValidator.validate(item)
+            if (item.email) {
+                const exists = await this._userRepository.checkExistByEmail(item.email)
+                if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
+            }
             item.last_login = undefined
             return this._patientRepository.update(item)
         } catch (err) {

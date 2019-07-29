@@ -7,7 +7,7 @@ export class UserRepositoryMock implements IUserRepository {
         return Promise.resolve(true)
     }
 
-    public checkExist(email?: string): Promise<boolean> {
+    public checkExistByEmail(email?: string): Promise<boolean> {
         return Promise.resolve(email === 'exists@mail.com')
     }
 

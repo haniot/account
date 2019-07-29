@@ -144,6 +144,7 @@ describe('Routes: Admins', () => {
     describe('PATCH /v1/admins/:admin_id', () => {
         context('when update a user', () => {
             it('should return status code 200 and updated user', () => {
+                user.email = 'another@mail.com'
                 return request
                     .patch(`/v1/admins/${user.id}`)
                     .send({ email: user.email })
@@ -163,7 +164,7 @@ describe('Routes: Admins', () => {
             it('should return status code 400 and info message from invalid id', () => {
                 return request
                     .patch('/v1/admins/123')
-                    .send({ email: user.email })
+                    .send({ email: 'any@thing.com' })
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
@@ -204,7 +205,7 @@ describe('Routes: Admins', () => {
             it('should return status code 404 and message from user not found', () => {
                 return request
                     .patch(`/v1/admins/${new ObjectID()}`)
-                    .send({ email: user.email })
+                    .send({ email: 'any@thing.com' })
                     .set('Content-Type', 'application/json')
                     .expect(404)
                     .then(res => {

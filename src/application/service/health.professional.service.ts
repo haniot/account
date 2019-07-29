@@ -25,7 +25,7 @@ export class HealthProfessionalService implements IHealthProfessionalService {
     public async add(item: HealthProfessional): Promise<HealthProfessional> {
         try {
             CreateHealthProfessionalValidator.validate(item)
-            const exists = await this._userRepository.checkExist(item.email)
+            const exists = await this._userRepository.checkExistByEmail(item.email)
             if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
             const result: HealthProfessional = await this._healthProfessionalRepository.create(item)
             result.total_pilot_studies = 0
@@ -66,6 +66,10 @@ export class HealthProfessionalService implements IHealthProfessionalService {
     public async update(item: HealthProfessional): Promise<HealthProfessional> {
         try {
             UpdateHealthProfessionalValidator.validate(item)
+            if (item.email) {
+                const exists = await this._userRepository.checkExistByEmail(item.email)
+                if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
+            }
             item.last_login = undefined
             const result: HealthProfessional = await this._healthProfessionalRepository.update(item)
             return Promise.resolve(this.addReadOnlyInformation(result))

@@ -35,8 +35,8 @@ describe('Services: PatientService', () => {
                 return service.add(new Patient())
                     .catch(err => {
                         assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                        assert.propertyVal(err, 'description', 'Patient validation: name, email, password, ' +
-                            'gender, birth_date is required!')
+                        assert.propertyVal(err, 'description', 'Patient validation: name, gender, birth_date is ' +
+                            'required!')
                     })
             })
         })

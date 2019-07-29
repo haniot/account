@@ -120,8 +120,7 @@ describe('Repositories: PatientRepository', () => {
                     sinon
                         .mock(modelFake)
                         .expects('findOne')
-                        .withArgs({ _id: user.id, type: 'patient' })
-                        .chain('select')
+                        .withArgs({ _id: user.id, type: 'patient', name: user.name, birth_date: user.birth_date })
                         .chain('exec')
                         .resolves(user)
 
@@ -138,8 +137,7 @@ describe('Repositories: PatientRepository', () => {
                     sinon
                         .mock(modelFake)
                         .expects('findOne')
-                        .withArgs({ _id: user.id, type: 'patient' })
-                        .chain('select')
+                        .withArgs({ _id: user.id, type: 'patient', name: user.name, birth_date: user.birth_date })
                         .chain('exec')
                         .resolves(undefined)
 
@@ -157,16 +155,13 @@ describe('Repositories: PatientRepository', () => {
                         .mock(modelFake)
                         .expects('findOne')
                         .withArgs({ _id: undefined, type: 'patient' })
-                        .chain('select')
                         .chain('exec')
                         .resolves(undefined)
 
-                    user.id = undefined
-                    return repo.checkExists(user)
+                    return repo.checkExists(new Patient())
                         .catch(err => {
                             assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                             assert.propertyVal(err, 'description', 'Please try again later...')
-                            user.id = DefaultEntityMock.PATIENT.id
                         })
                 })
             })
@@ -177,7 +172,6 @@ describe('Repositories: PatientRepository', () => {
                         .mock(modelFake)
                         .expects('findOne')
                         .withArgs({ _id: user.id, type: 'patient' })
-                        .chain('select')
                         .chain('exec')
                         .rejects({ message: 'An internal error has occurred in the database!' })
 

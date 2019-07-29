@@ -24,7 +24,7 @@ export class AdminService implements IAdminService {
     public async add(item: Admin): Promise<Admin> {
         try {
             CreateAdminValidator.validate(item)
-            const exists = await this._userRepository.checkExist(item.email)
+            const exists = await this._userRepository.checkExistByEmail(item.email)
             if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
             const result: Admin = await this._adminRepository.create(item)
             return Promise.resolve(this.addReadOnlyInformation(result))
@@ -63,6 +63,10 @@ export class AdminService implements IAdminService {
     public async update(item: Admin): Promise<Admin> {
         try {
             UpdateAdminValidator.validate(item)
+            if (item.email) {
+                const exists = await this._userRepository.checkExistByEmail(item.email)
+                if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
+            }
             item.last_login = undefined
             const result = await this._adminRepository.update(item)
             return Promise.resolve(this.addReadOnlyInformation(result))

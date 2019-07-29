@@ -146,6 +146,11 @@ export class App {
                     stream: { write: (str: string) => this._logger.info(str) }
                 }
             ))
+
+            // Manage Middleware Errors
+            app.use((err, req, res, next) => {
+                return res.status(err.statusCode).send({ code: err.statusCode, message: err.message })
+            })
         })
         this.express.use(inversifyExpress.build())
     }

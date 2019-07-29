@@ -34,7 +34,7 @@ export class AuthRepository extends BaseRepository<User, UserEntity> implements 
 
     public authenticate(_email: string, password: string): Promise<object> {
         return new Promise<object>((resolve, reject) => {
-            this._userModel.findOne({ email: _email })
+            this.Model.findOne({ email: _email })
                 .exec()
                 .then(async user => {
                     /* Validate password and generate access token*/
@@ -42,7 +42,6 @@ export class AuthRepository extends BaseRepository<User, UserEntity> implements 
                         return reject(new AuthenticationException(
                             'Authentication failed due to invalid authentication credentials.'))
                     }
-
                     if (user.change_password) {
                         return reject(
                             new ChangePasswordException(
@@ -51,7 +50,6 @@ export class AuthRepository extends BaseRepository<User, UserEntity> implements 
                                 `To change it, access PATCH /v1/auth/password.`,
                                 `/v1/auth/password`))
                     }
-                    // await this._userModel.findByIdAndUpdate(user.id, { last_login: new Date().toISOString() })
                     return resolve({ access_token: await this.generateAccessToken(this._userMapper.transform(user)) })
                 }).catch(err => reject(new RepositoryException(Strings.ERROR_MESSAGE.UNEXPECTED)))
         })
@@ -69,6 +67,7 @@ export class AuthRepository extends BaseRepository<User, UserEntity> implements 
                 email_verified: user.email_verified,
                 change_password: user.change_password
             }
+
             return Promise.resolve(jwt.sign(payload, private_key, { expiresIn: '1d', algorithm: 'RS256' }))
         } catch (err) {
             return Promise.reject(

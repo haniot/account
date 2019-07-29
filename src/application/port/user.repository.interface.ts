@@ -18,7 +18,7 @@ export interface IUserRepository extends IRepository<User> {
      * @return {Promise<boolean>} True if it exists or False, otherwise.
      * @throws {ValidationException | RepositoryException}
      */
-    checkExist(userEmail?: string): Promise<boolean>
+    checkExistByEmail(userEmail?: string): Promise<boolean>
 
     /**
      * Change the user password.

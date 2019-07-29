@@ -213,7 +213,7 @@ describe('Routes: HealthProfessionals', () => {
             it('should return status code 404 and message from user not found', () => {
                 return request
                     .patch(`/v1/healthprofessionals/${new ObjectID()}`)
-                    .send({ email: user.email })
+                    .send({ email: 'any@mail.com' })
                     .set('Content-Type', 'application/json')
                     .expect(404)
                     .then(res => {
