@@ -16,7 +16,7 @@ export abstract class Default {
     public static readonly PORT_HTTPS: number = 443
     public static readonly SWAGGER_PATH: string = './src/ui/swagger/api.yaml'
     public static readonly SWAGGER_URI: string = 'https://api.swaggerhub.com/apis/haniot/account-service/v1/swagger.json'
-    public static readonly LOGO_URI: string = 'http://www.ocariot.com.br/wp-content/uploads/2018/08/cropped-512-32x32.png'
+    public static readonly LOGO_URI: string = 'https://i.imgur.com/O7PxGWQ.png'
 
     // MongoDB
     public static readonly MONGODB_URI: string = 'mongodb://127.0.0.1:27017/account-service'
@@ -40,5 +40,5 @@ export abstract class Default {
     public static readonly SSL_KEY_PATH: string = '.certs/server.key'
     public static readonly SSL_CERT_PATH: string = '.certs/server.crt'
 
-    public static readonly IP_WHITELIST: Array<string> = ['*']
+    public static readonly HOST_WHITELIST: Array<string> = ['*']
 }
