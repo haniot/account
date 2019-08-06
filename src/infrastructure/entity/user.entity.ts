@@ -8,6 +8,7 @@ export class UserEntity {
     public selected_pilot_study?: string
     public language?: string
     public id?: string
+    public name?: string
     public email?: string
     public password?: string
     public phone_number?: string

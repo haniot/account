@@ -5,7 +5,6 @@ import { User } from './user'
 import { UserType } from '../utils/user.type'
 
 export class Patient extends User implements IJSONSerializable, IJSONDeserializable<Patient> {
-    private _name?: string
     private _gender?: string
 
     constructor() {
@@ -35,14 +34,6 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
         ]
     }
 
-    get name(): string | undefined {
-        return this._name
-    }
-
-    set name(value: string | undefined) {
-        this._name = value
-    }
-
     get gender(): string | undefined {
         return this._gender
     }
@@ -63,7 +54,6 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
         }
         super.fromJSON(json)
         if (json.id !== undefined) super.id = json.id
-        if (json.name !== undefined) this.name = json.name
         if (json.email !== undefined) this.email = json.email
         if (json.gender !== undefined) this.gender = json.gender
 
@@ -74,7 +64,6 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
         return {
             ...super.toJSON(),
             ...{
-                name: this.name,
                 gender: this.gender
             }
         }

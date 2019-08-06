@@ -23,7 +23,7 @@ const userSchema = new Mongoose.Schema({
         password: { type: String },
         phone_number: { type: String },
         birth_date: { type: String },
-        name: { type: String }, /* Patient and Health Professional Parameters */
+        name: { type: String },
         health_area: { type: String }, /* Health Professional Parameters*/
         gender: { type: String } /* Patient Parameter*/
     },

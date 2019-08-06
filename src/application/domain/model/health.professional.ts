@@ -11,7 +11,6 @@ import { UserType } from '../utils/user.type'
  * @implements {IJSONSerializable, IJSONDeserializable<HealthProfessional>}
  */
 export class HealthProfessional extends User implements IJSONSerializable, IJSONDeserializable<HealthProfessional> {
-    private _name?: string
     private _health_area?: string
     private _total_pilot_studies ?: number
     private _total_patients ?: number
@@ -52,14 +51,6 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
         ]
     }
 
-    get name(): string | undefined {
-        return this._name
-    }
-
-    set name(value: string | undefined) {
-        this._name = value
-    }
-
     get health_area(): string | undefined {
         return this._health_area
     }
@@ -97,7 +88,6 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
         }
 
         super.fromJSON(json)
-        if (json.name !== undefined) this.name = json.name
         if (json.health_area !== undefined) this.health_area = json.health_area
         if (json.total_pilot_studies !== undefined) this.total_pilot_studies = json.total_pilot_studies
         if (json.total_patients !== undefined) this.total_patients = json.total_patients
@@ -109,7 +99,6 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
         return {
             ...super.toJSON(),
             ...{
-                name: this.name,
                 health_area: this.health_area,
                 total_pilot_studies: this.total_pilot_studies,
                 total_patients: this.total_patients

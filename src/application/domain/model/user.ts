@@ -12,6 +12,7 @@ import { DatetimeValidator } from '../validator/date.time.validator'
  */
 export class User extends Entity implements IJSONSerializable, IJSONDeserializable<User> {
 
+    private _name?: string
     private _email?: string
     private _password?: string // Password for user authentication.
     private _birth_date?: string
@@ -27,6 +28,14 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
 
     constructor() {
         super()
+    }
+
+    get name(): string | undefined {
+        return this._name
+    }
+
+    set name(value: string | undefined) {
+        this._name = value
     }
 
     get email(): string | undefined {
@@ -154,6 +163,7 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
         }
 
         if (json.id !== undefined) super.id = json.id
+        if (json.name !== undefined) this.name = json.name
         if (json.email !== undefined) this.email = json.email
         if (json.password !== undefined) this.password = json.password
         if (json.birth_date !== undefined) this.birth_date = json.birth_date
@@ -172,6 +182,7 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
     public toJSON(): any {
         return {
             id: super.id,
+            name: this.name,
             email: this.email,
             birth_date: this.birth_date,
             type: this.type,

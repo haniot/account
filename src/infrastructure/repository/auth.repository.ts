@@ -63,7 +63,7 @@ export class AuthRepository extends BaseRepository<User, UserEntity> implements 
                 sub_type: user.type,
                 iss: process.env.ISSUER || Default.ISSUER,
                 iat: Math.floor(Date.now() / 1000),
-                scopes: user.scopes.join(' '),
+                scope: user.scopes.join(' '),
                 email_verified: user.email_verified,
                 change_password: user.change_password
             }
