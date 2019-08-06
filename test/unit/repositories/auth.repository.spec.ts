@@ -1,26 +1,29 @@
-import sinon from 'sinon'
-import { assert } from 'chai'
-import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { AuthRepository } from '../../../src/infrastructure/repository/auth.repository'
+import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { EntityMapperMock } from '../../mocks/models/entity.mapper.mock'
 import { UserRepositoryMock } from '../../mocks/repositories/user.repository.mock'
+import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
 import { Admin } from '../../../src/application/domain/model/admin'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
+import { assert } from 'chai'
+import sinon from 'sinon'
 
 require('sinon-mongoose')
 
 describe('Repositories: AuthRepository', () => {
-    const modelFake: any = UserRepoModel
-    const repo = new AuthRepository(modelFake, new EntityMapperMock(), new UserRepositoryMock())
+
+    const modelFake = UserRepoModel
+    const repo = new AuthRepository(modelFake, new EntityMapperMock(), new UserRepositoryMock(), new CustomLoggerMock())
     const user: Admin = new Admin().fromJSON(DefaultEntityMock.ADMIN)
+    user.id = DefaultEntityMock.ADMIN.id
 
     afterEach(() => {
         sinon.restore()
     })
 
     describe('authenticate()', () => {
-        context('when the authentication was successful', () => {
-            it('should return the auth token', () => {
+        context('when the authenticate is successful', () => {
+            it('should return a token', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
@@ -29,55 +32,30 @@ describe('Repositories: AuthRepository', () => {
                     .resolves(user)
 
                 return repo.authenticate(user.email!, user.password!)
-                    .then(result => {
-                        assert.property(result, 'token')
+                    .then(res => {
+                        assert.property(res, 'access_token')
                     })
             })
         })
 
         context('when the user is not found', () => {
-            it('should return error for invalid credentials', () => {
+            it('should reject an error', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs({ email: 'unknown@mail.com' })
+                    .withArgs({ email: user.email })
                     .chain('exec')
                     .resolves(undefined)
 
-                return repo.authenticate('unknown@mail.com', 'unknown')
+                return repo.authenticate(user.email!, user.password!)
                     .catch(err => {
-                        assert.property(err, 'message')
-                        assert.propertyVal(
-                            err, 'message', 'Authentication failed due to invalid authentication credentials.')
+                        assert.propertyVal(err, 'message', 'Authentication failed due to invalid authentication credentials.')
                     })
             })
         })
 
-        context('when the user does not have password', () => {
-            it('should return error for invalid credentials', () => {
-                const userWithoutPass: Admin = new Admin().fromJSON(
-                    {
-                        username: 'withoutpass',
-                        email: 'withoutpass@mail.com'
-                    })
-                sinon
-                    .mock(modelFake)
-                    .expects('findOne')
-                    .withArgs({ email: 'unknown@mail.com' })
-                    .chain('exec')
-                    .resolves(userWithoutPass)
-
-                return repo.authenticate('unknown@mail.com', 'unknown')
-                    .catch(err => {
-                        assert.property(err, 'message')
-                        assert.propertyVal(
-                            err, 'message', 'Authentication failed due to invalid authentication credentials.')
-                    })
-            })
-        })
-
-        context('when the user needs to change password before auth', () => {
-            it('should return error for change password necessary', () => {
+        context('when user needs to change password', () => {
+            it('should reject a error', () => {
                 user.change_password = true
                 sinon
                     .mock(modelFake)
@@ -88,50 +66,26 @@ describe('Repositories: AuthRepository', () => {
 
                 return repo.authenticate(user.email!, user.password!)
                     .catch(err => {
-                        assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'Change password is necessary.')
-                        assert.property(err, 'description')
-                        assert.propertyVal(err, 'description', `To ensure information security, the user must change ` +
-                            `the access password. To change it, access PATCH /users/${user.id}/password.`)
-                        assert.property(err, 'link')
-                        assert.propertyVal(err, 'link', `/users/${user.id}/password`)
-                    })
-            })
-        })
-
-        context('when the password does not match', () => {
-            it('should return error for invalid credentials', () => {
-                user.change_password = false
-                sinon
-                    .mock(modelFake)
-                    .expects('findOne')
-                    .withArgs({ email: user.email })
-                    .chain('exec')
-                    .resolves(user)
-
-                return repo.authenticate(user.email!, 'anotherpassword')
-                    .catch(err => {
-                        assert.property(err, 'message')
-                        assert.propertyVal(
-                            err, 'message', 'Authentication failed due to invalid authentication credentials.')
+                        assert.propertyVal(err, 'description', 'To ensure information security, the user must change the access' +
+                            ' password. To change it, access PATCH /v1/auth/password.')
+                        assert.propertyVal(err, 'link', '/v1/auth/password')
+                        user.change_password = false
                     })
             })
         })
 
         context('when a database error occurs', () => {
-            it('should reject a error', () => {
+            it('should reject an error', () => {
                 sinon
                     .mock(modelFake)
                     .expects('findOne')
-                    .withArgs({ email: undefined })
+                    .withArgs({ email: user.email })
                     .chain('exec')
-                    .rejects({ message: 'An internal error has occurred in the database!' })
+                    .rejects({ message: 'An unexpected error has occurred. Please try again later...' })
 
-                return repo.authenticate(undefined!, undefined!)
+                return repo.authenticate(user.email!, user.password!)
                     .catch(err => {
-                        assert.property(err, 'name')
-                        assert.propertyVal(err, 'name', 'Error')
-                        assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'An unexpected error has occurred. Please try again later...')
                     })
             })

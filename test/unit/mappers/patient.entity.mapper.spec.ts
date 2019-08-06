@@ -1,81 +1,87 @@
+import { assert } from 'chai'
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { PatientEntityMapper } from '../../../src/infrastructure/entity/mapper/patient.entity.mapper'
 import { PatientEntity } from '../../../src/infrastructure/entity/patient.entity'
-import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { Patient } from '../../../src/application/domain/model/patient'
-import { assert } from 'chai'
 
 describe('Mappers: PatientEntityMapper', () => {
     const mapper = new PatientEntityMapper()
-    const model: Patient = new Patient().fromJSON(DefaultEntityMock.PATIENT)
+    const user: Patient = new Patient().fromJSON(DefaultEntityMock.PATIENT)
+    user.id = DefaultEntityMock.PATIENT.id
+    user.change_password = DefaultEntityMock.PATIENT.change_password
+    user.email_verified = DefaultEntityMock.PATIENT.email_verified
+    user.type = 'user'
 
     describe('transform()', () => {
         context('when the parameter is a json', () => {
             it('should call the jsonToModel() method', () => {
                 const result = mapper.transform(DefaultEntityMock.PATIENT)
-                assert.property(result, 'id')
-                assert.propertyVal(result, 'id', DefaultEntityMock.PATIENT.id)
-                assert.property(result, 'pilotstudy_id')
-                assert.propertyVal(result, 'pilotstudy_id', DefaultEntityMock.PATIENT.pilotstudy_id)
-                assert.property(result, 'name')
-                assert.propertyVal(result, 'name', DefaultEntityMock.PATIENT.name)
-                assert.property(result, 'email')
-                assert.propertyVal(result, 'email', DefaultEntityMock.PATIENT.email)
-                assert.property(result, 'gender')
-                assert.propertyVal(result, 'gender', DefaultEntityMock.PATIENT.gender)
-                assert.property(result, 'birth_date')
-                assert.propertyVal(result, 'birth_date', DefaultEntityMock.PATIENT.birth_date)
+                assert.property(result, 'scopes')
+                assert.propertyVal(result, 'id', user.id)
+                assert.propertyVal(result, 'email', user.email)
+                assert.propertyVal(result, 'password', user.password)
+                assert.propertyVal(result, 'change_password', user.change_password)
+                assert.propertyVal(result, 'email_verified', user.email_verified)
+                assert.propertyVal(result, 'birth_date', user.birth_date)
+                assert.propertyVal(result, 'phone_number', user.phone_number)
+                assert.propertyVal(result, 'selected_pilot_study', user.selected_pilot_study)
+                assert.propertyVal(result, 'language', user.language)
+                assert.propertyVal(result, 'gender', user.gender)
             })
 
             it('should return model without parameters for empty json', () => {
                 const result = mapper.transform({})
-                assert.property(result, 'id')
+                assert.property(result, 'scopes')
                 assert.propertyVal(result, 'id', undefined)
-                assert.property(result, 'pilotstudy_id')
-                assert.propertyVal(result, 'pilotstudy_id', undefined)
-                assert.property(result, 'name')
-                assert.propertyVal(result, 'name', undefined)
-                assert.property(result, 'email')
                 assert.propertyVal(result, 'email', undefined)
-                assert.property(result, 'gender')
-                assert.propertyVal(result, 'gender', undefined)
-                assert.property(result, 'birth_date')
+                assert.propertyVal(result, 'password', undefined)
+                assert.propertyVal(result, 'change_password', undefined)
+                assert.propertyVal(result, 'email_verified', undefined)
                 assert.propertyVal(result, 'birth_date', undefined)
+                assert.propertyVal(result, 'phone_number', undefined)
+                assert.propertyVal(result, 'selected_pilot_study', undefined)
+                assert.propertyVal(result, 'language', undefined)
+                assert.propertyVal(result, 'gender', undefined)
             })
 
             it('should return model without parameter for undefined json', () => {
                 const result = mapper.transform(undefined)
-                assert.property(result, 'id')
+                assert.property(result, 'scopes')
                 assert.propertyVal(result, 'id', undefined)
-                assert.property(result, 'pilotstudy_id')
-                assert.propertyVal(result, 'pilotstudy_id', undefined)
-                assert.property(result, 'name')
-                assert.propertyVal(result, 'name', undefined)
-                assert.property(result, 'email')
                 assert.propertyVal(result, 'email', undefined)
-                assert.property(result, 'gender')
-                assert.propertyVal(result, 'gender', undefined)
-                assert.property(result, 'birth_date')
+                assert.propertyVal(result, 'password', undefined)
+                assert.propertyVal(result, 'change_password', undefined)
+                assert.propertyVal(result, 'email_verified', undefined)
                 assert.propertyVal(result, 'birth_date', undefined)
+                assert.propertyVal(result, 'phone_number', undefined)
+                assert.propertyVal(result, 'selected_pilot_study', undefined)
+                assert.propertyVal(result, 'language', undefined)
+                assert.propertyVal(result, 'gender', undefined)
             })
 
         })
 
         context('when the parameter is a model', () => {
             it('should call the modelToModelEntity() method', () => {
-                const result = mapper.transform(model)
-                assert.property(result, 'id')
-                assert.property(result, 'pilotstudy_id')
-                assert.property(result, 'name')
-                assert.property(result, 'email')
-                assert.property(result, 'gender')
-                assert.property(result, 'birth_date')
+                const result = mapper.transform(user)
+                assert.property(result, 'scopes')
+                assert.propertyVal(result, 'id', user.id)
+                assert.propertyVal(result, 'email', user.email)
+                assert.propertyVal(result, 'password', user.password)
+                assert.propertyVal(result, 'change_password', user.change_password)
+                assert.propertyVal(result, 'email_verified', user.email_verified)
+                assert.propertyVal(result, 'birth_date', user.birth_date)
+                assert.propertyVal(result, 'phone_number', user.phone_number)
+                assert.propertyVal(result, 'selected_pilot_study', user.selected_pilot_study)
+                assert.propertyVal(result, 'language', user.language)
+                assert.propertyVal(result, 'gender', user.gender)
             })
 
-            it('should return a model entity without parameters for empty model', () => {
-                const model = new Patient()
-                model.type = undefined
-                model.scopes = undefined!
-                const result = mapper.transform(model)
+            it('should return a model entity with basic parameters for empty model', () => {
+                const patient: Patient = new Patient()
+                patient.scopes = undefined!
+                patient.type = undefined
+                const result = mapper.transform(patient)
                 assert.isEmpty(result)
             })
         })
@@ -87,7 +93,6 @@ describe('Mappers: PatientEntityMapper', () => {
                 try {
                     mapper.modelEntityToModel(new PatientEntity())
                 } catch (err) {
-                    assert.property(err, 'message')
                     assert.property(err, 'message', 'Not implemented!')
                 }
             })

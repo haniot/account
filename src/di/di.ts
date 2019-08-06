@@ -2,7 +2,7 @@ import 'reflect-metadata'
 import { Container } from 'inversify'
 import { HomeController } from '../ui/controllers/home.controller'
 import { Identifier } from './identifiers'
-import { UserController } from '../ui/controllers/user.controller'
+import { UsersController } from '../ui/controllers/users.controller'
 import { IUserService } from '../application/port/user.service.interface'
 import { UserService } from '../application/service/user.service'
 import { IUserRepository } from '../application/port/user.repository.interface'
@@ -38,15 +38,15 @@ import { IHealthProfessionalService } from '../application/port/health.professio
 import { IAdminService } from '../application/port/admin.service.interface'
 import { HealthProfessionalService } from '../application/service/health.professional.service'
 import { AdminService } from '../application/service/admin.service'
-import { AdminController } from '../ui/controllers/admin.controller'
-import { HealthProfessionalController } from '../ui/controllers/health.professional.controller'
+import { AdminsController } from '../ui/controllers/admins.controller'
+import { HealthProfessionalsController } from '../ui/controllers/health.professionals.controller'
 import { PilotStudyRepoModel } from '../infrastructure/database/schema/pilot.study.schema'
 import { PilotStudy } from '../application/domain/model/pilot.study'
 import { PilotStudyEntity } from '../infrastructure/entity/pilot.study.entity'
 import { PilotStudyEntityMapper } from '../infrastructure/entity/mapper/pilot.study.entity.mapper'
 import { IPilotStudyRepository } from '../application/port/pilot.study.repository.interface'
 import { PilotStudyRepository } from '../infrastructure/repository/pilot.study.repository'
-import { PilotStudyController } from '../ui/controllers/pilot.study.controller'
+import { PilotStudiesController } from '../ui/controllers/pilot.studies.controller'
 import { IPilotStudyService } from '../application/port/pilot.study.service.interface'
 import { PilotStudyService } from '../application/service/pilot.study.service'
 import { IBackgroundTask } from '../application/port/background.task.interface'
@@ -58,7 +58,11 @@ import { IPatientRepository } from '../application/port/patient.repository.inter
 import { PatientRepository } from '../infrastructure/repository/patient.repository'
 import { IPatientService } from '../application/port/patient.service.interface'
 import { PatientService } from '../application/service/patient.service'
-import { PatientController } from '../ui/controllers/patient.controller'
+import { PatientsController } from '../ui/controllers/patients.controller'
+import { HealthProfessionalsPilotStudiesController } from '../ui/controllers/health.professionals.pilot.studies.controller'
+import { PilotStudiesHealthProfessionalsController } from '../ui/controllers/pilot.studies.health.professionals.controller'
+import { PilotStudiesPatientsController } from '../ui/controllers/pilot.studies.patients.controller'
+import { PatientsPilotStudiesController } from '../ui/controllers/patients.pilot.studies.controller'
 
 export class DI {
     private static instance: DI
@@ -105,15 +109,23 @@ export class DI {
 
         // Controllers
         this.container.bind<HomeController>(Identifier.HOME_CONTROLLER).to(HomeController).inSingletonScope()
-        this.container.bind<UserController>(Identifier.USER_CONTROLLER).to(UserController).inSingletonScope()
+        this.container.bind<UsersController>(Identifier.USERS_CONTROLLER).to(UsersController).inSingletonScope()
         this.container.bind<AuthController>(Identifier.AUTH_CONTROLLER)
             .to(AuthController).inSingletonScope()
-        this.container.bind<AdminController>(Identifier.ADMIN_CONTROLLER).to(AdminController).inSingletonScope()
-        this.container.bind<PatientController>(Identifier.PATIENT_CONTROLLER).to(PatientController).inSingletonScope()
-        this.container.bind<HealthProfessionalController>(Identifier.HEALTH_PROFESSIONAL_CONTROLLER)
-            .to(HealthProfessionalController).inSingletonScope()
-        this.container.bind<PilotStudyController>(Identifier.PILOT_STUDY_CONTROLLER)
-            .to(PilotStudyController).inSingletonScope()
+        this.container.bind<AdminsController>(Identifier.ADMINS_CONTROLLER).to(AdminsController).inSingletonScope()
+        this.container.bind<PatientsController>(Identifier.PATIENTS_CONTROLLER).to(PatientsController).inSingletonScope()
+        this.container.bind<PatientsPilotStudiesController>(Identifier.PATIENTS_PILOT_STUDIES_CONTROLLER)
+            .to(PatientsPilotStudiesController).inSingletonScope()
+        this.container.bind<HealthProfessionalsController>(Identifier.HEALTH_PROFESSIONALS_CONTROLLER)
+            .to(HealthProfessionalsController).inSingletonScope()
+        this.container.bind<HealthProfessionalsPilotStudiesController>(Identifier.HEALTH_PROFESSIONALS_PILOT_STUDIES_CONTROLLER)
+            .to(HealthProfessionalsPilotStudiesController).inSingletonScope()
+        this.container.bind<PilotStudiesController>(Identifier.PILOT_STUDIES_CONTROLLER)
+            .to(PilotStudiesController).inSingletonScope()
+        this.container.bind<PilotStudiesHealthProfessionalsController>(Identifier.PILOT_STUDIES_HEALTH_PROFESSIONALS_CONTROLLER)
+            .to(PilotStudiesHealthProfessionalsController).inSingletonScope()
+        this.container.bind<PilotStudiesPatientsController>(Identifier.PILOT_STUDIES_PATIENTS_CONTROLLER)
+            .to(PilotStudiesPatientsController).inSingletonScope()
 
         // Services
         this.container.bind<IUserService>(Identifier.USER_SERVICE).to(UserService).inSingletonScope()

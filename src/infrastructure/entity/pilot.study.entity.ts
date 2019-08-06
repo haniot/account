@@ -4,6 +4,7 @@ export class PilotStudyEntity {
     public is_active?: boolean
     public start?: Date
     public end?: Date
-    public health_professionals_id?: Array<any>
+    public health_professionals?: Array<any>
+    public patients?: Array<any>
     public location?: string
 }

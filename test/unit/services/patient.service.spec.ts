@@ -4,32 +4,28 @@ import { IPatientService } from '../../../src/application/port/patient.service.i
 import { PatientService } from '../../../src/application/service/patient.service'
 import { PatientRepositoryMock } from '../../mocks/repositories/patient.repository.mock'
 import { assert } from 'chai'
+import { UserRepositoryMock } from '../../mocks/repositories/user.repository.mock'
 import { Query } from '../../../src/infrastructure/repository/query/query'
-import { PilotStudyRepositoryMock } from '../../mocks/repositories/pilot.study.repository.mock'
 
 describe('Services: PatientService', () => {
-    const patient: Patient = new Patient().fromJSON(DefaultEntityMock.PATIENT)
-    patient.id = DefaultEntityMock.PATIENT.id
-    const service: IPatientService = new PatientService(new PatientRepositoryMock(), new PilotStudyRepositoryMock())
+    const user: Patient = new Patient().fromJSON(DefaultEntityMock.PATIENT)
+    user.id = DefaultEntityMock.PATIENT.id
+    const service: IPatientService = new PatientService(new PatientRepositoryMock(), new UserRepositoryMock())
 
     describe('add()', () => {
-        context('when save a new patient', () => {
-            it('should return a saved patient', () => {
+        context('when save a new user', () => {
+            it('should return a saved user', () => {
                 return service
-                    .add(patient)
-                    .then(result => {
-                        assert.property(result, 'id')
-                        assert.propertyVal(result, 'id', patient.id)
-                        assert.property(result, 'pilotstudy_id')
-                        assert.propertyVal(result, 'pilotstudy_id', patient.pilotstudy_id)
-                        assert.property(result, 'name')
-                        assert.propertyVal(result, 'name', patient.name)
-                        assert.property(result, 'email')
-                        assert.propertyVal(result, 'email', patient.email)
-                        assert.property(result, 'gender')
-                        assert.propertyVal(result, 'gender', patient.gender)
-                        assert.property(result, 'birth_date')
-                        assert.propertyVal(result, 'birth_date', patient.birth_date)
+                    .add(user)
+                    .then(res => {
+                        assert.propertyVal(res, 'id', user.id)
+                        assert.propertyVal(res, 'email', user.email)
+                        assert.propertyVal(res, 'birth_date', user.birth_date)
+                        assert.propertyVal(res, 'phone_number', user.phone_number)
+                        assert.propertyVal(res, 'selected_pilot_study', user.selected_pilot_study)
+                        assert.propertyVal(res, 'language', user.language)
+                        assert.propertyVal(res, 'name', user.name)
+                        assert.propertyVal(res, 'gender', user.gender)
                     })
             })
         })
@@ -38,79 +34,63 @@ describe('Services: PatientService', () => {
             it('should reject a validation error', () => {
                 return service.add(new Patient())
                     .catch(err => {
-                        assert.property(err, 'message')
-                        assert.property(err, 'description')
                         assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                        assert.propertyVal(err, 'description', 'Patient validation: name, email, password, ' +
-                            'gender, birth_date, pilotstudy_id is required!')
+                        assert.propertyVal(err, 'description', 'Patient validation: name, gender, birth_date is ' +
+                            'required!')
+                    })
+            })
+        })
+
+        context('when the user already exists', () => {
+            it('should reject an error for user already exist', () => {
+                user.email = 'exists@mail.com'
+                return service.add(user)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'A user with this email already registered!')
+                        user.email = DefaultEntityMock.PATIENT.email
                     })
             })
         })
     })
 
     describe('getAll()', () => {
-        context('when get all patients', () => {
-            it('should return a list of patients', () => {
-                const query: Query = new Query()
-                query.addFilter({ pilotstudy_id: patient.pilotstudy_id })
-
+        context('when get a collection of users', () => {
+            it('should return a list of users', () => {
                 return service
-                    .getAll(query)
-                    .then(result => {
-                        assert.isArray(result)
-                        assert.lengthOf(result, 1)
-                        assert.property(result[0], 'id')
-                        assert.propertyVal(result[0], 'id', patient.id)
-                        assert.property(result[0], 'pilotstudy_id')
-                        assert.propertyVal(result[0], 'pilotstudy_id', patient.pilotstudy_id)
-                        assert.property(result[0], 'name')
-                        assert.propertyVal(result[0], 'name', patient.name)
-                        assert.property(result[0], 'email')
-                        assert.propertyVal(result[0], 'email', patient.email)
-                        assert.property(result[0], 'gender')
-                        assert.propertyVal(result[0], 'gender', patient.gender)
-                        assert.property(result[0], 'birth_date')
-                        assert.propertyVal(result[0], 'birth_date', patient.birth_date)
+                    .getAll(new Query())
+                    .then(res => {
+                        assert.isArray(res)
+                        assert.lengthOf(res, 1)
+                        assert.propertyVal(res[0], 'id', user.id)
+                        assert.propertyVal(res[0], 'email', user.email)
+                        assert.propertyVal(res[0], 'birth_date', user.birth_date)
+                        assert.propertyVal(res[0], 'phone_number', user.phone_number)
+                        assert.propertyVal(res[0], 'selected_pilot_study', user.selected_pilot_study)
+                        assert.propertyVal(res[0], 'language', user.language)
+                        assert.propertyVal(res[0], 'name', user.name)
+                        assert.propertyVal(res[0], 'gender', user.gender)
                     })
             })
         })
 
-        context('when there are validation errors', () => {
-            it('should reject a validation error', () => {
-                return service
-                    .getAll(new Query().fromJSON({ pilotstudy_id: '123' }))
-                    .catch(err => {
-                        assert.property(err, 'message')
-                        assert.property(err, 'description')
-                        assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
-                        assert.propertyVal(err, 'description', 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea' +
-                            ' is expected.')
-                    })
-            })
-        })
     })
 
     describe('getById()', () => {
-        context('when get a unique patient', () => {
-            it('should return a patient', () => {
+        context('when get a unique user', () => {
+            it('should return a user', () => {
                 const query: Query = new Query()
-                query.addFilter({ pilotstudy_id: patient.pilotstudy_id })
 
                 return service
-                    .getById(patient.id!, query)
-                    .then(result => {
-                        assert.property(result, 'id')
-                        assert.propertyVal(result, 'id', patient.id)
-                        assert.property(result, 'pilotstudy_id')
-                        assert.propertyVal(result, 'pilotstudy_id', patient.pilotstudy_id)
-                        assert.property(result, 'name')
-                        assert.propertyVal(result, 'name', patient.name)
-                        assert.property(result, 'email')
-                        assert.propertyVal(result, 'email', patient.email)
-                        assert.property(result, 'gender')
-                        assert.propertyVal(result, 'gender', patient.gender)
-                        assert.property(result, 'birth_date')
-                        assert.propertyVal(result, 'birth_date', patient.birth_date)
+                    .getById(user.id!, query)
+                    .then(res => {
+                        assert.propertyVal(res, 'id', user.id)
+                        assert.propertyVal(res, 'email', user.email)
+                        assert.propertyVal(res, 'birth_date', user.birth_date)
+                        assert.propertyVal(res, 'phone_number', user.phone_number)
+                        assert.propertyVal(res, 'selected_pilot_study', user.selected_pilot_study)
+                        assert.propertyVal(res, 'language', user.language)
+                        assert.propertyVal(res, 'name', user.name)
+                        assert.propertyVal(res, 'gender', user.gender)
                     })
             })
         })
@@ -120,8 +100,6 @@ describe('Services: PatientService', () => {
                 return service
                     .getById('123', new Query())
                     .catch(err => {
-                        assert.property(err, 'message')
-                        assert.property(err, 'description')
                         assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
                         assert.propertyVal(err, 'description', 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea' +
                             ' is expected.')
@@ -131,13 +109,13 @@ describe('Services: PatientService', () => {
     })
 
     describe('remove()', () => {
-        context('when delete a patient', () => {
+        context('when delete a user', () => {
             it('should return true', () => {
                 return service
-                    .remove(patient.id!)
-                    .then(result => {
-                        assert.isBoolean(result)
-                        assert.isTrue(result)
+                    .remove(user.id!)
+                    .then(res => {
+                        assert.isBoolean(res)
+                        assert.isTrue(res)
                     })
             })
         })
@@ -147,8 +125,6 @@ describe('Services: PatientService', () => {
                 return service
                     .remove('123')
                     .catch(err => {
-                        assert.property(err, 'message')
-                        assert.property(err, 'description')
                         assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
                         assert.propertyVal(err, 'description', 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea' +
                             ' is expected.')
@@ -158,38 +134,55 @@ describe('Services: PatientService', () => {
     })
 
     describe('update()', () => {
-        context('when update a patient', () => {
-            it('should return the updated patient', () => {
-                patient.id = undefined
-                patient.pilotstudy_id = undefined
-                patient.password = undefined
+        context('when update a user', () => {
+            it('should return the updated user', () => {
+                user.password = undefined
                 return service
-                    .update(patient)
-                    .then(result => {
-                        assert.property(result, 'name')
-                        assert.propertyVal(result, 'name', patient.name)
-                        assert.property(result, 'email')
-                        assert.propertyVal(result, 'email', patient.email)
-                        assert.property(result, 'gender')
-                        assert.propertyVal(result, 'gender', patient.gender)
-                        assert.property(result, 'birth_date')
-                        assert.propertyVal(result, 'birth_date', patient.birth_date)
+                    .update(user)
+                    .then(res => {
+                        assert.propertyVal(res, 'id', user.id)
+                        assert.propertyVal(res, 'email', user.email)
+                        assert.propertyVal(res, 'birth_date', user.birth_date)
+                        assert.propertyVal(res, 'phone_number', user.phone_number)
+                        assert.propertyVal(res, 'selected_pilot_study', user.selected_pilot_study)
+                        assert.propertyVal(res, 'language', user.language)
+                        assert.propertyVal(res, 'name', user.name)
+                        assert.propertyVal(res, 'gender', user.gender)
                     })
             })
         })
 
         context('when there are validation errors', () => {
             it('should reject a validation error', () => {
-                patient.id = '123'
-                patient.pilotstudy_id = '123'
+                user.id = '123'
                 return service
-                    .update(patient)
+                    .update(user)
                     .catch(err => {
-                        assert.property(err, 'message')
-                        assert.property(err, 'description')
                         assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
                         assert.propertyVal(err, 'description', 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea' +
                             ' is expected.')
+                        user.id = DefaultEntityMock.PATIENT.id
+                    })
+            })
+            it('should throw error for try update password', () => {
+                user.password = DefaultEntityMock.PATIENT.password
+                return service.update(user)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'This parameter could not be updated.')
+                        assert.propertyVal(err, 'description', 'A specific route to update user password already exists.' +
+                            ` Access: PATCH /v1/auth/password to update your password.`)
+                    })
+            })
+        })
+    })
+
+    describe('count()', () => {
+        context('when want count users', () => {
+            it('should return a number of users', () => {
+                return service.count()
+                    .then(res => {
+                        assert.isNumber(res)
+                        assert.equal(res, 1)
                     })
             })
         })

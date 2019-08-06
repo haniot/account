@@ -21,12 +21,20 @@ const pilotStudySchema = new Mongoose.Schema({
             type: Date,
             required: true
         },
-        health_professionals_id: [{
+        health_professionals: [{
+            type: Schema.Types.ObjectId,
+            ref: 'User'
+        }],
+        patients: [{
             type: Schema.Types.ObjectId,
             ref: 'User'
         }],
         location: {
             type: String
+        },
+        language: {
+            type: String,
+            default: 'pt-br'
         }
     },
     {

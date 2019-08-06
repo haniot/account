@@ -11,9 +11,9 @@ import { UserType } from '../utils/user.type'
  * @implements {IJSONSerializable, IJSONDeserializable<HealthProfessional>}
  */
 export class HealthProfessional extends User implements IJSONSerializable, IJSONDeserializable<HealthProfessional> {
-    private _email?: string
-    private _name?: string
     private _health_area?: string
+    private _total_pilot_studies ?: number
+    private _total_patients ?: number
 
     constructor() {
         super()
@@ -51,22 +51,6 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
         ]
     }
 
-    get email(): string | undefined {
-        return this._email
-    }
-
-    set email(value: string | undefined) {
-        this._email = value
-    }
-
-    get name(): string | undefined {
-        return this._name
-    }
-
-    set name(value: string | undefined) {
-        this._name = value
-    }
-
     get health_area(): string | undefined {
         return this._health_area
     }
@@ -75,7 +59,24 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
         this._health_area = value
     }
 
+    get total_pilot_studies(): number | undefined {
+        return this._total_pilot_studies
+    }
+
+    set total_pilot_studies(value: number | undefined) {
+        this._total_pilot_studies = value
+    }
+
+    get total_patients(): number | undefined {
+        return this._total_patients
+    }
+
+    set total_patients(value: number | undefined) {
+        this._total_patients = value
+    }
+
     public fromJSON(json: any): HealthProfessional {
+
         if (!json) return this
         if (typeof json === 'string') {
             if (!JsonUtils.isJsonString(json)) {
@@ -87,9 +88,9 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
         }
 
         super.fromJSON(json)
-        if (json.email !== undefined) this.email = json.email
-        if (json.name !== undefined) this.name = json.name
         if (json.health_area !== undefined) this.health_area = json.health_area
+        if (json.total_pilot_studies !== undefined) this.total_pilot_studies = json.total_pilot_studies
+        if (json.total_patients !== undefined) this.total_patients = json.total_patients
 
         return this
     }
@@ -97,7 +98,11 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
     public toJSON(): any {
         return {
             ...super.toJSON(),
-            ...{ email: this.email, name: this.name, health_area: this.health_area }
+            ...{
+                health_area: this.health_area,
+                total_pilot_studies: this.total_pilot_studies,
+                total_patients: this.total_patients
+            }
         }
     }
 }

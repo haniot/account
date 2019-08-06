@@ -39,13 +39,15 @@ export class RegisterDefaultAdminTask implements IBackgroundTask {
         const query: IQuery = new Query()
         query.filters = { type: UserType.ADMIN }
         try {
-            const countUser = await this._adminRepository.count(query)
+            const countUser = await this._adminRepository.count()
             if (!countUser) {
                 const adminDefault = new Admin()
                 adminDefault.email = process.env.ADMIN_EMAIL || Default.ADMIN_EMAIL
                 adminDefault.password = process.env.ADMIN_PASSWORD || Default.ADMIN_PASSWORD
                 adminDefault.type = UserType.ADMIN
-                adminDefault.change_password = true
+                adminDefault.change_password = false
+                adminDefault.email_verified = false
+                adminDefault.language = 'pt-br'
 
                 const user = await this._adminRepository.create(adminDefault)
                 if (!user) throw new RepositoryException('Default admin user not created')

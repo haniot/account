@@ -37,7 +37,8 @@ export abstract class Strings {
 
     public static readonly PATIENT: any = {
         NOT_FOUND: 'Patient not found!',
-        NOT_FOUND_DESCRIPTION: 'Patient not found or already removed. A new operation for the same resource is required.'
+        NOT_FOUND_DESCRIPTION: 'Patient not found or already removed. A new operation for the same resource is required.',
+        ASSOCIATION_FAILURE: 'The association could not be performed because the patient does not have a record.'
     }
 
     public static readonly HEALTH_PROFESSIONAL: any = {
@@ -56,7 +57,9 @@ export abstract class Strings {
         UUID_NOT_VALID_FORMAT: 'Some ID provided does not have a valid format!',
         UUID_NOT_VALID_FORMAT_DESC: 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.',
         PARAMETER_COULD_NOT_BE_UPDATED: 'This parameter could not be updated.',
-        DATE_NOT_VALID_FORMAT_DESC: 'Date must be in the format: yyyy-MM-dd'
+        DATE_NOT_VALID_FORMAT_DESC: 'Date must be in the format: yyyy-MM-dd',
+        OPERATION_CANT_BE_COMPLETED: 'The operation could not be performed successfully.',
+        OPERATION_CANT_BE_COMPLETED_DESC: 'Probably one or more of the request parameters are incorrect.'
     }
 
     public static readonly PILOT_STUDY: any = {
@@ -64,7 +67,9 @@ export abstract class Strings {
         NOT_FOUND_DESCRIPTION: 'Pilot Study not found or already removed. ' +
             'A new operation for the same resource is required.',
         ASSOCIATION_FAILURE: 'The association could not be performed because the pilot study does not have a record.',
-        NAME_ALREADY_REGISTERED: 'A ṕilot study with this name already registered!'
+        DISASSOCIATION_FAILURE: 'The disassociation could not be performed because the pilot study does not have a record.',
+        NAME_ALREADY_REGISTERED: 'A pilot study with this name already registered!',
+        HAS_ASSOCIATION: 'The pilot study is associated with one or more users.'
     }
 
 }

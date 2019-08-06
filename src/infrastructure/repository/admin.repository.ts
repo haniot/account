@@ -4,8 +4,10 @@ import { AdminEntity } from '../entity/admin.entity'
 import { Admin } from '../../application/domain/model/admin'
 import { Identifier } from '../../di/identifiers'
 import { IAdminRepository } from '../../application/port/admin.repository.interface'
-import { IUserRepository } from '../../application/port/user.repository.interface'
 import { IEntityMapper } from '../port/entity.mapper.interface'
+import { Query } from './query/query'
+import { UserType } from '../../application/domain/utils/user.type'
+import { IUserRepository } from '../../application/port/user.repository.interface'
 
 @injectable()
 export class AdminRepository extends BaseRepository<Admin, AdminEntity> implements IAdminRepository {
@@ -21,5 +23,9 @@ export class AdminRepository extends BaseRepository<Admin, AdminEntity> implemen
     public create(item: Admin): Promise<Admin> {
         if (item.password) item.password = this._userRepository.encryptPassword(item.password)
         return super.create(item)
+    }
+
+    public count(): Promise<number> {
+        return super.count(new Query().fromJSON({ filters: { type: UserType.ADMIN } }))
     }
 }

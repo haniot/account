@@ -6,60 +6,59 @@ import { PilotStudyEntity } from '../../../src/infrastructure/entity/pilot.study
 
 describe('Mappers: PilotStudyEntityMapper', () => {
     const mapper = new PilotStudyEntityMapper()
-    const pilotModel: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY)
+    const pilot: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY)
 
     describe('transform()', () => {
         context('when the parameter is a json', () => {
             it('should call the jsonToModel() method', () => {
                 const result = mapper.transform(DefaultEntityMock.PILOT_STUDY)
-                assert.property(result, 'id')
-                assert.propertyVal(result, 'name', pilotModel.name)
-                assert.property(result, 'is_active')
-                assert.propertyVal(result, 'is_active', pilotModel.is_active)
+                assert.propertyVal(result, 'id', pilot.id)
+                assert.propertyVal(result, 'name', pilot.name)
+                assert.propertyVal(result, 'is_active', pilot.is_active)
                 assert.property(result, 'start')
                 assert.property(result, 'end')
-                assert.property(result, 'health_professionals_id')
+                assert.lengthOf(result.health_professionals!, 1)
+                assert.lengthOf(result.patients!, 1)
+                assert.propertyVal(result, 'location', pilot.location)
             })
 
             it('should return model without parameters for empty json', () => {
                 const result = mapper.transform({})
-                assert.property(result, 'id')
+                assert.propertyVal(result, 'id', undefined)
                 assert.propertyVal(result, 'name', undefined)
-                assert.property(result, 'is_active')
                 assert.propertyVal(result, 'is_active', undefined)
-                assert.property(result, 'start')
                 assert.propertyVal(result, 'start', undefined)
-                assert.property(result, 'end')
                 assert.propertyVal(result, 'end', undefined)
-                assert.property(result, 'health_professionals_id')
+                assert.propertyVal(result, 'health_professionals', undefined)
+                assert.propertyVal(result, 'patients', undefined)
+                assert.propertyVal(result, 'location', undefined)
             })
+
             it('should return model without parameter for undefined json', () => {
                 const result = mapper.transform(undefined)
-                assert.property(result, 'id')
+                assert.propertyVal(result, 'id', undefined)
                 assert.propertyVal(result, 'name', undefined)
-                assert.property(result, 'is_active')
                 assert.propertyVal(result, 'is_active', undefined)
-                assert.property(result, 'start')
                 assert.propertyVal(result, 'start', undefined)
-                assert.property(result, 'end')
                 assert.propertyVal(result, 'end', undefined)
-                assert.property(result, 'health_professionals_id')
+                assert.propertyVal(result, 'health_professionals', undefined)
+                assert.propertyVal(result, 'patients', undefined)
+                assert.propertyVal(result, 'location', undefined)
             })
 
         })
 
         context('when the parameter is a model', () => {
             it('should call the modelToModelEntity() method', () => {
-                const result = mapper.transform(pilotModel)
-                assert.property(result, 'id')
-                assert.propertyVal(result, 'id', pilotModel.id)
-                assert.property(result, 'id')
-                assert.propertyVal(result, 'name', pilotModel.name)
-                assert.property(result, 'is_active')
-                assert.propertyVal(result, 'is_active', pilotModel.is_active)
+                const result = mapper.transform(pilot)
+                assert.propertyVal(result, 'id', pilot.id)
+                assert.propertyVal(result, 'name', pilot.name)
+                assert.propertyVal(result, 'is_active', pilot.is_active)
                 assert.property(result, 'start')
                 assert.property(result, 'end')
-                assert.property(result, 'health_professionals_id')
+                assert.lengthOf(result.health_professionals!, 1)
+                assert.lengthOf(result.patients!, 1)
+                assert.propertyVal(result, 'location', pilot.location)
             })
 
             it('should return a model entity without parameters for empty model', () => {
@@ -75,7 +74,6 @@ describe('Mappers: PilotStudyEntityMapper', () => {
                 try {
                     mapper.modelEntityToModel(new PilotStudyEntity())
                 } catch (err) {
-                    assert.property(err, 'message')
                     assert.property(err, 'message', 'Not implemented!')
                 }
             })

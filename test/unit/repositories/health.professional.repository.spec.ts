@@ -4,9 +4,10 @@ import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.
 import { EntityMapperMock } from '../../mocks/models/entity.mapper.mock'
 import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
-import { UserRepositoryMock } from '../../mocks/repositories/user.repository.mock'
 import { HealthProfessionalRepository } from '../../../src/infrastructure/repository/health.professional.repository'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
+import { UserType } from '../../../src/application/domain/utils/user.type'
+import { UserRepositoryMock } from '../../mocks/repositories/user.repository.mock'
 
 require('sinon-mongoose')
 
@@ -15,6 +16,7 @@ describe('Repositories: HealthProfessionalRepository', () => {
     const repo =
         new HealthProfessionalRepository(modelFake, new EntityMapperMock(), new UserRepositoryMock(), new CustomLoggerMock())
     const user: HealthProfessional = new HealthProfessional().fromJSON(DefaultEntityMock.HEALTH_PROFESSIONAL)
+    user.id = DefaultEntityMock.HEALTH_PROFESSIONAL.id
 
     afterEach(() => {
         sinon.restore()
@@ -30,17 +32,15 @@ describe('Repositories: HealthProfessionalRepository', () => {
                     .resolves(user)
 
                 return repo.create(user)
-                    .then(result => {
-                        assert.property(result, 'id')
-                        assert.propertyVal(result, 'id', user.id)
-                        assert.property(result, 'password')
-                        assert.propertyVal(result, 'password', user.password)
-                        assert.property(result, 'email')
-                        assert.propertyVal(result, 'email', user.email)
-                        assert.property(result, 'name')
-                        assert.propertyVal(result, 'name', user.name)
-                        assert.property(result, 'health_area')
-                        assert.propertyVal(result, 'health_area', user.health_area)
+                    .then(res => {
+                        assert.propertyVal(res, 'id', user.id)
+                        assert.propertyVal(res, 'email', user.email)
+                        assert.propertyVal(res, 'birth_date', user.birth_date)
+                        assert.propertyVal(res, 'phone_number', user.phone_number)
+                        assert.propertyVal(res, 'selected_pilot_study', user.selected_pilot_study)
+                        assert.propertyVal(res, 'language', user.language)
+                        assert.propertyVal(res, 'name', user.name)
+                        assert.propertyVal(res, 'health_area', user.health_area)
                     })
             })
         })
@@ -58,10 +58,27 @@ describe('Repositories: HealthProfessionalRepository', () => {
                     })
                 return repo.create(user)
                     .catch(err => {
-                        assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
-                        assert.property(err, 'description')
                         assert.propertyVal(err, 'description', 'Please try again later...')
+                    })
+            })
+        })
+    })
+
+    describe('count()', () => {
+        context('when want count users', () => {
+            it('should return a number of users', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('countDocuments')
+                    .withArgs({ type: UserType.HEALTH_PROFESSIONAL })
+                    .chain('exec')
+                    .resolves(1)
+
+                return repo.count()
+                    .then(res => {
+                        assert.isNumber(res)
+                        assert.equal(res, 1)
                     })
             })
         })
@@ -80,9 +97,9 @@ describe('Repositories: HealthProfessionalRepository', () => {
                         .resolves(user)
 
                     return repo.checkExists(user)
-                        .then(result => {
-                            assert.isBoolean(result)
-                            assert.isTrue(result)
+                        .then(res => {
+                            assert.isBoolean(res)
+                            assert.isTrue(res)
                         })
                 })
             })
@@ -98,9 +115,9 @@ describe('Repositories: HealthProfessionalRepository', () => {
                         .resolves(undefined)
 
                     return repo.checkExists(user)
-                        .then(result => {
-                            assert.isBoolean(result)
-                            assert.isFalse(result)
+                        .then(res => {
+                            assert.isBoolean(res)
+                            assert.isFalse(res)
                         })
                 })
             })
@@ -118,9 +135,7 @@ describe('Repositories: HealthProfessionalRepository', () => {
                     user.id = undefined
                     return repo.checkExists(user)
                         .catch(err => {
-                            assert.property(err, 'message')
                             assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
-                            assert.property(err, 'description')
                             assert.propertyVal(err, 'description', 'Please try again later...')
                             user.id = DefaultEntityMock.HEALTH_PROFESSIONAL.id
                         })
@@ -139,9 +154,7 @@ describe('Repositories: HealthProfessionalRepository', () => {
 
                     return repo.checkExists(user)
                         .catch(err => {
-                            assert.property(err, 'message')
                             assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
-                            assert.property(err, 'description')
                             assert.propertyVal(err, 'description', 'Please try again later...')
                         })
                 })
@@ -160,9 +173,9 @@ describe('Repositories: HealthProfessionalRepository', () => {
                         .resolves(user)
 
                     return repo.checkExists([user])
-                        .then(result => {
-                            assert.isBoolean(result)
-                            assert.isTrue(result)
+                        .then(res => {
+                            assert.isBoolean(res)
+                            assert.isTrue(res)
                         })
                 })
             })
@@ -170,9 +183,9 @@ describe('Repositories: HealthProfessionalRepository', () => {
             context('when the health professionals list is empty', () => {
                 it('should return false', () => {
                     return repo.checkExists([])
-                        .then(result => {
-                            assert.isBoolean(result)
-                            assert.isFalse(result)
+                        .then(res => {
+                            assert.isBoolean(res)
+                            assert.isFalse(res)
                         })
                 })
             })
@@ -188,9 +201,8 @@ describe('Repositories: HealthProfessionalRepository', () => {
                         .resolves(undefined)
 
                     return repo.checkExists([user])
-                        .then(result => {
-                            assert.property(result, 'message')
-                            assert.propertyVal(result, 'message', user.id)
+                        .then(res => {
+                            assert.propertyVal(res, 'message', user.id)
                         })
                 })
             })
@@ -208,9 +220,7 @@ describe('Repositories: HealthProfessionalRepository', () => {
                     user.id = undefined
                     return repo.checkExists([user])
                         .catch(err => {
-                            assert.property(err, 'message')
                             assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
-                            assert.property(err, 'description')
                             assert.propertyVal(err, 'description', 'Please try again later...')
                             user.id = DefaultEntityMock.HEALTH_PROFESSIONAL.id
                         })
@@ -229,9 +239,7 @@ describe('Repositories: HealthProfessionalRepository', () => {
 
                     return repo.checkExists([user])
                         .catch(err => {
-                            assert.property(err, 'message')
                             assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
-                            assert.property(err, 'description')
                             assert.propertyVal(err, 'description', 'Please try again later...')
                         })
                 })

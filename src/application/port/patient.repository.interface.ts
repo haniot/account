@@ -1,5 +1,6 @@
 import { IRepository } from './repository.interface'
 import { Patient } from '../domain/model/patient'
+import { ValidationException } from '../domain/exception/validation.exception'
 
 /**
  * Interface of the Patient repository.
@@ -9,4 +10,7 @@ import { Patient } from '../domain/model/patient'
  * @extends {IRepository<Patient>}
  */
 export interface IPatientRepository extends IRepository<Patient> {
+    count(): Promise<number>
+
+    checkExists(users: Patient | Array<Patient>): Promise<boolean | ValidationException>
 }

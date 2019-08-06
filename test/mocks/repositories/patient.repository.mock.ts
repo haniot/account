@@ -7,11 +7,11 @@ const patient: Patient = new Patient().fromJSON(DefaultEntityMock.PATIENT)
 patient.id = DefaultEntityMock.PATIENT.id
 
 export class PatientRepositoryMock implements IPatientRepository {
-    public checkExists(id: string): Promise<boolean> {
-        return Promise.resolve(id === patient.id)
+    public checkExists(item: Patient): Promise<boolean> {
+        return Promise.resolve(item.id !== patient.id)
     }
 
-    public count(query: IQuery): Promise<number> {
+    public count(): Promise<number> {
         return Promise.resolve(1)
     }
 

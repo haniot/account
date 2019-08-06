@@ -11,8 +11,8 @@ import { Strings } from '../../utils/strings'
 import { Query } from '../../infrastructure/repository/query/query'
 import { ILogger } from '../../utils/custom.logger'
 
-@controller('/users/admins')
-export class AdminController {
+@controller('/v1/admins')
+export class AdminsController {
     constructor(
         @inject(Identifier.ADMIN_SERVICE) private readonly _adminService: IAdminService,
         @inject(Identifier.LOGGER) readonly _logger: ILogger
@@ -22,8 +22,7 @@ export class AdminController {
     @httpPost('/')
     public async addAdminUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const admin: Admin = new Admin().fromJSON(req.body)
-            admin.change_password = true
+            const admin: Admin = new Admin().fromJSON({ ...req.body, change_password: false, email_verified: false })
             const result: Admin = await this._adminService.add(admin)
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
         } catch (err) {
@@ -36,6 +35,8 @@ export class AdminController {
     public async getAllAdmins(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: Array<Admin> = await this._adminService.getAll(new Query().fromJSON(req.query))
+            const count: number = await this._adminService.count()
+            res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)

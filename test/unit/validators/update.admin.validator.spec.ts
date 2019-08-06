@@ -44,7 +44,19 @@ describe('Validators: UpdateAdminValidator', () => {
                 assert.property(err, 'description')
                 assert.equal(err.message, 'This parameter could not be updated.')
                 assert.equal(err.description, 'A specific route to update user password already exists.' +
-                    ` Access: PATCH /users/${user.id}/password to update your password.`)
+                    ` Access: PATCH /v1/auth/password to update your password.`)
+            }
+        })
+
+        it('should throw an error for does pass invalid birth_date', () => {
+            user.birth_date = '20-08-1987'
+            try {
+                UpdateAdminValidator.validate(user)
+            } catch (err) {
+                assert.property(err, 'message')
+                assert.property(err, 'description')
+                assert.propertyVal(err, 'message', 'Date: 20-08-1987 is not in valid ISO 8601 format.')
+                assert.propertyVal(err, 'description', 'Date must be in the format: yyyy-MM-dd')
             }
         })
     })

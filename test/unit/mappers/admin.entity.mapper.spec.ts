@@ -6,71 +6,78 @@ import { AdminEntity } from '../../../src/infrastructure/entity/admin.entity'
 
 describe('Mappers: AdminEntityMapper', () => {
     const mapper = new AdminEntityMapper()
-    const userModel: Admin = new Admin().fromJSON(DefaultEntityMock.ADMIN)
+    const user: Admin = new Admin().fromJSON(DefaultEntityMock.ADMIN)
+    user.id = DefaultEntityMock.ADMIN.id
+    user.change_password = DefaultEntityMock.ADMIN.change_password
+    user.email_verified = DefaultEntityMock.ADMIN.email_verified
 
     describe('transform()', () => {
         context('when the parameter is a json', () => {
             it('should call the jsonToModel() method', () => {
                 const result = mapper.transform(DefaultEntityMock.ADMIN)
-                assert.property(result, 'id')
-                assert.propertyVal(result, 'id', userModel.id)
-                assert.property(result, 'type')
-                assert.propertyVal(result, 'type', userModel.type)
                 assert.property(result, 'scopes')
-                assert.deepPropertyVal(result, 'scopes', userModel.scopes)
-                assert.property(result, 'password')
-                assert.propertyVal(result, 'password', userModel.password)
-                assert.property(result, 'email')
-                assert.propertyVal(result, 'email', userModel.email)
+                assert.propertyVal(result, 'id', user.id)
+                assert.propertyVal(result, 'email', user.email)
+                assert.propertyVal(result, 'password', user.password)
+                assert.propertyVal(result, 'change_password', user.change_password)
+                assert.propertyVal(result, 'email_verified', user.email_verified)
+                assert.propertyVal(result, 'birth_date', user.birth_date)
+                assert.propertyVal(result, 'phone_number', user.phone_number)
+                assert.propertyVal(result, 'selected_pilot_study', user.selected_pilot_study)
+                assert.propertyVal(result, 'language', user.language)
             })
 
             it('should return model without parameters for empty json', () => {
                 const result = mapper.transform({})
-                assert.property(result, 'id')
-                assert.propertyVal(result, 'id', undefined)
-                assert.property(result, 'type')
-                assert.propertyVal(result, 'type', 'admin')
                 assert.property(result, 'scopes')
-                assert.deepPropertyVal(result, 'scopes', userModel.scopes)
-                assert.property(result, 'password')
-                assert.propertyVal(result, 'password', undefined)
-                assert.property(result, 'email')
+                assert.propertyVal(result, 'id', undefined)
                 assert.propertyVal(result, 'email', undefined)
+                assert.propertyVal(result, 'password', undefined)
+                assert.propertyVal(result, 'change_password', undefined)
+                assert.propertyVal(result, 'email_verified', undefined)
+                assert.propertyVal(result, 'birth_date', undefined)
+                assert.propertyVal(result, 'phone_number', undefined)
+                assert.propertyVal(result, 'selected_pilot_study', undefined)
+                assert.propertyVal(result, 'language', undefined)
             })
 
             it('should return model without parameter for undefined json', () => {
                 const result = mapper.transform(undefined)
-                assert.property(result, 'id')
-                assert.propertyVal(result, 'id', undefined)
-                assert.property(result, 'type')
-                assert.propertyVal(result, 'type', 'admin')
                 assert.property(result, 'scopes')
-                assert.deepPropertyVal(result, 'scopes', userModel.scopes)
-                assert.property(result, 'password')
-                assert.propertyVal(result, 'password', undefined)
-                assert.property(result, 'email')
+                assert.propertyVal(result, 'id', undefined)
                 assert.propertyVal(result, 'email', undefined)
+                assert.propertyVal(result, 'password', undefined)
+                assert.propertyVal(result, 'change_password', undefined)
+                assert.propertyVal(result, 'email_verified', undefined)
+                assert.propertyVal(result, 'birth_date', undefined)
+                assert.propertyVal(result, 'phone_number', undefined)
+                assert.propertyVal(result, 'selected_pilot_study', undefined)
+                assert.propertyVal(result, 'language', undefined)
             })
 
         })
 
         context('when the parameter is a model', () => {
             it('should call the modelToModelEntity() method', () => {
-                const result = mapper.transform(userModel)
-                assert.property(result, 'password')
-                assert.propertyVal(result, 'password', userModel.password)
-                assert.property(result, 'type')
-                assert.propertyVal(result, 'type', userModel.type)
+                const result = mapper.transform(user)
                 assert.property(result, 'scopes')
-                assert.deepPropertyVal(result, 'scopes', userModel.scopes)
+                assert.propertyVal(result, 'id', user.id)
+                assert.propertyVal(result, 'email', user.email)
+                assert.propertyVal(result, 'password', user.password)
+                assert.propertyVal(result, 'change_password', user.change_password)
+                assert.propertyVal(result, 'email_verified', user.email_verified)
+                assert.propertyVal(result, 'birth_date', user.birth_date)
+                assert.propertyVal(result, 'phone_number', user.phone_number)
+                assert.propertyVal(result, 'selected_pilot_study', user.selected_pilot_study)
+                assert.propertyVal(result, 'language', user.language)
             })
 
             it('should return a model entity with basic parameters for empty model', () => {
-                const result = mapper.transform(new Admin())
-                assert.property(result, 'type')
-                assert.propertyVal(result, 'type', 'admin')
-                assert.property(result, 'scopes')
-                assert.deepPropertyVal(result, 'scopes', userModel.scopes)
+                const admin: Admin = new Admin()
+                admin.scopes = undefined!
+                admin.type = undefined
+                const result = mapper.transform(admin)
+                assert.isEmpty(result)
             })
         })
     })
@@ -81,7 +88,6 @@ describe('Mappers: AdminEntityMapper', () => {
                 try {
                     mapper.modelEntityToModel(new AdminEntity())
                 } catch (err) {
-                    assert.property(err, 'message')
                     assert.property(err, 'message', 'Not implemented!')
                 }
             })

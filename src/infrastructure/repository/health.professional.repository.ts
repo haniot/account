@@ -6,10 +6,10 @@ import { IHealthProfessionalRepository } from '../../application/port/health.pro
 import { IEntityMapper } from '../port/entity.mapper.interface'
 import { Identifier } from '../../di/identifiers'
 import { ILogger } from '../../utils/custom.logger'
-import { IUserRepository } from '../../application/port/user.repository.interface'
 import { ValidationException } from '../../application/domain/exception/validation.exception'
 import { Query } from './query/query'
 import { UserType } from '../../application/domain/utils/user.type'
+import { IUserRepository } from '../../application/port/user.repository.interface'
 
 @injectable()
 export class HealthProfessionalRepository extends BaseRepository<HealthProfessional, HealthProfessionalEntity>
@@ -28,6 +28,10 @@ export class HealthProfessionalRepository extends BaseRepository<HealthProfessio
     public create(item: HealthProfessional): Promise<HealthProfessional> {
         if (item.password) item.password = this._userRepository.encryptPassword(item.password)
         return super.create(item)
+    }
+
+    public count(): Promise<number> {
+        return super.count(new Query().fromJSON({ filters: { type: UserType.HEALTH_PROFESSIONAL } }))
     }
 
     public checkExists(users: HealthProfessional | Array<HealthProfessional>): Promise<boolean | ValidationException> {
@@ -58,15 +62,12 @@ export class HealthProfessionalRepository extends BaseRepository<HealthProfessio
                 })
             } else {
                 if (users.id) query.filters = { _id: users.id }
-
                 query.addFilter({ type: UserType.HEALTH_PROFESSIONAL })
-
                 this.findOne(query)
-                    .then(result => {
-                        if (!result) return resolve(false)
-                        return resolve(true)
-                    }).catch(err => reject(super.mongoDBErrorListener(err)))
+                    .then(result => resolve(!!result))
+                    .catch(err => reject(super.mongoDBErrorListener(err)))
             }
         })
     }
+
 }

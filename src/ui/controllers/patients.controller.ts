@@ -11,8 +11,8 @@ import { ILogger } from '../../utils/custom.logger'
 import { IPatientService } from '../../application/port/patient.service.interface'
 import { Patient } from '../../application/domain/model/patient'
 
-@controller('/users/patients')
-export class PatientController {
+@controller('/v1/patients')
+export class PatientsController {
     constructor(
         @inject(Identifier.PATIENT_SERVICE) private readonly _patientService: IPatientService,
         @inject(Identifier.LOGGER) readonly _logger: ILogger
@@ -22,8 +22,7 @@ export class PatientController {
     @httpPost('/')
     public async addPatientUser(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const patient: Patient = new Patient().fromJSON(req.body)
-            patient.change_password = true
+            const patient: Patient = new Patient().fromJSON({ ...req.body, change_password: false, email_verified: false })
             const result: Patient = await this._patientService.add(patient)
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
         } catch (err) {
@@ -36,6 +35,8 @@ export class PatientController {
     public async getAllPatients(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const result: Array<Patient> = await this._patientService.getAll(new Query().fromJSON(req.query))
+            const count: number = await this._patientService.count()
+            res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
@@ -77,12 +78,7 @@ export class PatientController {
     }
 
     private toJSONView(patient: Patient | Array<Patient>): object {
-        if (patient instanceof Array) {
-            return patient.map(item => {
-                item.type = undefined
-                return item.toJSON()
-            })
-        }
+        if (patient instanceof Array) return patient.map(item => this.toJSONView(item))
         patient.type = undefined
         return patient.toJSON()
     }

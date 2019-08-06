@@ -2,10 +2,13 @@ import { PilotStudy } from '../../../src/application/domain/model/pilot.study'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { assert } from 'chai'
 import { UpdatePilotStudyValidator } from '../../../src/application/domain/validator/update.pilot.study.validator'
+import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
+import { Patient } from '../../../src/application/domain/model/patient'
 
 describe('Validators: UpdatePilotStudyValidator', () => {
     const pilot: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY)
-    pilot.health_professionals_id = undefined
+    pilot.health_professionals = undefined
+    pilot.patients = undefined
 
     it('should return undefined when the validation was successful', () => {
         const result = UpdatePilotStudyValidator.validate(pilot)
@@ -37,14 +40,28 @@ describe('Validators: UpdatePilotStudyValidator', () => {
         })
 
         it('should throw error for does pass a health_professionals_id list', () => {
-            pilot.health_professionals_id = DefaultEntityMock.PILOT_STUDY.health_professionals_id
+            pilot.health_professionals = [new HealthProfessional().fromJSON(DefaultEntityMock.HEALTH_PROFESSIONAL)]
             try {
                 UpdatePilotStudyValidator.validate(pilot)
             } catch (err) {
                 assert.property(err, 'message')
                 assert.property(err, 'description')
                 assert.equal(err.message, 'This parameter could not be updated.')
-                assert.equal(err.description, 'A specific route to manage health_professionals_id already exists.')
+                assert.equal(err.description, 'A specific route to manage health_professionals already exists.')
+            } finally {
+                pilot.health_professionals = undefined
+            }
+        })
+
+        it('should throw error for does pass a patients list', () => {
+            pilot.patients = [new Patient().fromJSON(DefaultEntityMock.PATIENT)]
+            try {
+                UpdatePilotStudyValidator.validate(pilot)
+            } catch (err) {
+                assert.property(err, 'message')
+                assert.property(err, 'description')
+                assert.equal(err.message, 'This parameter could not be updated.')
+                assert.equal(err.description, 'A specific route to manage patients already exists.')
             }
         })
     })

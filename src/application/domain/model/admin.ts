@@ -5,7 +5,10 @@ import { UserType } from '../utils/user.type'
 import { JsonUtils } from '../utils/json.utils'
 
 export class Admin extends User implements IJSONSerializable, IJSONDeserializable<Admin> {
-    private _email?: string
+    private _total_pilot_studies ?: number
+    private _total_admins ?: number
+    private _total_health_professionals ?: number
+    private _total_patients ?: number
 
     constructor() {
         super()
@@ -46,21 +49,53 @@ export class Admin extends User implements IJSONSerializable, IJSONDeserializabl
         ]
     }
 
-    get email(): string | undefined {
-        return this._email
+    get total_pilot_studies(): number | undefined {
+        return this._total_pilot_studies
     }
 
-    set email(value: string | undefined) {
-        this._email = value
+    set total_pilot_studies(value: number | undefined) {
+        this._total_pilot_studies = value
+    }
+
+    get total_admins(): number | undefined {
+        return this._total_admins
+    }
+
+    set total_admins(value: number | undefined) {
+        this._total_admins = value
+    }
+
+    get total_health_professionals(): number | undefined {
+        return this._total_health_professionals
+    }
+
+    set total_health_professionals(value: number | undefined) {
+        this._total_health_professionals = value
+    }
+
+    get total_patients(): number | undefined {
+        return this._total_patients
+    }
+
+    set total_patients(value: number | undefined) {
+        this._total_patients = value
     }
 
     public fromJSON(json: any): Admin {
         if (!json) return this
-        if (typeof json === 'string' && JsonUtils.isJsonString(json)) {
-            json = JSON.parse(json)
+        if (typeof json === 'string') {
+            if (!JsonUtils.isJsonString(json)) {
+                super.id = json
+                return this
+            } else {
+                json = JSON.parse(json)
+            }
         }
         super.fromJSON(json)
-        if (json.email !== undefined) this.email = json.email
+        if (json.total_pilot_studies !== undefined) this.total_pilot_studies = json.total_pilot_studies
+        if (json.total_admins !== undefined) this.total_admins = json.total_admins
+        if (json.total_health_professionals !== undefined) this.total_health_professionals = json.total_health_professionals
+        if (json.total_patients !== undefined) this.total_patients = json.total_patients
 
         return this
     }
@@ -68,7 +103,12 @@ export class Admin extends User implements IJSONSerializable, IJSONDeserializabl
     public toJSON(): any {
         return {
             ...super.toJSON(),
-            ...{ email: this.email }
+            ...{
+                total_pilot_studies: this.total_pilot_studies,
+                total_admins: this.total_admins,
+                total_health_professionals: this.total_health_professionals,
+                total_patients: this.total_patients
+            }
         }
     }
 }

@@ -1,71 +1,152 @@
 import { assert } from 'chai'
+import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { User } from '../../../src/application/domain/model/user'
 
 describe('Models: User', () => {
-    const user = {
-        id: '5ca4b464620630ade4ec517c',
-        username: 'user',
-        password: 'user123',
-        scopes: ['none']
-    }
+    describe('addScope()', () => {
+        context('when add a scope from user', () => {
+            const user: User = new User().fromJSON(DefaultEntityMock.USER)
+            user.addScope('any')
+            assert.lengthOf(user.scopes, 2)
+        })
 
-    const userNew = new User().fromJSON(user)
+        context('when the scope array from user is undefined', () => {
+            it('should set scopes as new array and add the scope', () => {
+                const user: User = new User()
+                user.addScope('any')
+                assert.lengthOf(user.scopes, 1)
+            })
+        })
+
+        context('when pass a empty scope', () => {
+            it('should not add a scope', () => {
+                const user: User = new User()
+                user.addScope(undefined!)
+                assert.lengthOf(user.scopes, 0)
+            })
+        })
+    })
+
+    describe('removeScope()', () => {
+        context('when remove a scope', () => {
+            it('should remove a scope from user', () => {
+                const user: User = new User()
+                user.addScope('any')
+                assert.lengthOf(user.scopes, 1)
+                user.removeScope('any')
+                assert.lengthOf(user.scopes, 0)
+            })
+        })
+
+        context('when try remove a null scope', () => {
+            it('should do nothing', () => {
+                const user: User = new User()
+                user.addScope('any')
+                assert.lengthOf(user.scopes, 1)
+                user.removeScope(undefined!)
+                assert.lengthOf(user.scopes, 1)
+            })
+        })
+    })
+
+    describe('convertDatetimeString()', () => {
+        const user: User = new User()
+        context('when the param is a date string in iso format', () => {
+            it('should return a new date', () => {
+                const date = user.convertDatetimeString('2019-04-09T00:01:02')
+                assert.equal(typeof date, 'object')
+            })
+        })
+        context('when the param is a date but is not a string', () => {
+            it('should return a new date', () => {
+                const date = user.convertDatetimeString(new Date())
+                assert.equal(typeof date, 'object')
+            })
+        })
+    })
 
     describe('fromJSON()', () => {
         context('when pass a complete json', () => {
             it('should return a complete user model', () => {
-                const result = new User().fromJSON(user)
+                const result = new User().fromJSON(DefaultEntityMock.USER)
+                result.email_verified = DefaultEntityMock.USER.email_verified
+                result.change_password = DefaultEntityMock.USER.change_password
                 assert.property(result, 'id')
-                assert.propertyVal(result, 'id', user.id)
-                assert.property(result, 'password')
-                assert.propertyVal(result, 'password', user.password)
                 assert.property(result, 'scopes')
-                assert.deepPropertyVal(result, 'scopes', user.scopes)
+                assert.propertyVal(result, 'email', DefaultEntityMock.USER.email)
+                assert.propertyVal(result, 'password', DefaultEntityMock.USER.password)
+                assert.propertyVal(result, 'birth_date', DefaultEntityMock.USER.birth_date)
+                assert.propertyVal(result, 'phone_number', DefaultEntityMock.USER.phone_number)
+                assert.propertyVal(result, 'selected_pilot_study', DefaultEntityMock.USER.selected_pilot_study)
+                assert.propertyVal(result, 'language', DefaultEntityMock.USER.language)
+                assert.propertyVal(result, 'email_verified', DefaultEntityMock.USER.email_verified)
+                assert.propertyVal(result, 'change_password', DefaultEntityMock.USER.change_password)
             })
         })
 
         context('when does not pass a json', () => {
-            it('should return a user with some undefined parameters', () => {
+            it('should return a user with some undefined parameters for undefined json', () => {
                 const result = new User().fromJSON(undefined)
-                assert.property(result, 'id')
                 assert.propertyVal(result, 'id', undefined)
-                assert.property(result, 'password')
-                assert.propertyVal(result, 'password', undefined)
                 assert.property(result, 'scopes')
+                assert.propertyVal(result, 'email', undefined)
+                assert.propertyVal(result, 'password', undefined)
+                assert.propertyVal(result, 'birth_date', undefined)
+                assert.propertyVal(result, 'phone_number', undefined)
+                assert.propertyVal(result, 'selected_pilot_study', undefined)
+                assert.propertyVal(result, 'language', undefined)
+            })
+
+            it('should return a user with some undefined parameters for empty json', () => {
+                const result = new User().fromJSON({})
+                assert.propertyVal(result, 'id', undefined)
+                assert.property(result, 'scopes')
+                assert.propertyVal(result, 'email', undefined)
+                assert.propertyVal(result, 'password', undefined)
+                assert.propertyVal(result, 'birth_date', undefined)
+                assert.propertyVal(result, 'phone_number', undefined)
+                assert.propertyVal(result, 'selected_pilot_study', undefined)
+                assert.propertyVal(result, 'language', undefined)
+                assert.propertyVal(result, 'scopes', undefined)
                 assert.propertyVal(result, 'scopes', undefined)
             })
         })
 
         context('when does pass a json as string', () => {
             it('should return a complete user model', () => {
-                const result = new User().fromJSON(JSON.stringify(user))
+                const result = new User().fromJSON(JSON.stringify(DefaultEntityMock.USER))
                 assert.property(result, 'id')
-                assert.propertyVal(result, 'id', user.id)
-                assert.property(result, 'password')
-                assert.propertyVal(result, 'password', user.password)
                 assert.property(result, 'scopes')
-                assert.deepPropertyVal(result, 'scopes', user.scopes)
+                assert.propertyVal(result, 'email', DefaultEntityMock.USER.email)
+                assert.propertyVal(result, 'password', DefaultEntityMock.USER.password)
+                assert.propertyVal(result, 'birth_date', DefaultEntityMock.USER.birth_date)
+                assert.propertyVal(result, 'phone_number', DefaultEntityMock.USER.phone_number)
+                assert.propertyVal(result, 'selected_pilot_study', DefaultEntityMock.USER.selected_pilot_study)
+                assert.propertyVal(result, 'language', DefaultEntityMock.USER.language)
             })
 
             it('should return a user with some undefined parameters for empty string', () => {
                 const result = new User().fromJSON('')
-                assert.property(result, 'id')
                 assert.propertyVal(result, 'id', undefined)
-                assert.property(result, 'password')
-                assert.propertyVal(result, 'password', undefined)
                 assert.property(result, 'scopes')
+                assert.propertyVal(result, 'email', undefined)
+                assert.propertyVal(result, 'password', undefined)
+                assert.propertyVal(result, 'birth_date', undefined)
+                assert.propertyVal(result, 'phone_number', undefined)
+                assert.propertyVal(result, 'selected_pilot_study', undefined)
+                assert.propertyVal(result, 'language', undefined)
                 assert.propertyVal(result, 'scopes', undefined)
             })
-        })
 
-        context('when does pass a json as empty json', () => {
-            it('should return a user with some undefined parameters', () => {
-                const result = new User().fromJSON({})
-                assert.property(result, 'id')
-                assert.propertyVal(result, 'id', undefined)
-                assert.property(result, 'password')
-                assert.propertyVal(result, 'password', undefined)
+            it('should return a user with some undefined parameters for invalid string', () => {
+                const result = new User().fromJSON('d52215d412')
                 assert.property(result, 'scopes')
+                assert.propertyVal(result, 'email', undefined)
+                assert.propertyVal(result, 'password', undefined)
+                assert.propertyVal(result, 'birth_date', undefined)
+                assert.propertyVal(result, 'phone_number', undefined)
+                assert.propertyVal(result, 'selected_pilot_study', undefined)
+                assert.propertyVal(result, 'language', undefined)
                 assert.propertyVal(result, 'scopes', undefined)
             })
         })
@@ -73,43 +154,15 @@ describe('Models: User', () => {
 
     describe('toJSON()', () => {
         it('should return a user as JSON', () => {
-            const result = userNew.toJSON()
+            const user = new User().fromJSON(DefaultEntityMock.USER)
+            const result = user.toJSON()
             assert.property(result, 'id')
-            assert.propertyVal(result, 'id', user.id)
+            assert.propertyVal(result, 'email', DefaultEntityMock.USER.email)
+            assert.propertyVal(result, 'birth_date', DefaultEntityMock.USER.birth_date)
+            assert.propertyVal(result, 'phone_number', DefaultEntityMock.USER.phone_number)
+            assert.propertyVal(result, 'selected_pilot_study', DefaultEntityMock.USER.selected_pilot_study)
+            assert.propertyVal(result, 'language', DefaultEntityMock.USER.language)
         })
     })
 
-    describe('addScope()', () => {
-        context('when add a scopes', () => {
-            it('should add a scopes in user scopes', () => {
-                userNew.addScope('anyone')
-                assert.lengthOf(userNew.scopes!, 2)
-            })
-        })
-
-        context('when add a undefined scopes', () => {
-            it('should ignore a scopes', () => {
-                userNew.addScope(undefined!)
-                assert.lengthOf(userNew.scopes!, 2)
-            })
-        })
-
-        context('when the user scopes is undefined', () => {
-            it('should create a empty array before add scopes', () => {
-                const userWithoutScope: User = new User()
-                userWithoutScope.addScope('none')
-                assert.lengthOf(userWithoutScope.scopes!, 1)
-            })
-        })
-
-    })
-
-    describe('removeScope()', () => {
-        context('when remove a scopes', () => {
-            it('should remove a scopes from user scopes', () => {
-                userNew.removeScope('none')
-                assert.lengthOf(userNew.scopes!, 1)
-            })
-        })
-    })
 })

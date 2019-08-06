@@ -12,33 +12,6 @@ describe('Validators: CreatePatientValidator', () => {
     })
 
     context('when there are validation errors', () => {
-        it('should throw an error for does not pass pilotstudy_id', () => {
-            patient.pilotstudy_id = undefined
-            try {
-                CreatePatientValidator.validate(patient)
-            } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
-                assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                assert.propertyVal(err, 'description', 'Patient validation: pilotstudy_id is required!')
-            }
-        })
-
-        it('should throw an error for does pass invalid pilotstudy_id', () => {
-            patient.pilotstudy_id = '123'
-            try {
-                CreatePatientValidator.validate(patient)
-            } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
-                assert.propertyVal(err, 'message', 'Some ID provided does not have a valid format!')
-                assert.propertyVal(err, 'description', 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea ' +
-                    'is expected.')
-            } finally {
-                patient.pilotstudy_id = DefaultEntityMock.PATIENT.pilotstudy_id
-            }
-        })
-
         it('should throw an error for does not pass name', () => {
             patient.name = undefined
             try {
@@ -58,8 +31,6 @@ describe('Validators: CreatePatientValidator', () => {
             try {
                 CreatePatientValidator.validate(patient)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'Patient validation: email is required!')
             } finally {
@@ -67,13 +38,24 @@ describe('Validators: CreatePatientValidator', () => {
             }
         })
 
+        it('should throw an error for does not pass password', () => {
+            patient.password = undefined
+            try {
+                CreatePatientValidator.validate(patient)
+            } catch (err) {
+                assert.propertyVal(err, 'message', 'Required fields were not provided...')
+                assert.propertyVal(err, 'description', 'Patient validation: password is required!')
+            } finally {
+                patient.password = DefaultEntityMock.PATIENT.password
+            }
+        })
+
+
         it('should throw an error for does not pass gender', () => {
             patient.gender = undefined
             try {
                 CreatePatientValidator.validate(patient)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'Patient validation: gender is required!')
             }
@@ -84,8 +66,6 @@ describe('Validators: CreatePatientValidator', () => {
             try {
                 CreatePatientValidator.validate(patient)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.propertyVal(err, 'message', 'Value not mapped for gender: invalid')
                 assert.propertyVal(err, 'description', 'The mapped values are: male, female.')
             } finally {
@@ -98,8 +78,6 @@ describe('Validators: CreatePatientValidator', () => {
             try {
                 CreatePatientValidator.validate(patient)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
                 assert.propertyVal(err, 'description', 'Patient validation: birth_date is required!')
             }
@@ -110,8 +88,6 @@ describe('Validators: CreatePatientValidator', () => {
             try {
                 CreatePatientValidator.validate(patient)
             } catch (err) {
-                assert.property(err, 'message')
-                assert.property(err, 'description')
                 assert.propertyVal(err, 'message', 'Date: 20-08-1987 is not in valid ISO 8601 format.')
                 assert.propertyVal(err, 'description', 'Date must be in the format: yyyy-MM-dd')
             }

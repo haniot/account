@@ -10,10 +10,8 @@ export class CreatePilotStudyValidator {
         if (item.is_active === undefined) fields.push('is_active')
         if (!item.start) fields.push('start')
         if (!item.end) fields.push('end')
-        if (!item.health_professionals_id || !item.health_professionals_id.length)
-            fields.push('Collection with health_professional IDs')
-        else {
-            item.health_professionals_id.map(healthProfessional => {
+        if (item.health_professionals && item.health_professionals.length) {
+            item.health_professionals.map(healthProfessional => {
                 if (!healthProfessional.id) {
                     fields.push(('Collection with health_professional IDs (ID cannot be empty)'))
                 } else ObjectIdValidator.validate(healthProfessional.id)

@@ -3,6 +3,7 @@ import { PilotStudyEntity } from '../pilot.study.entity'
 import { PilotStudy } from '../../../application/domain/model/pilot.study'
 import { HealthProfessional } from '../../../application/domain/model/health.professional'
 import { injectable } from 'inversify'
+import { Patient } from '../../../application/domain/model/patient'
 
 @injectable()
 export class PilotStudyEntityMapper implements IEntityMapper <PilotStudy, PilotStudyEntity> {
@@ -15,10 +16,11 @@ export class PilotStudyEntityMapper implements IEntityMapper <PilotStudy, PilotS
         if (json.is_active !== undefined) result.is_active = json.is_active
         if (json.start !== undefined) result.start = json.start
         if (json.end !== undefined) result.end = json.end
-        if (json.health_professionals_id !== undefined && json.health_professionals_id.length > 0) {
-            result.health_professionals_id = json.health_professionals_id.map(id => {
-                return new HealthProfessional().fromJSON(id)
-            })
+        if (json.health_professionals !== undefined && json.health_professionals instanceof Array) {
+            result.health_professionals = json.health_professionals.map(item => new HealthProfessional().fromJSON(item))
+        }
+        if (json.patients !== undefined && json.patients instanceof Array) {
+            result.patients = json.patients.map(item => new Patient().fromJSON(item))
         }
         if (json.location !== undefined) result.location = json.location
 
@@ -37,8 +39,11 @@ export class PilotStudyEntityMapper implements IEntityMapper <PilotStudy, PilotS
         if (item.is_active !== undefined) result.is_active = item.is_active
         if (item.start !== undefined) result.start = item.start
         if (item.end !== undefined) result.end = item.end
-        if (item.health_professionals_id !== undefined && item.health_professionals_id.length > 0) {
-            result.health_professionals_id = item.health_professionals_id
+        if (item.health_professionals !== undefined && item.health_professionals instanceof Array) {
+            result.health_professionals = item.health_professionals.map(value => value.id)
+        }
+        if (item.patients !== undefined && item.patients instanceof Array) {
+            result.patients = item.patients.map(value => value.id)
         }
         if (item.location !== undefined) result.location = item.location
         return result

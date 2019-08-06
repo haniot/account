@@ -25,8 +25,7 @@ class UserRepository<T extends Entity, TModel> extends BaseRepository<any, any> 
 
 describe('Repositories: BaseRepository', () => {
     const modelFake: any = UserRepoModel
-    const repo =
-        new UserRepository(modelFake, new EntityMapperMock(), new CustomLoggerMock())
+    const repo = new UserRepository(modelFake, new EntityMapperMock(), new CustomLoggerMock())
     const user: User = new User().fromJSON(DefaultEntityMock.USER)
 
     afterEach(() => {
@@ -44,11 +43,13 @@ describe('Repositories: BaseRepository', () => {
                     .resolves(user)
 
                 return repo.create(user)
-                    .then(result => {
-                        assert.property(result, 'id')
-                        assert.propertyVal(result, 'id', user.id)
-                        assert.property(result, 'password')
-                        assert.propertyVal(result, 'password', user.password)
+                    .then(res => {
+                        assert.propertyVal(res, 'id', user.id)
+                        assert.propertyVal(res, 'email', user.email)
+                        assert.propertyVal(res, 'birth_date', user.birth_date)
+                        assert.propertyVal(res, 'phone_number', user.phone_number)
+                        assert.propertyVal(res, 'selected_pilot_study', user.selected_pilot_study)
+                        assert.propertyVal(res, 'language', user.language)
                     })
             })
         })
@@ -63,8 +64,8 @@ describe('Repositories: BaseRepository', () => {
                     .resolves(undefined)
 
                 return repo.create(user)
-                    .then(result => {
-                        assert.equal(result, undefined)
+                    .then(res => {
+                        assert.isUndefined(res)
                     })
             })
         })
@@ -73,17 +74,14 @@ describe('Repositories: BaseRepository', () => {
             it('should reject a error', () => {
                 sinon
                     .mock(modelFake)
-                    .expects('findOne')
+                    .expects('create')
                     .withArgs(user)
                     .chain('exec')
                     .rejects({ message: 'An internal error has occurred in the database!' })
 
                 return repo.create(user)
                     .catch(err => {
-                        assert.property(err, 'name')
-                        assert.propertyVal(err, 'name', 'Error')
-                        assert.property(err, 'message')
-                        assert.propertyVal(err, 'message', 'Required fields were not provided!')
+                        assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
         })
@@ -106,13 +104,15 @@ describe('Repositories: BaseRepository', () => {
                     .resolves([user])
 
                 return repo.find(new Query())
-                    .then(result => {
-                        assert.isArray(result)
-                        assert.lengthOf(result, 1)
-                        assert.property(result[0], 'id')
-                        assert.propertyVal(result[0], 'id', user.id)
-                        assert.property(result[0], 'password')
-                        assert.propertyVal(result[0], 'password', user.password)
+                    .then(res => {
+                        assert.isArray(res)
+                        assert.lengthOf(res, 1)
+                        assert.propertyVal(res[0], 'id', user.id)
+                        assert.propertyVal(res[0], 'email', user.email)
+                        assert.propertyVal(res[0], 'birth_date', user.birth_date)
+                        assert.propertyVal(res[0], 'phone_number', user.phone_number)
+                        assert.propertyVal(res[0], 'selected_pilot_study', user.selected_pilot_study)
+                        assert.propertyVal(res[0], 'language', user.language)
                     })
             })
         })
@@ -133,9 +133,9 @@ describe('Repositories: BaseRepository', () => {
                     .resolves([])
 
                 return repo.find(new Query())
-                    .then(result => {
-                        assert.isArray(result)
-                        assert.lengthOf(result, 0)
+                    .then(res => {
+                        assert.isArray(res)
+                        assert.lengthOf(res, 0)
                     })
             })
         })
@@ -157,9 +157,6 @@ describe('Repositories: BaseRepository', () => {
 
                 return repo.find(new Query())
                     .catch(err => {
-                        assert.property(err, 'name')
-                        assert.propertyVal(err, 'name', 'Error')
-                        assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
@@ -182,11 +179,13 @@ describe('Repositories: BaseRepository', () => {
                     .resolves(user)
 
                 return repo.findOne(query)
-                    .then(result => {
-                        assert.property(result, 'id')
-                        assert.propertyVal(result, 'id', user.id)
-                        assert.property(result, 'password')
-                        assert.propertyVal(result, 'password', user.password)
+                    .then(res => {
+                        assert.propertyVal(res, 'id', user.id)
+                        assert.propertyVal(res, 'email', user.email)
+                        assert.propertyVal(res, 'birth_date', user.birth_date)
+                        assert.propertyVal(res, 'phone_number', user.phone_number)
+                        assert.propertyVal(res, 'selected_pilot_study', user.selected_pilot_study)
+                        assert.propertyVal(res, 'language', user.language)
                     })
             })
         })
@@ -205,8 +204,8 @@ describe('Repositories: BaseRepository', () => {
                     .resolves(undefined)
 
                 return repo.findOne(query)
-                    .then(result => {
-                        assert.equal(result, undefined)
+                    .then(res => {
+                        assert.isUndefined(res)
                     })
             })
         })
@@ -226,9 +225,6 @@ describe('Repositories: BaseRepository', () => {
 
                 return repo.findOne(query)
                     .catch(err => {
-                        assert.property(err, 'name')
-                        assert.propertyVal(err, 'name', 'Error')
-                        assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
@@ -246,11 +242,13 @@ describe('Repositories: BaseRepository', () => {
                     .resolves(user)
 
                 return repo.update(user)
-                    .then(result => {
-                        assert.property(result, 'id')
-                        assert.propertyVal(result, 'id', user.id)
-                        assert.property(result, 'password')
-                        assert.propertyVal(result, 'password', user.password)
+                    .then(res => {
+                        assert.propertyVal(res, 'id', user.id)
+                        assert.propertyVal(res, 'email', user.email)
+                        assert.propertyVal(res, 'birth_date', user.birth_date)
+                        assert.propertyVal(res, 'phone_number', user.phone_number)
+                        assert.propertyVal(res, 'selected_pilot_study', user.selected_pilot_study)
+                        assert.propertyVal(res, 'language', user.language)
                     })
             })
         })
@@ -264,8 +262,8 @@ describe('Repositories: BaseRepository', () => {
                     .resolves(undefined)
 
                 return repo.update(user)
-                    .then(result => {
-                        assert.equal(result, undefined)
+                    .then(res => {
+                        assert.isUndefined(res)
                     })
             })
         })
@@ -281,9 +279,6 @@ describe('Repositories: BaseRepository', () => {
 
                 return repo.update(user)
                     .catch(err => {
-                        assert.property(err, 'name')
-                        assert.propertyVal(err, 'name', 'Error')
-                        assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
@@ -301,9 +296,9 @@ describe('Repositories: BaseRepository', () => {
                     .resolves(true)
 
                 return repo.delete(user.id!)
-                    .then(result => {
-                        assert.isBoolean(result)
-                        assert.isTrue(result)
+                    .then(res => {
+                        assert.isBoolean(res)
+                        assert.isTrue(res)
                     })
             })
         })
@@ -318,9 +313,9 @@ describe('Repositories: BaseRepository', () => {
                     .resolves(false)
 
                 return repo.delete(user.id!)
-                    .then(result => {
-                        assert.isBoolean(result)
-                        assert.isFalse(result)
+                    .then(res => {
+                        assert.isBoolean(res)
+                        assert.isFalse(res)
                     })
             })
         })
@@ -336,9 +331,7 @@ describe('Repositories: BaseRepository', () => {
 
                 return repo.delete(user.id!)
                     .catch(err => {
-                        assert.property(err, 'name')
                         assert.propertyVal(err, 'name', 'Error')
-                        assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })
             })
@@ -356,9 +349,9 @@ describe('Repositories: BaseRepository', () => {
                     .resolves(1)
 
                 return repo.count(new Query())
-                    .then(result => {
-                        assert.isNumber(result)
-                        assert.equal(result, 1)
+                    .then(res => {
+                        assert.isNumber(res)
+                        assert.equal(res, 1)
                     })
             })
         })
@@ -374,10 +367,70 @@ describe('Repositories: BaseRepository', () => {
 
                 return repo.count(new Query())
                     .catch(err => {
-                        assert.property(err, 'name')
                         assert.propertyVal(err, 'name', 'Error')
-                        assert.property(err, 'message')
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
+                    })
+            })
+        })
+    })
+
+    describe('mongoDBErrorListener()', () => {
+        context('when the database throw exceptions', () => {
+            it('should throw error for ValidationError', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('create')
+                    .withArgs(user)
+                    .chain('exec')
+                    .rejects({ name: 'ValidationError' })
+
+                return repo.create(user)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'Required fields were not provided!')
+                    })
+            })
+            it('should throw error for CastError', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('create')
+                    .withArgs(user)
+                    .chain('exec')
+                    .rejects({ name: 'CastError' })
+
+                return repo.create(user)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'The given ID is in invalid format.')
+                        assert.propertyVal(err, 'description', 'A 12 bytes hexadecimal ID similar to this')
+                    })
+            })
+            it('should throw error for MongoError', () => {
+                sinon
+                    .mock(modelFake)
+                    .expects('create')
+                    .withArgs(user)
+                    .chain('exec')
+                    .rejects({ name: 'MongoError', code: 11000 })
+
+                return repo.create(user)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'A registration with the same unique data already exists!')
+                    })
+            })
+            it('should throw error for ObjectParameterError', () => {
+                const query = new Query()
+                query.addFilter({ _id: user.id })
+
+                sinon
+                    .mock(modelFake)
+                    .expects('findOne')
+                    .withArgs({ _id: user.id })
+                    .chain('select')
+                    .chain('exec')
+                    .rejects({ name: 'ObjectParameterError' })
+
+                return repo.findOne(query)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'Invalid query parameters!')
                     })
             })
         })

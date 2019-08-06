@@ -1,39 +1,31 @@
-import Mongoose, { Schema } from 'mongoose'
+import Mongoose from 'mongoose'
 
 interface IUserModel extends Mongoose.Document {
 }
 
 const userSchema = new Mongoose.Schema({
-        password: {
-            type: String
-        },
-        type: {
-            type: String
-        },
-        change_password: {
-            type: Boolean
-        },
+        type: { type: String },
         scopes: [{ type: String }],
+        change_password: { type: Boolean },
+        email_verified: { type: Boolean },
+        last_login: { type: Date },
+        last_sync: { type: Date },
+        selected_pilot_study: { type: String },
+        language: {
+            type: String,
+            default: 'pt-br'
+        },
+        email: {
+            type: String,
+            unique: true,
+            sparse: true
+        },
+        password: { type: String },
         phone_number: { type: String },
-        email: { /* Common parameter between admin, patient and health professional. */
-            type: String
-        }, /* Health Professional parameters*/
-        name: {
-            type: String
-        },
-        health_area: {
-            type: String
-        }, /* Patient parameters */
-        gender: {
-            type: String
-        },
-        birth_date: {
-            type: String
-        },
-        pilotstudy_id: {
-            type: Schema.Types.ObjectId,
-            ref: 'PilotStudy'
-        }
+        birth_date: { type: String },
+        name: { type: String },
+        health_area: { type: String }, /* Health Professional Parameters*/
+        gender: { type: String } /* Patient Parameter*/
     },
     {
         timestamps: { createdAt: 'created_at', updatedAt: false },

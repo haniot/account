@@ -4,5 +4,5 @@ import { EventEmitter } from 'events'
 export interface IConnectionDB extends IDisposable {
     eventConnection: EventEmitter
 
-    tryConnect(retries: number, interval: number): void
+    tryConnect(retries: number, interval: number): Promise<void>
 }
