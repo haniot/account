@@ -63,30 +63,28 @@ import { HealthProfessionalsPilotStudiesController } from '../ui/controllers/hea
 import { PilotStudiesHealthProfessionalsController } from '../ui/controllers/pilot.studies.health.professionals.controller'
 import { PilotStudiesPatientsController } from '../ui/controllers/pilot.studies.patients.controller'
 import { PatientsPilotStudiesController } from '../ui/controllers/patients.pilot.studies.controller'
+import { ConnectionFactoryRabbitMQ } from '../infrastructure/eventbus/rabbitmq/connection.factory.rabbitmq'
+import { IConnectionEventBus } from '../infrastructure/port/connection.event.bus.interface'
+import { EventBusRabbitMQ } from '../infrastructure/eventbus/rabbitmq/eventbus.rabbitmq'
+import { ConnectionRabbitMQ } from '../infrastructure/eventbus/rabbitmq/connection.rabbitmq'
+import { IEventBus } from '../infrastructure/port/event.bus.interface'
+import { PublishEventBusTask } from '../background/task/publish.event.bus.task'
+import { SubscribeEventBusTask } from '../background/task/subscribe.event.bus.task'
+import { IntegrationEventRepoModel } from '../infrastructure/database/schema/integration.event.schema'
+import { IntegrationEventRepository } from '../infrastructure/repository/integration.event.repository'
+import { IIntegrationEventRepository } from '../application/port/integration.event.repository.interface'
 
-export class DI {
-    private static instance: DI
-    private readonly container: Container
+class IoC {
+    private readonly _container: Container
 
     /**
-     * Creates an instance of DI.
+     * Creates an instance of Di.
      *
      * @private
      */
-    private constructor() {
-        this.container = new Container()
+    constructor() {
+        this._container = new Container()
         this.initDependencies()
-    }
-
-    /**
-     * Recover single instance of class.
-     *
-     * @static
-     * @return {App}
-     */
-    public static getInstance(): DI {
-        if (!this.instance) this.instance = new DI()
-        return this.instance
     }
 
     /**
@@ -94,8 +92,8 @@ export class DI {
      *
      * @returns {Container}
      */
-    public getContainer(): Container {
-        return this.container
+    get container(): Container {
+        return this._container
     }
 
     /**
@@ -105,94 +103,114 @@ export class DI {
      * @return void
      */
     private initDependencies(): void {
-        this.container.bind(Identifier.APP).to(App).inSingletonScope()
+        this._container.bind(Identifier.APP).to(App).inSingletonScope()
 
         // Controllers
-        this.container.bind<HomeController>(Identifier.HOME_CONTROLLER).to(HomeController).inSingletonScope()
-        this.container.bind<UsersController>(Identifier.USERS_CONTROLLER).to(UsersController).inSingletonScope()
-        this.container.bind<AuthController>(Identifier.AUTH_CONTROLLER)
+        this._container.bind<HomeController>(Identifier.HOME_CONTROLLER).to(HomeController).inSingletonScope()
+        this._container.bind<UsersController>(Identifier.USERS_CONTROLLER).to(UsersController).inSingletonScope()
+        this._container.bind<AuthController>(Identifier.AUTH_CONTROLLER)
             .to(AuthController).inSingletonScope()
-        this.container.bind<AdminsController>(Identifier.ADMINS_CONTROLLER).to(AdminsController).inSingletonScope()
-        this.container.bind<PatientsController>(Identifier.PATIENTS_CONTROLLER).to(PatientsController).inSingletonScope()
-        this.container.bind<PatientsPilotStudiesController>(Identifier.PATIENTS_PILOT_STUDIES_CONTROLLER)
+        this._container.bind<AdminsController>(Identifier.ADMINS_CONTROLLER).to(AdminsController).inSingletonScope()
+        this._container.bind<PatientsController>(Identifier.PATIENTS_CONTROLLER).to(PatientsController).inSingletonScope()
+        this._container.bind<PatientsPilotStudiesController>(Identifier.PATIENTS_PILOT_STUDIES_CONTROLLER)
             .to(PatientsPilotStudiesController).inSingletonScope()
-        this.container.bind<HealthProfessionalsController>(Identifier.HEALTH_PROFESSIONALS_CONTROLLER)
+        this._container.bind<HealthProfessionalsController>(Identifier.HEALTH_PROFESSIONALS_CONTROLLER)
             .to(HealthProfessionalsController).inSingletonScope()
-        this.container.bind<HealthProfessionalsPilotStudiesController>(Identifier.HEALTH_PROFESSIONALS_PILOT_STUDIES_CONTROLLER)
+        this._container.bind<HealthProfessionalsPilotStudiesController>(Identifier.HEALTH_PROFESSIONALS_PILOT_STUDIES_CONTROLLER)
             .to(HealthProfessionalsPilotStudiesController).inSingletonScope()
-        this.container.bind<PilotStudiesController>(Identifier.PILOT_STUDIES_CONTROLLER)
+        this._container.bind<PilotStudiesController>(Identifier.PILOT_STUDIES_CONTROLLER)
             .to(PilotStudiesController).inSingletonScope()
-        this.container.bind<PilotStudiesHealthProfessionalsController>(Identifier.PILOT_STUDIES_HEALTH_PROFESSIONALS_CONTROLLER)
+        this._container.bind<PilotStudiesHealthProfessionalsController>(Identifier.PILOT_STUDIES_HEALTH_PROFESSIONALS_CONTROLLER)
             .to(PilotStudiesHealthProfessionalsController).inSingletonScope()
-        this.container.bind<PilotStudiesPatientsController>(Identifier.PILOT_STUDIES_PATIENTS_CONTROLLER)
+        this._container.bind<PilotStudiesPatientsController>(Identifier.PILOT_STUDIES_PATIENTS_CONTROLLER)
             .to(PilotStudiesPatientsController).inSingletonScope()
 
         // Services
-        this.container.bind<IUserService>(Identifier.USER_SERVICE).to(UserService).inSingletonScope()
-        this.container.bind<IAuthService>(Identifier.AUTH_SERVICE)
+        this._container.bind<IUserService>(Identifier.USER_SERVICE).to(UserService).inSingletonScope()
+        this._container.bind<IAuthService>(Identifier.AUTH_SERVICE)
             .to(AuthService).inSingletonScope()
-        this.container.bind<IHealthProfessionalService>(Identifier.HEALTH_PROFESSIONAL_SERVICE)
+        this._container.bind<IHealthProfessionalService>(Identifier.HEALTH_PROFESSIONAL_SERVICE)
             .to(HealthProfessionalService).inSingletonScope()
-        this.container.bind<IAdminService>(Identifier.ADMIN_SERVICE)
+        this._container.bind<IAdminService>(Identifier.ADMIN_SERVICE)
             .to(AdminService).inSingletonScope()
-        this.container.bind<IPatientService>(Identifier.PATIENT_SERVICE)
+        this._container.bind<IPatientService>(Identifier.PATIENT_SERVICE)
             .to(PatientService).inSingletonScope()
-        this.container.bind<IPilotStudyService>(Identifier.PILOT_STUDY_SERVICE)
+        this._container.bind<IPilotStudyService>(Identifier.PILOT_STUDY_SERVICE)
             .to(PilotStudyService).inSingletonScope()
 
         // Repositories
-        this.container
+        this._container
             .bind<IUserRepository>(Identifier.USER_REPOSITORY)
             .to(UserRepository).inSingletonScope()
-        this.container.bind<IAuthRepository>(Identifier.AUTH_REPOSITORY)
+        this._container.bind<IAuthRepository>(Identifier.AUTH_REPOSITORY)
             .to(AuthRepository).inSingletonScope()
-        this.container.bind<IHealthProfessionalRepository>(Identifier.HEALTH_PROFESSIONAL_REPOSITORY)
+        this._container.bind<IHealthProfessionalRepository>(Identifier.HEALTH_PROFESSIONAL_REPOSITORY)
             .to(HealthProfessionalRepository).inSingletonScope()
-        this.container.bind<IAdminRepository>(Identifier.ADMIN_REPOSITORY)
+        this._container.bind<IAdminRepository>(Identifier.ADMIN_REPOSITORY)
             .to(AdminRepository).inSingletonScope()
-        this.container.bind<IPatientRepository>(Identifier.PATIENT_REPOSITORY)
+        this._container.bind<IPatientRepository>(Identifier.PATIENT_REPOSITORY)
             .to(PatientRepository).inSingletonScope()
-        this.container.bind<IPilotStudyRepository>(Identifier.PILOT_STUDY_REPOSITORY)
+        this._container.bind<IPilotStudyRepository>(Identifier.PILOT_STUDY_REPOSITORY)
             .to(PilotStudyRepository).inSingletonScope()
+        this._container
+            .bind<IIntegrationEventRepository>(Identifier.INTEGRATION_EVENT_REPOSITORY)
+            .to(IntegrationEventRepository).inSingletonScope()
 
         // Models
-        this.container.bind(Identifier.USER_REPO_MODEL).toConstantValue(UserRepoModel)
-        this.container.bind(Identifier.PILOT_STUDY_REPO_MODEL).toConstantValue(PilotStudyRepoModel)
+        this._container.bind(Identifier.USER_REPO_MODEL).toConstantValue(UserRepoModel)
+        this._container.bind(Identifier.PILOT_STUDY_REPO_MODEL).toConstantValue(PilotStudyRepoModel)
+        this._container.bind(Identifier.INTEGRATION_EVENT_REPO_MODEL).toConstantValue(IntegrationEventRepoModel)
 
         // Mappers
-        this.container
+        this._container
             .bind<IEntityMapper<User, UserEntity>>(Identifier.USER_ENTITY_MAPPER)
             .to(UserEntityMapper).inSingletonScope()
-        this.container
+        this._container
             .bind<IEntityMapper<HealthProfessional, HealthProfessionalEntity>>(Identifier.HEALTH_PROFESSIONAL_ENTITY_MAPPER)
             .to(HealthProfessionalEntityMapper).inSingletonScope()
-        this.container
+        this._container
             .bind<IEntityMapper<Admin, AdminEntity>>(Identifier.ADMIN_ENTITY_MAPPER)
             .to(AdminEntityMapper).inSingletonScope()
-        this.container
+        this._container
             .bind<IEntityMapper<Patient, PatientEntity>>(Identifier.PATIENT_ENTITY_MAPPER)
             .to(PatientEntityMapper).inSingletonScope()
-        this.container
+        this._container
             .bind<IEntityMapper<PilotStudy, PilotStudyEntity>>(Identifier.PILOT_STUDY_ENTITY_MAPPER)
             .to(PilotStudyEntityMapper).inSingletonScope()
 
         // Background Services
-        this.container
+        this._container
             .bind<IConnectionFactory>(Identifier.MONGODB_CONNECTION_FACTORY)
             .to(ConnectionFactoryMongodb).inSingletonScope()
-        this.container
+        this._container
             .bind<IConnectionDB>(Identifier.MONGODB_CONNECTION)
             .to(ConnectionMongodb).inSingletonScope()
-        this.container
+        this._container
+            .bind<IConnectionFactory>(Identifier.RABBITMQ_CONNECTION_FACTORY)
+            .to(ConnectionFactoryRabbitMQ).inSingletonScope()
+        this._container
+            .bind<IConnectionEventBus>(Identifier.RABBITMQ_CONNECTION)
+            .to(ConnectionRabbitMQ)
+        this._container
+            .bind<IEventBus>(Identifier.RABBITMQ_EVENT_BUS)
+            .to(EventBusRabbitMQ).inSingletonScope()
+        this._container
             .bind(Identifier.BACKGROUND_SERVICE)
             .to(BackgroundService).inSingletonScope()
-
+        this._container
+            .bind<IBackgroundTask>(Identifier.PUBLISH_EVENT_BUS_TASK)
+            .to(PublishEventBusTask).inSingletonScope()
+        this._container
+            .bind<IBackgroundTask>(Identifier.SUBSCRIBE_EVENT_BUS_TASK)
+            .to(SubscribeEventBusTask).inSingletonScope()
         // Tasks
-        this.container
+        this._container
             .bind<IBackgroundTask>(Identifier.REGISTER_DEFAULT_ADMIN_TASK)
             .to(RegisterDefaultAdminTask).inRequestScope()
 
         // Log
-        this.container.bind<ILogger>(Identifier.LOGGER).to(CustomLogger).inSingletonScope()
+        this._container.bind<ILogger>(Identifier.LOGGER).to(CustomLogger).inSingletonScope()
     }
 }
+
+export const DIContainer = new IoC().container

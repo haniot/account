@@ -37,10 +37,12 @@ export abstract class Identifier {
     public static readonly ADMIN_REPOSITORY: any = Symbol.for('AdminRepository')
     public static readonly PATIENT_REPOSITORY: any = Symbol.for('PatientRepository')
     public static readonly PILOT_STUDY_REPOSITORY: any = Symbol.for('PilotStudyRepository')
+    public static readonly INTEGRATION_EVENT_REPOSITORY: any = Symbol.for('IntegrationEventRepository')
 
     // Models
     public static readonly USER_REPO_MODEL: any = Symbol.for('UserRepoModel')
     public static readonly PILOT_STUDY_REPO_MODEL: any = Symbol.for('PilotStudyRepoModel')
+    public static readonly INTEGRATION_EVENT_REPO_MODEL: any = Symbol.for('IntegrationEventRepoModel')
 
     // Mappers
     public static readonly USER_ENTITY_MAPPER: any = Symbol.for('UserEntityMapper')
@@ -52,7 +54,12 @@ export abstract class Identifier {
     // Background Services
     public static readonly MONGODB_CONNECTION_FACTORY: any = Symbol.for('ConnectionFactoryMongodb')
     public static readonly MONGODB_CONNECTION: any = Symbol.for('ConnectionMongodb')
+    public static readonly RABBITMQ_CONNECTION_FACTORY: any = Symbol.for('ConnectionFactoryRabbitMQ')
+    public static readonly RABBITMQ_CONNECTION: any = Symbol.for('ConnectionRabbitMQ')
+    public static readonly RABBITMQ_EVENT_BUS: any = Symbol.for('EventBusRabbitMQ')
     public static readonly BACKGROUND_SERVICE: any = Symbol.for('BackgroundService')
+    public static readonly PUBLISH_EVENT_BUS_TASK: any = Symbol.for('PublishEventBusTask')
+    public static readonly SUBSCRIBE_EVENT_BUS_TASK: any = Symbol.for('SubscribeEventBusTask')
 
     // Tasks
     public static readonly REGISTER_DEFAULT_ADMIN_TASK: any = Symbol.for('RegisterDefaultAdminTask')
