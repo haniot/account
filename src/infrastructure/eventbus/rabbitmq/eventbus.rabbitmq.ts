@@ -10,9 +10,9 @@ import { EventBusException } from '../../../application/domain/exception/eventbu
 
 @injectable()
 export class EventBusRabbitMQ implements IEventBus, IDisposable {
-    private readonly RABBITMQ_QUEUE_NAME: string = 'notification'
-    private readonly RABBITMQ_RPC_QUEUE_NAME: string = 'notification.rpc'
-    private readonly RABBITMQ_RPC_EXCHANGE_NAME: string = 'notification.service'
+    private readonly RABBITMQ_QUEUE_NAME: string = 'account'
+    private readonly RABBITMQ_RPC_QUEUE_NAME: string = 'account.rpc'
+    private readonly RABBITMQ_RPC_EXCHANGE_NAME: string = 'account.rpc'
     private _receiveFromYourself: boolean
     private _event_handlers: Map<string, IIntegrationEventHandler<IntegrationEvent<any>>>
     private _rpcServer!: any
@@ -117,7 +117,7 @@ export class EventBusRabbitMQ implements IEventBus, IDisposable {
         })
     }
 
-    public executeResource(serviceName: string, resourceName: string, queryString?: string): Promise<any> {
+    public executeResource(resourceName: string, queryString?: string): Promise<any> {
         if (!this.connectionRpcClient.isOpen) {
             return Promise.reject(new EventBusException('No connection open!'))
         }
@@ -132,7 +132,7 @@ export class EventBusRabbitMQ implements IEventBus, IDisposable {
                         type: 'direct',
                         durable: true
                     },
-                    rcpTimeout: 3000
+                    rcpTimeout: 5000
                 })
     }
 

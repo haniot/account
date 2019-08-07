@@ -153,8 +153,7 @@ describe('EVENT BUS', () => {
                     return { content: '123', original_query: query }
                 })
 
-                return eventBus.executeResource('notification.service',
-                    'resource.test.get', '?test=321')
+                return eventBus.executeResource('resource.test.get', '?test=321')
                     .then(res => {
                         expect(res.content).to.have.property('content', '123')
                         expect(res.content).to.have.property('original_query', '?test=321')
@@ -168,8 +167,7 @@ describe('EVENT BUS', () => {
             try {
                 await eventBus.connectionRpcClient.open(1, 500)
 
-                return eventBus.executeResource('notification.service',
-                    'resource.find', '')
+                return eventBus.executeResource('resource.find', '')
                     .catch(err => {
                         expect(err).to.be.an('error')
                     })

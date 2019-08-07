@@ -69,10 +69,10 @@ import { EventBusRabbitMQ } from '../infrastructure/eventbus/rabbitmq/eventbus.r
 import { ConnectionRabbitMQ } from '../infrastructure/eventbus/rabbitmq/connection.rabbitmq'
 import { IEventBus } from '../infrastructure/port/event.bus.interface'
 import { PublishEventBusTask } from '../background/task/publish.event.bus.task'
-import { SubscribeEventBusTask } from '../background/task/subscribe.event.bus.task'
 import { IntegrationEventRepoModel } from '../infrastructure/database/schema/integration.event.schema'
 import { IntegrationEventRepository } from '../infrastructure/repository/integration.event.repository'
 import { IIntegrationEventRepository } from '../application/port/integration.event.repository.interface'
+import { RpcServerEventBusTask } from '../background/task/rpc.server.event.bus.task'
 
 class IoC {
     private readonly _container: Container
@@ -197,13 +197,14 @@ class IoC {
         this._container
             .bind(Identifier.BACKGROUND_SERVICE)
             .to(BackgroundService).inSingletonScope()
+
+        // Tasks
         this._container
             .bind<IBackgroundTask>(Identifier.PUBLISH_EVENT_BUS_TASK)
             .to(PublishEventBusTask).inSingletonScope()
         this._container
-            .bind<IBackgroundTask>(Identifier.SUBSCRIBE_EVENT_BUS_TASK)
-            .to(SubscribeEventBusTask).inSingletonScope()
-        // Tasks
+            .bind<IBackgroundTask>(Identifier.RPC_SERVER_EVENT_BUST_TASK)
+            .to(RpcServerEventBusTask).inSingletonScope()
         this._container
             .bind<IBackgroundTask>(Identifier.REGISTER_DEFAULT_ADMIN_TASK)
             .to(RegisterDefaultAdminTask).inRequestScope()

@@ -6,7 +6,7 @@ interface IIntegrationEventModel extends Mongoose.Document {
 const integrationEventSchema = new Mongoose.Schema({
         __operation: {
             type: String,
-            enum: ['publish'],
+            default: 'publish',
             required: true
         },
         __routing_key: {

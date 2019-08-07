@@ -6,11 +6,14 @@ import { IBackgroundTask } from '../../application/port/background.task.interfac
 import { Query } from '../../infrastructure/repository/query/query'
 import { IIntegrationEventRepository } from '../../application/port/integration.event.repository.interface'
 import { IntegrationEvent } from '../../application/integration-event/event/integration.event'
+import { UserDeleteEvent } from '../../application/integration-event/event/user.delete.event'
+import { User } from '../../application/domain/model/user'
+import { PilotStudyDeleteEvent } from '../../application/integration-event/event/pilot.study.delete.event'
+import { PilotStudy } from '../../application/domain/model/pilot.study'
+import { EmailWelcomeEvent } from '../../application/integration-event/event/email.welcome.event'
 
 @injectable()
 export class PublishEventBusTask implements IBackgroundTask {
-    private handlerPub: any
-
     constructor(
         @inject(Identifier.RABBITMQ_EVENT_BUS) private readonly _eventBus: IEventBus,
         @inject(Identifier.INTEGRATION_EVENT_REPOSITORY)
@@ -24,9 +27,10 @@ export class PublishEventBusTask implements IBackgroundTask {
         // e sent and were saved for later submission.
         this._eventBus
             .connectionPub
-            .open(0, 2000)
+            .open(0, 1000)
             .then((conn) => {
                 conn.on('re_established_connection', () => this.internalPublishSavedEvents())
+                this._logger.info('Connection with publish event opened successful!')
             })
             .catch(err => {
                 this._logger.error(`Error trying to get connection to Event Bus for event publishing. ${err.message}`)
@@ -36,7 +40,6 @@ export class PublishEventBusTask implements IBackgroundTask {
     public async stop(): Promise<void> {
         try {
             await this._eventBus.dispose()
-            if (this.handlerPub) clearInterval(this.handlerPub)
         } catch (err) {
             return Promise.reject(new Error(`Error stopping PublishEventBusTask! ${err.message}`))
         }
@@ -52,7 +55,7 @@ export class PublishEventBusTask implements IBackgroundTask {
 
                 this._publishEvent(event)
                     .then(success => {
-                        if (!success) {
+                        if (success) {
                             this._logger.info(`Event with name ${event.event_name}, which was saved, `
                                 .concat('was successfully published to the event bus.'))
                             this._integrationEventRepository
@@ -73,6 +76,27 @@ export class PublishEventBusTask implements IBackgroundTask {
     }
 
     private _publishEvent(event: any): Promise<boolean> {
+        if (event.event_name === 'UserDeleteEvent') {
+            const userDeleteEvent: UserDeleteEvent = new UserDeleteEvent(
+                event.timestamp,
+                new User().fromJSON(event.user)
+            )
+            return this._eventBus.publish(userDeleteEvent, event.__routing_key)
+        }
+        if (event.event_name === 'PilotStudyDeleteEvent') {
+            const pilotStudyDeleteEvent: PilotStudyDeleteEvent = new PilotStudyDeleteEvent(
+                event.timestamp,
+                new PilotStudy().fromJSON(event.pilot_study)
+            )
+            return this._eventBus.publish(pilotStudyDeleteEvent, event.__routing_key)
+        }
+        if (event.event_name === 'EmailWelcomeEvent') {
+            const emailWelcomeEvent: EmailWelcomeEvent = new EmailWelcomeEvent(
+                event.timestamp,
+                new User().fromJSON(event.user)
+            )
+            return this._eventBus.publish(emailWelcomeEvent, event.__routing_key)
+        }
         return Promise.resolve(false)
     }
 }
