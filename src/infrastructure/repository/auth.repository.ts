@@ -82,8 +82,12 @@ export class AuthRepository extends BaseRepository<User, UserEntity> implements 
             if (!user) return Promise.resolve(undefined!)
             const token: string = await this.generateResetPasswordToken(user)
             if (!token) return Promise.resolve(undefined!)
-            const result: User = await this.Model.findOneAndUpdate({ _id: user.id }, { reset_password_token: token })
-            return Promise.resolve(result)
+            const result: User =
+                await this.Model.findOneAndUpdate(
+                    { _id: user.id },
+                    { reset_password_token: token },
+                    { new: true })
+            return Promise.resolve(this.mapper.transform(result))
         } catch (err) {
             return Promise.reject(err)
         }

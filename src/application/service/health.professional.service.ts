@@ -18,6 +18,7 @@ import { IEventBus } from '../../infrastructure/port/event.bus.interface'
 import { IIntegrationEventRepository } from '../port/integration.event.repository.interface'
 import { ILogger } from '../../utils/custom.logger'
 import { EmailWelcomeEvent } from '../integration-event/event/email.welcome.event'
+import { Email } from '../domain/model/email'
 
 @injectable()
 export class HealthProfessionalService implements IHealthProfessionalService {
@@ -41,7 +42,15 @@ export class HealthProfessionalService implements IHealthProfessionalService {
             if (result) {
                 result.total_pilot_studies = 0
                 result.total_patients = 0
-                await this.publishEvent(new EmailWelcomeEvent(new Date(), item), 'emails.welcome')
+                const mail: Email = new Email().fromJSON({
+                    to: {
+                        name: result.name,
+                        email: result.email
+                    },
+                    password: result.password,
+                    lang: result.language
+                })
+                await this.publishEvent(new EmailWelcomeEvent(new Date(), mail), 'emails.welcome')
             }
             return Promise.resolve(result)
         } catch (err) {

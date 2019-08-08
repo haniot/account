@@ -8,6 +8,8 @@ import { IHealthProfessionalRepository } from '../../application/port/health.pro
 import { IAdminRepository } from '../../application/port/admin.repository.interface'
 import { UserType } from '../../application/domain/utils/user.type'
 import { Query } from '../../infrastructure/repository/query/query'
+import qs from 'query-strings-parser'
+import { IPilotStudyRepository } from '../../application/port/pilot.study.repository.interface'
 
 @injectable()
 export class RpcServerEventBusTask implements IBackgroundTask {
@@ -16,6 +18,7 @@ export class RpcServerEventBusTask implements IBackgroundTask {
         @inject(Identifier.PATIENT_REPOSITORY) private readonly _patientRepo: IPatientRepository,
         @inject(Identifier.HEALTH_PROFESSIONAL_REPOSITORY) private readonly _healthRepo: IHealthProfessionalRepository,
         @inject(Identifier.ADMIN_REPOSITORY) private readonly _adminRepo: IAdminRepository,
+        @inject(Identifier.PILOT_STUDY_REPOSITORY) private readonly _pilotRepo: IPilotStudyRepository,
         @inject(Identifier.LOGGER) private readonly _logger: ILogger
     ) {
     }
@@ -45,15 +48,15 @@ export class RpcServerEventBusTask implements IBackgroundTask {
 
     private initializeServer(): void {
         this._eventBus
-            .provideResource('users.find', (query?: string, userType?: string) => {
-                // TODO Use the parser() function from query-strings-parser to manage query param
+            .provideResource('users.find', (_query?: string, userType?: string) => {
+                const query: Query = new Query().fromJSON({ ...qs.parser(_query), type: userType })
                 switch (userType) {
                     case(UserType.ADMIN):
-                        return this._adminRepo.find(new Query().fromJSON({ filters: { type: userType } }))
+                        return this._adminRepo.find(query)
                     case(UserType.HEALTH_PROFESSIONAL):
-                        return this._healthRepo.find(new Query().fromJSON({ filters: { type: userType } }))
+                        return this._healthRepo.find(query)
                     case(UserType.PATIENT):
-                        return this._patientRepo.find(new Query().fromJSON({ filters: { type: userType } }))
+                        return this._patientRepo.find(query)
                     default:
                         return new Error('User Type param is required. The mapped values are: admin, ' +
                             'health_professional, patient.')
@@ -61,5 +64,13 @@ export class RpcServerEventBusTask implements IBackgroundTask {
             })
             .then(() => this._logger.info('Resource users.find successful registered'))
             .catch((err) => this._logger.error(`Error at register resource users.find: ${err.message}`))
+
+        this._eventBus
+            .provideResource('pilotstudies.get', (_query?: string) => {
+                const query: Query = new Query().fromJSON({ ...qs.parser(_query) })
+                return this._pilotRepo.findAndPopulate(query)
+            })
+            .then(() => this._logger.info('Resource pilotstudies.get successful registered'))
+            .catch((err) => this._logger.error(`Error at register resource pilotstudies.get: ${err.message}`))
     }
 }

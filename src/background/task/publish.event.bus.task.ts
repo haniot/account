@@ -11,6 +11,9 @@ import { User } from '../../application/domain/model/user'
 import { PilotStudyDeleteEvent } from '../../application/integration-event/event/pilot.study.delete.event'
 import { PilotStudy } from '../../application/domain/model/pilot.study'
 import { EmailWelcomeEvent } from '../../application/integration-event/event/email.welcome.event'
+import { EmailResetPasswordEvent } from '../../application/integration-event/event/email.reset.password.event'
+import { Email } from '../../application/domain/model/email'
+import { EmailUpdatePasswordEvent } from '../../application/integration-event/event/email.update.password.event'
 
 @injectable()
 export class PublishEventBusTask implements IBackgroundTask {
@@ -93,9 +96,23 @@ export class PublishEventBusTask implements IBackgroundTask {
         if (event.event_name === 'EmailWelcomeEvent') {
             const emailWelcomeEvent: EmailWelcomeEvent = new EmailWelcomeEvent(
                 event.timestamp,
-                new User().fromJSON(event.user)
+                new Email().fromJSON(event.email)
             )
             return this._eventBus.publish(emailWelcomeEvent, event.__routing_key)
+        }
+        if (event.event_name === 'EmailResetPasswordEvent') {
+            const emailResetPasswordEvent: EmailResetPasswordEvent = new EmailResetPasswordEvent(
+                event.timestamp,
+                new Email().fromJSON(event.email)
+            )
+            return this._eventBus.publish(emailResetPasswordEvent, event.__routing_key)
+        }
+        if (event.event_name === 'EmailUpdatePasswordEvent') {
+            const emailUpdatePasswordEvent: EmailUpdatePasswordEvent = new EmailUpdatePasswordEvent(
+                event.timestamp,
+                new Email().fromJSON(event.email)
+            )
+            return this._eventBus.publish(emailUpdatePasswordEvent, event.__routing_key)
         }
         return Promise.resolve(false)
     }

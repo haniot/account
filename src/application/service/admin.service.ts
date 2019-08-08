@@ -18,6 +18,7 @@ import { IEventBus } from '../../infrastructure/port/event.bus.interface'
 import { IIntegrationEventRepository } from '../port/integration.event.repository.interface'
 import { ILogger } from '../../utils/custom.logger'
 import { EmailWelcomeEvent } from '../integration-event/event/email.welcome.event'
+import { Email } from '../domain/model/email'
 
 @injectable()
 export class AdminService implements IAdminService {
@@ -37,7 +38,17 @@ export class AdminService implements IAdminService {
             const exists = await this._userRepository.checkExistByEmail(item.email)
             if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
             const result: Admin = await this._adminRepository.create(item)
-            if (result) await this.publishEvent(new EmailWelcomeEvent(new Date(), item), 'emails.welcome')
+            if (result) {
+                const mail: Email = new Email().fromJSON({
+                    to: {
+                        name: result.name,
+                        email: result.email
+                    },
+                    password: result.password,
+                    lang: result.language
+                })
+                await this.publishEvent(new EmailWelcomeEvent(new Date(), mail), 'emails.welcome')
+            }
             return Promise.resolve(this.addReadOnlyInformation(result))
         } catch (err) {
             return Promise.reject(err)

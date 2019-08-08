@@ -1,26 +1,18 @@
 import { EventType, IntegrationEvent } from './integration.event'
-import { User } from '../../domain/model/user'
+import { Email } from '../../domain/model/email'
 
-export class EmailWelcomeEvent extends IntegrationEvent<User> {
-    constructor(public timestamp?: Date, public user?: User) {
+export class EmailWelcomeEvent extends IntegrationEvent<Email> {
+    constructor(public timestamp?: Date, public email?: Email) {
         super('EmailWelcomeEvent', EventType.EMAIL, timestamp)
     }
 
     public toJSON(): any {
-        if (!this.user) return {}
-        const result: any = {
-            email: {
-                to: {
-                    name: this.user.name,
-                    email: this.user.email
-                },
-                lang: this.user.language
-            }
-        }
-        if (this.user.password) result.email.password = this.user.password
+        if (!this.email) return {}
         return {
             ...super.toJSON(),
-            ...result
+            ...{
+                email: this.email.toJSON()
+            }
         }
     }
 }

@@ -17,6 +17,7 @@ import { IIntegrationEventRepository } from '../port/integration.event.repositor
 import { ILogger } from '../../utils/custom.logger'
 import { IntegrationEvent } from '../integration-event/event/integration.event'
 import { User } from '../domain/model/user'
+import { Email } from '../domain/model/email'
 
 @injectable()
 export class PatientService implements IPatientService {
@@ -39,7 +40,17 @@ export class PatientService implements IPatientService {
             const patientExists = await this._patientRepository.checkExists(item)
             if (patientExists) throw new ConflictException('A patient with the same name and birth date already exists')
             const result: Patient = await this._patientRepository.create(item)
-            if (result) await this.publishEvent(new EmailWelcomeEvent(new Date(), item), 'emails.welcome')
+            if (result) {
+                const mail: Email = new Email().fromJSON({
+                    to: {
+                        name: result.name,
+                        email: result.email
+                    },
+                    password: result.password,
+                    lang: result.language
+                })
+                await this.publishEvent(new EmailWelcomeEvent(new Date(), mail), 'emails.welcome')
+            }
             return Promise.resolve(result)
         } catch (err) {
             return Promise.reject(err)

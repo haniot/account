@@ -61,7 +61,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.5.12",
     "morgan": "^1.9.1",
-    "query-strings-parser": "^2.0.0",
+    "query-strings-parser": "^2.1.1",
     "reflect-metadata": "^0.1.13",
     "swagger-ui-express": "^4.0.5",
     "winston": "^3.2.1",
