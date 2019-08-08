@@ -37,10 +37,8 @@ export class PatientService implements IPatientService {
                 const exists = await this._userRepository.checkExistByEmail(item.email)
                 if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
             }
-            const patientExists = await this._patientRepository.checkExists(item)
-            if (patientExists) throw new ConflictException('A patient with the same name and birth date already exists')
             const result: Patient = await this._patientRepository.create(item)
-            if (result) {
+            if (result && result.email) {
                 const mail: Email = new Email().fromJSON({
                     to: {
                         name: result.name,

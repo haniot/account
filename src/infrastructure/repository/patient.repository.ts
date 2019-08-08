@@ -55,8 +55,6 @@ export class PatientRepository extends BaseRepository<Patient, PatientRepository
                 })
             } else {
                 if (users.id) query.addFilter({ _id: users.id })
-                if (users.name) query.addFilter({ name: users.name })
-                if (users.birth_date) query.addFilter({ birth_date: users.birth_date })
                 query.addFilter({ type: UserType.PATIENT })
                 this.findOne(query)
                     .then(result => resolve(!!result))
