@@ -1,3 +1,5 @@
+import { User } from '../domain/model/user'
+
 /**
  * Interface of the auth repository.
  * Must be implemented by the user repository at the infrastructure layer.
@@ -12,4 +14,12 @@ export interface IAuthRepository {
      * @throws {ValidationException | RepositoryException}
      */
     authenticate(userMail: string, password: string): Promise<object>
-    }
+
+    resetPassword(_email: string, _type: string): Promise<User>
+
+    updatePassword(userId: string, userEmail: string, new_password: string): Promise<User>
+
+    validateToken(token: string): Promise<boolean>
+
+    getTokenPayload(token: string): Promise<any>
+}

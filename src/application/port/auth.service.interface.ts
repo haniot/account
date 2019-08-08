@@ -11,4 +11,8 @@ export interface IAuthService {
      * @throws {ValidationException | RepositoryException}
      */
     authenticate(email: string, password: string): Promise<object>
+
+    forgotPassword(userType: string, email: string): Promise<object>
+
+    changePassword(email: string, old_password: string, new_password: string, token: string): Promise<boolean>
 }

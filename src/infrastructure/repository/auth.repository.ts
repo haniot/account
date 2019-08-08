@@ -19,6 +19,7 @@ import { readFileSync } from 'fs'
 import { BaseRepository } from './base/base.repository'
 import { ILogger } from '../../utils/custom.logger'
 import { IUserRepository } from '../../application/port/user.repository.interface'
+import { Query } from './query/query'
 
 @injectable()
 export class AuthRepository extends BaseRepository<User, UserEntity> implements IAuthRepository {
@@ -72,6 +73,73 @@ export class AuthRepository extends BaseRepository<User, UserEntity> implements 
         } catch (err) {
             return Promise.reject(
                 new AuthenticationException('Authentication failed due to failure at generate the access token.'))
+        }
+    }
+
+    public async resetPassword(_email: string, _type: string): Promise<User> {
+        try {
+            const user: User = await this.findOne(new Query().fromJSON({ filters: { email: _email, type: _type } }))
+            if (!user) return Promise.resolve(undefined!)
+            const token: string = await this.generateResetPasswordToken(user)
+            if (!token) return Promise.resolve(undefined!)
+            const result: User = await this.Model.findOneAndUpdate({ _id: user.id }, { reset_password_token: token })
+            return Promise.resolve(result)
+        } catch (err) {
+            return Promise.reject(err)
+        }
+    }
+
+    private async generateResetPasswordToken(user: User): Promise<string> {
+        try {
+            const private_key = readFileSync(`${process.env.JWT_PRIVATE_KEY_PATH}`, 'utf-8')
+            const payload: object = {
+                sub: user.id,
+                sub_type: user.type,
+                email: user.email,
+                iss: process.env.ISSUER || Default.ISSUER,
+                iat: Math.floor(Date.now() / 1000),
+                scope: 'users.update',
+                reset_password: true
+            }
+            return Promise.resolve(jwt.sign(payload, private_key, { expiresIn: '1h', algorithm: 'RS256' }))
+        } catch (err) {
+            return Promise.reject(new AuthenticationException('Could not complete reset password request. ' +
+                'Please try again later.'))
+        }
+    }
+
+    public async updatePassword(userId: string, userEmail: string, new_password: string): Promise<User> {
+        return new Promise<User>((resolve, reject) => {
+            this.Model.findOneAndUpdate(
+                { _id: userId, email: userEmail },
+                { password: new_password, $unset: { reset_password_token: 1 } })
+                .then(result => {
+                    if (!result) {
+                        return reject(new AuthenticationException('Could not complete change password request. ' +
+                            'Please try again later.'))
+                    }
+                    return resolve(result)
+                })
+        })
+    }
+
+    public validateToken(token: string): Promise<boolean> {
+        try {
+            const public_key = readFileSync(`${process.env.JWT_PUBLIC_KEY_PATH}`, 'utf-8')
+            const result = jwt.verify(token, public_key, { algorithms: ['RS256'] })
+            return Promise.resolve(!!result)
+        } catch (err) {
+            return Promise.reject(new AuthenticationException('Could not complete change password request. ' +
+                'Please try again later.'))
+        }
+    }
+
+    public getTokenPayload(token: string): Promise<any> {
+        try {
+            return Promise.resolve(jwt.decode(token))
+        } catch (err) {
+            return Promise.reject(new AuthenticationException('Could not complete change password request. ' +
+                'Please try again later.'))
         }
     }
 }

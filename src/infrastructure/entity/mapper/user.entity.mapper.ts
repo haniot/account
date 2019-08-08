@@ -37,6 +37,7 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
         if (item.phone_number !== undefined) result.phone_number = item.phone_number
         if (item.selected_pilot_study !== undefined) result.selected_pilot_study = item.selected_pilot_study
         if (item.language !== undefined) result.language = item.language
+        if (item.reset_password_token !== undefined) result.reset_password_token = item.reset_password_token
 
         return result
     }
@@ -77,6 +78,7 @@ export class UserEntityMapper implements IEntityMapper<User, UserEntity> {
         if (json.phone_number !== undefined) result.phone_number = json.phone_number
         if (json.selected_pilot_study !== undefined) result.selected_pilot_study = json.selected_pilot_study
         if (json.language !== undefined) result.language = json.language
+        if (json.reset_password_token !== undefined) result.reset_password_token = json.reset_password_token
 
         return result
     }

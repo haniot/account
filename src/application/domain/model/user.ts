@@ -25,6 +25,7 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
     private _last_sync?: Date
     private _selected_pilot_study?: string
     private _language?: string
+    private _reset_password_token?: string
 
     constructor() {
         super()
@@ -134,6 +135,14 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
         this._language = value
     }
 
+    get reset_password_token(): string | undefined {
+        return this._reset_password_token
+    }
+
+    set reset_password_token(value: string | undefined) {
+        this._reset_password_token = value
+    }
+
     public addScope(scope: string): void {
         if (!this.scopes) this._scopes = []
         if (scope) this._scopes.push(scope)
@@ -175,6 +184,7 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
         if (json.last_sync !== undefined) this.last_sync = this.convertDatetimeString(json.last_sync)
         if (json.selected_pilot_study !== undefined) this.selected_pilot_study = json.selected_pilot_study
         if (json.language !== undefined) this.language = json.language
+        if (json.reset_password_token !== undefined) this.reset_password_token = json.reset_password_token
 
         return this
     }

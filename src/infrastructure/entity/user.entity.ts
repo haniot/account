@@ -7,6 +7,7 @@ export class UserEntity {
     public last_sync?: Date
     public selected_pilot_study?: string
     public language?: string
+    public reset_password_token?: string
     public id?: string
     public name?: string
     public email?: string
