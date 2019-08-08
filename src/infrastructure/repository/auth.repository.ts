@@ -76,9 +76,9 @@ export class AuthRepository extends BaseRepository<User, UserEntity> implements 
         }
     }
 
-    public async resetPassword(_email: string, _type: string): Promise<User> {
+    public async resetPassword(_email: string): Promise<User> {
         try {
-            const user: User = await this.findOne(new Query().fromJSON({ filters: { email: _email, type: _type } }))
+            const user: User = await this.findOne(new Query().fromJSON({ filters: { email: _email } }))
             if (!user) return Promise.resolve(undefined!)
             const token: string = await this.generateResetPasswordToken(user)
             if (!token) return Promise.resolve(undefined!)
@@ -108,10 +108,10 @@ export class AuthRepository extends BaseRepository<User, UserEntity> implements 
         }
     }
 
-    public async updatePassword(userId: string, userEmail: string, new_password: string): Promise<User> {
+    public async updatePassword(userId: string, userEmail: string, new_password: string, token: string): Promise<User> {
         return new Promise<User>((resolve, reject) => {
             this.Model.findOneAndUpdate(
-                { _id: userId, email: userEmail },
+                { _id: userId, email: userEmail, reset_password_token: token },
                 { password: new_password, $unset: { reset_password_token: 1 } })
                 .then(result => {
                     if (!result) {

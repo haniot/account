@@ -15,9 +15,9 @@ export interface IAuthRepository {
      */
     authenticate(userMail: string, password: string): Promise<object>
 
-    resetPassword(_email: string, _type: string): Promise<User>
+    resetPassword(_email: string): Promise<User>
 
-    updatePassword(userId: string, userEmail: string, new_password: string): Promise<User>
+    updatePassword(userId: string, userEmail: string, new_password: string, token: string): Promise<User>
 
     validateToken(token: string): Promise<boolean>
 

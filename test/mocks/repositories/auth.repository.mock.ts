@@ -11,7 +11,7 @@ export class AuthRepositoryMock implements IAuthRepository {
         return Promise.resolve('token')
     }
 
-    public resetPassword(_email: string, _type: string): Promise<User> {
+    public resetPassword(_email: string): Promise<User> {
         return Promise.resolve(new User().fromJSON(DefaultEntityMock.USER))
     }
 
@@ -19,7 +19,7 @@ export class AuthRepositoryMock implements IAuthRepository {
         return Promise.resolve({})
     }
 
-    public updatePassword(userId: string, userEmail: string, new_password: string): Promise<User> {
+    public updatePassword(userId: string, userEmail: string, new_password: string, token: string): Promise<User> {
         return Promise.resolve(new User().fromJSON(DefaultEntityMock.USER))
     }
 

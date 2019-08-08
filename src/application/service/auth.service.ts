@@ -40,11 +40,11 @@ export class AuthService implements IAuthService {
         return Promise.resolve(result)
     }
 
-    public async forgotPassword(userType: string, email: string): Promise<object> {
+    public async forgotPassword(email: string): Promise<object> {
         try {
             const host: string = process.env.DASHBOARD_HOST || Default.DASHBOARD_HOST
             EmailValidator.validate(email)
-            const result: User = await this._authRepository.resetPassword(email, userType)
+            const result: User = await this._authRepository.resetPassword(email)
             if (result) {
                 const mail: Email = new Email().fromJSON({
                     to: {
@@ -75,7 +75,7 @@ export class AuthService implements IAuthService {
             }
             ResetPasswordValidator.validate(email, new_password)
             const encryptPassword: string = await this._userRepository.encryptPassword(new_password)
-            const result = await this._authRepository.updatePassword(payload.sub, email, encryptPassword)
+            const result = await this._authRepository.updatePassword(payload.sub, email, encryptPassword, token)
             if (result) {
                 const mail: Email = new Email().fromJSON({
                     to: {
@@ -97,8 +97,8 @@ export class AuthService implements IAuthService {
         try {
             const successPublish = await this._eventBus.publish(event, routingKey)
             if (!successPublish) throw new Error('')
-            this._logger.info(`User with email: ${event.toJSON().email.to.email} has been successful modify password request` +
-                'and published on event bus...')
+            this._logger.info(`User with email: ${event.toJSON().email.to.email} has been successful ` +
+                `${routingKey.split('.')[1]} request and published on event bus...`)
         } catch (err) {
             const saveEvent: any = event.toJSON()
             this._integrationEventRepo.create({

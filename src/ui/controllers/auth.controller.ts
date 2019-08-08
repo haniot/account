@@ -32,7 +32,7 @@ export class AuthController {
     @httpPost('/forgot')
     public async resetPassword(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const result: object = await this._authService.forgotPassword(req.body.user_type, req.body.email)
+            const result: object = await this._authService.forgotPassword(req.body.email)
             return res.status(HttpStatus.ACCEPTED).send(result)
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
