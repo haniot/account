@@ -66,11 +66,20 @@ export class RpcServerEventBusTask implements IBackgroundTask {
             .catch((err) => this._logger.error(`Error at register resource users.find: ${err.message}`))
 
         this._eventBus
-            .provideResource('pilotstudies.get', (_query?: string) => {
+            .provideResource('pilotstudies.find', async (_query?: string) => {
                 const query: Query = new Query().fromJSON({ ...qs.parser(_query) })
-                return this._pilotRepo.findAndPopulate(query)
+                const result = await this._pilotRepo.findAndPopulate(query)
+                return result.map(item => {
+                    return {
+                        ...item.toJSON(),
+                        patients: item.patients!.map(patient => patient.toJSON())
+                    }
+                })
             })
-            .then(() => this._logger.info('Resource pilotstudies.get successful registered'))
-            .catch((err) => this._logger.error(`Error at register resource pilotstudies.get: ${err.message}`))
+            .then(() => this._logger.info('Resource pilotstudies.find successful registered'))
+            .catch((err) => {
+                this._logger.error(`Error at register resource pilotstudies.find: ${err.message}`)
+                return new Error(err.message)
+            })
     }
 }

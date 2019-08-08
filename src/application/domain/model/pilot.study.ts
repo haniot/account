@@ -162,7 +162,7 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
             total_patients: this.total_patients,
             health_professionals:
                 this.health_professionals ? this.health_professionals.map(healthProfessional => healthProfessional.id) : [],
-            patients: this.patients ? this.patients.map(patient => patient.id) : [],
+            patients: this.patients ? this.patients.map(patient => patient.name) : [],
             location: this.location
         }
     }
