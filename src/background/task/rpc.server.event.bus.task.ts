@@ -8,8 +8,8 @@ import { IHealthProfessionalRepository } from '../../application/port/health.pro
 import { IAdminRepository } from '../../application/port/admin.repository.interface'
 import { UserType } from '../../application/domain/utils/user.type'
 import { Query } from '../../infrastructure/repository/query/query'
-import qs from 'query-strings-parser'
 import { IPilotStudyRepository } from '../../application/port/pilot.study.repository.interface'
+import qs from 'query-strings-parser'
 
 @injectable()
 export class RpcServerEventBusTask implements IBackgroundTask {
@@ -66,19 +66,15 @@ export class RpcServerEventBusTask implements IBackgroundTask {
             .catch((err) => this._logger.error(`Error at register resource users.find: ${err.message}`))
 
         this._eventBus
-            .provideResource('pilotstudies.find', async (_query?: string) => {
-                const query: Query = new Query().fromJSON({ ...qs.parser(_query) })
-                const result = await this._pilotRepo.findAndPopulate(query)
-                return result.map(item => {
-                    return {
-                        ...item.toJSON(),
-                        patients: item.patients!.map(patient => patient.toJSON())
-                    }
-                })
+            .provideResource('pilotstudies.findone', async (pilotId?: string) => {
+                if (!(/^[a-fA-F0-9]{24}$/.test(pilotId!))) throw new Error('')
+                const query: Query = new Query().fromJSON({ filters: { _id: pilotId } })
+                const result = await this._pilotRepo.findOneAndPopulate(query)
+                return { ...result.toJSON(), patients: result.patients!.map(patient => patient.toJSON()) }
             })
-            .then(() => this._logger.info('Resource pilotstudies.find successful registered'))
+            .then(() => this._logger.info('Resource pilotstudies.findone successful registered'))
             .catch((err) => {
-                this._logger.error(`Error at register resource pilotstudies.find: ${err.message}`)
+                this._logger.error(`Error at register resource pilotstudies.findone: ${err.message}`)
                 return new Error(err.message)
             })
     }

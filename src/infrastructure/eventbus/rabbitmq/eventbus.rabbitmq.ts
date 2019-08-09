@@ -117,14 +117,14 @@ export class EventBusRabbitMQ implements IEventBus, IDisposable {
         })
     }
 
-    public executeResource(resourceName: string, queryString?: string): Promise<any> {
+    public executeResource(serviceName: string, resourceName: string, queryString?: string): Promise<any> {
         if (!this.connectionRpcClient.isOpen) {
             return Promise.reject(new EventBusException('No connection open!'))
         }
 
         return this.connectionRpcClient
             .rpcClient(
-                this.RABBITMQ_RPC_EXCHANGE_NAME,
+                serviceName,
                 resourceName,
                 [queryString],
                 {
