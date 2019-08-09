@@ -67,10 +67,10 @@ export class RpcServerEventBusTask implements IBackgroundTask {
 
         this._eventBus
             .provideResource('pilotstudies.findone', async (pilotId?: string) => {
-                if (!(/^[a-fA-F0-9]{24}$/.test(pilotId!))) throw new Error('')
+                if (!(/^[a-fA-F0-9]{24}$/.test(pilotId!))) throw new Error('Invalid pilot id!')
                 const query: Query = new Query().fromJSON({ filters: { _id: pilotId } })
                 const result = await this._pilotRepo.findOneAndPopulate(query)
-                return { ...result.toJSON(), patients: result.patients!.map(patient => patient.toJSON()) }
+                return result ? { ...result.toJSON(), patients: result.patients!.map(patient => patient.toJSON()) } : {}
             })
             .then(() => this._logger.info('Resource pilotstudies.findone successful registered'))
             .catch((err) => {

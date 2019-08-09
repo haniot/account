@@ -19,6 +19,7 @@ import { IIntegrationEventRepository } from '../port/integration.event.repositor
 import { ILogger } from '../../utils/custom.logger'
 import { EmailWelcomeEvent } from '../integration-event/event/email.welcome.event'
 import { Email } from '../domain/model/email'
+import { Default } from '../../utils/default'
 
 @injectable()
 export class AdminService implements IAdminService {
@@ -45,6 +46,7 @@ export class AdminService implements IAdminService {
                         email: result.email
                     },
                     password: result.password,
+                    action_url: process.env.DASHBOARD_HOST || Default.DASHBOARD_HOST,
                     lang: result.language
                 })
                 await this.publishEvent(new EmailWelcomeEvent(new Date(), mail), 'emails.welcome')

@@ -18,6 +18,7 @@ import { ILogger } from '../../utils/custom.logger'
 import { IntegrationEvent } from '../integration-event/event/integration.event'
 import { User } from '../domain/model/user'
 import { Email } from '../domain/model/email'
+import { Default } from '../../utils/default'
 
 @injectable()
 export class PatientService implements IPatientService {
@@ -45,6 +46,7 @@ export class PatientService implements IPatientService {
                         email: result.email
                     },
                     password: result.password,
+                    action_url: process.env.DASHBOARD_HOST || Default.DASHBOARD_HOST,
                     lang: result.language
                 })
                 await this.publishEvent(new EmailWelcomeEvent(new Date(), mail), 'emails.welcome')
