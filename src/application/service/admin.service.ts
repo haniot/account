@@ -42,12 +42,12 @@ export class AdminService implements IAdminService {
             if (result) {
                 const mail: Email = new Email().fromJSON({
                     to: {
-                        name: result.name,
-                        email: result.email
+                        name: item.name,
+                        email: item.email
                     },
-                    password: result.password,
+                    password: item.password,
                     action_url: process.env.DASHBOARD_HOST || Default.DASHBOARD_HOST,
-                    lang: result.language
+                    lang: item.language
                 })
                 await this.publishEvent(new EmailWelcomeEvent(new Date(), mail), 'emails.welcome')
             }
