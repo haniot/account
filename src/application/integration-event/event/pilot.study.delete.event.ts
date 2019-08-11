@@ -8,7 +8,7 @@ export class PilotStudyDeleteEvent extends IntegrationEvent<PilotStudy> {
 
     public toJSON(): any {
         if (!this.pilot) return {}
-        return {
+        return  {
             ...super.toJSON(),
             ...{ pilot_study: { id: this.pilot.id, name: this.pilot.name } }
         }

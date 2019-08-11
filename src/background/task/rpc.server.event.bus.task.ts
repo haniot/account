@@ -10,6 +10,11 @@ import { UserType } from '../../application/domain/utils/user.type'
 import { Query } from '../../infrastructure/repository/query/query'
 import { IPilotStudyRepository } from '../../application/port/pilot.study.repository.interface'
 import qs from 'query-strings-parser'
+import { IUserRepository } from '../../application/port/user.repository.interface'
+import { User } from '../../application/domain/model/user'
+import { Admin } from '../../application/domain/model/admin'
+import { HealthProfessional } from '../../application/domain/model/health.professional'
+import { Patient } from '../../application/domain/model/patient'
 
 @injectable()
 export class RpcServerEventBusTask implements IBackgroundTask {
@@ -18,6 +23,7 @@ export class RpcServerEventBusTask implements IBackgroundTask {
         @inject(Identifier.PATIENT_REPOSITORY) private readonly _patientRepo: IPatientRepository,
         @inject(Identifier.HEALTH_PROFESSIONAL_REPOSITORY) private readonly _healthRepo: IHealthProfessionalRepository,
         @inject(Identifier.ADMIN_REPOSITORY) private readonly _adminRepo: IAdminRepository,
+        @inject(Identifier.USER_REPOSITORY) private readonly _userRepo: IUserRepository,
         @inject(Identifier.PILOT_STUDY_REPOSITORY) private readonly _pilotRepo: IPilotStudyRepository,
         @inject(Identifier.LOGGER) private readonly _logger: ILogger
     ) {
@@ -48,15 +54,23 @@ export class RpcServerEventBusTask implements IBackgroundTask {
 
     private initializeServer(): void {
         this._eventBus
-            .provideResource('users.find', (_query?: string, userType?: string) => {
-                const query: Query = new Query().fromJSON({ ...qs.parser(_query), type: userType })
+            .provideResource('users.find', async (_query?: string) => {
+                const query: Query = new Query().fromJSON({ ...qs.parser(_query) })
+                const userType: string = query.toJSON().filters.type
+                if (!userType) {
+                    const users: Array<User> = await this._userRepo.find(query)
+                    return users.map(item => item.toJSON())
+                }
                 switch (userType) {
                     case(UserType.ADMIN):
-                        return this._adminRepo.find(query)
+                        const admins: Array<Admin> = await this._adminRepo.find(query)
+                        return admins.map(item => item.toJSON())
                     case(UserType.HEALTH_PROFESSIONAL):
-                        return this._healthRepo.find(query)
+                        const healths: Array<HealthProfessional> = await this._healthRepo.find(query)
+                        return healths.map(item => item.toJSON())
                     case(UserType.PATIENT):
-                        return this._patientRepo.find(query)
+                        const patients: Array<Patient> = await this._patientRepo.find(query)
+                        return patients.map(item => item.toJSON())
                     default:
                         return new Error('User Type param is required. The mapped values are: admin, ' +
                             'health_professional, patient.')

@@ -274,7 +274,8 @@ export class PilotStudyService implements IPilotStudyService {
         try {
             const successPublish = await this._eventBus.publish(event, routingKey)
             if (!successPublish) throw new Error('')
-            this._logger.info(`Pilot Study with ID: ${event.toJSON().user.id} has been deleted and published on event bus...`)
+            this._logger.info(`Pilot Study with ID: ${event.toJSON().pilot_study.id} has been deleted and published on ` + '' +
+                'event bus...')
         } catch (err) {
             const saveEvent: any = event.toJSON()
             this._integrationEventRepo.create({
