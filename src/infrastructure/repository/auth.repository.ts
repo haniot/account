@@ -107,8 +107,7 @@ export class AuthRepository extends BaseRepository<User, UserEntity> implements 
             }
             return Promise.resolve(jwt.sign(payload, private_key, { expiresIn: '1h', algorithm: 'RS256' }))
         } catch (err) {
-            return Promise.reject(new AuthenticationException('Could not complete reset password request. ' +
-                'Please try again later.'))
+            return Promise.reject(err)
         }
     }
 
@@ -119,8 +118,9 @@ export class AuthRepository extends BaseRepository<User, UserEntity> implements 
                 { password: new_password, $unset: { reset_password_token: 1 } })
                 .then(result => {
                     if (!result) {
-                        return reject(new AuthenticationException('Could not complete change password request. ' +
-                            'Please try again later.'))
+                        return reject(new AuthenticationException('Invalid password reset token!',
+                            'Token probably expired or already used. You can only use the reset token once' +
+                            ' while it is within its validity period.'))
                     }
                     return resolve(result)
                 })
@@ -133,8 +133,9 @@ export class AuthRepository extends BaseRepository<User, UserEntity> implements 
             const result = jwt.verify(token, public_key, { algorithms: ['RS256'] })
             return Promise.resolve(!!result)
         } catch (err) {
-            return Promise.reject(new AuthenticationException('Could not complete change password request. ' +
-                'Please try again later.'))
+            return Promise.reject(new AuthenticationException('Invalid password reset token!',
+                'Token probably expired or already used. You can only use the reset token once while it is within its ' +
+                'validity period.'))
         }
     }
 

@@ -39,13 +39,16 @@ export class AdminService implements IAdminService {
             const exists = await this._userRepository.checkExistByEmail(item.email)
             if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
             const result: Admin = await this._adminRepository.create(item)
+
+            const passwordWithoutCrypt: string = item.password!
+
             if (result) {
                 const mail: Email = new Email().fromJSON({
                     to: {
                         name: item.name,
                         email: item.email
                     },
-                    password: item.password,
+                    password: passwordWithoutCrypt,
                     action_url: process.env.DASHBOARD_HOST || Default.DASHBOARD_HOST,
                     lang: item.language
                 })

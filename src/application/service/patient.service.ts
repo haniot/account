@@ -11,7 +11,6 @@ import { UpdatePatientValidator } from '../domain/validator/update.patient.valid
 import { Strings } from '../../utils/strings'
 import { IUserRepository } from '../port/user.repository.interface'
 import { ConflictException } from '../domain/exception/conflict.exception'
-import { EmailWelcomeEvent } from '../integration-event/event/email.welcome.event'
 import { IEventBus } from '../../infrastructure/port/event.bus.interface'
 import { IIntegrationEventRepository } from '../port/integration.event.repository.interface'
 import { ILogger } from '../../utils/custom.logger'
@@ -19,6 +18,7 @@ import { IntegrationEvent } from '../integration-event/event/integration.event'
 import { User } from '../domain/model/user'
 import { Email } from '../domain/model/email'
 import { Default } from '../../utils/default'
+import { EmailWelcomeEvent } from '../integration-event/event/email.welcome.event'
 
 @injectable()
 export class PatientService implements IPatientService {
@@ -34,20 +34,25 @@ export class PatientService implements IPatientService {
     public async add(item: Patient): Promise<Patient> {
         try {
             CreatePatientValidator.validate(item)
+
             if (item.email) {
                 const exists = await this._userRepository.checkExistByEmail(item.email)
                 if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
             }
+
+            let passwordWithoutCrypt: string = ''
+            if (item.password) passwordWithoutCrypt = item.password
+
             const result: Patient = await this._patientRepository.create(item)
             if (result && result.email) {
                 const mail: Email = new Email().fromJSON({
                     to: {
-                        name: result.name,
-                        email: result.email
+                        name: item.name,
+                        email: item.email
                     },
-                    password: result.password,
+                    password: passwordWithoutCrypt ? passwordWithoutCrypt : undefined,
                     action_url: process.env.DASHBOARD_HOST || Default.DASHBOARD_HOST,
-                    lang: result.language
+                    lang: item.language
                 })
                 await this.publishEvent(new EmailWelcomeEvent(new Date(), mail), 'emails.welcome')
             }
@@ -99,7 +104,7 @@ export class PatientService implements IPatientService {
         return this._patientRepository.count()
     }
 
-    private async publishEvent(event: IntegrationEvent<User>, routingKey: string): Promise<void> {
+    public async publishEvent(event: IntegrationEvent<User>, routingKey: string): Promise<void> {
         try {
             const successPublish = await this._eventBus.publish(event, routingKey)
             if (!successPublish) throw new Error('')

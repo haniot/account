@@ -39,18 +39,21 @@ export class HealthProfessionalService implements IHealthProfessionalService {
             CreateHealthProfessionalValidator.validate(item)
             const exists = await this._userRepository.checkExistByEmail(item.email)
             if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
+
+            const passwordWithoutCrypt: string = item.password!
+
             const result: HealthProfessional = await this._healthProfessionalRepository.create(item)
             if (result) {
                 result.total_pilot_studies = 0
                 result.total_patients = 0
                 const mail: Email = new Email().fromJSON({
                     to: {
-                        name: result.name,
-                        email: result.email
+                        name: item.name,
+                        email: item.email
                     },
-                    password: result.password,
+                    password: passwordWithoutCrypt,
                     action_url: process.env.DASHBOARD_HOST || Default.DASHBOARD_HOST,
-                    lang: result.language
+                    lang: item.language
                 })
                 await this.publishEvent(new EmailWelcomeEvent(new Date(), mail), 'emails.welcome')
             }
