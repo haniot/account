@@ -1,5 +1,3 @@
-import { Container } from 'inversify'
-import { DI } from '../../../src/di/di'
 import { IConnectionDB } from '../../../src/infrastructure/port/connection.db.interface'
 import { Identifier } from '../../../src/di/identifiers'
 import { PilotStudy } from '../../../src/application/domain/model/pilot.study'
@@ -11,12 +9,12 @@ import { IHealthProfessionalRepository } from '../../../src/application/port/hea
 import { IPilotStudyRepository } from '../../../src/application/port/pilot.study.repository.interface'
 import { App } from '../../../src/app'
 import { expect } from 'chai'
+import { DIContainer } from '../../../src/di/di'
 
-const container: Container = DI.getInstance().getContainer()
-const dbConnection: IConnectionDB = container.get(Identifier.MONGODB_CONNECTION)
-const healthRepo: IHealthProfessionalRepository = container.get(Identifier.HEALTH_PROFESSIONAL_REPOSITORY)
-const pilotRepo: IPilotStudyRepository = container.get(Identifier.PILOT_STUDY_REPOSITORY)
-const app: App = container.get(Identifier.APP)
+const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
+const healthRepo: IHealthProfessionalRepository = DIContainer.get(Identifier.HEALTH_PROFESSIONAL_REPOSITORY)
+const pilotRepo: IPilotStudyRepository = DIContainer.get(Identifier.PILOT_STUDY_REPOSITORY)
+const app: App = DIContainer.get(Identifier.APP)
 const request = require('supertest')(app.getExpress())
 
 describe('Routes: HealthProfessionalsPilotStudies', () => {

@@ -15,7 +15,7 @@ export class CreateAdminValidator {
 
         if (fields.length > 0) {
             throw new ValidationException('Required fields were not provided...',
-                'User validation: '.concat(fields.join(', ')).concat(' required!'))
+                'Admin validation: '.concat(fields.join(', ')).concat(' required!'))
         }
     }
 }

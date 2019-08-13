@@ -1,7 +1,6 @@
 import { Admin } from '../../../src/application/domain/model/admin'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
-import { Container } from 'inversify'
-import { DI } from '../../../src/di/di'
+import { DIContainer } from '../../../src/di/di'
 import { IConnectionDB } from '../../../src/infrastructure/port/connection.db.interface'
 import { Identifier } from '../../../src/di/identifiers'
 import { App } from '../../../src/app'
@@ -11,10 +10,9 @@ import { Strings } from '../../../src/utils/strings'
 import { IAdminRepository } from '../../../src/application/port/admin.repository.interface'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 
-const container: Container = DI.getInstance().getContainer()
-const adminRepo: IAdminRepository = container.get(Identifier.ADMIN_REPOSITORY)
-const dbConnection: IConnectionDB = container.get(Identifier.MONGODB_CONNECTION)
-const app: App = container.get(Identifier.APP)
+const adminRepo: IAdminRepository = DIContainer.get(Identifier.ADMIN_REPOSITORY)
+const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
+const app: App = DIContainer.get(Identifier.APP)
 const request = require('supertest')(app.getExpress())
 
 describe('Routes: Users', () => {

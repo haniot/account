@@ -15,6 +15,7 @@ const userSchema = new Mongoose.Schema({
             type: String,
             default: 'pt-br'
         },
+        reset_password_token: { type: String },
         email: {
             type: String,
             unique: true,
