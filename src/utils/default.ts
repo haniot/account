@@ -27,9 +27,6 @@ export abstract class Default {
     // RabbitMQ
     public static readonly RABBITMQ_URI: string = 'amqp://guest:guest@127.0.0.1:5672'
 
-    // RabbitMQ
-    public static readonly RABBITMQ_PORT: number = 5672
-
     // Log
     public static readonly LOG_DIR: string = 'logs'
 
