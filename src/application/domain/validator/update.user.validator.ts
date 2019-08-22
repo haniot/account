@@ -4,6 +4,7 @@ import { ObjectIdValidator } from './object.id.validator'
 import { Strings } from '../../../utils/strings'
 import { EmailValidator } from './email.validator'
 import { DateValidator } from './date.validator'
+import { LanguageValidator } from './language.validator'
 
 export class UpdateUserValidator {
     public static validate(user: User): void | ValidationException {
@@ -16,5 +17,6 @@ export class UpdateUserValidator {
                 'A specific route to update user password already exists. ' +
                 `Access: PATCH /v1/auth/password to update your password.`)
         }
+        if (user.language !== undefined) LanguageValidator.validate(user.language)
     }
 }

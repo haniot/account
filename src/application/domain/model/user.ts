@@ -29,6 +29,7 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
 
     constructor() {
         super()
+        this.language = 'pt-BR'
     }
 
     get name(): string | undefined {

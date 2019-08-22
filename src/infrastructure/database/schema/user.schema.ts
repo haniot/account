@@ -13,7 +13,7 @@ const userSchema = new Mongoose.Schema({
         selected_pilot_study: { type: String },
         language: {
             type: String,
-            default: 'pt-br'
+            default: 'pt-BR'
         },
         reset_password_token: { type: String },
         email: {
