@@ -39,11 +39,29 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
 
     public findOneAndPopulate(query: IQuery): Promise<PilotStudy> {
         const q: any = query.toJSON()
+        const pilotFilter: any = { _id: q.filters._id }
+        delete q.filters._id
         return new Promise<PilotStudy>((resolve, reject) => {
-            this.Model.findOne(q.filters)
+            this.Model.findOne(pilotFilter)
                 .select(q.fields)
-                .populate('health_professionals')
-                .populate('patients')
+                .populate({
+                    path: 'health_professionals',
+                    match: q.filters,
+                    options: {
+                        sort: q.ordination,
+                        skip: Number((q.pagination.limit * q.pagination.page) - q.pagination.limit),
+                        limit: Number(q.pagination.limit)
+                    }
+                })
+                .populate({
+                    path: 'patients',
+                    match: q.filters,
+                    options: {
+                        sort: q.ordination,
+                        skip: Number((q.pagination.limit * q.pagination.page) - q.pagination.limit),
+                        limit: Number(q.pagination.limit)
+                    }
+                })
                 .exec()
                 .then((result: PilotStudy) => {
                     if (!result) return resolve(undefined)
@@ -109,7 +127,7 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
         return new Promise<number>((resolve, reject) => {
             return this.Model.distinct('patients', { health_professionals: healthId })
                 .then(result => resolve(result && result.length ? result.length : 0))
-                .catch(err => reject (this.mongoDBErrorListener(err)))
+                .catch(err => reject(this.mongoDBErrorListener(err)))
         })
     }
 
