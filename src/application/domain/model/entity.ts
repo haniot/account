@@ -6,9 +6,11 @@
  */
 export abstract class Entity {
     private _id?: string
+    private _created_at?: string
 
-    protected constructor(id?: string) {
+    protected constructor(id?: string, created_at?: string) {
         this._id = id
+        this._created_at = created_at
     }
 
     get id(): string | undefined {
@@ -17,5 +19,13 @@ export abstract class Entity {
 
     set id(value: string | undefined) {
         this._id = value
+    }
+
+    get created_at(): string | undefined {
+        return this._created_at
+    }
+
+    set created_at(value: string | undefined) {
+        this._created_at = value
     }
 }

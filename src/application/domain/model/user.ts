@@ -193,6 +193,7 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
     public toJSON(): any {
         return {
             id: super.id,
+            created_at: super.created_at,
             name: this.name,
             email: this.email,
             birth_date: this.birth_date,
