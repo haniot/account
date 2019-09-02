@@ -20,7 +20,7 @@ export abstract class DefaultEntityMock {
         selected_pilot_study: '5ca23b9af04e7c28223cb590',
         language: 'pt-BR',
         last_login: '2019-03-15T00:00:00.000Z',
-        last_sync: '2019-04-15T23:59:59.000Z',
+        last_sync: '2019-04-15T23:59:59.000Z'
     }
 
     public static readonly HEALTH_PROFESSIONAL: any = {
@@ -83,7 +83,7 @@ export abstract class DefaultEntityMock {
         end: '2019-04-15T23:59:59.000Z',
         total_patients: 0,
         total_health_professionals: 0,
-        location: 'Mock Land',
+        location: 'Mock Land'
     }
 
     public static readonly USER: any = {
@@ -99,6 +99,14 @@ export abstract class DefaultEntityMock {
         selected_pilot_study: '5ca23b9af04e7c28223cb590',
         language: 'pt-BR',
         last_sync: '2019-03-15T00:00:00.000Z',
-        last_login: '2019-03-15T00:00:00.000Z'
+        last_login: '2019-03-15T00:00:00.000Z',
+        reset_password_token: 'token'
+    }
+
+    public static readonly EMAIL: any = {
+        to: 'you@mail.com',
+        action_url: 'any@url.com',
+        password: 'password',
+        lang: 'pt_BR'
     }
 }
