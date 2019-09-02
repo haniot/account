@@ -6,9 +6,19 @@ import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { UserRepositoryMock } from '../../mocks/repositories/user.repository.mock'
 import { PilotStudyRepositoryMock } from '../../mocks/repositories/pilot.study.repository.mock'
 import { Query } from '../../../src/infrastructure/repository/query/query'
+import { EventBusRabbitMQMock } from '../../mocks/eventbus/eventbus.rabbitmq.mock'
+import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
+import { IntegrationEventRepositoryMock } from '../../mocks/repositories/integration.event.repository.mock'
 
 describe('Services: AdminService', () => {
-    const service = new AdminService(new AdminRepositoryMock(), new UserRepositoryMock(), new PilotStudyRepositoryMock())
+    const service = new AdminService(
+        new AdminRepositoryMock(),
+        new UserRepositoryMock(),
+        new PilotStudyRepositoryMock(),
+        new EventBusRabbitMQMock(),
+        new IntegrationEventRepositoryMock(),
+        new CustomLoggerMock())
+
     const user: Admin = new Admin().fromJSON(DefaultEntityMock.ADMIN)
 
     describe('add()', () => {
@@ -43,7 +53,7 @@ describe('Services: AdminService', () => {
                 return service.add(user)
                     .catch(err => {
                         assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                        assert.propertyVal(err, 'description', 'User validation: email required!')
+                        assert.propertyVal(err, 'description', 'Admin validation: email required!')
                         user.email = DefaultEntityMock.ADMIN.email
                     })
             })

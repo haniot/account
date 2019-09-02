@@ -6,10 +6,19 @@ import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { UserRepositoryMock } from '../../mocks/repositories/user.repository.mock'
 import { PilotStudyRepositoryMock } from '../../mocks/repositories/pilot.study.repository.mock'
 import { Query } from '../../../src/infrastructure/repository/query/query'
+import { EventBusRabbitMQMock } from '../../mocks/eventbus/eventbus.rabbitmq.mock'
+import { IntegrationEventRepositoryMock } from '../../mocks/repositories/integration.event.repository.mock'
+import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
 
 describe('Services: HealthProfessionalService', () => {
     const service = new HealthProfessionalService(
-        new HealthProfessionalRepositoryMock(), new UserRepositoryMock(), new PilotStudyRepositoryMock())
+        new HealthProfessionalRepositoryMock(),
+        new UserRepositoryMock(),
+        new PilotStudyRepositoryMock(),
+        new EventBusRabbitMQMock(),
+        new IntegrationEventRepositoryMock(),
+        new CustomLoggerMock()
+    )
     const user: HealthProfessional = new HealthProfessional().fromJSON(DefaultEntityMock.HEALTH_PROFESSIONAL)
 
     describe('add()', () => {
@@ -35,7 +44,8 @@ describe('Services: HealthProfessionalService', () => {
                 return service.add(user)
                     .catch(err => {
                         assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                        assert.propertyVal(err, 'description', 'User validation: email required!')
+                        assert.propertyVal(err, 'description', 'Health Professional validation: ' +
+                            'email required!')
                     })
             })
         })

@@ -6,9 +6,18 @@ import { User } from '../../../src/application/domain/model/user'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { Query } from '../../../src/infrastructure/repository/query/query'
 import { PilotStudyRepositoryMock } from '../../mocks/repositories/pilot.study.repository.mock'
+import { EventBusRabbitMQMock } from '../../mocks/eventbus/eventbus.rabbitmq.mock'
+import { IntegrationEventRepositoryMock } from '../../mocks/repositories/integration.event.repository.mock'
+import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
 
 describe('Services: UserService', () => {
-    const service: IUserService = new UserService(new UserRepositoryMock(), new PilotStudyRepositoryMock())
+    const service: IUserService = new UserService(
+        new UserRepositoryMock(),
+        new PilotStudyRepositoryMock(),
+        new EventBusRabbitMQMock(),
+        new IntegrationEventRepositoryMock(),
+        new CustomLoggerMock()
+    )
     const user: User = new User().fromJSON(DefaultEntityMock.USER)
 
     describe('remove()', () => {
@@ -78,29 +87,6 @@ describe('Services: UserService', () => {
                 assert.property(err, 'message')
                 assert.propertyVal(err, 'message', 'Not implemented!')
             }
-        })
-    })
-
-    describe('changePassword()', () => {
-        context('when change the password', () => {
-            it('should return true', () => {
-                return service
-                    .changePassword(user.email!, user.password!, user.password!)
-                    .then(result => {
-                        assert.isBoolean(result)
-                        assert.isTrue(result)
-                    })
-            })
-        })
-
-        context('when there are validation errors', () => {
-            it('should reject a validation error', () => {
-                return service
-                    .changePassword('invalid', user.password!, user.password!)
-                    .catch(err => {
-                        assert.propertyVal(err, 'message', 'Invalid email address!')
-                    })
-            })
         })
     })
 

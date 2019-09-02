@@ -18,7 +18,7 @@ describe('Validators: CreateAdminValidator', () => {
                 CreateAdminValidator.validate(user)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                assert.propertyVal(err, 'description', 'User validation: email required!')
+                assert.propertyVal(err, 'description', 'Admin validation: email required!')
             }
         })
 
@@ -41,7 +41,7 @@ describe('Validators: CreateAdminValidator', () => {
                 CreateAdminValidator.validate(user)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                assert.propertyVal(err, 'description', 'User validation: password required!')
+                assert.propertyVal(err, 'description', 'Admin validation: password required!')
             } finally {
                 user.password = DefaultEntityMock.ADMIN.password
             }
@@ -54,7 +54,7 @@ describe('Validators: CreateAdminValidator', () => {
                 CreateAdminValidator.validate(user)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                assert.propertyVal(err, 'description', 'User validation: birth_date required!')
+                assert.propertyVal(err, 'description', 'Admin validation: birth_date required!')
             }
         })
 
@@ -75,7 +75,7 @@ describe('Validators: CreateAdminValidator', () => {
                 CreateAdminValidator.validate(new Admin())
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                assert.propertyVal(err, 'description', 'User validation: email, password, birth_date required!')
+                assert.propertyVal(err, 'description', 'Admin validation: email, password, birth_date required!')
             }
         })
     })

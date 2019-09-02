@@ -38,7 +38,6 @@ describe('Mappers: UserEntityMapper', () => {
                 assert.propertyVal(result, 'birth_date', undefined)
                 assert.propertyVal(result, 'phone_number', undefined)
                 assert.propertyVal(result, 'selected_pilot_study', undefined)
-                assert.propertyVal(result, 'language', undefined)
             })
 
             it('should return model without parameter for undefined json', () => {
@@ -52,7 +51,6 @@ describe('Mappers: UserEntityMapper', () => {
                 assert.propertyVal(result, 'birth_date', undefined)
                 assert.propertyVal(result, 'phone_number', undefined)
                 assert.propertyVal(result, 'selected_pilot_study', undefined)
-                assert.propertyVal(result, 'language', undefined)
             })
 
         })
@@ -76,6 +74,7 @@ describe('Mappers: UserEntityMapper', () => {
                 const admin: User = new User()
                 admin.scopes = undefined!
                 admin.type = undefined
+                admin.language = undefined
                 const result = mapper.transform(admin)
                 assert.isEmpty(result)
             })

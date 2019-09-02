@@ -4,9 +4,19 @@ import { AuthRepositoryMock } from '../../mocks/repositories/auth.repository.moc
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { UserRepositoryMock } from '../../mocks/repositories/user.repository.mock'
 import { User } from '../../../src/application/domain/model/user'
+import { EventBusRabbitMQMock } from '../../mocks/eventbus/eventbus.rabbitmq.mock'
+import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
+import { IntegrationEventRepositoryMock } from '../../mocks/repositories/integration.event.repository.mock'
 
 describe('Services: AuthService', () => {
-    const service = new AuthService(new AuthRepositoryMock(), new UserRepositoryMock())
+    const service = new AuthService(
+        new AuthRepositoryMock(),
+        new UserRepositoryMock(),
+        new EventBusRabbitMQMock(),
+        new IntegrationEventRepositoryMock(),
+        new CustomLoggerMock()
+    )
+
     const user: User = new User().fromJSON(DefaultEntityMock.USER)
 
     describe('authenticate()', () => {
