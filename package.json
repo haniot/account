@@ -13,7 +13,7 @@
     "test:unit": "nyc --clean --all --reporter=text-summary mocha --opts test/mocha.opts test/unit/**/*.spec.ts",
     "test:integration": "nyc --clean --all --reporter=text-summary mocha --opts test/mocha.opts test/integration/**/*.spec.ts",
     "test:single": "mocha --opts test/mocha.opts",
-    "test:cov": "nyc --clean --all --reporter=html --reporter=text mocha --opts test/mocha.opts test/unit/**/*.spec.ts"
+    "test:cov": "nyc --clean --all --reporter=html --reporter=text mocha --opts test/mocha.opts test/**/*.spec.ts"
   },
   "repository": {
     "type": "git",
