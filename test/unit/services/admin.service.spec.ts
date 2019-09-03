@@ -37,12 +37,24 @@ describe('Services: AdminService', () => {
             })
         })
 
+        context('when the user is not saved', () => {
+            it('should return undefined', () => {
+                user.name = 'Another Name'
+                return service.add(user)
+                    .then(res => {
+                        assert.isUndefined(res)
+                        user.name = DefaultEntityMock.ADMIN.name
+                    })
+            })
+        })
+
         context('when user with email already exists', () => {
             it('should reject an error for user already exist', () => {
                 user.email = 'exists@mail.com'
                 return service.add(user)
                     .catch(err => {
                         assert.propertyVal(err, 'message', 'A user with this email already registered!')
+                        user.email = DefaultEntityMock.ADMIN.email
                     })
             })
         })
@@ -142,6 +154,30 @@ describe('Services: AdminService', () => {
                         assert.propertyVal(res, 'phone_number', user.phone_number)
                         assert.propertyVal(res, 'selected_pilot_study', user.selected_pilot_study)
                         assert.propertyVal(res, 'language', user.language)
+                    })
+            })
+
+            it('should return the updated user without update email', () => {
+                user.email = undefined
+                return service.update(user)
+                    .then(res => {
+                        assert.propertyVal(res, 'id', user.id)
+                        assert.propertyVal(res, 'email', DefaultEntityMock.ADMIN.email)
+                        assert.propertyVal(res, 'birth_date', user.birth_date)
+                        assert.propertyVal(res, 'phone_number', user.phone_number)
+                        assert.propertyVal(res, 'selected_pilot_study', user.selected_pilot_study)
+                        assert.propertyVal(res, 'language', user.language)
+                    })
+            })
+        })
+
+        context('when user with email already exists', () => {
+            it('should reject an error for user already exist', () => {
+                user.email = 'exists@mail.com'
+                return service.update(user)
+                    .catch(err => {
+                        assert.propertyVal(err, 'message', 'A user with this email already registered!')
+                        user.email = DefaultEntityMock.ADMIN.email
                     })
             })
         })

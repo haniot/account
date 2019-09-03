@@ -192,7 +192,7 @@ describe('Routes: Auth', () => {
     describe('PATCH /v1/auth/password', () => {
         context('when the password is updated', () => {
             it('should return status code 204 and no content', async () => {
-                const token: string = await JwtRepositoryMock.generateResetPasswordToken(user)
+                const token: string = await JwtRepositoryMock.generateResetPasswordToken(user, true)
                 await updateUser(user.email, { change_password: false, reset_password_token: token }).then()
                 return request
                     .patch('/v1/auth/password')
