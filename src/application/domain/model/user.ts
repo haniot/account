@@ -3,6 +3,7 @@ import { JsonUtils } from '../utils/json.utils'
 import { IJSONSerializable } from '../utils/json.serializable.interface'
 import { IJSONDeserializable } from '../utils/json.deserializable.interface'
 import { DatetimeValidator } from '../validator/date.time.validator'
+import { LanguageTypes } from '../utils/language.types'
 
 /**
  * Implementation of the user entity.
@@ -24,12 +25,12 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
     private _last_login?: Date
     private _last_sync?: Date
     private _selected_pilot_study?: string
-    private _language?: string
+    private _language?: LanguageTypes
     private _reset_password_token?: string
 
     constructor() {
         super()
-        this.language = 'pt-BR'
+        this.language = LanguageTypes.PT_BR
     }
 
     get name(): string | undefined {
@@ -128,11 +129,11 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
         this._selected_pilot_study = value
     }
 
-    get language(): string | undefined {
+    get language(): LanguageTypes | undefined {
         return this._language
     }
 
-    set language(value: string | undefined) {
+    set language(value: LanguageTypes | undefined) {
         this._language = value
     }
 

@@ -3,7 +3,7 @@ import { GenderTypes } from '../utils/gender.types'
 import { Strings } from '../../../utils/strings'
 
 export class GenderTypesValidator {
-    public static validate(value: string): void | ValidationException {
+    public static validate(value: GenderTypes): void | ValidationException {
         if (!Object.values(GenderTypes).includes(value)) {
             throw new ValidationException(
                 Strings.ENUM_VALIDATOR.NOT_MAPPED.concat(`gender: ${value}`),

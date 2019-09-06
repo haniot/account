@@ -10,6 +10,7 @@ import { IBackgroundTask } from '../../application/port/background.task.interfac
 import { Admin } from '../../application/domain/model/admin'
 import { IAdminRepository } from '../../application/port/admin.repository.interface'
 import { Default } from '../../utils/default'
+import { LanguageTypes } from '../../application/domain/utils/language.types'
 
 /**
  * In this class it's checked whether there are any admin users in the
@@ -47,7 +48,7 @@ export class RegisterDefaultAdminTask implements IBackgroundTask {
                 adminDefault.type = UserType.ADMIN
                 adminDefault.change_password = false
                 adminDefault.email_verified = false
-                adminDefault.language = 'pt-BR'
+                adminDefault.language = LanguageTypes.PT_BR
 
                 const user = await this._adminRepository.create(adminDefault)
                 if (!user) throw new RepositoryException('Default admin user not created')
