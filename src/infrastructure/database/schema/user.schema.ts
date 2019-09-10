@@ -1,4 +1,5 @@
 import Mongoose from 'mongoose'
+import { LanguageTypes } from '../../../application/domain/utils/language.types'
 
 interface IUserModel extends Mongoose.Document {
 }
@@ -13,7 +14,7 @@ const userSchema = new Mongoose.Schema({
         selected_pilot_study: { type: String },
         language: {
             type: String,
-            default: 'pt-BR'
+            default: LanguageTypes.PT_BR
         },
         reset_password_token: { type: String },
         email: {

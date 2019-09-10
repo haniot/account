@@ -154,6 +154,7 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
     public toJSON(): any {
         return {
             id: super.id,
+            created_at: super.created_at,
             name: this.name,
             is_active: this.is_active,
             start: this.start,

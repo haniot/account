@@ -1,6 +1,6 @@
 {
   "name": "account-service",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "Microservice responsible for managing and authenticating users on the HANIoT platform and managing pilot studies.",
   "main": "dist/server.js",
   "scripts": {
@@ -52,7 +52,7 @@
     "all": true
   },
   "dependencies": {
-    "amqp-client-node": "^1.0.3",
+    "amqp-client-node": "^1.0.7",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "dotenv": "^8.1.0",
@@ -92,6 +92,6 @@
     "ts-node": "^8.2.0",
     "tslint": "^5.17.0",
     "typedoc": "^0.15.0",
-    "typescript": "^3.5.1"
+    "typescript": "^3.6.2"
   }
 }

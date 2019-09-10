@@ -2,7 +2,7 @@ import { ValidationException } from '../exception/validation.exception'
 import { LanguageTypes } from '../utils/language.types'
 
 export class LanguageValidator {
-    public static validate(lang: string): void | ValidationException {
+    public static validate(lang: LanguageTypes): void | ValidationException {
         const languageTypes = Object.values(LanguageTypes)
 
         if (!languageTypes.includes(lang)) {

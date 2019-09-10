@@ -9,6 +9,7 @@ export class UserEntity {
     public language?: string
     public reset_password_token?: string
     public id?: string
+    public created_at?: string
     public name?: string
     public email?: string
     public password?: string

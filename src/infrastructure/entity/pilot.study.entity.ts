@@ -1,5 +1,6 @@
 export class PilotStudyEntity {
     public id?: string
+    public created_at?: string
     public name?: string
     public is_active?: boolean
     public start?: Date

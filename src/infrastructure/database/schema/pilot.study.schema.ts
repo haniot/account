@@ -1,4 +1,5 @@
 import Mongoose, { Schema } from 'mongoose'
+import { LanguageTypes } from '../../../application/domain/utils/language.types'
 
 interface IPilotStudyModel extends Mongoose.Document {
 }
@@ -34,7 +35,7 @@ const pilotStudySchema = new Mongoose.Schema({
         },
         language: {
             type: String,
-            default: 'pt-br'
+            default: LanguageTypes.PT_BR
         }
     },
     {
