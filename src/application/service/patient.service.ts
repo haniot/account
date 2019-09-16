@@ -34,14 +34,13 @@ export class PatientService implements IPatientService {
     public async add(item: Patient): Promise<Patient> {
         try {
             CreatePatientValidator.validate(item)
+            let passwordWithoutCrypt: string | undefined
+            if (item.password) passwordWithoutCrypt = item.password
 
             if (item.email) {
                 const exists = await this._userRepository.checkExistByEmail(item.email)
                 if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
             }
-
-            let passwordWithoutCrypt: string = ''
-            if (item.password) passwordWithoutCrypt = item.password
 
             const result: Patient = await this._patientRepository.create(item)
             if (result && result.email) {
@@ -50,7 +49,7 @@ export class PatientService implements IPatientService {
                         name: item.name,
                         email: item.email
                     },
-                    password: passwordWithoutCrypt ? passwordWithoutCrypt : undefined,
+                    password: passwordWithoutCrypt,
                     action_url: process.env.DASHBOARD_HOST || Default.DASHBOARD_HOST,
                     lang: item.language
                 })

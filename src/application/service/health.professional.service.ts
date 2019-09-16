@@ -37,10 +37,10 @@ export class HealthProfessionalService implements IHealthProfessionalService {
     public async add(item: HealthProfessional): Promise<HealthProfessional> {
         try {
             CreateHealthProfessionalValidator.validate(item)
+            const passwordWithoutCrypt: string = item.password!
+
             const exists = await this._userRepository.checkExistByEmail(item.email)
             if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
-
-            const passwordWithoutCrypt: string = item.password!
 
             const result: HealthProfessional = await this._healthProfessionalRepository.create(item)
             if (result) {

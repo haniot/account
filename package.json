@@ -1,6 +1,6 @@
 {
   "name": "account-service",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Microservice responsible for managing and authenticating users on the HANIoT platform and managing pilot studies.",
   "main": "dist/server.js",
   "scripts": {
@@ -92,6 +92,6 @@
     "ts-node": "^8.2.0",
     "tslint": "^5.17.0",
     "typedoc": "^0.15.0",
-    "typescript": "^3.6.2"
+    "typescript": "^3.6.3"
   }
 }

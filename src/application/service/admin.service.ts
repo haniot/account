@@ -36,12 +36,12 @@ export class AdminService implements IAdminService {
     public async add(item: Admin): Promise<Admin> {
         try {
             CreateAdminValidator.validate(item)
-            const exists = await this._userRepository.checkExistByEmail(item.email)
-            if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
-            const result: Admin = await this._adminRepository.create(item)
-
             const passwordWithoutCrypt: string = item.password!
 
+            const exists = await this._userRepository.checkExistByEmail(item.email)
+            if (exists) throw new ConflictException(Strings.USER.EMAIL_ALREADY_REGISTERED)
+
+            const result: Admin = await this._adminRepository.create(item)
             if (result) {
                 const mail: Email = new Email().fromJSON({
                     to: {
