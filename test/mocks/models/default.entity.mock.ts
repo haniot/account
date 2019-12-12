@@ -6,6 +6,7 @@ export abstract class DefaultEntityMock {
         id: '5ca4b4648e20e14f9a8feef0',
         scopes: ['any'],
         type: 'admin',
+        name: 'Admin Mock',
         email: 'admin@mail.com',
         password: 'admin123',
         birth_date: '1992-01-08',
@@ -17,9 +18,9 @@ export abstract class DefaultEntityMock {
         total_admins: 1,
         total_health_professionals: 1,
         selected_pilot_study: '5ca23b9af04e7c28223cb590',
-        language: 'pt-br',
+        language: 'pt-BR',
         last_login: '2019-03-15T00:00:00.000Z',
-        last_sync: '2019-04-15T23:59:59.000Z',
+        last_sync: '2019-04-15T23:59:59.000Z'
     }
 
     public static readonly HEALTH_PROFESSIONAL: any = {
@@ -39,7 +40,7 @@ export abstract class DefaultEntityMock {
         selected_pilot_study: '5ca23b9af04e7c28223cb590',
         last_login: '2019-03-15T00:00:00.000Z',
         last_sync: '2019-04-15T23:59:59.000Z',
-        language: 'pt-br'
+        language: 'pt-BR'
 
     }
 
@@ -58,7 +59,7 @@ export abstract class DefaultEntityMock {
         selected_pilot_study: '5ca23b9af04e7c28223cb590',
         last_login: '2019-03-15T00:00:00.000Z',
         last_sync: '2019-04-15T23:59:59.000Z',
-        language: 'pt-br'
+        language: 'pt-BR'
     }
 
     public static readonly PILOT_STUDY: any = {
@@ -82,13 +83,14 @@ export abstract class DefaultEntityMock {
         end: '2019-04-15T23:59:59.000Z',
         total_patients: 0,
         total_health_professionals: 0,
-        location: 'Mock Land',
+        location: 'Mock Land'
     }
 
     public static readonly USER: any = {
         id: '5ca4b4648e20e14f9a8feef0',
         type: 'user',
         scopes: ['all'],
+        name: 'User Mock',
         email: 'user@mail.com',
         password: 'user123',
         birth_date: '1992-01-08',
@@ -96,8 +98,16 @@ export abstract class DefaultEntityMock {
         email_verified: true,
         phone_number: '(88) 98888-8888',
         selected_pilot_study: '5ca23b9af04e7c28223cb590',
-        language: 'pt-br',
+        language: 'pt-BR',
         last_sync: '2019-03-15T00:00:00.000Z',
-        last_login: '2019-03-15T00:00:00.000Z'
+        last_login: '2019-03-15T00:00:00.000Z',
+        reset_password_token: 'token'
+    }
+
+    public static readonly EMAIL: any = {
+        to: 'you@mail.com',
+        action_url: 'any@url.com',
+        password: 'password',
+        lang: 'pt_BR'
     }
 }

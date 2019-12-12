@@ -7,7 +7,7 @@ import { Admin } from '../../../src/application/domain/model/admin'
 import { UserType } from '../../../src/application/domain/utils/user.type'
 import { IAdminRepository } from '../../../src/application/port/admin.repository.interface'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
-import { Strings } from '../../../src/utils/strings'
+import { JwtRepositoryMock } from '../../mocks/repositories/jwt.repository.mock'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const adminRepo: IAdminRepository = DIContainer.get(Identifier.ADMIN_REPOSITORY)
@@ -189,31 +189,19 @@ describe('Routes: Auth', () => {
         })
     })
 
-    describe('POST /v1/auth/password', () => {
+    describe('PATCH /v1/auth/password', () => {
         context('when the password is updated', () => {
             it('should return status code 204 and no content', async () => {
-                await updateUser(user.email, { change_password: false }).then()
+                const token: string = await JwtRepositoryMock.generateResetPasswordToken(user, true)
+                await updateUser(user.email, { change_password: false, reset_password_token: token }).then()
                 return request
                     .patch('/v1/auth/password')
                     .send({ email: user.email, old_password: 'password', new_password: 'new@password' })
+                    .set('Authorization', `Bearer ${token}`)
                     .set('Content-Type', 'application/json')
                     .expect(204)
                     .then(res => {
                         expect(res.body).to.eql({})
-                    })
-            })
-        })
-
-        context('when the operation is not successful', () => {
-            it('should return status code 400 and message from invalid parameters', () => {
-                return request
-                    .patch('/v1/auth/password')
-                    .send({ email: 'another@mail.com', old_password: 'password', new_password: 'new@password' })
-                    .set('Content-Type', 'application/json')
-                    .expect(400)
-                    .then(res => {
-                        expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.OPERATION_CANT_BE_COMPLETED)
-                        expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.OPERATION_CANT_BE_COMPLETED_DESC)
                     })
             })
         })
@@ -230,16 +218,17 @@ describe('Routes: Auth', () => {
                     })
             })
 
-            it('should return status code 400 and message from missing parameters', () => {
+            it('should return status code 401 and message from invalid token', () => {
                 return request
                     .patch('/v1/auth/password')
-                    .send({})
+                    .send({ email: user.email, old_password: 'password', new_password: 'new@password' })
                     .set('Content-Type', 'application/json')
-                    .expect(400)
+                    .set('Authorization', 'Bearer invalid')
+                    .expect(401)
                     .then(res => {
-                        expect(res.body).to.have.property('message', 'Required fields were not provided...')
-                        expect(res.body).to.have.property('description', 'Change password validation: email, old_password, ' +
-                            'new_password required!')
+                        expect(res.body).to.have.property('message', 'Invalid password reset token!')
+                        expect(res.body).to.have.property('description', 'Token probably expired or already ' +
+                            'used. You can only use the reset token once while it is within its validity period.')
                     })
             })
         })

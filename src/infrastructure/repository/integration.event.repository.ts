@@ -21,7 +21,7 @@ export class IntegrationEventRepository implements IIntegrationEventRepository {
         return new Promise<IntegrationEvent<any>>((resolve, reject) => {
             this.model.create(item)
                 .then(result => resolve(result))
-                .catch(err => reject(new RepositoryException(err)))
+                .catch(err => reject(new RepositoryException(err.message, err.description)))
         })
     }
 
@@ -34,7 +34,7 @@ export class IntegrationEventRepository implements IIntegrationEventRepository {
                 .sort(q.ordination)
                 .exec() // execute query
                 .then(result => resolve(result))
-                .catch(err => reject(new RepositoryException(err)))
+                .catch(err => reject(new RepositoryException(err.message, err.description)))
         })
     }
 
@@ -46,7 +46,7 @@ export class IntegrationEventRepository implements IIntegrationEventRepository {
                     if (!result) return resolve(false)
                     resolve(true)
                 })
-                .catch(err => reject(new RepositoryException(err)))
+                .catch(err => reject(new RepositoryException(err.message, err.description)))
         })
     }
 

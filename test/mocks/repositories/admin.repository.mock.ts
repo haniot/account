@@ -13,7 +13,7 @@ export class AdminRepositoryMock implements IAdminRepository {
     }
 
     public create(item: Admin): Promise<Admin> {
-        return Promise.resolve(admin)
+        return Promise.resolve(admin.name === item.name ? admin : undefined!)
     }
 
     public delete(id: string): Promise<boolean> {

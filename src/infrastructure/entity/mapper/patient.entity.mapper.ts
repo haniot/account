@@ -15,7 +15,6 @@ export class PatientEntityMapper implements IEntityMapper<Patient, PatientEntity
         if (!json) return result
 
         if (json.id !== undefined) result.id = json.id
-        if (json.created_at !== undefined) result.created_at = json.created_at
         if (json.type !== undefined) result.type = json.type
         if (json.scopes !== undefined) result.scopes = json.scopes
         if (json.email !== undefined) result.email = json.email

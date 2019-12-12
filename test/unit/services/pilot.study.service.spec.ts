@@ -10,10 +10,20 @@ import { Patient } from '../../../src/application/domain/model/patient'
 import { Query } from '../../../src/infrastructure/repository/query/query'
 import { ObjectID } from 'bson'
 import { Strings } from '../../../src/utils/strings'
+import { EventBusRabbitMQMock } from '../../mocks/eventbus/eventbus.rabbitmq.mock'
+import { IntegrationEventRepositoryMock } from '../../mocks/repositories/integration.event.repository.mock'
+import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
 
 describe('Services: PilotStudyService', () => {
     const service = new PilotStudyService(
-        new PilotStudyRepositoryMock(), new HealthProfessionalRepositoryMock(), new PatientRepositoryMock())
+        new PilotStudyRepositoryMock(),
+        new HealthProfessionalRepositoryMock(),
+        new EventBusRabbitMQMock(),
+        new IntegrationEventRepositoryMock(),
+        new PatientRepositoryMock(),
+        new CustomLoggerMock()
+    )
+
     const pilot: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY)
     const health: HealthProfessional = new HealthProfessional().fromJSON(DefaultEntityMock.HEALTH_PROFESSIONAL)
     const patient: Patient = new Patient().fromJSON(DefaultEntityMock.PATIENT)

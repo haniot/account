@@ -12,7 +12,6 @@ export class PilotStudyEntityMapper implements IEntityMapper <PilotStudy, PilotS
         if (!json) return result
 
         if (json.id !== undefined) result.id = json.id
-        if (json.created_at !== undefined) result.created_at = json.created_at
         if (json.name !== undefined) result.name = json.name
         if (json.is_active !== undefined) result.is_active = json.is_active
         if (json.start !== undefined) result.start = json.start

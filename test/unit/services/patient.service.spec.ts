@@ -6,11 +6,20 @@ import { PatientRepositoryMock } from '../../mocks/repositories/patient.reposito
 import { assert } from 'chai'
 import { UserRepositoryMock } from '../../mocks/repositories/user.repository.mock'
 import { Query } from '../../../src/infrastructure/repository/query/query'
+import { EventBusRabbitMQMock } from '../../mocks/eventbus/eventbus.rabbitmq.mock'
+import { IntegrationEventRepositoryMock } from '../../mocks/repositories/integration.event.repository.mock'
+import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
 
 describe('Services: PatientService', () => {
     const user: Patient = new Patient().fromJSON(DefaultEntityMock.PATIENT)
     user.id = DefaultEntityMock.PATIENT.id
-    const service: IPatientService = new PatientService(new PatientRepositoryMock(), new UserRepositoryMock())
+    const service: IPatientService = new PatientService(
+        new PatientRepositoryMock(),
+        new UserRepositoryMock(),
+        new EventBusRabbitMQMock(),
+        new IntegrationEventRepositoryMock(),
+        new CustomLoggerMock()
+    )
 
     describe('add()', () => {
         context('when save a new user', () => {
