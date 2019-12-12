@@ -31,6 +31,28 @@ const userSchema = new Mongoose.Schema({
         protected: { /* For blocking (or not) deleting an Admin user. */
             type: Boolean,
             default: false
+        },
+        goals: {
+            steps: {
+                type: Number,
+                required: true
+            },
+            calories: {
+                type: Number,
+                required: true
+            },
+            distance: {
+                type: Number,
+                required: true
+            },
+            active_minutes: {
+                type: Number,
+                required: true
+            },
+            sleep: {
+                type: Number,
+                required: true
+            }
         }
     },
     {

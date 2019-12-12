@@ -3,9 +3,11 @@ import { IJSONSerializable } from '../utils/json.serializable.interface'
 import { JsonUtils } from '../utils/json.utils'
 import { User } from './user'
 import { UserType } from '../utils/user.type'
+import { Goal } from './goal'
 
 export class Patient extends User implements IJSONSerializable, IJSONDeserializable<Patient> {
     private _gender?: string
+    private _goals!: Goal
 
     constructor() {
         super()
@@ -32,6 +34,11 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
             'notifications:read',
             'notifications:delete'
         ]
+        this.goals.steps = 10000        // Default steps goal value
+        this.goals.calories = 2600      // Default calories goal value
+        this.goals.distance = 8000      // Default distance goal value
+        this.goals.active_minutes = 60  // Default active_minutes goal value
+        this.goals.sleep = 480          // Default sleep goal value
     }
 
     get gender(): string | undefined {
@@ -40,6 +47,14 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
 
     set gender(value: string | undefined) {
         this._gender = value
+    }
+
+    get goals(): Goal {
+        return this._goals
+    }
+
+    set goals(value: Goal) {
+        this._goals = value
     }
 
     public fromJSON(json: any): Patient {
