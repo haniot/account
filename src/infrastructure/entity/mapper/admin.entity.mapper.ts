@@ -35,6 +35,7 @@ export class AdminEntityMapper implements IEntityMapper<Admin, AdminEntity> {
         if (item.phone_number !== undefined) result.phone_number = item.phone_number
         if (item.selected_pilot_study !== undefined) result.selected_pilot_study = item.selected_pilot_study
         if (item.language !== undefined) result.language = item.language
+        if (item.protected !== undefined) result.protected = item.protected
 
         return result
     }
@@ -75,6 +76,7 @@ export class AdminEntityMapper implements IEntityMapper<Admin, AdminEntity> {
         if (json.phone_number !== undefined) result.phone_number = json.phone_number
         if (json.selected_pilot_study !== undefined) result.selected_pilot_study = json.selected_pilot_study
         if (json.language !== undefined) result.language = json.language
+        if (json.protected !== undefined) result.protected = json.protected
 
         return result
     }

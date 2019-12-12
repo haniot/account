@@ -3,10 +3,9 @@ import { IJSONSerializable } from '../utils/json.serializable.interface'
 import { JsonUtils } from '../utils/json.utils'
 import { User } from './user'
 import { UserType } from '../utils/user.type'
-import { GenderTypes } from '../utils/gender.types'
 
 export class Patient extends User implements IJSONSerializable, IJSONDeserializable<Patient> {
-    private _gender?: GenderTypes
+    private _gender?: string
 
     constructor() {
         super()
@@ -35,11 +34,11 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
         ]
     }
 
-    get gender(): GenderTypes | undefined {
+    get gender(): string | undefined {
         return this._gender
     }
 
-    set gender(value: GenderTypes | undefined) {
+    set gender(value: string | undefined) {
         this._gender = value
     }
 

@@ -49,6 +49,7 @@ export class RegisterDefaultAdminTask implements IBackgroundTask {
                 adminDefault.change_password = false
                 adminDefault.email_verified = false
                 adminDefault.language = LanguageTypes.PT_BR
+                adminDefault.protected = true
 
                 const user = await this._adminRepository.create(adminDefault)
                 if (!user) throw new RepositoryException('Default admin user not created')

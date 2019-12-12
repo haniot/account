@@ -15,4 +15,5 @@ export class UserEntity {
     public password?: string
     public phone_number?: string
     public birth_date?: string
+    public protected?: boolean
 }

@@ -47,6 +47,7 @@ export class Admin extends User implements IJSONSerializable, IJSONDeserializabl
             'notifications:readAll',
             'notifications:delete'
         ]
+        super.protected = false
     }
 
     get total_pilot_studies(): number | undefined {

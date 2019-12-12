@@ -25,10 +25,6 @@ export class ConnectionMongodb implements IConnectionDB {
         this._eventConnection = new EventEmitter()
     }
 
-    get conn(): Connection | undefined {
-        return this._connection
-    }
-
     get eventConnection(): EventEmitter {
         return this._eventConnection
     }

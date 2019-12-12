@@ -3,7 +3,6 @@ import { IJSONSerializable } from '../utils/json.serializable.interface'
 import { IJSONDeserializable } from '../utils/json.deserializable.interface'
 import { JsonUtils } from '../utils/json.utils'
 import { UserType } from '../utils/user.type'
-import { HealthAreaTypes } from '../utils/health.area.types'
 
 /**
  * Implementation of the educator entity.
@@ -12,7 +11,7 @@ import { HealthAreaTypes } from '../utils/health.area.types'
  * @implements {IJSONSerializable, IJSONDeserializable<HealthProfessional>}
  */
 export class HealthProfessional extends User implements IJSONSerializable, IJSONDeserializable<HealthProfessional> {
-    private _health_area?: HealthAreaTypes
+    private _health_area?: string
     private _total_pilot_studies ?: number
     private _total_patients ?: number
 
@@ -52,11 +51,11 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
         ]
     }
 
-    get health_area(): HealthAreaTypes | undefined {
+    get health_area(): string | undefined {
         return this._health_area
     }
 
-    set health_area(value: HealthAreaTypes | undefined) {
+    set health_area(value: string | undefined) {
         this._health_area = value
     }
 

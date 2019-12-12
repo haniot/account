@@ -9,14 +9,12 @@ export class ConnectionFactoryMongodb implements IConnectionFactory {
         useNewUrlParser: true,
         useCreateIndex: true,
         useFindAndModify: false,
-        bufferMaxEntries: 0,
-        reconnectTries: Number.MAX_SAFE_INTEGER,
-        reconnectInterval: 1500
+        useUnifiedTopology: true
     }
 
     public createConnection(retries: number, interval: number): Promise<Connection> {
-        this.options.reconnectTries = (retries === 0) ? Number.MAX_SAFE_INTEGER : retries
-        this.options.reconnectInterval = interval
+        // this.options.reconnectTries = (retries === 0) ? Number.MAX_SAFE_INTEGER : retries
+        // this.options.reconnectInterval = interval
 
         return new Promise<Connection>((resolve, reject) => {
             mongoose.connect(this.getDBUri(), this.options)

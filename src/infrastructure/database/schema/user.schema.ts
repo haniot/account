@@ -27,7 +27,11 @@ const userSchema = new Mongoose.Schema({
         birth_date: { type: String },
         name: { type: String },
         health_area: { type: String }, /* Health Professional Parameters*/
-        gender: { type: String } /* Patient Parameter*/
+        gender: { type: String }, /* Patient Parameter*/
+        protected: { /* For blocking (or not) deleting an Admin user. */
+            type: Boolean,
+            default: false
+        }
     },
     {
         timestamps: { createdAt: 'created_at', updatedAt: false },

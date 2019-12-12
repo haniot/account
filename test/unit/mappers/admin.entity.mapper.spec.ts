@@ -75,6 +75,7 @@ describe('Mappers: AdminEntityMapper', () => {
                 admin.scopes = undefined!
                 admin.type = undefined
                 admin.language = undefined
+                admin.protected = undefined
                 const result = mapper.transform(admin)
                 assert.isEmpty(result)
             })
