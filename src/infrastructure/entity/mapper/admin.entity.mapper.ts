@@ -63,6 +63,7 @@ export class AdminEntityMapper implements IEntityMapper<Admin, AdminEntity> {
         if (!json) return result
 
         if (json.id !== undefined) result.id = json.id
+        if (json.created_at !== undefined) result.created_at = json.created_at
         if (json.type !== undefined) result.type = json.type
         if (json.scopes !== undefined) result.scopes = json.scopes
         if (json.name !== undefined) result.name = json.name

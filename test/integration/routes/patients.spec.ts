@@ -45,6 +45,7 @@ describe('Routes: Patients', () => {
                     .expect(201)
                     .then(res => {
                         expect(res.body).to.have.property('id')
+                        expect(res.body).to.have.property('created_at')
                         expect(res.body).to.have.property('email', user.email)
                         expect(res.body).to.have.property('birth_date', user.birth_date)
                         expect(res.body).to.have.property('phone_number', user.phone_number)
@@ -107,6 +108,7 @@ describe('Routes: Patients', () => {
                     .expect(200)
                     .then(res => {
                         expect(res.body).to.have.property('id', user.id)
+                        expect(res.body).to.have.property('created_at')
                         expect(res.body).to.have.property('email', user.email)
                         expect(res.body).to.have.property('birth_date', user.birth_date)
                         expect(res.body).to.have.property('phone_number', user.phone_number)
@@ -154,6 +156,7 @@ describe('Routes: Patients', () => {
                     .expect(200)
                     .then(res => {
                         expect(res.body).to.have.property('id', user.id)
+                        expect(res.body).to.have.property('created_at')
                         expect(res.body).to.have.property('email', user.email)
                         expect(res.body).to.have.property('birth_date', user.birth_date)
                         expect(res.body).to.have.property('phone_number', user.phone_number)
@@ -232,6 +235,7 @@ describe('Routes: Patients', () => {
                         expect(res.body).to.be.an.instanceof(Array)
                         expect(res.body).to.have.lengthOf(1)
                         expect(res.body[0]).to.have.property('id', user.id)
+                        expect(res.body[0]).to.have.property('created_at')
                         expect(res.body[0]).to.have.property('email', user.email)
                         expect(res.body[0]).to.have.property('birth_date', user.birth_date)
                         expect(res.body[0]).to.have.property('phone_number', user.phone_number)
