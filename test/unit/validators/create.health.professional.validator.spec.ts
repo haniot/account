@@ -79,7 +79,8 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
                 CreateHealthProfessionalValidator.validate(user)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Health Area not mapped!')
-                assert.propertyVal(err, 'description', 'The mapped areas are: nutrition, dentistry.')
+                assert.propertyVal(err, 'description', 'The mapped areas are: nutrition, dentistry, ' +
+                    'nursing, endocrinology, other.')
             } finally {
                 user.health_area = DefaultEntityMock.HEALTH_PROFESSIONAL.health_area
             }

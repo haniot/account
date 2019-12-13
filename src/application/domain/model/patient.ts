@@ -4,10 +4,13 @@ import { JsonUtils } from '../utils/json.utils'
 import { User } from './user'
 import { UserType } from '../utils/user.type'
 import { Goal } from './goal'
+import { ExternalServices } from './external.services'
+import { AccessStatusTypes } from '../utils/access.status.types'
 
 export class Patient extends User implements IJSONSerializable, IJSONDeserializable<Patient> {
     private _gender?: string
     private _goals!: Goal       // Patient goals
+    private _external_services!: ExternalServices       // External Patient services
 
     constructor() {
         super()
@@ -34,8 +37,8 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
             'notifications:read',
             'notifications:delete'
         ]
-        // Default Patient goals
-        this.goals = new Goal(10000, 2600, 8000, 60, 480)
+        this.goals = new Goal(10000, 2600, 8000, 60, 480)   // Default goals
+        this.external_services = new ExternalServices(AccessStatusTypes.NONE)   // Default external services
     }
 
     get gender(): string | undefined {
@@ -52,6 +55,14 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
 
     set goals(value: Goal) {
         this._goals = value
+    }
+
+    get external_services(): ExternalServices {
+        return this._external_services
+    }
+
+    set external_services(value: ExternalServices) {
+        this._external_services = value
     }
 
     public fromJSON(json: any): Patient {
@@ -76,7 +87,8 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
         return {
             ...super.toJSON(),
             ...{
-                gender: this.gender
+                gender: this.gender,
+                external_services: this.external_services ? this.external_services.toJSON() : this.external_services
             }
         }
     }

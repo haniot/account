@@ -48,6 +48,14 @@ const userSchema = new Mongoose.Schema({
             sleep: {
                 type: Number
             }
+        },
+        external_services: {
+            fitbit_status: {
+                type: String
+            },
+            fitbit_last_sync: {
+                type: Date
+            }
         }
     },
     {

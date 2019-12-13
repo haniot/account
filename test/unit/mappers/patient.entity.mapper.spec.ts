@@ -81,6 +81,7 @@ describe('Mappers: PatientEntityMapper', () => {
                 patient.type = undefined
                 patient.language = undefined
                 patient.goals = undefined!
+                patient.external_services = undefined!
                 const result = mapper.transform(patient)
                 assert.isEmpty(result)
             })

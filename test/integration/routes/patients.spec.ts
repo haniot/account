@@ -8,6 +8,7 @@ import { Patient } from '../../../src/application/domain/model/patient'
 import { Strings } from '../../../src/utils/strings'
 import { ObjectID } from 'bson'
 import { DIContainer } from '../../../src/di/di'
+import { AccessStatusTypes } from '../../../src/application/domain/utils/access.status.types'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const app: App = DIContainer.get(Identifier.APP)
@@ -53,6 +54,9 @@ describe('Routes: Patients', () => {
                         expect(res.body).to.have.property('language', user.language)
                         expect(res.body).to.have.property('name', user.name)
                         expect(res.body).to.have.property('gender', user.gender)
+                        expect(res.body).to.have.property('external_services')
+                        expect(res.body.external_services).to.have.property('fitbit_status', AccessStatusTypes.NONE)
+                        expect(res.body.external_services).to.have.property('fitbit_last_sync', '')
                         user.id = res.body.id
                     })
             })
