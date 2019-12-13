@@ -62,7 +62,7 @@ export abstract class Strings {
         OPERATION_CANT_BE_COMPLETED_DESC: 'Probably one or more of the request parameters are incorrect.',
         INVALID_FIELDS: 'One or more request fields are invalid...',
         INVALID_NUMBER: ' must be a valid number!',
-        NEGATIVE_NUMBER: ' can\'t be negative!',
+        LESS_THAN_OR_EQUAL_TO_ZERO: ' cannot be less than or equal to zero!',
         INVALID_DATE: ', is not in valid ISO 8601 format.',
         INVALID_DATE_DESC: 'Date must be in the format: yyyy-MM-dd\'T\'HH:mm:ssZ'
     }

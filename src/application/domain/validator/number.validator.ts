@@ -6,9 +6,9 @@ export class NumberValidator {
         if (value !== undefined && (value === null || isNaN(value))) {
             throw new ValidationException(Strings.ERROR_MESSAGE.INVALID_FIELDS,
                 fieldName.concat(Strings.ERROR_MESSAGE.INVALID_NUMBER))
-        } else if (value < 0) {
+        } else if (value <= 0) {
             throw new ValidationException(Strings.ERROR_MESSAGE.INVALID_FIELDS,
-                fieldName.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                fieldName.concat(Strings.ERROR_MESSAGE.LESS_THAN_OR_EQUAL_TO_ZERO))
         }
     }
 }

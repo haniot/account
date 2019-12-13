@@ -55,6 +55,7 @@ export abstract class DefaultEntityMock {
         change_password: false,
         email_verified: true,
         gender: GenderTypes.MALE,
+        address: 'Av. Juvêncio Arruda, S/N - Universitário, Campina Grande - PB, 58429-600',
         phone_number: '(88) 98888-8888',
         selected_pilot_study: '5ca23b9af04e7c28223cb590',
         last_login: '2019-03-15T00:00:00.000Z',

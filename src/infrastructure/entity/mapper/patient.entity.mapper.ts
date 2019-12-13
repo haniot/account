@@ -31,12 +31,13 @@ export class PatientEntityMapper implements IEntityMapper<Patient, PatientEntity
 
         if (json.name !== undefined) result.name = json.name
         if (json.gender !== undefined) result.gender = json.gender
+        if (json.address !== undefined) result.address = json.address
         if (json.goals !== undefined) {
-            if (json.goals.steps !== undefined) result.goals.steps = json.goals.steps
-            if (json.goals.calories !== undefined) result.goals.calories = json.goals.calories
-            if (json.goals.distance !== undefined) result.goals.distance = json.goals.distance
-            if (json.goals.active_minutes !== undefined) result.goals.active_minutes = json.goals.active_minutes
-            if (json.goals.sleep !== undefined) result.goals.sleep = json.goals.sleep
+            if (json.goals.steps) result.goals.steps = json.goals.steps
+            if (json.goals.calories) result.goals.calories = json.goals.calories
+            if (json.goals.distance) result.goals.distance = json.goals.distance
+            if (json.goals.active_minutes) result.goals.active_minutes = json.goals.active_minutes
+            if (json.goals.sleep) result.goals.sleep = json.goals.sleep
         }
         if (json.external_services !== undefined) {
             if (json.external_services.fitbit_status !== undefined)
@@ -70,6 +71,7 @@ export class PatientEntityMapper implements IEntityMapper<Patient, PatientEntity
 
         if (item.name !== undefined) result.name = item.name
         if (item.gender !== undefined) result.gender = item.gender
+        if (item.address !== undefined) result.address = item.address
         if (item.goals !== undefined) result.goals = item.goals.toJSON()
         if (item.external_services !== undefined) result.external_services = item.external_services.toJSON()
 

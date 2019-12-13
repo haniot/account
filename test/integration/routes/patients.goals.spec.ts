@@ -148,7 +148,7 @@ describe('Routes: PatientsGoals', () => {
                     .then(res => {
                         expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.INVALID_FIELDS)
                         expect(res.body).to.have.property('description',
-                            'distance'.concat(Strings.ERROR_MESSAGE.NEGATIVE_NUMBER))
+                            'distance'.concat(Strings.ERROR_MESSAGE.LESS_THAN_OR_EQUAL_TO_ZERO))
                     })
             })
         })

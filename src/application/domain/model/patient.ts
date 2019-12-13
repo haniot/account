@@ -9,6 +9,7 @@ import { AccessStatusTypes } from '../utils/access.status.types'
 
 export class Patient extends User implements IJSONSerializable, IJSONDeserializable<Patient> {
     private _gender?: string
+    private _address?: string
     private _goals!: Goal       // Patient goals
     private _external_services!: ExternalServices       // External Patient services
 
@@ -49,6 +50,14 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
         this._gender = value
     }
 
+    get address(): string | undefined {
+        return this._address
+    }
+
+    set address(value: string | undefined) {
+        this._address = value
+    }
+
     get goals(): Goal {
         return this._goals
     }
@@ -79,6 +88,7 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
         if (json.id !== undefined) super.id = json.id
         if (json.email !== undefined) this.email = json.email
         if (json.gender !== undefined) this.gender = json.gender
+        if (json.address !== undefined) this.address = json.address
 
         return this
     }
@@ -88,6 +98,7 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
             ...super.toJSON(),
             ...{
                 gender: this.gender,
+                address: this.address,
                 external_services: this.external_services ? this.external_services.toJSON() : this.external_services
             }
         }

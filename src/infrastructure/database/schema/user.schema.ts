@@ -28,6 +28,7 @@ const userSchema = new Mongoose.Schema({
         name: { type: String },
         health_area: { type: String }, /* Health Professional Parameters*/
         gender: { type: String }, /* Patient Parameter*/
+        address: { type: String }, /* Patient Parameter*/
         protected: { /* For blocking (or not) deleting an Admin user. */
             type: Boolean,
             default: false
