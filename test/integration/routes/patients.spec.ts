@@ -153,6 +153,7 @@ describe('Routes: Patients', () => {
                 return request
                     .patch(`/v1/patients/${user.id}`)
                     .send({ name: user.name })
+                    .set('Content-Type', 'application/json')
                     .expect(200)
                     .then(res => {
                         expect(res.body).to.have.property('id', user.id)

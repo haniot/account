@@ -34,24 +34,19 @@ const userSchema = new Mongoose.Schema({
         },
         goals: {
             steps: {
-                type: Number,
-                required: true
+                type: Number
             },
             calories: {
-                type: Number,
-                required: true
+                type: Number
             },
             distance: {
-                type: Number,
-                required: true
+                type: Number
             },
             active_minutes: {
-                type: Number,
-                required: true
+                type: Number
             },
             sleep: {
-                type: Number,
-                required: true
+                type: Number
             }
         }
     },

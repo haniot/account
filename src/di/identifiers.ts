@@ -12,6 +12,7 @@ export abstract class Identifier {
     public static readonly AUTH_CONTROLLER: any = Symbol.for('AuthController')
     public static readonly ADMINS_CONTROLLER: any = Symbol.for('AdminsController')
     public static readonly PATIENTS_CONTROLLER: any = Symbol.for('PatientsController')
+    public static readonly PATIENTS_GOALS_CONTROLLER: any = Symbol.for('PatientsGoalsController')
     public static readonly PATIENTS_PILOT_STUDIES_CONTROLLER: any = Symbol.for('PatientsPilotStudiesController')
     public static readonly HEALTH_PROFESSIONALS_CONTROLLER: any = Symbol.for('HealthProfessionalsController')
     public static readonly HEALTH_PROFESSIONALS_PILOT_STUDIES_CONTROLLER: any =
@@ -28,6 +29,7 @@ export abstract class Identifier {
     public static readonly HEALTH_PROFESSIONAL_SERVICE: any = Symbol.for('HealthProfessionalService')
     public static readonly ADMIN_SERVICE: any = Symbol.for('AdminService')
     public static readonly PATIENT_SERVICE: any = Symbol.for('PatientService')
+    public static readonly GOAL_SERVICE: any = Symbol.for('GoalService')
     public static readonly PILOT_STUDY_SERVICE: any = Symbol.for('PilotStudyService')
 
     // Repositories

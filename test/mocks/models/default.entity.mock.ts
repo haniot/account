@@ -62,6 +62,14 @@ export abstract class DefaultEntityMock {
         language: 'pt-BR'
     }
 
+    public static readonly GOAL: any = {
+        steps: 10000,
+        calories: 2600,
+        distance: 8000,
+        active_minutes: 60,
+        sleep: 480
+    }
+
     public static readonly PILOT_STUDY: any = {
         id: '5ca4b464f497945cb2041774',
         name: 'pilotstudy',

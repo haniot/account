@@ -59,7 +59,10 @@ export abstract class Strings {
         PARAMETER_COULD_NOT_BE_UPDATED: 'This parameter could not be updated.',
         DATE_NOT_VALID_FORMAT_DESC: 'Date must be in the format: yyyy-MM-dd',
         OPERATION_CANT_BE_COMPLETED: 'The operation could not be performed successfully.',
-        OPERATION_CANT_BE_COMPLETED_DESC: 'Probably one or more of the request parameters are incorrect.'
+        OPERATION_CANT_BE_COMPLETED_DESC: 'Probably one or more of the request parameters are incorrect.',
+        INVALID_FIELDS: 'One or more request fields are invalid...',
+        INVALID_NUMBER: ' must be a valid number!',
+        NEGATIVE_NUMBER: ' can\'t be negative!'
     }
 
     public static readonly PILOT_STUDY: any = {

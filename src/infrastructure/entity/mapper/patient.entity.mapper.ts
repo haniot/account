@@ -31,6 +31,13 @@ export class PatientEntityMapper implements IEntityMapper<Patient, PatientEntity
 
         if (json.name !== undefined) result.name = json.name
         if (json.gender !== undefined) result.gender = json.gender
+        if (json.goals !== undefined) {
+            if (json.goals.steps) result.goals.steps = json.goals.steps
+            if (json.goals.calories) result.goals.calories = json.goals.calories
+            if (json.goals.distance) result.goals.distance = json.goals.distance
+            if (json.goals.active_minutes) result.goals.active_minutes = json.goals.active_minutes
+            if (json.goals.sleep) result.goals.sleep = json.goals.sleep
+        }
         return result
     }
 
@@ -57,6 +64,7 @@ export class PatientEntityMapper implements IEntityMapper<Patient, PatientEntity
 
         if (item.name !== undefined) result.name = item.name
         if (item.gender !== undefined) result.gender = item.gender
+        if (item.goals !== undefined) result.goals = item.goals.toJSON()
 
         return result
     }

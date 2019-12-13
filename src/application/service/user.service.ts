@@ -57,9 +57,9 @@ export class UserService implements IUserService {
                     query.addFilter(user.type === UserType.PATIENT ? { patients: user.id } : { health_professionals: user.id })
                     const pilots: Array<PilotStudy> = await this._pilotStudyRepository.find(query)
 
-                    await pilots.forEach(async pilot => {
+                    for (const pilot of pilots) {
                         await this._pilotStudyRepository.disassociateUser(pilot.id!, user.id!, user.type!)
-                    })
+                    }
                 }
                 await this.publishEvent(new UserDeleteEvent(new Date(), user), 'users.delete')
             }

@@ -9,6 +9,14 @@ export class Goal implements IJSONSerializable, IJSONDeserializable<Goal> {
     private _active_minutes?: number
     private _sleep?: number
 
+    constructor(steps?: number, calories?: number, distance?: number, active_minutes?: number, sleep?: number) {
+        this.steps = steps ? steps : undefined
+        this.calories = calories ? calories : undefined
+        this.distance = distance ? distance : undefined
+        this.active_minutes = active_minutes ? active_minutes : undefined
+        this.sleep = sleep ? sleep : undefined
+    }
+
     get steps(): number | undefined {
         return this._steps
     }

@@ -7,7 +7,7 @@ import { Goal } from './goal'
 
 export class Patient extends User implements IJSONSerializable, IJSONDeserializable<Patient> {
     private _gender?: string
-    private _goals!: Goal
+    private _goals!: Goal       // Patient goals
 
     constructor() {
         super()
@@ -34,11 +34,8 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
             'notifications:read',
             'notifications:delete'
         ]
-        this.goals.steps = 10000        // Default steps goal value
-        this.goals.calories = 2600      // Default calories goal value
-        this.goals.distance = 8000      // Default distance goal value
-        this.goals.active_minutes = 60  // Default active_minutes goal value
-        this.goals.sleep = 480          // Default sleep goal value
+        // Default Patient goals
+        this.goals = new Goal(10000, 2600, 8000, 60, 480)
     }
 
     get gender(): string | undefined {
