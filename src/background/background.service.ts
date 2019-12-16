@@ -5,6 +5,7 @@ import { RegisterDefaultAdminTask } from './task/register.default.admin.task'
 import { IBackgroundTask } from '../application/port/background.task.interface'
 import { IAdminRepository } from '../application/port/admin.repository.interface'
 import { ILogger } from '../utils/custom.logger'
+import { Default } from '../utils/default'
 
 @injectable()
 export class BackgroundService {
@@ -32,7 +33,7 @@ export class BackgroundService {
              * Go ahead only when the run is resolved.
              * Since the application depends on the database connection to work.
              */
-            await this._mongodb.tryConnect(0, 1000)
+            await this._mongodb.tryConnect(this.getDBUri())
 
             await this._publishTask.run()
             await this._rpcServerTask.run()
@@ -47,5 +48,17 @@ export class BackgroundService {
         } catch (err) {
             return Promise.reject(new Error(`Error stopping MongoDB! ${err.message}`))
         }
+    }
+
+    /**
+     * Retrieve the URI for connection to MongoDB.
+     *
+     * @return {string}
+     */
+    private getDBUri(): string {
+        if (process.env.NODE_ENV && process.env.NODE_ENV === 'test') {
+            return process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST
+        }
+        return process.env.MONGODB_URI || Default.MONGODB_URI
     }
 }

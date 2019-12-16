@@ -21,8 +21,6 @@ export abstract class Default {
     // MongoDB
     public static readonly MONGODB_URI: string = 'mongodb://127.0.0.1:27017/account-service'
     public static readonly MONGODB_URI_TEST: string = 'mongodb://127.0.0.1:27017/account-service-test'
-    public static readonly MONGODB_CON_RETRY_COUNT: number = 0 // infinite
-    public static readonly MONGODB_CON_RETRY_INTERVAL: number = 1000 // 1s
 
     // RabbitMQ
     public static readonly RABBITMQ_URI: string = 'amqp://guest:guest@127.0.0.1:5672'
@@ -42,7 +40,7 @@ export abstract class Default {
     // To generate self-signed certificates, see: https://devcenter.heroku.com/articles/ssl-certificate-self
     public static readonly SSL_KEY_PATH: string = '.certs/server.key'
     public static readonly SSL_CERT_PATH: string = '.certs/server.crt'
-    public static readonly HOST_WHITELIST: Array<string> = ['*']
+    public static readonly RABBITMQ_CA_PATH: string = '.certs/ca.crt'
 
     // Dashboard Host
     public static readonly DASHBOARD_HOST: string = 'https://localhost:443'

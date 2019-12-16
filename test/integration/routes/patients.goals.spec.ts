@@ -9,6 +9,7 @@ import { Patient } from '../../../src/application/domain/model/patient'
 import { Goal } from '../../../src/application/domain/model/goal'
 import { ObjectID } from 'bson'
 import { Strings } from '../../../src/utils/strings'
+import { Default } from '../../../src/utils/default'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const app: App = DIContainer.get(Identifier.APP)
@@ -20,7 +21,7 @@ describe('Routes: PatientsGoals', () => {
 
     before(async () => {
             try {
-                await dbConnection.tryConnect(0, 500)
+                await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
                 await deleteAllUsers({})
             } catch (err) {
                 throw new Error('Failure on PatientsGoals test: ' + err.message)

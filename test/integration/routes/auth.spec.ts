@@ -8,6 +8,7 @@ import { UserType } from '../../../src/application/domain/utils/user.type'
 import { IAdminRepository } from '../../../src/application/port/admin.repository.interface'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { JwtRepositoryMock } from '../../mocks/repositories/jwt.repository.mock'
+import { Default } from '../../../src/utils/default'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const adminRepo: IAdminRepository = DIContainer.get(Identifier.ADMIN_REPOSITORY)
@@ -24,7 +25,7 @@ describe('Routes: Auth', () => {
 
     before(async () => {
             try {
-                await dbConnection.tryConnect(0, 500)
+                await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
                 await deleteAllUsers({})
                 const result = await adminRepo.create(user)
                 user.id = result.id

@@ -1,7 +1,6 @@
 import { injectable } from 'inversify'
 import mongoose, { Connection, Mongoose } from 'mongoose'
-import { IConnectionFactory } from '../port/connection.factory.interface'
-import { Default } from '../../utils/default'
+import { IConnectionFactory, IDBOptions } from '../port/connection.factory.interface'
 
 @injectable()
 export class ConnectionFactoryMongodb implements IConnectionFactory {
@@ -12,26 +11,22 @@ export class ConnectionFactoryMongodb implements IConnectionFactory {
         useUnifiedTopology: true
     }
 
-    public createConnection(retries: number, interval: number): Promise<Connection> {
+    /**
+     * Create instance of MongoDB.
+     *
+     * @param uri This specification defines an URI scheme.
+     * For more details see: {@link https://docs.mongodb.com/manual/reference/connection-string/}
+     * @param options {IDBOptions} Connection setup Options.
+     * @return Promise<Connection>
+     */
+    public createConnection(uri: string, options?: IDBOptions): Promise<Connection> {
         // this.options.reconnectTries = (retries === 0) ? Number.MAX_SAFE_INTEGER : retries
         // this.options.reconnectInterval = interval
 
         return new Promise<Connection>((resolve, reject) => {
-            mongoose.connect(this.getDBUri(), this.options)
+            mongoose.connect(uri, this.options)
                 .then((result: Mongoose) => resolve(result.connection))
                 .catch(err => reject(err))
         })
-    }
-
-    /**
-     * Retrieve the URI for connection to MongoDB.
-     *
-     * @return {string}
-     */
-    private getDBUri(): string {
-        if (process.env.NODE_ENV && process.env.NODE_ENV === 'test') {
-            return process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST
-        }
-        return process.env.MONGODB_URI || Default.MONGODB_URI
     }
 }

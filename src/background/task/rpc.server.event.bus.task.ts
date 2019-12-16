@@ -15,6 +15,8 @@ import { User } from '../../application/domain/model/user'
 import { Admin } from '../../application/domain/model/admin'
 import { HealthProfessional } from '../../application/domain/model/health.professional'
 import { Patient } from '../../application/domain/model/patient'
+import { Default } from '../../utils/default'
+import fs from 'fs'
 
 @injectable()
 export class RpcServerEventBusTask implements IBackgroundTask {
@@ -30,11 +32,17 @@ export class RpcServerEventBusTask implements IBackgroundTask {
     }
 
     public run(): void {
+        // To use SSL/TLS, simply mount the uri with the amqps protocol and pass the CA.
+        const rabbitUri = process.env.RABBITMQ_URI || Default.RABBITMQ_URI
+        const rabbitOptions: any = { sslOptions: { ca: [] } }
+        if (rabbitUri.indexOf('amqps') === 0) {
+            rabbitOptions.sslOptions.ca = [fs.readFileSync(process.env.RABBITMQ_CA_PATH || Default.RABBITMQ_CA_PATH)]
+        }
         // It RPC Server events, that for some reason could not
         // e sent and were saved for later submission.
         this._eventBus
             .connectionRpcServer
-            .open(0, 2000)
+            .open(rabbitUri, rabbitOptions)
             .then(() => {
                 this._logger.info('Connection with RPC Server opened successful!')
                 this.initializeServer()

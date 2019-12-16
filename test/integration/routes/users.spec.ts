@@ -19,6 +19,7 @@ import { User } from '../../../src/application/domain/model/user'
 import { ConnectionMongodb } from '../../../src/infrastructure/database/connection.mongodb'
 import { IConnectionFactory } from '../../../src/infrastructure/port/connection.factory.interface'
 import { IUserRepository } from '../../../src/application/port/user.repository.interface'
+import { Default } from '../../../src/utils/default'
 
 const adminRepo: IAdminRepository = DIContainer.get(Identifier.ADMIN_REPOSITORY)
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
@@ -29,7 +30,7 @@ describe('Routes: Users', () => {
 
     before(async () => {
             try {
-                await dbConnection.tryConnect(0, 500)
+                await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
                 await deleteAllUsers({})
             } catch (err) {
                 throw new Error('Failure on Users test: ' + err.message)
@@ -106,7 +107,7 @@ describe('Routes: Users', () => {
             before(async () => {
                 await new RegisterDefaultAdminTask(otherDbConnection, adminRepo, logger).run()
 
-                await otherDbConnection.tryConnect(0, 100)
+                await otherDbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
 
                 return new Promise(resolve => setTimeout(resolve, 2000))
             })
