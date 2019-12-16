@@ -38,7 +38,8 @@ export abstract class Strings {
     public static readonly PATIENT: any = {
         NOT_FOUND: 'Patient not found!',
         NOT_FOUND_DESCRIPTION: 'Patient not found or already removed. A new operation for the same resource is required.',
-        ASSOCIATION_FAILURE: 'The association could not be performed because the patient does not have a record.'
+        ASSOCIATION_FAILURE: 'The association could not be performed because the patient does not have a record.',
+        PARAM_ID_NOT_VALID_FORMAT: 'Parameter {patient_id} is not in valid format!'
     }
 
     public static readonly HEALTH_PROFESSIONAL: any = {
