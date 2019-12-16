@@ -5,7 +5,7 @@ import { JsonUtils } from '../utils/json.utils'
 import { UserType } from '../utils/user.type'
 
 /**
- * Implementation of the educator entity.
+ * Implementation of the health professional entity.
  *
  * @extends {User}
  * @implements {IJSONSerializable, IJSONDeserializable<HealthProfessional>}
@@ -20,9 +20,11 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
         super.type = UserType.HEALTH_PROFESSIONAL
         super.scopes = [
             'healthprofessionals:read',
+            'healthprofessionals:readAll',
             'healthprofessionals:update',
             'patients:create',
             'patients:read',
+            'patients:readAll',
             'patients:update',
             'patients:delete',
             'pilots:create',
@@ -47,7 +49,17 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
             'evaluations:delete',
             'notifications:create',
             'notifications:read',
-            'notifications:delete'
+            'notifications:delete',
+            'activities:create',
+            'activities:read',
+            'activities:update',
+            'activities:delete',
+            'sleep:create',
+            'sleep:read',
+            'sleep:update',
+            'sleep:delete',
+            'series:read',
+            'series:readAll'
         ]
     }
 
@@ -89,8 +101,6 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
 
         super.fromJSON(json)
         if (json.health_area !== undefined) this.health_area = json.health_area
-        if (json.total_pilot_studies !== undefined) this.total_pilot_studies = json.total_pilot_studies
-        if (json.total_patients !== undefined) this.total_patients = json.total_patients
 
         return this
     }

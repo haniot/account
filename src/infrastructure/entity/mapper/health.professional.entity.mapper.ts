@@ -29,7 +29,6 @@ export class HealthProfessionalEntityMapper implements IEntityMapper<HealthProfe
         if (item.change_password !== undefined) result.change_password = item.change_password
         if (item.email_verified !== undefined) result.email_verified = item.email_verified
         if (item.last_login !== undefined) result.last_login = item.last_login
-        if (item.last_sync !== undefined) result.last_sync = item.last_sync
         if (item.birth_date !== undefined) result.birth_date = item.birth_date
         if (item.phone_number !== undefined) result.phone_number = item.phone_number
         if (item.selected_pilot_study !== undefined) result.selected_pilot_study = item.selected_pilot_study
@@ -71,7 +70,6 @@ export class HealthProfessionalEntityMapper implements IEntityMapper<HealthProfe
         if (json.change_password !== undefined) result.change_password = json.change_password
         if (json.email_verified !== undefined) result.email_verified = json.email_verified
         if (json.last_login !== undefined) result.last_login = json.last_login
-        if (json.last_sync !== undefined) result.last_sync = json.last_sync
         if (json.birth_date !== undefined) result.birth_date = json.birth_date
         if (json.phone_number !== undefined) result.phone_number = json.phone_number
         if (json.selected_pilot_study !== undefined) result.selected_pilot_study = json.selected_pilot_study

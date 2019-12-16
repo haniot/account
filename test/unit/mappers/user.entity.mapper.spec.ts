@@ -58,7 +58,6 @@ describe('Mappers: UserEntityMapper', () => {
         context('when the parameter is a model', () => {
             it('should call the modelToModelEntity() method', () => {
                 const result = mapper.transform(user)
-                assert.property(result, 'scopes')
                 assert.propertyVal(result, 'id', user.id)
                 assert.propertyVal(result, 'email', user.email)
                 assert.propertyVal(result, 'password', user.password)

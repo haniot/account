@@ -4,7 +4,6 @@ export class UserEntity {
     public change_password?: boolean
     public email_verified?: boolean
     public last_login?: Date
-    public last_sync?: Date
     public selected_pilot_study?: string
     public language?: string
     public reset_password_token?: string

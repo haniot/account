@@ -6,6 +6,7 @@ describe('Models: User', () => {
     describe('addScope()', () => {
         context('when add a scope from user', () => {
             const user: User = new User().fromJSON(DefaultEntityMock.USER)
+            user.addScope('all')
             user.addScope('any')
             assert.lengthOf(user.scopes, 2)
         })

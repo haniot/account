@@ -139,8 +139,6 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
         if (json.is_active !== undefined) this.is_active = json.is_active
         if (json.start !== undefined) this.start = this.convertDatetimeString(json.start)
         if (json.end !== undefined) this.end = this.convertDatetimeString(json.end)
-        if (json.total_health_professionals !== undefined) this.total_health_professionals = json.total_health_professionals
-        if (json.total_patients !== undefined) this.total_patients = json.total_patients
         if (json.health_professionals !== undefined && json.health_professionals instanceof Array) {
             this.health_professionals = json.health_professionals.map(id => new HealthProfessional().fromJSON(id))
         }
