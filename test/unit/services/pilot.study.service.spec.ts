@@ -176,6 +176,8 @@ describe('Services: PilotStudyService', () => {
     describe('update()', () => {
         context('when update a pilot study', () => {
             it('should return the updated pilot study', () => {
+                pilot.health_professionals = undefined
+                pilot.patients = undefined
                 return service.update(pilot)
                     .then(res => {
                         assert.property(res, 'id')

@@ -56,8 +56,6 @@ describe('Mappers: PilotStudyEntityMapper', () => {
                 assert.propertyVal(result, 'is_active', pilot.is_active)
                 assert.property(result, 'start')
                 assert.property(result, 'end')
-                assert.lengthOf(result.health_professionals!, 1)
-                assert.lengthOf(result.patients!, 1)
                 assert.propertyVal(result, 'location', pilot.location)
             })
 

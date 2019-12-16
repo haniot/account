@@ -73,6 +73,9 @@ import { IntegrationEventRepoModel } from '../infrastructure/database/schema/int
 import { IntegrationEventRepository } from '../infrastructure/repository/integration.event.repository'
 import { IIntegrationEventRepository } from '../application/port/integration.event.repository.interface'
 import { RpcServerEventBusTask } from '../background/task/rpc.server.event.bus.task'
+import { PatientsGoalsController } from '../ui/controllers/patients.goals.controller'
+import { IGoalService } from '../application/port/goal.service.interface'
+import { GoalService } from '../application/service/goal.service'
 
 class IoC {
     private readonly _container: Container
@@ -112,6 +115,8 @@ class IoC {
             .to(AuthController).inSingletonScope()
         this._container.bind<AdminsController>(Identifier.ADMINS_CONTROLLER).to(AdminsController).inSingletonScope()
         this._container.bind<PatientsController>(Identifier.PATIENTS_CONTROLLER).to(PatientsController).inSingletonScope()
+        this._container.bind<PatientsGoalsController>(Identifier.PATIENTS_GOALS_CONTROLLER)
+            .to(PatientsGoalsController).inSingletonScope()
         this._container.bind<PatientsPilotStudiesController>(Identifier.PATIENTS_PILOT_STUDIES_CONTROLLER)
             .to(PatientsPilotStudiesController).inSingletonScope()
         this._container.bind<HealthProfessionalsController>(Identifier.HEALTH_PROFESSIONALS_CONTROLLER)
@@ -135,6 +140,8 @@ class IoC {
             .to(AdminService).inSingletonScope()
         this._container.bind<IPatientService>(Identifier.PATIENT_SERVICE)
             .to(PatientService).inSingletonScope()
+        this._container.bind<IGoalService>(Identifier.GOAL_SERVICE)
+            .to(GoalService).inSingletonScope()
         this._container.bind<IPilotStudyService>(Identifier.PILOT_STUDY_SERVICE)
             .to(PilotStudyService).inSingletonScope()
 

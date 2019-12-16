@@ -17,16 +17,16 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
     private _email?: string
     private _password?: string // Password for user authentication.
     private _birth_date?: string
-    private _type?: string // Type of user. Can be Child, Educator, Health Professional or Family.
+    private _type?: string // Type of user. Can be Admin, Health Professional or Patient.
     private _scopes!: Array<string> // Scope that signal the types of access the user has.
     private _change_password?: boolean
     private _email_verified?: boolean
     private _phone_number?: string
     private _last_login?: Date
-    private _last_sync?: Date
     private _selected_pilot_study?: string
-    private _language?: LanguageTypes
+    private _language?: string
     private _reset_password_token?: string
+    private _protected?: boolean // For blocking (or not) deleting an Admin user.
 
     constructor() {
         super()
@@ -113,14 +113,6 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
         this._last_login = value
     }
 
-    get last_sync(): Date | undefined {
-        return this._last_sync
-    }
-
-    set last_sync(value: Date | undefined) {
-        this._last_sync = value
-    }
-
     get selected_pilot_study(): string | undefined {
         return this._selected_pilot_study
     }
@@ -129,11 +121,11 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
         this._selected_pilot_study = value
     }
 
-    get language(): LanguageTypes | undefined {
+    get language(): string | undefined {
         return this._language
     }
 
-    set language(value: LanguageTypes | undefined) {
+    set language(value: string | undefined) {
         this._language = value
     }
 
@@ -143,6 +135,14 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
 
     set reset_password_token(value: string | undefined) {
         this._reset_password_token = value
+    }
+
+    get protected(): boolean | undefined {
+        return this._protected
+    }
+
+    set protected(value: boolean | undefined) {
+        this._protected = value
     }
 
     public addScope(scope: string): void {
@@ -178,15 +178,9 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
         if (json.email !== undefined) this.email = json.email
         if (json.password !== undefined) this.password = json.password
         if (json.birth_date !== undefined) this.birth_date = json.birth_date
-        if (json.scopes !== undefined) this.scopes = json.scopes
         if (json.phone_number !== undefined) this.phone_number = json.phone_number
-        if (json.change_password !== undefined) this.change_password = json.change_password
-        if (json.email_verified !== undefined) this.email_verified = json.email_verified
-        if (json.last_login !== undefined) this.last_login = this.convertDatetimeString(json.last_login)
-        if (json.last_sync !== undefined) this.last_sync = this.convertDatetimeString(json.last_sync)
         if (json.selected_pilot_study !== undefined) this.selected_pilot_study = json.selected_pilot_study
         if (json.language !== undefined) this.language = json.language
-        if (json.reset_password_token !== undefined) this.reset_password_token = json.reset_password_token
 
         return this
     }
@@ -201,7 +195,6 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
             type: this.type,
             phone_number: this.phone_number,
             last_login: this.last_login,
-            last_sync: this.last_sync,
             selected_pilot_study: this.selected_pilot_study,
             language: this.language
         }

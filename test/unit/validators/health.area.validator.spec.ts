@@ -16,7 +16,8 @@ describe('Validators: HealthAreaValidator', () => {
                 assert.property(err, 'message')
                 assert.property(err, 'description')
                 assert.equal(err.message, 'Health Area not mapped!')
-                assert.equal(err.description, 'The mapped areas are: nutrition, dentistry.')
+                assert.equal(err.description, 'The mapped areas are: nutrition, dentistry, nursing, ' +
+                    'endocrinology, other.')
             }
         })
     })

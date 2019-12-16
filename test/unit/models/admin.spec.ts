@@ -17,10 +17,6 @@ describe('Models: Admin', () => {
                 assert.propertyVal(result, 'phone_number', DefaultEntityMock.ADMIN.phone_number)
                 assert.propertyVal(result, 'selected_pilot_study', DefaultEntityMock.ADMIN.selected_pilot_study)
                 assert.propertyVal(result, 'language', DefaultEntityMock.ADMIN.language)
-                assert.propertyVal(result, 'total_pilot_studies', DefaultEntityMock.ADMIN.total_pilot_studies)
-                assert.propertyVal(result, 'total_admins', DefaultEntityMock.ADMIN.total_admins)
-                assert.propertyVal(result, 'total_health_professionals', DefaultEntityMock.ADMIN.total_health_professionals)
-                assert.propertyVal(result, 'total_patients', DefaultEntityMock.ADMIN.total_patients)
             })
         })
 
@@ -70,10 +66,6 @@ describe('Models: Admin', () => {
                 assert.propertyVal(result, 'phone_number', DefaultEntityMock.ADMIN.phone_number)
                 assert.propertyVal(result, 'selected_pilot_study', DefaultEntityMock.ADMIN.selected_pilot_study)
                 assert.propertyVal(result, 'language', DefaultEntityMock.ADMIN.language)
-                assert.propertyVal(result, 'total_pilot_studies', DefaultEntityMock.ADMIN.total_pilot_studies)
-                assert.propertyVal(result, 'total_admins', DefaultEntityMock.ADMIN.total_admins)
-                assert.propertyVal(result, 'total_health_professionals', DefaultEntityMock.ADMIN.total_health_professionals)
-                assert.propertyVal(result, 'total_patients', DefaultEntityMock.ADMIN.total_patients)
             })
 
             it('should return a admin with id model', () => {
@@ -127,10 +119,6 @@ describe('Models: Admin', () => {
             assert.propertyVal(result, 'phone_number', DefaultEntityMock.ADMIN.phone_number)
             assert.propertyVal(result, 'selected_pilot_study', DefaultEntityMock.ADMIN.selected_pilot_study)
             assert.propertyVal(result, 'language', DefaultEntityMock.ADMIN.language)
-            assert.propertyVal(result, 'total_pilot_studies', DefaultEntityMock.ADMIN.total_pilot_studies)
-            assert.propertyVal(result, 'total_admins', DefaultEntityMock.ADMIN.total_admins)
-            assert.propertyVal(result, 'total_health_professionals', DefaultEntityMock.ADMIN.total_health_professionals)
-            assert.propertyVal(result, 'total_patients', DefaultEntityMock.ADMIN.total_patients)
         })
     })
 })
