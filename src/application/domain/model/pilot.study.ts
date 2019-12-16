@@ -139,12 +139,6 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
         if (json.is_active !== undefined) this.is_active = json.is_active
         if (json.start !== undefined) this.start = this.convertDatetimeString(json.start)
         if (json.end !== undefined) this.end = this.convertDatetimeString(json.end)
-        if (json.health_professionals !== undefined && json.health_professionals instanceof Array) {
-            this.health_professionals = json.health_professionals.map(id => new HealthProfessional().fromJSON(id))
-        }
-        if (json.patients !== undefined && json.patients instanceof Array) {
-            this.patients = json.patients.map(id => new Patient().fromJSON(id))
-        }
         if (json.location !== undefined) this.location = json.location
         return this
     }
@@ -159,9 +153,6 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
             end: this.end,
             total_health_professionals: this.total_health_professionals,
             total_patients: this.total_patients,
-            health_professionals:
-                this.health_professionals ? this.health_professionals.map(healthProfessional => healthProfessional.id) : [],
-            patients: this.patients ? this.patients.map(patient => patient.name) : [],
             location: this.location
         }
     }
