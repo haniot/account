@@ -6,8 +6,6 @@ export interface IDBOptions {
 }
 
 export interface IEventBusOptions {
-    rpcTimeout?: number
-    receiveFromYourself?: boolean
     retries?: number
     interval?: number
     sslOptions?: ISSL

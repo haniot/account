@@ -209,13 +209,13 @@ class IoC {
         // Tasks
         this._container
             .bind<IBackgroundTask>(Identifier.PUBLISH_EVENT_BUS_TASK)
-            .to(PublishEventBusTask).inSingletonScope()
+            .to(PublishEventBusTask).inRequestScope()
         this._container
             .bind<IBackgroundTask>(Identifier.SUBSCRIBE_EVENT_BUS_TASK)
-            .to(SubscribeEventBusTask).inSingletonScope()
+            .to(SubscribeEventBusTask).inRequestScope()
         this._container
             .bind<IBackgroundTask>(Identifier.RPC_SERVER_EVENT_BUST_TASK)
-            .to(RpcServerEventBusTask).inSingletonScope()
+            .to(RpcServerEventBusTask).inRequestScope()
         this._container
             .bind<IBackgroundTask>(Identifier.REGISTER_DEFAULT_ADMIN_TASK)
             .to(RegisterDefaultAdminTask).inRequestScope()

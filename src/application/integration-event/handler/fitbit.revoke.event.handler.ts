@@ -24,10 +24,8 @@ export class FitbitRevokeEventHandler implements IIntegrationEventHandler<Fitbit
 
     public async handle(event: FitbitRevokeEvent): Promise<void> {
         try {
-            if (!event.fitbitRevoke || !event.fitbitRevoke.patient_id) {
-                return Promise.reject()
-            }
-            const patientId: string = event.fitbitRevoke.patient_id
+            if (!event.fitbit || !event.fitbit.patient_id) return
+            const patientId: string = event.fitbit.patient_id
 
             // 1. Validate child_id
             ObjectIdValidator.validate(patientId, Strings.PATIENT.PARAM_ID_NOT_VALID_FORMAT)

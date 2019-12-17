@@ -2,16 +2,19 @@ import { EventType, IntegrationEvent } from './integration.event'
 import { Fitbit } from '../../domain/model/fitbit'
 
 export class FitbitRevokeEvent extends IntegrationEvent<Fitbit>{
-    constructor(public timestamp?: Date, public fitbitRevoke?: Fitbit) {
+    public static readonly ROUTING_KEY: string = 'fitbit.revoke'
+
+    constructor(public timestamp?: Date, public fitbit?: Fitbit) {
         super('FitbitRevokeEvent', EventType.FITBIT, timestamp)
     }
 
     public toJSON(): any {
-        if (!this.fitbitRevoke) return {}
+        if (!this.fitbit) return {}
         return {
-            timestamp: this.timestamp,
-            event_name: this.event_name,
-            fitbit: this.fitbitRevoke.toJSON()
+            ...super.toJSON(),
+            fitbit: {
+                ...this.fitbit.toJSON()
+            }
         }
     }
 }

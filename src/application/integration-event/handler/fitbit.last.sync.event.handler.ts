@@ -24,11 +24,9 @@ export class FitbitLastSyncEventHandler implements IIntegrationEventHandler<Fitb
 
     public async handle(event: FitbitLastSyncEvent): Promise<void> {
         try {
-            if (!event.fitbitLastSync || !event.fitbitLastSync.patient_id || !event.fitbitLastSync.last_sync) {
-                return Promise.reject()
-            }
-            const patientId: string = event.fitbitLastSync.patient_id
-            const lastSync: string = event.fitbitLastSync.last_sync
+            if (!event.fitbit || !event.fitbit.patient_id || !event.fitbit.last_sync) return
+            const patientId: string = event.fitbit.patient_id
+            const lastSync: string = event.fitbit.last_sync
 
             // 1. Validate child_id
             ObjectIdValidator.validate(patientId, Strings.PATIENT.PARAM_ID_NOT_VALID_FORMAT)

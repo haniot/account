@@ -33,7 +33,7 @@ export class SubscribeEventBusTask implements IBackgroundTask {
         this._eventBus
             .connectionSub
             .open(rabbitUri, rabbitOptions)
-            .then((conn) => {
+            .then(() => {
                 this.subscribeEvents()
                 this._logger.info('Connection with subscribe event opened successful!')
             })
@@ -61,11 +61,10 @@ export class SubscribeEventBusTask implements IBackgroundTask {
             /**
              * Subscribe in FitbitLastSyncEvent
              */
-            const fitbitLastSyncEvent = new FitbitLastSyncEvent(new Date())
-            const fitbitLastSyncEventHandler = new FitbitLastSyncEventHandler(
-                DIContainer.get<IPatientRepository>(Identifier.PATIENT_REPOSITORY), this._logger)
             this._eventBus
-                .subscribe(fitbitLastSyncEvent, fitbitLastSyncEventHandler, 'fitbit.lastsync')
+                .subscribe(new FitbitLastSyncEvent(), new FitbitLastSyncEventHandler(
+                    DIContainer.get<IPatientRepository>(Identifier.PATIENT_REPOSITORY), this._logger),
+                    FitbitLastSyncEvent.ROUTING_KEY)
                 .then((result: boolean) => {
                     if (result) this._logger.info('Subscribe in FitbitLastSyncEvent successful!')
                 })
@@ -76,11 +75,10 @@ export class SubscribeEventBusTask implements IBackgroundTask {
             /**
              * Subscribe in FitbitErrorEvent
              */
-            const fitbitErrorEvent = new FitbitErrorEvent(new Date())
-            const fitbitErrorEventHandler = new FitbitErrorEventHandler(
-                DIContainer.get<IPatientRepository>(Identifier.PATIENT_REPOSITORY), this._logger)
             this._eventBus
-                .subscribe(fitbitErrorEvent, fitbitErrorEventHandler, 'fitbit.error')
+                .subscribe(new FitbitErrorEvent(), new FitbitErrorEventHandler(
+                    DIContainer.get<IPatientRepository>(Identifier.PATIENT_REPOSITORY), this._logger),
+                    FitbitErrorEvent.ROUTING_KEY)
                 .then((result: boolean) => {
                     if (result) this._logger.info('Subscribe in FitbitErrorEvent successful!')
                 })
@@ -91,11 +89,10 @@ export class SubscribeEventBusTask implements IBackgroundTask {
             /**
              * Subscribe in FitbitRevokeEvent
              */
-            const fitbitRevokeEvent = new FitbitRevokeEvent(new Date())
-            const fitbitRevokeEventHandler = new FitbitRevokeEventHandler(
-                DIContainer.get<IPatientRepository>(Identifier.PATIENT_REPOSITORY), this._logger)
             this._eventBus
-                .subscribe(fitbitRevokeEvent, fitbitRevokeEventHandler, 'fitbit.revoke')
+                .subscribe(new FitbitRevokeEvent(), new FitbitRevokeEventHandler(
+                    DIContainer.get<IPatientRepository>(Identifier.PATIENT_REPOSITORY), this._logger),
+                    FitbitRevokeEvent.ROUTING_KEY)
                 .then((result: boolean) => {
                     if (result) this._logger.info('Subscribe in FitbitRevokeEvent successful!')
                 })

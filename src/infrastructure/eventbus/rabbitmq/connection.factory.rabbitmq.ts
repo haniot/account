@@ -5,8 +5,6 @@ import { IConnectionFactory, IEventBusOptions } from '../../port/connection.fact
 @injectable()
 export class ConnectionFactoryRabbitMQ implements IConnectionFactory {
     private readonly options = {
-        rpcTimeout: 5000,
-        receiveFromYourself: false,
         retries: 0,
         interval: 2000
     }

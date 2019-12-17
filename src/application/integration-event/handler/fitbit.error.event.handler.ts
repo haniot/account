@@ -24,11 +24,9 @@ export class FitbitErrorEventHandler implements IIntegrationEventHandler<FitbitE
 
     public async handle(event: FitbitErrorEvent): Promise<void> {
         try {
-            if (!event.fitbitError || !event.fitbitError.patient_id || !event.fitbitError.error) {
-                return Promise.reject()
-            }
-            const patientId: string = event.fitbitError.patient_id
-            const errorCode: number = event.fitbitError.error.code
+            if (!event.fitbit || !event.fitbit.patient_id || !event.fitbit.error) return
+            const patientId: string = event.fitbit.patient_id
+            const errorCode: number = event.fitbit.error.code
             let fitbitStatus: AccessStatusTypes = AccessStatusTypes.NONE
             switch (errorCode) {
                 case 1011:
