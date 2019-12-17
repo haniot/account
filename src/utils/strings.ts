@@ -38,7 +38,8 @@ export abstract class Strings {
     public static readonly PATIENT: any = {
         NOT_FOUND: 'Patient not found!',
         NOT_FOUND_DESCRIPTION: 'Patient not found or already removed. A new operation for the same resource is required.',
-        ASSOCIATION_FAILURE: 'The association could not be performed because the patient does not have a record.'
+        ASSOCIATION_FAILURE: 'The association could not be performed because the patient does not have a record.',
+        PARAM_ID_NOT_VALID_FORMAT: 'Parameter {patient_id} is not in valid format!'
     }
 
     public static readonly HEALTH_PROFESSIONAL: any = {
@@ -60,6 +61,8 @@ export abstract class Strings {
         DATE_NOT_VALID_FORMAT_DESC: 'Date must be in the format: yyyy-MM-dd',
         OPERATION_CANT_BE_COMPLETED: 'The operation could not be performed successfully.',
         OPERATION_CANT_BE_COMPLETED_DESC: 'Probably one or more of the request parameters are incorrect.',
+        INTERNAL_SERVER_ERROR: 'An internal server error has occurred.',
+        INTERNAL_SERVER_ERROR_DESC: 'Check all parameters of the operation being requested.',
         INVALID_FIELDS: 'One or more request fields are invalid...',
         INVALID_NUMBER: ' must be a valid number!',
         LESS_THAN_OR_EQUAL_TO_ZERO: ' cannot be less than or equal to zero!',

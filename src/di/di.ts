@@ -76,6 +76,7 @@ import { RpcServerEventBusTask } from '../background/task/rpc.server.event.bus.t
 import { PatientsGoalsController } from '../ui/controllers/patients.goals.controller'
 import { IGoalService } from '../application/port/goal.service.interface'
 import { GoalService } from '../application/service/goal.service'
+import { SubscribeEventBusTask } from '../background/task/subscribe.event.bus.task'
 
 class IoC {
     private readonly _container: Container
@@ -208,10 +209,13 @@ class IoC {
         // Tasks
         this._container
             .bind<IBackgroundTask>(Identifier.PUBLISH_EVENT_BUS_TASK)
-            .to(PublishEventBusTask).inSingletonScope()
+            .to(PublishEventBusTask).inRequestScope()
+        this._container
+            .bind<IBackgroundTask>(Identifier.SUBSCRIBE_EVENT_BUS_TASK)
+            .to(SubscribeEventBusTask).inRequestScope()
         this._container
             .bind<IBackgroundTask>(Identifier.RPC_SERVER_EVENT_BUST_TASK)
-            .to(RpcServerEventBusTask).inSingletonScope()
+            .to(RpcServerEventBusTask).inRequestScope()
         this._container
             .bind<IBackgroundTask>(Identifier.REGISTER_DEFAULT_ADMIN_TASK)
             .to(RegisterDefaultAdminTask).inRequestScope()

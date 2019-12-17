@@ -48,7 +48,7 @@ describe('EVENT BUS', () => {
         it('should connect successfully to publish.', async () => {
             try {
                 await eventBus.connectionPub.open(process.env.RABBITMQ_URI || Default.RABBITMQ_URI,
-                    { interval: 100, receiveFromYourself: true, sslOptions: { ca: [] } })
+                    { interval: 100, sslOptions: { ca: [] } })
                 expect(eventBus.connectionPub.isOpen).to.eql(true)
             } catch (err) {
                 throw new Error('Failure on EventBus test: ' + err.message)
@@ -59,7 +59,7 @@ describe('EVENT BUS', () => {
         it('should connect successfully to subscribe.', async () => {
             try {
                 await eventBus.connectionSub.open(process.env.RABBITMQ_URI || Default.RABBITMQ_URI,
-                    { interval: 100, receiveFromYourself: true, sslOptions: { ca: [] } })
+                    { interval: 100, sslOptions: { ca: [] } })
                 expect(eventBus.connectionSub.isOpen).to.eql(true)
             } catch (err) {
                 throw new Error('Failure on EventBus test: ' + err.message)
@@ -71,7 +71,7 @@ describe('EVENT BUS', () => {
         it('should return true to subscribe in TestOneEvent', async () => {
             try {
                 await eventBus.connectionSub.open(process.env.RABBITMQ_URI || Default.RABBITMQ_URI,
-                    { interval: 100, receiveFromYourself: true, sslOptions: { ca: [] } })
+                    { interval: 100, sslOptions: { ca: [] } })
 
                 return eventBus
                     .subscribe(createEventFake('TestOneEvent'), createHandlerEventFake(),
@@ -87,7 +87,7 @@ describe('EVENT BUS', () => {
         it('should return true to subscribe in TestTwoEvent', async () => {
             try {
                 await eventBus.connectionSub.open(process.env.RABBITMQ_URI || Default.RABBITMQ_URI,
-                    { interval: 100, receiveFromYourself: true, sslOptions: { ca: [] } })
+                    { interval: 100, sslOptions: { ca: [] } })
 
                 return eventBus
                     .subscribe(createEventFake('TestTwoEvent'), createHandlerEventFake(),
@@ -105,7 +105,7 @@ describe('EVENT BUS', () => {
         it('should return true for published TestOneEvent.', async () => {
             try {
                 await eventBus.connectionPub.open(process.env.RABBITMQ_URI || Default.RABBITMQ_URI,
-                    { interval: 100, receiveFromYourself: true, sslOptions: { ca: [] } })
+                    { interval: 100, sslOptions: { ca: [] } })
 
                 return eventBus.publish(
                     createEventFake('TestOneEvent'),
@@ -121,7 +121,7 @@ describe('EVENT BUS', () => {
         it('should return true for published TestTwoEvent.', async () => {
             try {
                 await eventBus.connectionPub.open(process.env.RABBITMQ_URI || Default.RABBITMQ_URI,
-                    { interval: 100, receiveFromYourself: true, sslOptions: { ca: [] } })
+                    { interval: 100, sslOptions: { ca: [] } })
 
                 return eventBus.publish(
                     createEventFake('TestTwoEvent'),
@@ -139,7 +139,7 @@ describe('EVENT BUS', () => {
         it('should return true when initializing a resource provider.', async () => {
             try {
                 await eventBus.connectionRpcServer.open(process.env.RABBITMQ_URI || Default.RABBITMQ_URI,
-                    { interval: 100, receiveFromYourself: true, sslOptions: { ca: [] } })
+                    { interval: 100, sslOptions: { ca: [] } })
 
                 return eventBus
                     .provideResource('resource.get', (query: string) => {
@@ -156,7 +156,7 @@ describe('EVENT BUS', () => {
         it('should return a requested resource.', async () => {
             try {
                 await eventBus.connectionRpcClient.open(process.env.RABBITMQ_URI || Default.RABBITMQ_URI,
-                    { interval: 100, receiveFromYourself: true, sslOptions: { ca: [] } })
+                    { interval: 100, sslOptions: { ca: [] } })
                 await eventBus.provideResource('resource.test.get', (query: string) => {
                     return { content: '123', original_query: query }
                 })
@@ -176,7 +176,7 @@ describe('EVENT BUS', () => {
         it('should return time out for a requested resource that is not being provided.', async () => {
             try {
                 await eventBus.connectionRpcClient.open(process.env.RABBITMQ_URI || Default.RABBITMQ_URI,
-                    { interval: 100, receiveFromYourself: true, sslOptions: { ca: [] } })
+                    { interval: 100, sslOptions: { ca: [] } })
 
                 return eventBus.executeResource('resource.find', '')
                     .catch(err => {
