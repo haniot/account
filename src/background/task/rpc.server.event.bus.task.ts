@@ -64,7 +64,6 @@ export class RpcServerEventBusTask implements IBackgroundTask {
     private initializeServer(): void {
         this._eventBus
             .provideResource('users.find', async (_query?: string) => {
-                // const query: Query = new Query().fromJSON({ ...qs.parser(_query) })
                 const query: IQuery = this.buildQS(_query)
                 const userType: string = query.toJSON().filters.type
                 if (!userType) {
@@ -107,12 +106,11 @@ export class RpcServerEventBusTask implements IBackgroundTask {
      * Prepare query string based on defaults parameters and values.
      *
      * @param query
-     * @param dateField
      */
-    private buildQS(query?: any, dateField?: string): IQuery {
+    private buildQS(query?: any): IQuery {
         return new Query().fromJSON(
             qs.parser(query ? query : {}, { pagination: { limit: Number.MAX_SAFE_INTEGER } },
-                { use_page: true, date_fields: { start_at: dateField, end_at: dateField } })
+                { use_page: true })
         )
     }
 }
