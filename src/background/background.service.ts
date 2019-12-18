@@ -47,8 +47,12 @@ export class BackgroundService {
     public async stopServices(): Promise<void> {
         try {
             await this._mongodb.dispose()
+
+            await this._publishTask.stop()
+            await this._subscribeTask.stop()
+            await this._rpcServerTask.stop()
         } catch (err) {
-            return Promise.reject(new Error(`Error stopping MongoDB! ${err.message}`))
+            return Promise.reject(new Error(`Error stopping services in background! ${err.message}`))
         }
     }
 
