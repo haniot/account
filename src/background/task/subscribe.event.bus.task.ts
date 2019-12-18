@@ -34,8 +34,8 @@ export class SubscribeEventBusTask implements IBackgroundTask {
             .connectionSub
             .open(rabbitUri, rabbitOptions)
             .then(() => {
-                this.subscribeEvents()
                 this._logger.info('Connection with subscribe event opened successful!')
+                this.subscribeEvents()
             })
             .catch(err => {
                 this._logger.error(`Error trying to get connection to Event Bus for event subscribing. ${err.message}`)

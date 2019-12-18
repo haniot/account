@@ -59,7 +59,8 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
             'sleep:update',
             'sleep:delete',
             'series:read',
-            'series:readAll'
+            'series:readAll',
+            'external:sync'
         ]
     }
 

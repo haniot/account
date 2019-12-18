@@ -45,7 +45,8 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
             'sleep:read',
             'sleep:update',
             'sleep:delete',
-            'series:read'
+            'series:read',
+            'external:sync'
         ]
         this.goals = new Goal(10000, 2600, 8000, 60, 480)   // Default goals
         this.external_services = new ExternalServices(AccessStatusTypes.NONE)   // Default external services

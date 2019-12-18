@@ -26,8 +26,12 @@ export class FitbitErrorEventHandler implements IIntegrationEventHandler<FitbitE
         try {
             if (!event.fitbit || !event.fitbit.patient_id || !event.fitbit.error) return
             const patientId: string = event.fitbit.patient_id
+
+            // 1. Validate child_id
+            ObjectIdValidator.validate(patientId, Strings.PATIENT.PARAM_ID_NOT_VALID_FORMAT)
+
             const errorCode: number = event.fitbit.error.code
-            let fitbitStatus: AccessStatusTypes = AccessStatusTypes.NONE
+            let fitbitStatus: AccessStatusTypes = undefined!
             switch (errorCode) {
                 case 1011:
                     fitbitStatus = AccessStatusTypes.EXPIRED_TOKEN
@@ -39,22 +43,20 @@ export class FitbitErrorEventHandler implements IIntegrationEventHandler<FitbitE
                     fitbitStatus = AccessStatusTypes.INVALID_REFRESH_TOKEN
                     break
                 default:
-                    fitbitStatus = AccessStatusTypes.NONE
                     break
             }
 
-            // 1. Validate child_id
-            ObjectIdValidator.validate(patientId, Strings.PATIENT.PARAM_ID_NOT_VALID_FORMAT)
+            if (fitbitStatus) {
+                const patientUp: Patient = new Patient()
+                patientUp.id = patientId
+                patientUp.external_services.fitbit_status = fitbitStatus
 
-            const patientUp: Patient = new Patient()
-            patientUp.id = patientId
-            patientUp.external_services.fitbit_status = fitbitStatus
+                // 2. Try to update the patient
+                await this._patientRepository.update(patientUp)
 
-            // 2. Try to update the patient
-            await this._patientRepository.update(patientUp)
-
-            // 3. If got here, it's because the action was successful.
-            this._logger.info(`Action for event ${event.event_name} associated with patient with ID: ${patientId} successfully held!`)
+                // 3. If got here, it's because the action was successful.
+                this._logger.info(`Action for event ${event.event_name} associated with patient with ID: ${patientId} successfully held!`)
+            }
         } catch (err) {
             this._logger.warn(`An error occurred while attempting `
                 .concat(`perform the operation with the ${event.event_name} name event. ${err.message}`)
