@@ -1,16 +1,16 @@
-import { inject, injectable } from 'inversify'
-import { Identifier } from '../../di/identifiers'
-import { IQuery } from '../../application/port/query.interface'
-import { Query } from '../../infrastructure/repository/query/query'
-import { UserType } from '../../application/domain/utils/user.type'
-import { ILogger } from '../../utils/custom.logger'
-import { RepositoryException } from '../../application/domain/exception/repository.exception'
-import { IConnectionDB } from '../../infrastructure/port/connection.db.interface'
-import { IBackgroundTask } from '../../application/port/background.task.interface'
-import { Admin } from '../../application/domain/model/admin'
-import { IAdminRepository } from '../../application/port/admin.repository.interface'
-import { Default } from '../../utils/default'
-import { LanguageTypes } from '../../application/domain/utils/language.types'
+import {inject, injectable} from 'inversify'
+import {Identifier} from '../../di/identifiers'
+import {IQuery} from '../../application/port/query.interface'
+import {Query} from '../../infrastructure/repository/query/query'
+import {UserType} from '../../application/domain/utils/user.type'
+import {ILogger} from '../../utils/custom.logger'
+import {RepositoryException} from '../../application/domain/exception/repository.exception'
+import {IConnectionDB} from '../../infrastructure/port/connection.db.interface'
+import {IBackgroundTask} from '../../application/port/background.task.interface'
+import {Admin} from '../../application/domain/model/admin'
+import {IAdminRepository} from '../../application/port/admin.repository.interface'
+import {Default} from '../../utils/default'
+import {LanguageTypes} from '../../application/domain/utils/language.types'
 
 /**
  * In this class it's checked whether there are any admin users in the
@@ -38,11 +38,13 @@ export class RegisterDefaultAdminTask implements IBackgroundTask {
 
     private async createUserAdmin(): Promise<void> {
         const query: IQuery = new Query()
-        query.filters = { type: UserType.ADMIN }
+        query.filters = {type: UserType.ADMIN}
         try {
             const countUser = await this._adminRepository.count()
             if (!countUser) {
                 const adminDefault = new Admin()
+                adminDefault.name = 'Admin'
+                adminDefault.birth_date = new Date().toISOString().split('T')[0]
                 adminDefault.email = process.env.ADMIN_EMAIL || Default.ADMIN_EMAIL
                 adminDefault.password = process.env.ADMIN_PASSWORD || Default.ADMIN_PASSWORD
                 adminDefault.type = UserType.ADMIN
