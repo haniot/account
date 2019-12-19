@@ -1,6 +1,6 @@
 {
   "name": "account-service",
-  "version": "2.0.3",
+  "version": "2.1.0",
   "description": "Microservice responsible for managing and authenticating users on the HANIoT platform and managing pilot studies.",
   "main": "dist/server.js",
   "scripts": {
@@ -24,13 +24,14 @@
   },
   "homepage": "https://github.com/haniot/account#readme",
   "keywords": [
+    "account",
     "microservice",
     "nodejs",
     "typescipt",
     "express"
   ],
   "author": "NUTES/UEPB",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "nyc": {
     "include": [
       "**/*.tsx",

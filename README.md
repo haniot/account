@@ -6,6 +6,7 @@ Microservice responsible for managing and authenticating users on the HANIoT pla
 **Main features:**
 - Authentication of users;
 - Registration and management of admin, patient, and health professional;
+- Patient record of goals;
 - Registration and management of pilot study;
 - Message Bus Integration (RabbitMQ).
  
