@@ -45,8 +45,15 @@ export class Admin extends User implements IJSONSerializable, IJSONDeserializabl
             'notifications:create',
             'notifications:read',
             'notifications:readAll',
-            'notifications:delete'
+            'notifications:delete',
+            'activities:read',
+            'activities:readAll',
+            'sleep:read',
+            'sleep:readAll',
+            'series:read',
+            'series:readAll'
         ]
+        super.protected = false
     }
 
     get total_pilot_studies(): number | undefined {
@@ -92,10 +99,6 @@ export class Admin extends User implements IJSONSerializable, IJSONDeserializabl
             }
         }
         super.fromJSON(json)
-        if (json.total_pilot_studies !== undefined) this.total_pilot_studies = json.total_pilot_studies
-        if (json.total_admins !== undefined) this.total_admins = json.total_admins
-        if (json.total_health_professionals !== undefined) this.total_health_professionals = json.total_health_professionals
-        if (json.total_patients !== undefined) this.total_patients = json.total_patients
 
         return this
     }

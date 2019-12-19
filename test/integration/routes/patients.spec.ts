@@ -8,6 +8,8 @@ import { Patient } from '../../../src/application/domain/model/patient'
 import { Strings } from '../../../src/utils/strings'
 import { ObjectID } from 'bson'
 import { DIContainer } from '../../../src/di/di'
+import { AccessStatusTypes } from '../../../src/application/domain/utils/access.status.types'
+import { Default } from '../../../src/utils/default'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const app: App = DIContainer.get(Identifier.APP)
@@ -18,7 +20,7 @@ describe('Routes: Patients', () => {
 
     before(async () => {
             try {
-                await dbConnection.tryConnect(0, 500)
+                await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
                 await deleteAllUsers({})
             } catch (err) {
                 throw new Error('Failure on Patients test: ' + err.message)
@@ -45,6 +47,7 @@ describe('Routes: Patients', () => {
                     .expect(201)
                     .then(res => {
                         expect(res.body).to.have.property('id')
+                        expect(res.body).to.have.property('created_at')
                         expect(res.body).to.have.property('email', user.email)
                         expect(res.body).to.have.property('birth_date', user.birth_date)
                         expect(res.body).to.have.property('phone_number', user.phone_number)
@@ -52,6 +55,10 @@ describe('Routes: Patients', () => {
                         expect(res.body).to.have.property('language', user.language)
                         expect(res.body).to.have.property('name', user.name)
                         expect(res.body).to.have.property('gender', user.gender)
+                        expect(res.body).to.have.property('address', user.address)
+                        expect(res.body).to.have.property('external_services')
+                        expect(res.body.external_services).to.have.property('fitbit_status', AccessStatusTypes.NONE)
+                        expect(res.body.external_services).to.have.property('fitbit_last_sync', '')
                         user.id = res.body.id
                     })
             })
@@ -107,6 +114,7 @@ describe('Routes: Patients', () => {
                     .expect(200)
                     .then(res => {
                         expect(res.body).to.have.property('id', user.id)
+                        expect(res.body).to.have.property('created_at')
                         expect(res.body).to.have.property('email', user.email)
                         expect(res.body).to.have.property('birth_date', user.birth_date)
                         expect(res.body).to.have.property('phone_number', user.phone_number)
@@ -114,6 +122,7 @@ describe('Routes: Patients', () => {
                         expect(res.body).to.have.property('language', user.language)
                         expect(res.body).to.have.property('name', user.name)
                         expect(res.body).to.have.property('gender', user.gender)
+                        expect(res.body).to.have.property('address', user.address)
                     })
             })
         })
@@ -151,9 +160,11 @@ describe('Routes: Patients', () => {
                 return request
                     .patch(`/v1/patients/${user.id}`)
                     .send({ name: user.name })
+                    .set('Content-Type', 'application/json')
                     .expect(200)
                     .then(res => {
                         expect(res.body).to.have.property('id', user.id)
+                        expect(res.body).to.have.property('created_at')
                         expect(res.body).to.have.property('email', user.email)
                         expect(res.body).to.have.property('birth_date', user.birth_date)
                         expect(res.body).to.have.property('phone_number', user.phone_number)
@@ -161,6 +172,7 @@ describe('Routes: Patients', () => {
                         expect(res.body).to.have.property('language', user.language)
                         expect(res.body).to.have.property('name', user.name)
                         expect(res.body).to.have.property('gender', user.gender)
+                        expect(res.body).to.have.property('address', user.address)
                     })
             })
         })
@@ -232,6 +244,7 @@ describe('Routes: Patients', () => {
                         expect(res.body).to.be.an.instanceof(Array)
                         expect(res.body).to.have.lengthOf(1)
                         expect(res.body[0]).to.have.property('id', user.id)
+                        expect(res.body[0]).to.have.property('created_at')
                         expect(res.body[0]).to.have.property('email', user.email)
                         expect(res.body[0]).to.have.property('birth_date', user.birth_date)
                         expect(res.body[0]).to.have.property('phone_number', user.phone_number)
@@ -239,6 +252,7 @@ describe('Routes: Patients', () => {
                         expect(res.body[0]).to.have.property('language', user.language)
                         expect(res.body[0]).to.have.property('name', user.name)
                         expect(res.body[0]).to.have.property('gender', user.gender)
+                        expect(res.body[0]).to.have.property('address', user.address)
                     })
             })
         })

@@ -66,6 +66,7 @@ export class AuthService implements IAuthService {
 
     public async changePassword(email: string, old_password: string, new_password: string, token: string): Promise<boolean> {
         try {
+            EmailValidator.validate(email)
             const isValid: boolean = await this._authRepository.validateToken(token)
             if (!isValid) return Promise.resolve(false)
             const payload = await this._authRepository.getTokenPayload(token)

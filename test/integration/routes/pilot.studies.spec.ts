@@ -8,6 +8,9 @@ import { App } from '../../../src/app'
 import { PilotStudyRepoModel } from '../../../src/infrastructure/database/schema/pilot.study.schema'
 import { Strings } from '../../../src/utils/strings'
 import { ObjectID } from 'bson'
+import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
+import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
+import { Default } from '../../../src/utils/default'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const app: App = DIContainer.get(Identifier.APP)
@@ -15,10 +18,11 @@ const request = require('supertest')(app.getExpress())
 
 describe('Routes: PilotStudies', () => {
     const pilot: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY_BASIC)
+    const healthProf: HealthProfessional = new HealthProfessional().fromJSON(DefaultEntityMock.HEALTH_PROFESSIONAL)
 
     before(async () => {
             try {
-                await dbConnection.tryConnect(0, 500)
+                await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
                 await deleteAllPilots({})
             } catch (err) {
                 throw new Error('Failure on Auth test: ' + err.message)
@@ -97,39 +101,6 @@ describe('Routes: PilotStudies', () => {
                     .then(res => {
                         expect(res.body).to.have.property('message', 'Datetime: 02/02/2019, is not in valid ISO 8601 format.')
                         expect(res.body).to.have.property('description', 'Date must be in the format: yyyy-MM-dd\'T\'HH:mm:ssZ')
-                    })
-            })
-
-            it('should return status code 400 and message from invalid health professionals', () => {
-                const body: any = JSON.parse(JSON.stringify(DefaultEntityMock.PILOT_STUDY_BASIC))
-                body.health_professionals = ['1a2b3c']
-
-                return request
-                    .post('/v1/pilotstudies')
-                    .send(body)
-                    .set('Content-Type', 'application/json')
-                    .expect(400)
-                    .then(res => {
-                        expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT)
-                        expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
-                    })
-            })
-
-            it('should return status code 400 and message from not registered health professionals', () => {
-                const body: any = JSON.parse(JSON.stringify(DefaultEntityMock.PILOT_STUDY_BASIC))
-                const randomId: string = '5d1a5c972bb4b946d7b5158e'
-                body.health_professionals = [randomId]
-
-                return request
-                    .post('/v1/pilotstudies')
-                    .send(body)
-                    .set('Content-Type', 'application/json')
-                    .expect(400)
-                    .then(res => {
-                        expect(res.body).to.have.property('message', 'It is necessary for health professional to be registered' +
-                            ' before proceeding.')
-                        expect(res.body).to.have.property('description', 'The following IDs were verified without registration:' +
-                            ` ${randomId}`)
                     })
             })
         })
@@ -215,19 +186,6 @@ describe('Routes: PilotStudies', () => {
                         expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
                     })
             })
-
-            it('should return status code 400 and message from try update health professionals id list', () => {
-                return request
-                    .patch(`/v1/pilotstudies/${pilot.id}`)
-                    .send({ health_professionals: [`${new ObjectID()}`] })
-                    .set('Content-Type', 'application/json')
-                    .expect(400)
-                    .then(res => {
-                        expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.PARAMETER_COULD_NOT_BE_UPDATED)
-                        expect(res.body).to.have.property('description',
-                            'A specific route to manage health_professionals already exists.')
-                    })
-            })
         })
 
         context('when the pilot study is not founded', () => {
@@ -265,13 +223,40 @@ describe('Routes: PilotStudies', () => {
         })
 
         context('when the pilot study has association with users', () => {
+            let resultHealthProf
+            const pilotNew: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY)
+
+            before(async () => {
+                try {
+                    await deleteAllUsers({})
+
+                    resultHealthProf = await createUser({
+                        name: healthProf.name,
+                        email: healthProf.email,
+                        password: healthProf.password,
+                        health_area: healthProf.health_area,
+                        phone_number: healthProf.phone_number,
+                        birth_date: healthProf.birth_date,
+                        language: healthProf.language
+                    })
+
+                    pilotNew.name = 'Another Pilot'
+
+                    const result = await PilotStudyRepoModel.create({
+                        name: pilotNew.name,
+                        is_active: pilotNew.is_active,
+                        start: pilotNew.start,
+                        end: pilotNew.end,
+                        total_health_professionals: 1,
+                        location: pilotNew.location,
+                        health_professionals: [resultHealthProf.id]
+                    })
+                    pilotNew.id = result.id
+                } catch (err) {
+                    throw new Error('Failure on PilotStudies test: ' + err.message)
+                }
+            })
             it('should return status code 400 and message from has association', async () => {
-                const pilotNew: PilotStudy = new PilotStudy().fromJSON(DefaultEntityMock.PILOT_STUDY)
-                pilotNew.name = 'Another Pilot'
-
-                const result = await PilotStudyRepoModel.create(pilotNew.toJSON())
-                pilotNew.id = result.id
-
                 return request
                     .delete(`/v1/pilotstudies/${pilotNew.id}`)
                     .set('Content-Type', 'application/json')
@@ -349,6 +334,14 @@ describe('Routes: PilotStudies', () => {
     })
 })
 
+async function createUser(item) {
+    return UserRepoModel.create(item)
+}
+
 async function deleteAllPilots(doc) {
     return await PilotStudyRepoModel.deleteMany(doc)
+}
+
+async function deleteAllUsers(doc) {
+    return await UserRepoModel.deleteMany(doc)
 }

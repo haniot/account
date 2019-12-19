@@ -82,12 +82,33 @@ describe('Repositories: PilotStudyRepository', () => {
     describe('findOneAndPopulate', () => {
         context('when get a populated pilot study', () => {
             it('should return a pilot study', () => {
+                const query: Query = new Query()
+                const q = query.toJSON()
                 sinon
                     .mock(modelFake)
                     .expects('findOne').withArgs({ _id: pilot.id })
-                    .chain('select').withArgs({})
-                    .chain('populate').withArgs('health_professionals')
-                    .chain('populate').withArgs('patients')
+                    .chain('select')
+                    .withArgs({})
+                    .chain('populate')
+                    .withArgs({
+                        path: 'health_professionals',
+                        match: q.filters,
+                        options: {
+                            sort: q.ordination,
+                            skip: Number((q.pagination.limit * q.pagination.page) - q.pagination.limit),
+                            limit: Number(q.pagination.limit)
+                        }
+                    })
+                    .chain('populate')
+                    .withArgs({
+                        path: 'patients',
+                        match: q.filters,
+                        options: {
+                            sort: q.ordination,
+                            skip: Number((q.pagination.limit * q.pagination.page) - q.pagination.limit),
+                            limit: Number(q.pagination.limit)
+                        }
+                    })
                     .chain('exec')
                     .resolves(pilot)
 
@@ -99,20 +120,39 @@ describe('Repositories: PilotStudyRepository', () => {
                         assert.property(res, 'start')
                         assert.property(res, 'end')
                         assert.propertyVal(res, 'location', pilot.location)
-                        assert.propertyVal(res, 'total_health_professionals', 1)
-                        assert.propertyVal(res, 'total_patients', 1)
                     })
             })
         })
 
         context('when the pilot study is not founded', () => {
             it('should return undefined', () => {
+                const query: Query = new Query()
+                const q = query.toJSON()
                 sinon
                     .mock(modelFake)
                     .expects('findOne').withArgs({ _id: pilot.id })
-                    .chain('select').withArgs({})
-                    .chain('populate').withArgs('health_professionals')
-                    .chain('populate').withArgs('patients')
+                    .chain('select')
+                    .withArgs({})
+                    .chain('populate')
+                    .withArgs({
+                        path: 'health_professionals',
+                        match: q.filters,
+                        options: {
+                            sort: q.ordination,
+                            skip: Number((q.pagination.limit * q.pagination.page) - q.pagination.limit),
+                            limit: Number(q.pagination.limit)
+                        }
+                    })
+                    .chain('populate')
+                    .withArgs({
+                        path: 'patients',
+                        match: q.filters,
+                        options: {
+                            sort: q.ordination,
+                            skip: Number((q.pagination.limit * q.pagination.page) - q.pagination.limit),
+                            limit: Number(q.pagination.limit)
+                        }
+                    })
                     .chain('exec')
                     .resolves(undefined)
 
@@ -125,12 +165,33 @@ describe('Repositories: PilotStudyRepository', () => {
 
         context('when a database error occurs', () => {
             it('should reject a error', () => {
+                const query: Query = new Query()
+                const q = query.toJSON()
                 sinon
                     .mock(modelFake)
                     .expects('findOne').withArgs({ _id: pilot.id })
-                    .chain('select').withArgs({})
-                    .chain('populate').withArgs('health_professionals')
-                    .chain('populate').withArgs('patients')
+                    .chain('select')
+                    .withArgs({})
+                    .chain('populate')
+                    .withArgs({
+                        path: 'health_professionals',
+                        match: q.filters,
+                        options: {
+                            sort: q.ordination,
+                            skip: Number((q.pagination.limit * q.pagination.page) - q.pagination.limit),
+                            limit: Number(q.pagination.limit)
+                        }
+                    })
+                    .chain('populate')
+                    .withArgs({
+                        path: 'patients',
+                        match: q.filters,
+                        options: {
+                            sort: q.ordination,
+                            skip: Number((q.pagination.limit * q.pagination.page) - q.pagination.limit),
+                            limit: Number(q.pagination.limit)
+                        }
+                    })
                     .chain('exec')
                     .rejects({ message: 'An internal error has occurred in the database!' })
 
@@ -246,8 +307,6 @@ describe('Repositories: PilotStudyRepository', () => {
                         assert.property(res, 'start')
                         assert.property(res, 'end')
                         assert.propertyVal(res, 'location', pilot.location)
-                        assert.propertyVal(res, 'total_health_professionals', 1)
-                        assert.propertyVal(res, 'total_patients', 1)
                     })
             })
         })
@@ -271,8 +330,6 @@ describe('Repositories: PilotStudyRepository', () => {
                         assert.property(res, 'start')
                         assert.property(res, 'end')
                         assert.propertyVal(res, 'location', pilot.location)
-                        assert.propertyVal(res, 'total_health_professionals', 1)
-                        assert.propertyVal(res, 'total_patients', 1)
                     })
             })
         })
@@ -329,8 +386,6 @@ describe('Repositories: PilotStudyRepository', () => {
                         assert.property(res, 'start')
                         assert.property(res, 'end')
                         assert.propertyVal(res, 'location', pilot.location)
-                        assert.propertyVal(res, 'total_health_professionals', 1)
-                        assert.propertyVal(res, 'total_patients', 1)
                     })
             })
         })
@@ -354,8 +409,6 @@ describe('Repositories: PilotStudyRepository', () => {
                         assert.property(res, 'start')
                         assert.property(res, 'end')
                         assert.propertyVal(res, 'location', pilot.location)
-                        assert.propertyVal(res, 'total_health_professionals', 1)
-                        assert.propertyVal(res, 'total_patients', 1)
                     })
             })
         })

@@ -73,6 +73,10 @@ import { IntegrationEventRepoModel } from '../infrastructure/database/schema/int
 import { IntegrationEventRepository } from '../infrastructure/repository/integration.event.repository'
 import { IIntegrationEventRepository } from '../application/port/integration.event.repository.interface'
 import { RpcServerEventBusTask } from '../background/task/rpc.server.event.bus.task'
+import { PatientsGoalsController } from '../ui/controllers/patients.goals.controller'
+import { IGoalService } from '../application/port/goal.service.interface'
+import { GoalService } from '../application/service/goal.service'
+import { SubscribeEventBusTask } from '../background/task/subscribe.event.bus.task'
 
 class IoC {
     private readonly _container: Container
@@ -112,6 +116,8 @@ class IoC {
             .to(AuthController).inSingletonScope()
         this._container.bind<AdminsController>(Identifier.ADMINS_CONTROLLER).to(AdminsController).inSingletonScope()
         this._container.bind<PatientsController>(Identifier.PATIENTS_CONTROLLER).to(PatientsController).inSingletonScope()
+        this._container.bind<PatientsGoalsController>(Identifier.PATIENTS_GOALS_CONTROLLER)
+            .to(PatientsGoalsController).inSingletonScope()
         this._container.bind<PatientsPilotStudiesController>(Identifier.PATIENTS_PILOT_STUDIES_CONTROLLER)
             .to(PatientsPilotStudiesController).inSingletonScope()
         this._container.bind<HealthProfessionalsController>(Identifier.HEALTH_PROFESSIONALS_CONTROLLER)
@@ -135,6 +141,8 @@ class IoC {
             .to(AdminService).inSingletonScope()
         this._container.bind<IPatientService>(Identifier.PATIENT_SERVICE)
             .to(PatientService).inSingletonScope()
+        this._container.bind<IGoalService>(Identifier.GOAL_SERVICE)
+            .to(GoalService).inSingletonScope()
         this._container.bind<IPilotStudyService>(Identifier.PILOT_STUDY_SERVICE)
             .to(PilotStudyService).inSingletonScope()
 
@@ -201,10 +209,13 @@ class IoC {
         // Tasks
         this._container
             .bind<IBackgroundTask>(Identifier.PUBLISH_EVENT_BUS_TASK)
-            .to(PublishEventBusTask).inSingletonScope()
+            .to(PublishEventBusTask).inRequestScope()
+        this._container
+            .bind<IBackgroundTask>(Identifier.SUBSCRIBE_EVENT_BUS_TASK)
+            .to(SubscribeEventBusTask).inRequestScope()
         this._container
             .bind<IBackgroundTask>(Identifier.RPC_SERVER_EVENT_BUST_TASK)
-            .to(RpcServerEventBusTask).inSingletonScope()
+            .to(RpcServerEventBusTask).inRequestScope()
         this._container
             .bind<IBackgroundTask>(Identifier.REGISTER_DEFAULT_ADMIN_TASK)
             .to(RegisterDefaultAdminTask).inRequestScope()

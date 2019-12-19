@@ -6,6 +6,7 @@ describe('Models: User', () => {
     describe('addScope()', () => {
         context('when add a scope from user', () => {
             const user: User = new User().fromJSON(DefaultEntityMock.USER)
+            user.addScope('all')
             user.addScope('any')
             assert.lengthOf(user.scopes, 2)
         })
@@ -94,7 +95,6 @@ describe('Models: User', () => {
                 assert.propertyVal(result, 'birth_date', undefined)
                 assert.propertyVal(result, 'phone_number', undefined)
                 assert.propertyVal(result, 'selected_pilot_study', undefined)
-                assert.propertyVal(result, 'language', undefined)
             })
 
             it('should return a user with some undefined parameters for empty json', () => {
@@ -106,7 +106,6 @@ describe('Models: User', () => {
                 assert.propertyVal(result, 'birth_date', undefined)
                 assert.propertyVal(result, 'phone_number', undefined)
                 assert.propertyVal(result, 'selected_pilot_study', undefined)
-                assert.propertyVal(result, 'language', undefined)
                 assert.propertyVal(result, 'scopes', undefined)
                 assert.propertyVal(result, 'scopes', undefined)
             })
@@ -134,7 +133,6 @@ describe('Models: User', () => {
                 assert.propertyVal(result, 'birth_date', undefined)
                 assert.propertyVal(result, 'phone_number', undefined)
                 assert.propertyVal(result, 'selected_pilot_study', undefined)
-                assert.propertyVal(result, 'language', undefined)
                 assert.propertyVal(result, 'scopes', undefined)
             })
 
@@ -146,7 +144,6 @@ describe('Models: User', () => {
                 assert.propertyVal(result, 'birth_date', undefined)
                 assert.propertyVal(result, 'phone_number', undefined)
                 assert.propertyVal(result, 'selected_pilot_study', undefined)
-                assert.propertyVal(result, 'language', undefined)
                 assert.propertyVal(result, 'scopes', undefined)
             })
         })

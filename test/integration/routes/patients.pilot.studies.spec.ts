@@ -9,6 +9,7 @@ import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.
 import { PilotStudyRepoModel } from '../../../src/infrastructure/database/schema/pilot.study.schema'
 import { ObjectID } from 'bson'
 import { Patient } from '../../../src/application/domain/model/patient'
+import { Default } from '../../../src/utils/default'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const app: App = DIContainer.get(Identifier.APP)
@@ -20,7 +21,7 @@ describe('Routes: PatientsPilotStudies', () => {
 
     before(async () => {
             try {
-                await dbConnection.tryConnect(0, 500)
+                await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
                 await deleteAllPilots({})
                 await deleteAllUsers({})
                 await UserRepoModel.create(DefaultEntityMock.PATIENT).then(res => user.id = res.id)

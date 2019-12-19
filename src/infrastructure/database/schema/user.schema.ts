@@ -27,7 +27,37 @@ const userSchema = new Mongoose.Schema({
         birth_date: { type: String },
         name: { type: String },
         health_area: { type: String }, /* Health Professional Parameters*/
-        gender: { type: String } /* Patient Parameter*/
+        gender: { type: String }, /* Patient Parameter*/
+        address: { type: String }, /* Patient Parameter*/
+        protected: { /* For blocking (or not) deleting an Admin user. */
+            type: Boolean,
+            default: false
+        },
+        goals: {
+            steps: {
+                type: Number
+            },
+            calories: {
+                type: Number
+            },
+            distance: {
+                type: Number
+            },
+            active_minutes: {
+                type: Number
+            },
+            sleep: {
+                type: Number
+            }
+        },
+        external_services: {
+            fitbit_status: {
+                type: String
+            },
+            fitbit_last_sync: {
+                type: Date
+            }
+        }
     },
     {
         timestamps: { createdAt: 'created_at', updatedAt: false },

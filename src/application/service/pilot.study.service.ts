@@ -36,18 +36,7 @@ export class PilotStudyService implements IPilotStudyService {
 
     public async add(item: PilotStudy): Promise<PilotStudy> {
         try {
-            if (item.patients) item.patients = undefined
             CreatePilotStudyValidator.validate(item)
-            if (item.health_professionals) {
-                const validateHealthList =
-                    await this._healthProfessionalRepository.checkExists(item.health_professionals)
-                if (validateHealthList instanceof ValidationException) {
-                    throw new ValidationException(
-                        Strings.HEALTH_PROFESSIONAL.HEALTH_PROFESSIONAL_REGISTER_REQUIRED,
-                        Strings.HEALTH_PROFESSIONAL.IDS_WITHOUT_REGISTER.concat(' ').concat(validateHealthList.message)
-                    )
-                }
-            }
             const result: PilotStudy = await this._pilotStudyRepository.create(item)
             return Promise.resolve(this.addReadOnlyInformation(result))
         } catch (err) {

@@ -33,7 +33,6 @@ describe('Models: Patient', () => {
                 assert.propertyVal(result, 'birth_date', undefined)
                 assert.propertyVal(result, 'phone_number', undefined)
                 assert.propertyVal(result, 'selected_pilot_study', undefined)
-                assert.propertyVal(result, 'language', undefined)
                 assert.propertyVal(result, 'gender', undefined)
             })
 
@@ -47,7 +46,6 @@ describe('Models: Patient', () => {
                 assert.propertyVal(result, 'birth_date', undefined)
                 assert.propertyVal(result, 'phone_number', undefined)
                 assert.propertyVal(result, 'selected_pilot_study', undefined)
-                assert.propertyVal(result, 'language', undefined)
                 assert.propertyVal(result, 'gender', undefined)
             })
         })
@@ -84,7 +82,6 @@ describe('Models: Patient', () => {
                 assert.propertyVal(result, 'birth_date', undefined)
                 assert.propertyVal(result, 'phone_number', undefined)
                 assert.propertyVal(result, 'selected_pilot_study', undefined)
-                assert.propertyVal(result, 'language', undefined)
                 assert.propertyVal(result, 'gender', undefined)
             })
 
@@ -97,7 +94,6 @@ describe('Models: Patient', () => {
                 assert.propertyVal(result, 'birth_date', undefined)
                 assert.propertyVal(result, 'phone_number', undefined)
                 assert.propertyVal(result, 'selected_pilot_study', undefined)
-                assert.propertyVal(result, 'language', undefined)
                 assert.propertyVal(result, 'gender', undefined)
             })
         })

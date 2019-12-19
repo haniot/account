@@ -14,6 +14,7 @@ import { IntegrationEvent } from '../integration-event/event/integration.event'
 import { IIntegrationEventRepository } from '../port/integration.event.repository.interface'
 import { ILogger } from '../../utils/custom.logger'
 import { UserDeleteEvent } from '../integration-event/event/user.delete.event'
+import { ValidationException } from '../domain/exception/validation.exception'
 
 /**
  * Implementing User Service.
@@ -42,6 +43,13 @@ export class UserService implements IUserService {
         try {
             ObjectIdValidator.validate(id)
             const user: User = await this._userRepository.findOne(new Query().fromJSON({ filters: { _id: id } }))
+
+            if (user && user.type === UserType.ADMIN && user.protected) {
+                throw new ValidationException(
+                    'The operation could not be completed as the user in question cannot be removed.'
+                )
+            }
+
             const result: boolean = await this._userRepository.delete(id)
             if (result) {
                 if (user && user.type !== UserType.ADMIN) {
@@ -49,9 +57,9 @@ export class UserService implements IUserService {
                     query.addFilter(user.type === UserType.PATIENT ? { patients: user.id } : { health_professionals: user.id })
                     const pilots: Array<PilotStudy> = await this._pilotStudyRepository.find(query)
 
-                    await pilots.forEach(async pilot => {
+                    for (const pilot of pilots) {
                         await this._pilotStudyRepository.disassociateUser(pilot.id!, user.id!, user.type!)
-                    })
+                    }
                 }
                 await this.publishEvent(new UserDeleteEvent(new Date(), user), 'users.delete')
             }

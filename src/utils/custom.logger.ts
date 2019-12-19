@@ -1,23 +1,21 @@
 import fs from 'fs'
-import { injectable } from 'inversify'
-import { Default } from './default'
-import { createLogger, format, Logger, transports } from 'winston'
+import {injectable} from 'inversify'
+import {Default} from './default'
+import {createLogger, format, Logger, transports} from 'winston'
 import DailyRotateFile from 'winston-daily-rotate-file'
 
 @injectable()
 export class CustomLogger implements ILogger {
     private readonly _logger: Logger
     private readonly _logDir = process.env.LOG_DIR || Default.LOG_DIR
+    private readonly _moduleName: string
     private _options: any = {}
 
     constructor() {
         if (!fs.existsSync(this._logDir)) fs.mkdirSync(this._logDir) // create directory if it does not exist
         this.initOptions() // initialize options logger
         this._logger = this.internalCreateLogger()
-    }
-
-    get logger(): Logger {
-        return this._logger
+        this._moduleName = 'account.app'
     }
 
     private internalCreateLogger(): Logger {
@@ -40,25 +38,16 @@ export class CustomLogger implements ILogger {
                 format.colorize(),
                 format.splat(),
                 format.timestamp(),
-                format.printf(
-                    info => `${info.timestamp} ${info.level}: ${info.message}`
-                )
+                format.printf(log => `${log.module} @ ${log.timestamp} ${log.level}: ${log.message}`)
             )
         }
 
-        switch ((process.env.NODE_ENV || Default.NODE_ENV)) {
-            case 'production':
-                this._options.level = 'warning'
-                this._options.silent = false
-                break
-            case 'test':
-                this._options.level = 'none'
-                this._options.silent = true
-                break
-            default: // development or other
-                this._options.level = 'debug'
-                this._options.silent = false
-                break
+        if ((process.env.NODE_ENV || Default.NODE_ENV) === 'test') {
+            this._options.level = 'none'
+            this._options.silent = true
+        } else {
+            this._options.level = 'debug'
+            this._options.silent = false
         }
     }
 
@@ -77,27 +66,27 @@ export class CustomLogger implements ILogger {
     }
 
     public error(message: string): void {
-        this._logger.error(message)
+        this._logger.error(message, {module: this._moduleName})
     }
 
     public warn(message: string): void {
-        this._logger.warn(message)
+        this._logger.warn(message, {module: this._moduleName})
     }
 
     public info(message: string): void {
-        this._logger.info(message)
+        this._logger.info(message, {module: this._moduleName})
     }
 
     public verbose(message: string): void {
-        this._logger.verbose(message)
+        this._logger.verbose(message, {module: this._moduleName})
     }
 
     public debug(message: string): void {
-        this._logger.debug(message)
+        this._logger.debug(message, {module: this._moduleName})
     }
 
     public silly(message: string): void {
-        this._logger.silly(message)
+        this._logger.silly(message, {module: this._moduleName})
     }
 }
 
@@ -114,8 +103,6 @@ export class CustomLogger implements ILogger {
  * @see {@link https://github.com/winstonjs/winston#using-logging-levels} for further information.
  */
 export interface ILogger {
-    logger: Logger
-
     error(message: string): void
 
     warn(message: string): void

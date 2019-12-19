@@ -10,6 +10,7 @@ import { IPilotStudyRepository } from '../../../src/application/port/pilot.study
 import { App } from '../../../src/app'
 import { expect } from 'chai'
 import { DIContainer } from '../../../src/di/di'
+import { Default } from '../../../src/utils/default'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const healthRepo: IHealthProfessionalRepository = DIContainer.get(Identifier.HEALTH_PROFESSIONAL_REPOSITORY)
@@ -23,7 +24,7 @@ describe('Routes: HealthProfessionalsPilotStudies', () => {
 
     before(async () => {
             try {
-                await dbConnection.tryConnect(0, 500)
+                await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
                 await deleteAllPilots({})
                 await deleteAllUsers({})
                 const health = await healthRepo.create(user)

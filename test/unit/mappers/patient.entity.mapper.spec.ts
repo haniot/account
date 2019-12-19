@@ -40,7 +40,6 @@ describe('Mappers: PatientEntityMapper', () => {
                 assert.propertyVal(result, 'birth_date', undefined)
                 assert.propertyVal(result, 'phone_number', undefined)
                 assert.propertyVal(result, 'selected_pilot_study', undefined)
-                assert.propertyVal(result, 'language', undefined)
                 assert.propertyVal(result, 'gender', undefined)
             })
 
@@ -55,7 +54,6 @@ describe('Mappers: PatientEntityMapper', () => {
                 assert.propertyVal(result, 'birth_date', undefined)
                 assert.propertyVal(result, 'phone_number', undefined)
                 assert.propertyVal(result, 'selected_pilot_study', undefined)
-                assert.propertyVal(result, 'language', undefined)
                 assert.propertyVal(result, 'gender', undefined)
             })
 
@@ -81,6 +79,9 @@ describe('Mappers: PatientEntityMapper', () => {
                 const patient: Patient = new Patient()
                 patient.scopes = undefined!
                 patient.type = undefined
+                patient.language = undefined
+                patient.goals = undefined!
+                patient.external_services = undefined!
                 const result = mapper.transform(patient)
                 assert.isEmpty(result)
             })

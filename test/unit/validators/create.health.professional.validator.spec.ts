@@ -19,7 +19,7 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
                 CreateHealthProfessionalValidator.validate(user)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                assert.propertyVal(err, 'description', 'User validation: email required!')
+                assert.propertyVal(err, 'description', 'Health Professional validation: email required!')
             }
         })
 
@@ -42,7 +42,7 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
                 CreateHealthProfessionalValidator.validate(user)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                assert.propertyVal(err, 'description', 'User validation: password required!')
+                assert.propertyVal(err, 'description', 'Health Professional validation: password required!')
             } finally {
                 user.password = DefaultEntityMock.HEALTH_PROFESSIONAL.password
             }
@@ -55,7 +55,7 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
                 CreateHealthProfessionalValidator.validate(user)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                assert.propertyVal(err, 'description', 'User validation: name required!')
+                assert.propertyVal(err, 'description', 'Health Professional validation: name required!')
             } finally {
                 user.name = DefaultEntityMock.HEALTH_PROFESSIONAL.name
             }
@@ -68,7 +68,7 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
                 CreateHealthProfessionalValidator.validate(user)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                assert.propertyVal(err, 'description', 'User validation: health_area required!')
+                assert.propertyVal(err, 'description', 'Health Professional validation: health_area required!')
             }
         })
 
@@ -79,7 +79,8 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
                 CreateHealthProfessionalValidator.validate(user)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Health Area not mapped!')
-                assert.propertyVal(err, 'description', 'The mapped areas are: nutrition, dentistry.')
+                assert.propertyVal(err, 'description', 'The mapped areas are: nutrition, dentistry, ' +
+                    'nursing, endocrinology, other.')
             } finally {
                 user.health_area = DefaultEntityMock.HEALTH_PROFESSIONAL.health_area
             }
@@ -92,7 +93,7 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
                 CreateHealthProfessionalValidator.validate(user)
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                assert.propertyVal(err, 'description', 'User validation: birth_date required!')
+                assert.propertyVal(err, 'description', 'Health Professional validation: birth_date required!')
             }
         })
 
@@ -114,8 +115,8 @@ describe('Validators: CreateHealthProfessionalValidator', () => {
                 CreateHealthProfessionalValidator.validate(new HealthProfessional())
             } catch (err) {
                 assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                assert.propertyVal(err, 'description', 'User validation: email, password, name, health_area, birth_date' +
-                    ' required!')
+                assert.propertyVal(err, 'description', 'Health Professional validation: email, password,' +
+                    ' name, health_area, birth_date required!')
             }
         })
     })

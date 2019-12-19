@@ -120,7 +120,7 @@ describe('Repositories: PatientRepository', () => {
                     sinon
                         .mock(modelFake)
                         .expects('findOne')
-                        .withArgs({ _id: user.id, type: 'patient', name: user.name, birth_date: user.birth_date })
+                        .withArgs({ _id: user.id, type: 'patient' })
                         .chain('exec')
                         .resolves(user)
 
@@ -137,7 +137,7 @@ describe('Repositories: PatientRepository', () => {
                     sinon
                         .mock(modelFake)
                         .expects('findOne')
-                        .withArgs({ _id: user.id, type: 'patient', name: user.name, birth_date: user.birth_date })
+                        .withArgs({ _id: user.id, type: 'patient' })
                         .chain('exec')
                         .resolves(undefined)
 
