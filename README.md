@@ -32,11 +32,12 @@ Application settings are defined by environment variables.. To define the settin
 | `JWT_PRIVATE_KEY_PATH` | Private key used to generate and validate JSON Web Token (JWT). | `.certs/jwt.key` |
 | `JWT_PUBLIC_KEY_PATH` | Public key used to generate and validate JSON Web Token (JWT). | `.certs/jwt.key.pub` |
 | `ISSUER` | Used to generate the JWT token. Usually it is the name of the platform.  | `haniot` |
-| `ADMIN_USERNAME` | The default user name of type administrator created automatically when the application is initialized and the database has no administrator user.| `admin` |
-| `ADMIN_PASSWORD` | The default user password of the administrator type created automatically when the application is initialized and the database has no administrator user.  | `admin` |
-| `RABBITMQ_URI` | URI containing the parameters for connection to the message channel RabbitMQ. The [URI specifications ](https://www.rabbitmq.com/uri-spec.html) defined by RabbitMQ are accepted. For example: `amqp://user:pass@host:port/vhost`. | `amqp://guest:guest`<br/>`@127.0.0.1:5672/haniot` |
-| `MONGODB_URI` | Database connection URI used if the application is running in development or production environment. The [URI specifications ](https://docs.mongodb.com/manual/reference/connection-string) defined by MongoDB are accepted. For example: `mongodb://user:pass@host:port/database?options`. | `mongodb://127.0.0.1:27017`<br/>`/haniot-account` |
-| `MONGODB_URI_TEST` | Database connection URI used if the application is running in test environment. The [URI specifications ](https://docs.mongodb.com/manual/reference/connection-string) defined by MongoDB are accepted. For example: `mongodb://user:pass@host:port/database?options`. | `mongodb://127.0.0.1:27017`<br/>`/haniot-account-test` |
+| `ADMIN_EMAIL` | The default user email of administrator created automatically when the application is initialized and the database has no administrator user.| `admin@haniot.com` |
+| `ADMIN_PASSWORD` | The default user password of the administrator created automatically when the application is initialized and the database has no administrator user.  | `admin123` |
+| `RABBITMQ_URI` | URI containing the parameters for connection to the message channel RabbitMQ. The [URI specifications ](https://www.rabbitmq.com/uri-spec.html) defined by RabbitMQ are accepted. For example: `amqp://user:pass@host:port/vhost`. | `amqp://guest:guest`<br/>`@127.0.0.1:5672` |
+| `RABBITMQ_CA_PATH` | RabbitMQ CA file location. Must always be provided when using `amqps` protocol. | `.certs/ca.crt` |
+| `MONGODB_URI` | Database connection URI used if the application is running in development or production environment. The [URI specifications ](https://docs.mongodb.com/manual/reference/connection-string) defined by MongoDB are accepted. For example: `mongodb://user:pass@host:port/database?options`. | `mongodb://127.0.0.1:27017`<br/>`/account-service` |
+| `MONGODB_URI_TEST` | Database connection URI used if the application is running in test environment. The [URI specifications ](https://docs.mongodb.com/manual/reference/connection-string) defined by MongoDB are accepted. For example: `mongodb://user:pass@host:port/database?options`. | `mongodb://127.0.0.1:27017`<br/>`/account-service-test` |
 | `DASHBOARD_HOST` | Dashboard URL. This url is shared with other microservices as needed through the message bus.  | `https://localhost` |
 
 
@@ -122,10 +123,10 @@ docker run --rm \
   -e JWT_PRIVATE_KEY_PATH=.certs/jwt.key \
   -e JWT_PUBLIC_KEY_PATH=.certs/jwt.key.pub \
   -e ISSUER=haniot \
-  -e ADMIN_USERNAME=admin \
+  -e ADMIN_EMAIL=admin \
   -e ADMIN_PASSWORD=admin123 \
-  -e RABBITMQ_URI="amqp://guest:guest@192.168.0.1:5672/haniot" \
-  -e MONGODB_URI="mongodb://192.168.0.2:27017/haniot-account" \
+  -e RABBITMQ_URI="amqp://guest:guest@192.168.0.1:5672" \
+  -e MONGODB_URI="mongodb://192.168.0.2:27017/account-service" \
   -e DASHBOARD_HOST="https://localhost" \
   haniot/account-service
 ```
@@ -133,8 +134,8 @@ If the MongoDB or RabbitMQ instance is in the host local, add the `--net=host` s
 ```sh
 docker run --rm \
   --net=host \
-  -e RABBITMQ_URI="amqp://guest:guest@localhost:5672/haniot" \
-  -e MONGODB_URI="mongodb://localhost:27017/haniot-account" \
+  -e RABBITMQ_URI="amqp://guest:guest@localhost:5672" \
+  -e MONGODB_URI="mongodb://localhost:27017/account-service" \
   haniot/account-service
 ```
 To generate your own docker image, run the following command:

@@ -12,8 +12,8 @@ export abstract class Default {
     public static readonly APP_DESCRIPTION: string = 'Microservice responsible for adding' +
         'updating, providing, deleting and authenticating users. '
     public static readonly NODE_ENV: string = 'development' // development, test, production
-    public static readonly PORT_HTTP: number = 80
-    public static readonly PORT_HTTPS: number = 443
+    public static readonly PORT_HTTP: number = 3000
+    public static readonly PORT_HTTPS: number = 3001
     public static readonly SWAGGER_PATH: string = './src/ui/swagger/api.yaml'
     public static readonly SWAGGER_URI: string = 'https://api.swaggerhub.com/apis/haniot/account-service/v1/swagger.json'
     public static readonly LOGO_URI: string = 'https://i.imgur.com/O7PxGWQ.png'
