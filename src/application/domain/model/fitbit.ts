@@ -37,9 +37,9 @@ export class Fitbit implements IJSONSerializable, IJSONDeserializable<Fitbit> {
             json = JSON.parse(json)
         }
 
-        if (json.patient_id !== undefined) this.patient_id = json.patient_id
-        if (json.last_sync !== undefined) this.last_sync = json.last_sync
-        if (json.error !== undefined) this.error = json.error
+        if (json.patient_id) this.patient_id = json.patient_id
+        if (json.last_sync) this.last_sync = json.last_sync
+        if (json.error) this.error = json.error
 
         return this
     }

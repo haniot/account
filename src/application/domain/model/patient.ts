@@ -95,8 +95,8 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
             }
         }
         super.fromJSON(json)
-        if (json.gender !== undefined) this.gender = json.gender
-        if (json.address !== undefined) this.address = json.address
+        if (json.gender) this.gender = json.gender
+        if (json.address) this.address = json.address
 
         return this
     }
