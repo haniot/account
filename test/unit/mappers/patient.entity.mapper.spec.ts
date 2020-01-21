@@ -35,8 +35,8 @@ describe('Mappers: PatientEntityMapper', () => {
                 assert.propertyVal(result, 'id', undefined)
                 assert.propertyVal(result, 'email', undefined)
                 assert.propertyVal(result, 'password', undefined)
-                assert.propertyVal(result, 'change_password', undefined)
-                assert.propertyVal(result, 'email_verified', undefined)
+                assert.propertyVal(result, 'change_password', false)
+                assert.propertyVal(result, 'email_verified', false)
                 assert.propertyVal(result, 'birth_date', undefined)
                 assert.propertyVal(result, 'phone_number', undefined)
                 assert.propertyVal(result, 'selected_pilot_study', undefined)
@@ -49,8 +49,8 @@ describe('Mappers: PatientEntityMapper', () => {
                 assert.propertyVal(result, 'id', undefined)
                 assert.propertyVal(result, 'email', undefined)
                 assert.propertyVal(result, 'password', undefined)
-                assert.propertyVal(result, 'change_password', undefined)
-                assert.propertyVal(result, 'email_verified', undefined)
+                assert.propertyVal(result, 'change_password', false)
+                assert.propertyVal(result, 'email_verified', false)
                 assert.propertyVal(result, 'birth_date', undefined)
                 assert.propertyVal(result, 'phone_number', undefined)
                 assert.propertyVal(result, 'selected_pilot_study', undefined)
@@ -82,6 +82,8 @@ describe('Mappers: PatientEntityMapper', () => {
                 patient.language = undefined
                 patient.goals = undefined!
                 patient.external_services = undefined!
+                patient.change_password = undefined
+                patient.email_verified = undefined
                 const result = mapper.transform(patient)
                 assert.isEmpty(result)
             })

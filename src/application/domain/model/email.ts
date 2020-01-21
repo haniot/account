@@ -45,10 +45,10 @@ export class Email implements IJSONSerializable, IJSONDeserializable<Email> {
         if (typeof json === 'string' && JsonUtils.isJsonString(json)) {
             json = JSON.parse(json)
         }
-        if (json.to !== undefined) this.to = json.to
-        if (json.action_url !== undefined) this.action_url = json.action_url
-        if (json.password !== undefined) this.password = json.password
-        if (json.lang !== undefined) this.lang = json.lang
+        if (json.to) this.to = json.to
+        if (json.action_url) this.action_url = json.action_url
+        if (json.password) this.password = json.password
+        if (json.lang) this.lang = json.lang
 
         return this
     }

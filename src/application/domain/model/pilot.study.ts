@@ -134,12 +134,12 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
             }
         }
 
-        if (json.id !== undefined) super.id = json.id
-        if (json.name !== undefined) this.name = json.name
-        if (json.is_active !== undefined) this.is_active = json.is_active
-        if (json.start !== undefined) this.start = this.convertDatetimeString(json.start)
-        if (json.end !== undefined) this.end = this.convertDatetimeString(json.end)
-        if (json.location !== undefined) this.location = json.location
+        if (json.id) super.id = json.id
+        if (json.name) this.name = json.name
+        if (json.is_active) this.is_active = json.is_active
+        if (json.start) this.start = this.convertDatetimeString(json.start)
+        if (json.end) this.end = this.convertDatetimeString(json.end)
+        if (json.location) this.location = json.location
         return this
     }
 
