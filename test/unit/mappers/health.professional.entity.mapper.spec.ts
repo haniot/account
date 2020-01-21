@@ -34,8 +34,8 @@ describe('Mappers: HealthProfessionalEntityMapper', () => {
                 assert.propertyVal(result, 'id', undefined)
                 assert.propertyVal(result, 'email', undefined)
                 assert.propertyVal(result, 'password', undefined)
-                assert.propertyVal(result, 'change_password', undefined)
-                assert.propertyVal(result, 'email_verified', undefined)
+                assert.propertyVal(result, 'change_password', false)
+                assert.propertyVal(result, 'email_verified', false)
                 assert.propertyVal(result, 'birth_date', undefined)
                 assert.propertyVal(result, 'phone_number', undefined)
                 assert.propertyVal(result, 'selected_pilot_study', undefined)
@@ -48,8 +48,8 @@ describe('Mappers: HealthProfessionalEntityMapper', () => {
                 assert.propertyVal(result, 'id', undefined)
                 assert.propertyVal(result, 'email', undefined)
                 assert.propertyVal(result, 'password', undefined)
-                assert.propertyVal(result, 'change_password', undefined)
-                assert.propertyVal(result, 'email_verified', undefined)
+                assert.propertyVal(result, 'change_password', false)
+                assert.propertyVal(result, 'email_verified', false)
                 assert.propertyVal(result, 'birth_date', undefined)
                 assert.propertyVal(result, 'phone_number', undefined)
                 assert.propertyVal(result, 'selected_pilot_study', undefined)
@@ -79,6 +79,8 @@ describe('Mappers: HealthProfessionalEntityMapper', () => {
                 health.scopes = undefined!
                 health.type = undefined
                 health.language = undefined
+                health.change_password = undefined
+                health.email_verified = undefined
                 const result = mapper.transform(health)
                 assert.isEmpty(result)
             })

@@ -101,7 +101,7 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
         }
 
         super.fromJSON(json)
-        if (json.health_area !== undefined) this.health_area = json.health_area
+        if (json.health_area) this.health_area = json.health_area
 
         return this
     }

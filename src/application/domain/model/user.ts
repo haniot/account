@@ -31,6 +31,8 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
     constructor() {
         super()
         this.language = LanguageTypes.PT_BR
+        this.change_password = false
+        this.email_verified = false
     }
 
     get name(): string | undefined {
@@ -173,14 +175,14 @@ export class User extends Entity implements IJSONSerializable, IJSONDeserializab
             }
         }
 
-        if (json.id !== undefined) super.id = json.id
-        if (json.name !== undefined) this.name = json.name
-        if (json.email !== undefined) this.email = json.email
-        if (json.password !== undefined) this.password = json.password
-        if (json.birth_date !== undefined) this.birth_date = json.birth_date
-        if (json.phone_number !== undefined) this.phone_number = json.phone_number
-        if (json.selected_pilot_study !== undefined) this.selected_pilot_study = json.selected_pilot_study
-        if (json.language !== undefined) this.language = json.language
+        if (json.id) super.id = json.id
+        if (json.name) this.name = json.name
+        if (json.email) this.email = json.email
+        if (json.password) this.password = json.password
+        if (json.birth_date) this.birth_date = json.birth_date
+        if (json.phone_number) this.phone_number = json.phone_number
+        if (json.selected_pilot_study) this.selected_pilot_study = json.selected_pilot_study
+        if (json.language) this.language = json.language
 
         return this
     }
