@@ -17,11 +17,17 @@ export class PilotStudyEntityMapper implements IEntityMapper <PilotStudy, PilotS
         if (json.is_active !== undefined) result.is_active = json.is_active
         if (json.start !== undefined) result.start = json.start
         if (json.end !== undefined) result.end = json.end
-        if (json.health_professionals !== undefined && json.health_professionals instanceof Array) {
+        if (json.health_professionals instanceof Array) {
             result.health_professionals = json.health_professionals.map(item => new HealthProfessional().fromJSON(item))
         }
-        if (json.patients !== undefined && json.patients instanceof Array) {
-            result.patients = json.patients.map(item => new Patient().fromJSON(item))
+        if (json.patients instanceof Array) {
+            result.patients = json.patients.map(item => {
+                const patientItem = new Patient().fromJSON(item)
+                patientItem.created_at = item.created_at
+                patientItem.last_login = item.last_login
+                patientItem.external_services = item.external_services
+                return patientItem
+            })
         }
         if (json.location !== undefined) result.location = json.location
 
