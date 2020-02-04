@@ -21,8 +21,6 @@ export interface IPilotStudyService extends IService<PilotStudy> {
 
     disassociatePatient(pilotId: string, patientId: string): Promise<boolean>
 
-    count(): Promise<number>
-
     countPatientsFromPilotStudy(pilotId: string): Promise<number>
 
     countHealthProfessionalsFromPilotStudy(pilotId: string): Promise<number>

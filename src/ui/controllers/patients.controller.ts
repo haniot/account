@@ -10,6 +10,8 @@ import { Query } from '../../infrastructure/repository/query/query'
 import { ILogger } from '../../utils/custom.logger'
 import { IPatientService } from '../../application/port/patient.service.interface'
 import { Patient } from '../../application/domain/model/patient'
+import { IQuery } from '../../application/port/query.interface'
+import { UserType } from '../../application/domain/utils/user.type'
 
 @controller('/v1/patients')
 export class PatientsController {
@@ -34,8 +36,10 @@ export class PatientsController {
     @httpGet('/')
     public async getAllPatients(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const result: Array<Patient> = await this._patientService.getAll(new Query().fromJSON(req.query))
-            const count: number = await this._patientService.count()
+            const query: IQuery = new Query().fromJSON(req.query)
+            query.addFilter({ type: UserType.PATIENT })
+            const result: Array<Patient> = await this._patientService.getAll(query)
+            const count: number = await this._patientService.count(query)
             res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {

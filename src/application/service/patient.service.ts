@@ -62,7 +62,6 @@ export class PatientService implements IPatientService {
     }
 
     public getAll(query: IQuery): Promise<Array<Patient>> {
-        query.addFilter({ type: UserType.PATIENT })
         return this._patientRepository.find(query)
     }
 
@@ -99,8 +98,12 @@ export class PatientService implements IPatientService {
         }
     }
 
-    public count(): Promise<number> {
-        return this._patientRepository.count()
+    public count(query: IQuery): Promise<number> {
+        try {
+            return this._patientRepository.count(query)
+        } catch (err) {
+            return Promise.reject(err)
+        }
     }
 
     public async publishEvent(event: IntegrationEvent<User>, routingKey: string): Promise<void> {

@@ -8,6 +8,7 @@ import { HealthProfessionalRepository } from '../../../src/infrastructure/reposi
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
 import { UserType } from '../../../src/application/domain/utils/user.type'
 import { UserRepositoryMock } from '../../mocks/repositories/user.repository.mock'
+import { Query } from '../../../src/infrastructure/repository/query/query'
 
 require('sinon-mongoose')
 
@@ -75,7 +76,7 @@ describe('Repositories: HealthProfessionalRepository', () => {
                     .chain('exec')
                     .resolves(1)
 
-                return repo.count()
+                return repo.count(new Query().fromJSON({ filters: { type: UserType.HEALTH_PROFESSIONAL } }))
                     .then(res => {
                         assert.isNumber(res)
                         assert.equal(res, 1)

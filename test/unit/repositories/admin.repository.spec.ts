@@ -8,6 +8,7 @@ import { AdminRepository } from '../../../src/infrastructure/repository/admin.re
 import { UserType } from '../../../src/application/domain/utils/user.type'
 import { UserRepositoryMock } from '../../mocks/repositories/user.repository.mock'
 import sinon from 'sinon'
+import { Query } from '../../../src/infrastructure/repository/query/query'
 
 require('sinon-mongoose')
 
@@ -72,7 +73,7 @@ describe('Repositories: AdminRepository', () => {
                     .chain('exec')
                     .resolves(1)
 
-                return repo.count()
+                return repo.count(new Query().fromJSON({ filters: { type: UserType.ADMIN } }))
                     .then(res => {
                         assert.isNumber(res)
                         assert.equal(res, 1)

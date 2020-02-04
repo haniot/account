@@ -89,18 +89,21 @@ export class PilotStudyService implements IPilotStudyService {
         }
     }
 
-    public count(): Promise<number> {
-        return this._pilotStudyRepository.count()
+    public count(query: IQuery): Promise<number> {
+        try {
+            return this._pilotStudyRepository.count(query)
+        } catch (err) {
+            return Promise.reject(err)
+        }
     }
 
     public async getAllPilotStudiesFromHealthProfessional(healthId: string, query: IQuery): Promise<Array<PilotStudy>> {
         try {
             ObjectIdValidator.validate(healthId)
+            return this.getAll(query)
         } catch (err) {
             return Promise.reject(err)
         }
-        query.addFilter({ health_professionals: healthId })
-        return this.getAll(query)
     }
 
     public async getAllPilotStudiesFromPatient(patientId: string, query: IQuery): Promise<Array<PilotStudy>> {
@@ -109,7 +112,6 @@ export class PilotStudyService implements IPilotStudyService {
         } catch (err) {
             return Promise.reject(err)
         }
-        query.addFilter({ patients: patientId })
         return this.getAll(query)
     }
 
@@ -202,19 +204,19 @@ export class PilotStudyService implements IPilotStudyService {
     public countPilotStudiesFromHealthProfessional(healthId: string): Promise<number> {
         try {
             ObjectIdValidator.validate(healthId)
+            return this._pilotStudyRepository.countPilotStudiesFromHealthProfessional(healthId)
         } catch (err) {
             return Promise.reject(err)
         }
-        return this._pilotStudyRepository.countPilotStudiesFromHealthProfessional(healthId)
     }
 
     public countPilotStudiesFromPatient(patientId: string): Promise<number> {
         try {
             ObjectIdValidator.validate(patientId)
+            return this._pilotStudyRepository.countPilotStudiesFromPatient(patientId)
         } catch (err) {
             return Promise.reject(err)
         }
-        return this._pilotStudyRepository.countPilotStudiesFromPatient(patientId)
     }
 
     public countPatientsFromPilotStudy(pilotId: string): Promise<number> {

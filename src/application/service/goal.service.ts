@@ -60,6 +60,10 @@ export class GoalService implements IGoalService {
         throw new Error('Unsupported feature!')
     }
 
+    public async count(query: IQuery): Promise<number> {
+        throw new Error('Unsupported feature!')
+    }
+
     public async updateFromPatient(patient: Patient): Promise<Goal> {
         try {
             UpdatePatientValidator.validate(patient)

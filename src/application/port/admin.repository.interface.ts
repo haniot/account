@@ -9,5 +9,4 @@ import { Admin } from '../domain/model/admin'
  * @extends {IRepository<HealthProfessional>}
  */
 export interface IAdminRepository extends IRepository<Admin> {
-    count(): Promise<number>
 }
