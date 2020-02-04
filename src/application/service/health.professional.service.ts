@@ -65,7 +65,6 @@ export class HealthProfessionalService implements IHealthProfessionalService {
     }
 
     public async getAll(query: IQuery): Promise<Array<HealthProfessional>> {
-        query.addFilter({ type: UserType.HEALTH_PROFESSIONAL })
         const result: Array<HealthProfessional> = await this._healthProfessionalRepository.find(query)
         return Promise.resolve(await this.addMultipleReadOnlyInformation(result))
     }
@@ -99,14 +98,18 @@ export class HealthProfessionalService implements IHealthProfessionalService {
             }
             item.last_login = undefined
             const result: HealthProfessional = await this._healthProfessionalRepository.update(item)
-            return Promise.resolve(this.addReadOnlyInformation(result))
+            return Promise.resolve(await this.addReadOnlyInformation(result))
         } catch (err) {
             return Promise.reject(err)
         }
     }
 
-    public count(): Promise<number> {
-        return this._healthProfessionalRepository.count()
+    public count(query: IQuery): Promise<number> {
+        try {
+            return this._healthProfessionalRepository.count(query)
+        } catch (err) {
+            return Promise.reject(err)
+        }
     }
 
     private async addMultipleReadOnlyInformation(item: Array<HealthProfessional>): Promise<Array<HealthProfessional>> {

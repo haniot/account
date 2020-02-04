@@ -30,10 +30,6 @@ export class HealthProfessionalRepository extends BaseRepository<HealthProfessio
         return super.create(item)
     }
 
-    public count(): Promise<number> {
-        return super.count(new Query().fromJSON({ filters: { type: UserType.HEALTH_PROFESSIONAL } }))
-    }
-
     public checkExists(users: HealthProfessional | Array<HealthProfessional>): Promise<boolean | ValidationException> {
         const query: Query = new Query()
         return new Promise<boolean | ValidationException>((resolve, reject) => {

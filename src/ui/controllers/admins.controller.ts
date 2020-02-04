@@ -10,6 +10,8 @@ import { ApiException } from '../exception/api.exception'
 import { Strings } from '../../utils/strings'
 import { Query } from '../../infrastructure/repository/query/query'
 import { ILogger } from '../../utils/custom.logger'
+import { IQuery } from '../../application/port/query.interface'
+import { UserType } from '../../application/domain/utils/user.type'
 
 @controller('/v1/admins')
 export class AdminsController {
@@ -34,8 +36,10 @@ export class AdminsController {
     @httpGet('/')
     public async getAllAdmins(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const result: Array<Admin> = await this._adminService.getAll(new Query().fromJSON(req.query))
-            const count: number = await this._adminService.count()
+            const query: IQuery = new Query().fromJSON(req.query)
+            query.addFilter({ type: UserType.ADMIN })
+            const result: Array<Admin> = await this._adminService.getAll(query)
+            const count: number = await this._adminService.count(query)
             res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {

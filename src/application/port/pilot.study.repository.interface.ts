@@ -13,8 +13,6 @@ export interface IPilotStudyRepository extends IRepository<PilotStudy> {
 
     disassociateUser(pilotId: string, userId: string, userType: string): Promise<PilotStudy>
 
-    count(): Promise<number>
-
     countHealthProfessionalsFromPilotStudy(pilotId: string): Promise<number>
 
     countPatientsFromPilotStudy(pilotId: string): Promise<number>

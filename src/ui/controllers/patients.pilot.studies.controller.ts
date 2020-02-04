@@ -21,9 +21,10 @@ export class PatientsPilotStudiesController {
     public async getAllPilotStudiesFromPatient(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const query: Query = new Query().fromJSON(req.query)
+            query.addFilter({ patients: req.params.patient_id })
             const result: Array<PilotStudy> =
                 await this._pilotStudyService.getAllPilotStudiesFromPatient(req.params.patient_id, query)
-            const count: number = await this._pilotStudyService.countPilotStudiesFromPatient(req.params.patient_id)
+            const count: number = await this._pilotStudyService.count(query)
             res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {

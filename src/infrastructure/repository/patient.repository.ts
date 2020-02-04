@@ -25,10 +25,6 @@ export class PatientRepository extends BaseRepository<Patient, PatientRepository
         return super.create(item)
     }
 
-    public count(): Promise<number> {
-        return super.count(new Query().fromJSON({ filters: { type: UserType.PATIENT } }))
-    }
-
     public checkExists(users: Patient | Array<Patient>): Promise<boolean | ValidationException> {
         const query: Query = new Query()
         return new Promise<boolean | ValidationException>((resolve, reject) => {

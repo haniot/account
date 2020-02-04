@@ -103,10 +103,6 @@ export class PilotStudyRepository extends BaseRepository<PilotStudy, PilotStudyE
         })
     }
 
-    public count(): Promise<number> {
-        return super.count(new Query())
-    }
-
     public countHealthProfessionalsFromPilotStudy(pilotId: string): Promise<number> {
         return new Promise<number>((resolve, reject) => {
             super.findOne(new Query().fromJSON({ filters: { _id: pilotId } }))

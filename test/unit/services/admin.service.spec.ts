@@ -9,6 +9,7 @@ import { Query } from '../../../src/infrastructure/repository/query/query'
 import { EventBusRabbitMQMock } from '../../mocks/eventbus/eventbus.rabbitmq.mock'
 import { CustomLoggerMock } from '../../mocks/custom.logger.mock'
 import { IntegrationEventRepositoryMock } from '../../mocks/repositories/integration.event.repository.mock'
+import { UserType } from '../../../src/application/domain/utils/user.type'
 
 describe('Services: AdminService', () => {
     const service = new AdminService(
@@ -207,7 +208,7 @@ describe('Services: AdminService', () => {
     describe('count()', () => {
         context('when want count users', () => {
             it('should return a number of users', () => {
-                return service.count()
+                return service.count(new Query().fromJSON({ filters: { type: UserType.ADMIN } }))
                     .then(res => {
                         assert.isNumber(res)
                         assert.equal(res, 1)
