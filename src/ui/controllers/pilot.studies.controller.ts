@@ -10,6 +10,7 @@ import { ApiException } from '../exception/api.exception'
 import { Strings } from '../../utils/strings'
 import { ApiExceptionManager } from '../exception/api.exception.manager'
 import { Query } from '../../infrastructure/repository/query/query'
+import { IQuery } from '../../application/port/query.interface'
 
 @controller('/v1/pilotstudies')
 export class PilotStudiesController {
@@ -34,8 +35,9 @@ export class PilotStudiesController {
     @httpGet('/')
     public async getAllPilotStudies(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
-            const result: Array<PilotStudy> = await this._pilotStudyService.getAll(new Query().fromJSON(req.query))
-            const count: number = await this._pilotStudyService.count()
+            const query: IQuery = new Query().fromJSON(req.query)
+            const result: Array<PilotStudy> = await this._pilotStudyService.getAll(query)
+            const count: number = await this._pilotStudyService.count(query)
             res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {

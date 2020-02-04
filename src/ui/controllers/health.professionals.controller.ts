@@ -10,6 +10,8 @@ import { ILogger } from '../../utils/custom.logger'
 import { Strings } from '../../utils/strings'
 import { IHealthProfessionalService } from '../../application/port/health.professional.service.interface'
 import { HealthProfessional } from '../../application/domain/model/health.professional'
+import { IQuery } from '../../application/port/query.interface'
+import { UserType } from '../../application/domain/utils/user.type'
 
 @controller('/v1/healthprofessionals')
 export class HealthProfessionalsController {
@@ -41,9 +43,11 @@ export class HealthProfessionalsController {
     @httpGet('/')
     public async getAllHealthProfessionals(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
+            const query: IQuery = new Query().fromJSON(req.query)
+            query.addFilter({ type: UserType.HEALTH_PROFESSIONAL })
             const result: Array<HealthProfessional> =
-                await this._healthProfessionalService.getAll(new Query().fromJSON(req.query))
-            const count: number = await this._healthProfessionalService.count()
+                await this._healthProfessionalService.getAll(query)
+            const count: number = await this._healthProfessionalService.count(query)
             res.setHeader('X-Total-Count', count)
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {

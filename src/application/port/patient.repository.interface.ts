@@ -10,7 +10,5 @@ import { ValidationException } from '../domain/exception/validation.exception'
  * @extends {IRepository<Patient>}
  */
 export interface IPatientRepository extends IRepository<Patient> {
-    count(): Promise<number>
-
     checkExists(users: Patient | Array<Patient>): Promise<boolean | ValidationException>
 }

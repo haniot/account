@@ -8,6 +8,7 @@ import { PatientRepository } from '../../../src/infrastructure/repository/patien
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { UserType } from '../../../src/application/domain/utils/user.type'
 import { UserRepositoryMock } from '../../mocks/repositories/user.repository.mock'
+import { Query } from '../../../src/infrastructure/repository/query/query'
 
 require('sinon-mongoose')
 
@@ -88,7 +89,7 @@ describe('Repositories: PatientRepository', () => {
                     .chain('exec')
                     .resolves(1)
 
-                return repo.count()
+                return repo.count(new Query().fromJSON({ filters: { type: UserType.PATIENT } }))
                     .then(res => {
                         assert.isNumber(res)
                         assert.equal(res, 1)
@@ -105,7 +106,7 @@ describe('Repositories: PatientRepository', () => {
                     .chain('exec')
                     .rejects({ message: 'An internal error has occurred in the database!' })
 
-                return repo.count()
+                return repo.count(new Query().fromJSON({ filters: { type: UserType.PATIENT } }))
                     .catch(err => {
                         assert.propertyVal(err, 'message', 'An internal error has occurred in the database!')
                     })

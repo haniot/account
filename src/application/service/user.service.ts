@@ -85,6 +85,10 @@ export class UserService implements IUserService {
         throw Error('Not implemented!')
     }
 
+    public count(query: IQuery): Promise<number> {
+        throw Error('Not implemented!')
+    }
+
     private async publishEvent(event: IntegrationEvent<User>, routingKey: string): Promise<void> {
         try {
             const successPublish = await this._eventBus.publish(event, routingKey)

@@ -60,5 +60,5 @@ export interface IRepository<T> {
      * @return {Promise<number>}
      * @throws {RepositoryException}
      */
-    count(query: IQuery): Promise<number>
+    count(query?: IQuery): Promise<number>
 }

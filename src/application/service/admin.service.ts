@@ -61,7 +61,6 @@ export class AdminService implements IAdminService {
     }
 
     public async getAll(query: IQuery): Promise<Array<Admin>> {
-        query.addFilter({ type: UserType.ADMIN })
         const result = await this._adminRepository.find(query)
         return Promise.resolve(this.addMultipleReadOnlyInformation(result))
     }
@@ -102,8 +101,12 @@ export class AdminService implements IAdminService {
         }
     }
 
-    public count(): Promise<number> {
-        return this._adminRepository.count()
+    public count(query: IQuery): Promise<number> {
+        try {
+            return this._adminRepository.count(query)
+        } catch (err) {
+            return Promise.reject(err)
+        }
     }
 
     private async addMultipleReadOnlyInformation(item: Array<Admin>): Promise<Array<Admin>> {

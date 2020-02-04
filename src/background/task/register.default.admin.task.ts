@@ -38,9 +38,9 @@ export class RegisterDefaultAdminTask implements IBackgroundTask {
 
     private async createUserAdmin(): Promise<void> {
         const query: IQuery = new Query()
-        query.filters = {type: UserType.ADMIN}
+        query.filters = { type: UserType.ADMIN }
         try {
-            const countUser = await this._adminRepository.count()
+            const countUser = await this._adminRepository.count(query)
             if (!countUser) {
                 const adminDefault = new Admin()
                 adminDefault.name = 'Admin'

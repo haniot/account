@@ -209,7 +209,7 @@ describe('Services: PilotStudyService', () => {
     describe('count()', () => {
         context('when want count pilot studies', () => {
             it('should return a number of pilot studies', () => {
-                return service.count()
+                return service.count(new Query())
                     .then(res => {
                         assert.isNumber(res)
                         assert.equal(res, 1)
