@@ -76,12 +76,14 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
         })
         it('should return an updated child with a new fitbit_last_sync and a new fitbit_status', (done) => {
             const patient: Patient = new Patient().fromJSON(DefaultEntityMock.PATIENT)
+            patient.external_services.fitbit_status = AccessStatusTypes.VALID_TOKEN
+            patient.external_services.fitbit_last_sync = new Date('2020-01-25T14:40:00Z')
 
             patientRepository.create(patient)
                 .then(async patientCreate => {
                     const fitbitLastSync: Fitbit = new Fitbit()
                     fitbitLastSync.patient_id = patientCreate.id
-                    fitbitLastSync.last_sync = '2018-11-19T14:40:00'
+                    fitbitLastSync.last_sync = '2020-02-05T10:30:00Z'
                     await timeout(2000)
 
                     const fitbitLastSyncEvent: FitbitLastSyncEvent = new FitbitLastSyncEvent(new Date(), fitbitLastSync)
@@ -114,6 +116,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
         })
         it('should return an updated child with a new fitbit_status', (done) => {
             const patient: Patient = new Patient().fromJSON(DefaultEntityMock.PATIENT)
+            patient.external_services.fitbit_status = AccessStatusTypes.VALID_TOKEN
 
             patientRepository.create(patient)
                 .then(async patientCreate => {

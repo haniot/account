@@ -2,6 +2,7 @@ import { IPatientRepository } from '../../../src/application/port/patient.reposi
 import { DefaultEntityMock } from '../models/default.entity.mock'
 import { IQuery } from '../../../src/application/port/query.interface'
 import { Patient } from '../../../src/application/domain/model/patient'
+import { AccessStatusTypes } from '../../../src/application/domain/utils/access.status.types'
 
 const patient: Patient = new Patient().fromJSON(DefaultEntityMock.PATIENT)
 patient.id = DefaultEntityMock.PATIENT.id
@@ -35,4 +36,28 @@ export class PatientRepositoryMock implements IPatientRepository {
         return Promise.resolve(patient)
     }
 
+    public updateFitbitStatus(patientId: string, fitbitStatus: string): Promise<Patient> {
+        const patientFitbitStatus: Patient = new Patient()
+        patientFitbitStatus.id = patientId
+        switch (fitbitStatus) {
+            case 'expired_token':
+                patientFitbitStatus.external_services.fitbit_status = AccessStatusTypes.EXPIRED_TOKEN
+                break
+            case 'invalid_token':
+                patientFitbitStatus.external_services.fitbit_status = AccessStatusTypes.INVALID_TOKEN
+                break
+            case 'invalid_refresh_token':
+                patientFitbitStatus.external_services.fitbit_status = AccessStatusTypes.INVALID_REFRESH_TOKEN
+                break
+        }
+        return Promise.resolve(patientFitbitStatus)
+    }
+
+    public updateLastSync(patientId: string, lastSync: Date): Promise<Patient> {
+        const patientLastSync: Patient = new Patient()
+        patientLastSync.id = patientId
+        patientLastSync.external_services.fitbit_last_sync = lastSync
+        patientLastSync.external_services.fitbit_status = AccessStatusTypes.VALID_TOKEN
+        return Promise.resolve(patientLastSync)
+    }
 }

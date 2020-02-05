@@ -50,8 +50,7 @@ export class Admin extends User implements IJSONSerializable, IJSONDeserializabl
             'activities:readAll',
             'sleep:read',
             'sleep:readAll',
-            'series:read',
-            'series:readAll'
+            'series:read'
         ]
         super.protected = false
     }
