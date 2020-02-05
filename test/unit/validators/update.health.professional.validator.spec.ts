@@ -2,6 +2,7 @@ import { assert } from 'chai'
 import { UpdateHealthProfessionalValidator } from '../../../src/application/domain/validator/update.health.professional.validator'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
+import { Strings } from '../../../src/utils/strings'
 
 describe('Validators: UpdateHealthProfessionalValidator', () => {
     const user: HealthProfessional = new HealthProfessional().fromJSON(DefaultEntityMock.HEALTH_PROFESSIONAL)
@@ -79,8 +80,9 @@ describe('Validators: UpdateHealthProfessionalValidator', () => {
             } catch (err) {
                 assert.property(err, 'message')
                 assert.property(err, 'description')
-                assert.propertyVal(err, 'message', 'Date: 20-08-1987 is not in valid ISO 8601 format.')
-                assert.propertyVal(err, 'description', 'Date must be in the format: yyyy-MM-dd')
+                assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.INVALID_DATE_FORMAT
+                    .replace('{0}', '20-08-1987'))
+                assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.INVALID_DATE_FORMAT_DESC)
             }
         })
     })

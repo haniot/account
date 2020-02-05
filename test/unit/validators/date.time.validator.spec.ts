@@ -1,5 +1,6 @@
 import { assert } from 'chai'
 import { DatetimeValidator } from '../../../src/application/domain/validator/date.time.validator'
+import { Strings } from '../../../src/utils/strings'
 
 describe('Validators: DateTimeValidator', () => {
     it('should return undefined when the validation was successful', () => {
@@ -14,8 +15,9 @@ describe('Validators: DateTimeValidator', () => {
             } catch (err) {
                 assert.property(err, 'message')
                 assert.property(err, 'description')
-                assert.equal(err.message, 'Datetime: 02-08-2018, is not in valid ISO 8601 format.')
-                assert.equal(err.description, 'Date must be in the format: yyyy-MM-dd\'T\'HH:mm:ssZ')
+                assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.INVALID_DATETIME_FORMAT
+                    .replace('{0}', '02-08-2018'))
+                assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.INVALID_DATETIME_FORMAT_DESC)
             }
         })
     })

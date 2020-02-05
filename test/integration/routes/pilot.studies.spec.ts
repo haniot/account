@@ -99,8 +99,9 @@ describe('Routes: PilotStudies', () => {
                     .set('Content-Type', 'application/json')
                     .expect(400)
                     .then(res => {
-                        expect(res.body).to.have.property('message', 'Datetime: 02/02/2019, is not in valid ISO 8601 format.')
-                        expect(res.body).to.have.property('description', 'Date must be in the format: yyyy-MM-dd\'T\'HH:mm:ssZ')
+                        expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.INVALID_DATETIME_FORMAT
+                            .replace('{0}', '02/02/2019'))
+                        expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.INVALID_DATETIME_FORMAT_DESC)
                     })
             })
         })
