@@ -44,6 +44,14 @@ export abstract class DefaultEntityMock {
 
     }
 
+    public static readonly GOAL: any = {
+        steps: 10000,
+        calories: 2600,
+        distance: 8000,
+        active_minutes: 60,
+        sleep: 480
+    }
+
     public static readonly PATIENT: any = {
         id: '5ca23b9af04e7c28223cb590',
         scopes: ['all'],
@@ -59,16 +67,7 @@ export abstract class DefaultEntityMock {
         phone_number: '(88) 98888-8888',
         selected_pilot_study: '5ca23b9af04e7c28223cb590',
         last_login: '2019-03-15T00:00:00.000Z',
-        last_sync: '2019-04-15T23:59:59.000Z',
         language: 'pt-BR'
-    }
-
-    public static readonly GOAL: any = {
-        steps: 10000,
-        calories: 2600,
-        distance: 8000,
-        active_minutes: 60,
-        sleep: 480
     }
 
     public static readonly PILOT_STUDY: any = {

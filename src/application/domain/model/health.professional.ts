@@ -88,8 +88,9 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
     }
 
     public fromJSON(json: any): HealthProfessional {
-
         if (!json) return this
+        super.fromJSON(json)
+
         if (typeof json === 'string') {
             if (!JsonUtils.isJsonString(json)) {
                 super.id = json
@@ -99,7 +100,6 @@ export class HealthProfessional extends User implements IJSONSerializable, IJSON
             }
         }
 
-        super.fromJSON(json)
         if (json.health_area) this.health_area = json.health_area
 
         return this

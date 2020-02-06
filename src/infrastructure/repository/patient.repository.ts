@@ -10,6 +10,7 @@ import { UserType } from '../../application/domain/utils/user.type'
 import { IUserRepository } from '../../application/port/user.repository.interface'
 import { PatientEntity } from '../entity/patient.entity'
 import { AccessStatusTypes } from '../../application/domain/utils/access.status.types'
+import { Goal } from '../../application/domain/model/goal'
 
 @injectable()
 export class PatientRepository extends BaseRepository<Patient, PatientRepository> implements IPatientRepository {
@@ -61,6 +62,28 @@ export class PatientRepository extends BaseRepository<Patient, PatientRepository
         })
     }
 
+    public updateGoals(patientId: string, goals: Goal): Promise<Patient> {
+        const goalsUp: any = {}
+        if (goals.steps) goalsUp.steps = goals.steps
+        if (goals.calories) goalsUp.calories = goals.calories
+        if (goals.distance) goalsUp.distance = goals.distance
+        if (goals.active_minutes) goalsUp.active_minutes = goals.active_minutes
+        if (goals.sleep) goalsUp.sleep = goals.sleep
+        return new Promise<Patient>((resolve, reject) => {
+            this.Model.findOneAndUpdate({ _id: patientId },
+                {'$set': { 'goals.steps': goalsUp.steps, 'goals.calories': goalsUp.calories,
+                        'goals.distance': goalsUp.distance, 'goals.active_minutes': goalsUp.active_minutes,
+                        'goals.sleep': goalsUp.sleep } },
+                { new: true, omitUndefined: true })
+                .exec()
+                .then((result: PatientEntity) => {
+                    if (!result) return resolve(undefined)
+                    return resolve(this.mapper.transform(result))
+                })
+                .catch(err => reject(this.mongoDBErrorListener(err)))
+        })
+    }
+
     public updateFitbitStatus(patientId: string, fitbitStatus: string): Promise<Patient> {
         return new Promise<Patient>((resolve, reject) => {
             this.Model.findOneAndUpdate({ _id: patientId },
@@ -77,7 +100,11 @@ export class PatientRepository extends BaseRepository<Patient, PatientRepository
     public updateLastSync(patientId: string, lastSync: Date): Promise<Patient> {
         return new Promise<Patient>((resolve, reject) => {
             this.Model.findOneAndUpdate({ _id: patientId },
-                {'$set': { external_services: { fitbit_last_sync: lastSync, fitbit_status: AccessStatusTypes.VALID_TOKEN } } },
+                {'$set':
+                        {
+                            'external_services.fitbit_last_sync': lastSync,
+                            'external_services.fitbit_status': AccessStatusTypes.VALID_TOKEN
+                        } },
                 { new: true })
                 .exec()
                 .then((result: PatientEntity) => {

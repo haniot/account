@@ -3,6 +3,7 @@ import { DefaultEntityMock } from '../models/default.entity.mock'
 import { IQuery } from '../../../src/application/port/query.interface'
 import { Patient } from '../../../src/application/domain/model/patient'
 import { AccessStatusTypes } from '../../../src/application/domain/utils/access.status.types'
+import { Goal } from '../../../src/application/domain/model/goal'
 
 const patient: Patient = new Patient().fromJSON(DefaultEntityMock.PATIENT)
 patient.id = DefaultEntityMock.PATIENT.id
@@ -34,6 +35,13 @@ export class PatientRepositoryMock implements IPatientRepository {
 
     public update(item: Patient): Promise<Patient> {
         return Promise.resolve(patient)
+    }
+
+    public updateGoals(patientId: string, goals: Goal): Promise<Patient> {
+        const patientGoals: Patient = new Patient()
+        patientGoals.id = patientId
+        patientGoals.goals = goals
+        return Promise.resolve(patientGoals)
     }
 
     public updateFitbitStatus(patientId: string, fitbitStatus: string): Promise<Patient> {

@@ -9,7 +9,7 @@ import { IPatientRepository } from '../port/patient.repository.interface'
 import { Patient } from '../domain/model/patient'
 import { ValidationException } from '../domain/exception/validation.exception'
 import { Strings } from '../../utils/strings'
-import { UpdatePatientValidator } from '../domain/validator/update.patient.validator'
+import { GoalValidator } from '../domain/validator/goal.validator'
 
 @injectable()
 export class GoalService implements IGoalService {
@@ -64,10 +64,11 @@ export class GoalService implements IGoalService {
         throw new Error('Unsupported feature!')
     }
 
-    public async updateFromPatient(patient: Patient): Promise<Goal> {
+    public async updateFromPatient(patientId: string, goals: Goal): Promise<Goal> {
         try {
-            UpdatePatientValidator.validate(patient)
-            const patientUpdated: Patient = await this._patientRepository.update(patient)
+            ObjectIdValidator.validate(patientId)
+            GoalValidator.validate(goals)
+            const patientUpdated: Patient = await this._patientRepository.updateGoals(patientId, goals)
 
             if (!patientUpdated) throw new ValidationException(Strings.PATIENT.NOT_FOUND, Strings.PATIENT.NOT_FOUND_DESCRIPTION)
 
