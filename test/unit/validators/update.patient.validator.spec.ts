@@ -50,8 +50,9 @@ describe('Validators: UpdatePatientValidator', () => {
             } catch (err) {
                 assert.property(err, 'message')
                 assert.property(err, 'description')
-                assert.propertyVal(err, 'message', 'Date: 20-08-1987 is not in valid ISO 8601 format.')
-                assert.propertyVal(err, 'description', 'Date must be in the format: yyyy-MM-dd')
+                assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.INVALID_DATE_FORMAT
+                    .replace('{0}', '20-08-1987'))
+                assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.INVALID_DATE_FORMAT_DESC)
             }
         })
     })

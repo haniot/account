@@ -58,16 +58,17 @@ export abstract class Strings {
         UUID_NOT_VALID_FORMAT: 'Some ID provided does not have a valid format!',
         UUID_NOT_VALID_FORMAT_DESC: 'A 24-byte hex ID similar to this: 507f191e810c19729de860ea is expected.',
         PARAMETER_COULD_NOT_BE_UPDATED: 'This parameter could not be updated.',
-        DATE_NOT_VALID_FORMAT_DESC: 'Date must be in the format: yyyy-MM-dd',
         OPERATION_CANT_BE_COMPLETED: 'The operation could not be performed successfully.',
         OPERATION_CANT_BE_COMPLETED_DESC: 'Probably one or more of the request parameters are incorrect.',
         INTERNAL_SERVER_ERROR: 'An internal server error has occurred.',
         INTERNAL_SERVER_ERROR_DESC: 'Check all parameters of the operation being requested.',
         INVALID_FIELDS: 'One or more request fields are invalid...',
-        INVALID_NUMBER: ' must be a valid number!',
-        LESS_THAN_OR_EQUAL_TO_ZERO: ' cannot be less than or equal to zero!',
-        INVALID_DATE: ', is not in valid ISO 8601 format.',
-        INVALID_DATE_DESC: 'Date must be in the format: yyyy-MM-dd\'T\'HH:mm:ssZ'
+        INTEGER_GREATER_ZERO: '{0} must be an integer greater than zero.',
+        NUMBER_GREATER_ZERO: '{0} must be a number greater than zero.',
+        INVALID_DATE_FORMAT: 'Date: {0}, is not in valid ISO 8601 format.',
+        INVALID_DATE_FORMAT_DESC: 'Date must be in the format: yyyy-MM-dd',
+        INVALID_DATETIME_FORMAT: 'Datetime: {0}, is not in valid ISO 8601 format.',
+        INVALID_DATETIME_FORMAT_DESC: 'Datetime must be in the format: yyyy-MM-ddTHH:mm:ssZ',
     }
 
     public static readonly PILOT_STUDY: any = {

@@ -5,9 +5,8 @@ import { ILogger } from '../../../utils/custom.logger'
 import { FitbitLastSyncEvent } from '../event/fitbit.last.sync.event'
 import { ObjectIdValidator } from '../../domain/validator/object.id.validator'
 import { Strings } from '../../../utils/strings'
-import { Patient } from '../../domain/model/patient'
-import { AccessStatusTypes } from '../../domain/utils/access.status.types'
 import { IPatientRepository } from '../../port/patient.repository.interface'
+import { DatetimeValidator } from '../../domain/validator/date.time.validator'
 
 export class FitbitLastSyncEventHandler implements IIntegrationEventHandler<FitbitLastSyncEvent> {
     /**
@@ -28,16 +27,12 @@ export class FitbitLastSyncEventHandler implements IIntegrationEventHandler<Fitb
             const patientId: string = event.fitbit.patient_id
             const lastSync: string = event.fitbit.last_sync
 
-            // 1. Validate child_id
+            // 1. Validate patient_id and last_sync
             ObjectIdValidator.validate(patientId, Strings.PATIENT.PARAM_ID_NOT_VALID_FORMAT)
-
-            const patientUp: Patient = new Patient()
-            patientUp.id = patientId
-            patientUp.external_services.fitbit_last_sync = patientUp.convertDatetimeString(lastSync) // Validate last_sync
-            patientUp.external_services.fitbit_status = AccessStatusTypes.VALID_TOKEN
+            DatetimeValidator.validate(lastSync)
 
             // 2. Try to update the patient
-            await this._patientRepository.update(patientUp)
+            await this._patientRepository.updateLastSync(patientId, new Date(lastSync))
 
             // 3. If got here, it's because the action was successful.
             this._logger.info(`Action for event ${event.event_name} associated with patient with ID: ${patientId} successfully held!`)

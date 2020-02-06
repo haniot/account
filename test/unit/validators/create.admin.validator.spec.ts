@@ -2,6 +2,7 @@ import { assert } from 'chai'
 import { Admin } from '../../../src/application/domain/model/admin'
 import { CreateAdminValidator } from '../../../src/application/domain/validator/create.admin.validator'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
+import { Strings } from '../../../src/utils/strings'
 
 describe('Validators: CreateAdminValidator', () => {
     const user: Admin = new Admin().fromJSON(DefaultEntityMock.ADMIN)
@@ -64,8 +65,9 @@ describe('Validators: CreateAdminValidator', () => {
             try {
                 CreateAdminValidator.validate(user)
             } catch (err) {
-                assert.propertyVal(err, 'message', 'Date: invalid is not in valid ISO 8601 format.')
-                assert.propertyVal(err, 'description', 'Date must be in the format: yyyy-MM-dd')
+                assert.propertyVal(err, 'message', Strings.ERROR_MESSAGE.INVALID_DATE_FORMAT
+                    .replace('{0}', 'invalid'))
+                assert.propertyVal(err, 'description', Strings.ERROR_MESSAGE.INVALID_DATE_FORMAT_DESC)
             } finally {
                 user.birth_date = DefaultEntityMock.ADMIN.birth_date
             }

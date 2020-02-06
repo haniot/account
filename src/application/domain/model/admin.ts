@@ -50,10 +50,8 @@ export class Admin extends User implements IJSONSerializable, IJSONDeserializabl
             'activities:readAll',
             'sleep:read',
             'sleep:readAll',
-            'series:read',
-            'series:readAll'
+            'series:read'
         ]
-        super.protected = false
     }
 
     get total_pilot_studies(): number | undefined {
@@ -90,6 +88,8 @@ export class Admin extends User implements IJSONSerializable, IJSONDeserializabl
 
     public fromJSON(json: any): Admin {
         if (!json) return this
+        super.fromJSON(json)
+
         if (typeof json === 'string') {
             if (!JsonUtils.isJsonString(json)) {
                 super.id = json
@@ -98,7 +98,6 @@ export class Admin extends User implements IJSONSerializable, IJSONDeserializabl
                 json = JSON.parse(json)
             }
         }
-        super.fromJSON(json)
 
         return this
     }

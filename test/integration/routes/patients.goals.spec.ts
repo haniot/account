@@ -122,8 +122,8 @@ describe('Routes: PatientsGoals', () => {
                     .expect(400)
                     .then(res => {
                         expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(res.body).to.have.property('description',
-                            'distance'.concat(Strings.ERROR_MESSAGE.INVALID_NUMBER))
+                        expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.NUMBER_GREATER_ZERO
+                            .replace('{0}', 'distance'))
                     })
             })
 
@@ -135,8 +135,8 @@ describe('Routes: PatientsGoals', () => {
                     .expect(400)
                     .then(res => {
                         expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(res.body).to.have.property('description',
-                            'distance'.concat(Strings.ERROR_MESSAGE.INVALID_NUMBER))
+                        expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.NUMBER_GREATER_ZERO
+                            .replace('{0}', 'distance'))
                     })
             })
 
@@ -148,8 +148,8 @@ describe('Routes: PatientsGoals', () => {
                     .expect(400)
                     .then(res => {
                         expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.INVALID_FIELDS)
-                        expect(res.body).to.have.property('description',
-                            'distance'.concat(Strings.ERROR_MESSAGE.LESS_THAN_OR_EQUAL_TO_ZERO))
+                        expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.NUMBER_GREATER_ZERO
+                            .replace('{0}', 'distance'))
                     })
             })
         })

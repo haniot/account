@@ -5,7 +5,6 @@ import { User } from './user'
 import { UserType } from '../utils/user.type'
 import { Goal } from './goal'
 import { ExternalServices } from './external.services'
-import { AccessStatusTypes } from '../utils/access.status.types'
 
 export class Patient extends User implements IJSONSerializable, IJSONDeserializable<Patient> {
     private _gender?: string
@@ -48,8 +47,6 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
             'series:read',
             'external:sync'
         ]
-        this.goals = new Goal(10000, 2600, 8000, 60, 480)   // Default goals
-        this.external_services = new ExternalServices(AccessStatusTypes.NONE)   // Default external services
     }
 
     get gender(): string | undefined {
@@ -86,6 +83,8 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
 
     public fromJSON(json: any): Patient {
         if (!json) return this
+        super.fromJSON(json)
+
         if (typeof json === 'string') {
             if (!JsonUtils.isJsonString(json)) {
                 super.id = json
@@ -94,7 +93,7 @@ export class Patient extends User implements IJSONSerializable, IJSONDeserializa
                 json = JSON.parse(json)
             }
         }
-        super.fromJSON(json)
+
         if (json.gender) this.gender = json.gender
         if (json.address) this.address = json.address
 
