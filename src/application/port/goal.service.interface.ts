@@ -1,7 +1,6 @@
 import { IService } from './service.interface'
 import { Goal } from '../domain/model/goal'
 import { IQuery } from './query.interface'
-import { Patient } from '../domain/model/patient'
 
 /**
  * Interface of the Goal service.
@@ -24,9 +23,10 @@ export interface IGoalService extends IService<Goal> {
     /**
      * Updates a Goal object from a Patient user.
      *
-     * @param patient Patient user.
+     * @param patientId Patient id.
+     * @param goals Patient goals.
      * @return {Promise<Goal>}
      * @throws {ValidationException | RepositoryException}
      */
-    updateFromPatient(patient: Patient): Promise<Goal>
+    updateFromPatient(patientId: string, goals: Goal): Promise<Goal>
 }

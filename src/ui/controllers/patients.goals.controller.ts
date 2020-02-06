@@ -7,7 +7,6 @@ import { ApiExceptionManager } from '../exception/api.exception.manager'
 import { ILogger } from '../../utils/custom.logger'
 import { Query } from '../../infrastructure/repository/query/query'
 import { Goal } from '../../application/domain/model/goal'
-import { Patient } from '../../application/domain/model/patient'
 import { IGoalService } from '../../application/port/goal.service.interface'
 
 @controller('/v1/patients/:patient_id/goals')
@@ -35,10 +34,7 @@ export class PatientsGoalsController {
     public async patchGoalsOfPatient(@request() req: Request, @response() res: Response): Promise<Response> {
         try {
             const goals: Goal = new Goal().fromJSON(req.body)
-            const patient: Patient = new Patient()
-            patient.id = req.params.patient_id
-            patient.goals = goals
-            const result: Goal = await this._goalService.updateFromPatient(patient)
+            const result: Goal = await this._goalService.updateFromPatient(req.params.patient_id, goals)
             return res.status(HttpStatus.OK).send(result)
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)

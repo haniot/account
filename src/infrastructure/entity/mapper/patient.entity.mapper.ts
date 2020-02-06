@@ -2,6 +2,8 @@ import { IEntityMapper } from '../../port/entity.mapper.interface'
 import { PatientEntity } from '../patient.entity'
 import { Patient } from '../../../application/domain/model/patient'
 import { injectable } from 'inversify'
+import { ExternalServices } from '../../../application/domain/model/external.services'
+import { Goal } from '../../../application/domain/model/goal'
 
 @injectable()
 export class PatientEntityMapper implements IEntityMapper<Patient, PatientEntity> {
@@ -12,6 +14,8 @@ export class PatientEntityMapper implements IEntityMapper<Patient, PatientEntity
 
     public jsonToModel(json: any): Patient {
         const result: Patient = new Patient()
+        result.goals = new Goal()
+        result.external_services = new ExternalServices()
         if (!json) return result
 
         if (json.id !== undefined) result.id = json.id
