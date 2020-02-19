@@ -41,7 +41,14 @@ export class FitbitErrorEventHandler implements IIntegrationEventHandler<FitbitE
                 case 1021:
                     fitbitStatus = AccessStatusTypes.INVALID_REFRESH_TOKEN
                     break
+                case 1401:
+                    fitbitStatus = AccessStatusTypes.INVALID_CLIENT
+                    break
+                case 1429:
+                    fitbitStatus = AccessStatusTypes.TOO_MANY_REQUESTS
+                    break
                 default:
+                    fitbitStatus = AccessStatusTypes.NONE
                     break
             }
 
