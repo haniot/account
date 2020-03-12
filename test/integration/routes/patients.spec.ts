@@ -102,6 +102,52 @@ describe('Routes: Patients', () => {
                         expect(res.body.message).to.eql('Invalid email address!')
                     })
             })
+
+            it('should return status code 400 and invalid birth date message', () => {
+                const body: any = JSON.parse(JSON.stringify(DefaultEntityMock.PATIENT))
+                body.birth_date = '2020-04-011'
+
+                return request
+                    .post('/v1/patients')
+                    .send(body)
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(res => {
+                        expect(res.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_DATE_FORMAT
+                            .replace('{0}', body.birth_date))
+                        expect(res.body.description).to.eql(Strings.ERROR_MESSAGE.INVALID_DATE_FORMAT_DESC)
+                    })
+            })
+
+            it('should return status code 400 and invalid birth date message (invalid day)', () => {
+                const body: any = JSON.parse(JSON.stringify(DefaultEntityMock.PATIENT))
+                body.birth_date = '2020-04-32'
+
+                return request
+                    .post('/v1/patients')
+                    .send(body)
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(res => {
+                        expect(res.body.message).to.eql(Strings.ERROR_MESSAGE.INVALID_DATE_FORMAT
+                            .replace('{0}', body.birth_date))
+                    })
+            })
+
+            it('should return status code 400 and invalid birth date message (invalid year)', () => {
+                const body: any = JSON.parse(JSON.stringify(DefaultEntityMock.PATIENT))
+                body.birth_date = '1677-04-01'
+
+                return request
+                    .post('/v1/patients')
+                    .send(body)
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(res => {
+                        expect(res.body.message).to.eql(Strings.ERROR_MESSAGE.YEAR_NOT_ALLOWED
+                            .replace('{0}', body.birth_date))
+                    })
+            })
         })
     })
 

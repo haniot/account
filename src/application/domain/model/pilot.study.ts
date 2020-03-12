@@ -16,6 +16,7 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
     private _health_professionals?: Array<HealthProfessional>
     private _patients?: Array<Patient>
     private _location?: string
+    private _data_types?: Array<string>
 
     constructor() {
         super()
@@ -93,6 +94,14 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
         this._location = value
     }
 
+    get data_types(): Array<string> | undefined {
+        return this._data_types
+    }
+
+    set data_types(value: Array<string> | undefined) {
+        this._data_types = value
+    }
+
     public addHealthProfessional(healthProfessional: HealthProfessional) {
         if (!this.health_professionals) this.health_professionals = []
         this.health_professionals.push(healthProfessional)
@@ -140,6 +149,7 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
         if (json.start) this.start = this.convertDatetimeString(json.start)
         if (json.end) this.end = this.convertDatetimeString(json.end)
         if (json.location) this.location = json.location
+        if (json.data_types) this.data_types = json.data_types
         return this
     }
 
@@ -153,7 +163,8 @@ export class PilotStudy extends Entity implements IJSONSerializable, IJSONDeseri
             end: this.end,
             total_health_professionals: this.total_health_professionals,
             total_patients: this.total_patients,
-            location: this.location
+            location: this.location,
+            data_types: this.data_types ? this.data_types : undefined
         }
     }
 }

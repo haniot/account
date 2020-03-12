@@ -67,7 +67,7 @@ describe('Validators: CreatePatientValidator', () => {
             try {
                 CreatePatientValidator.validate(patient)
             } catch (err) {
-                assert.propertyVal(err, 'message', 'Value not mapped for gender: invalid')
+                assert.propertyVal(err, 'message', 'Values not mapped for gender: invalid')
                 assert.propertyVal(err, 'description', 'The mapped values are: male, female.')
             } finally {
                 patient.gender = DefaultEntityMock.PATIENT.gender

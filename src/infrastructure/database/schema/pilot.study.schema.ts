@@ -33,6 +33,9 @@ const pilotStudySchema = new Mongoose.Schema({
         location: {
             type: String
         },
+        data_types: [{
+           type: String
+        }],
         language: {
             type: String,
             default: LanguageTypes.PT_BR

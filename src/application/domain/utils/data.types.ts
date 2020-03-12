@@ -1,0 +1,17 @@
+export enum DataTypes {
+    WEIGHT = 'weight',
+    BODY_TEMPERATURE = 'body_temperature',
+    BLOOD_GLUCOSE = 'blood_glucose',
+    BLOOD_PRESSURE = 'blood_pressure',
+    HEIGHT = 'height',
+    WAIST_CIRCUMFERENCE = 'waist_circumference',
+    PHYSICAL_ACTIVITY = 'physical_activity',
+    SLEEP = 'sleep',
+    STEPS = 'steps',
+    CALORIES = 'calories',
+    DISTANCE = 'distance',
+    HEART_RATE = 'heart_rate',
+    MINUTES_ACTIVE = 'minutes_active',
+    QUEST_NUTRITIONAL = 'quest_nutritional',
+    QUEST_ODONTOLOGICAL = 'quest_odontological',
+}
