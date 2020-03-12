@@ -30,6 +30,7 @@ export class PilotStudyEntityMapper implements IEntityMapper <PilotStudy, PilotS
             })
         }
         if (json.location !== undefined) result.location = json.location
+        if (json.data_types !== undefined) result.data_types = json.data_types
 
         return result
     }
@@ -53,6 +54,8 @@ export class PilotStudyEntityMapper implements IEntityMapper <PilotStudy, PilotS
             result.patients = item.patients.map(value => value.id)
         }
         if (item.location !== undefined) result.location = item.location
+        if (item.data_types !== undefined) result.data_types = item.data_types
+
         return result
     }
 

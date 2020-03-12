@@ -69,7 +69,8 @@ describe('Services: PilotStudyService', () => {
                 return service.add(new PilotStudy())
                     .catch(err => {
                         assert.propertyVal(err, 'message', 'Required fields were not provided...')
-                        assert.propertyVal(err, 'description', 'Pilot Study validation: name, is_active, start, end required!')
+                        assert.propertyVal(err, 'description', 'Pilot Study validation: name, is_active, ' +
+                            'start, end, data_types required!')
                     })
             })
 

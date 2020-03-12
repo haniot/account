@@ -80,7 +80,24 @@ export abstract class DefaultEntityMock {
         total_health_professionals: 1,
         location: 'Mock Land',
         health_professionals: [DefaultEntityMock.HEALTH_PROFESSIONAL.id],
-        patients: [DefaultEntityMock.PATIENT.id]
+        patients: [DefaultEntityMock.PATIENT.id],
+        data_types: [
+            'weight',
+            'body_temperature',
+            'blood_glucose',
+            'blood_pressure',
+            'height',
+            'waist_circumference',
+            'physical_activity',
+            'sleep',
+            'steps',
+            'calories',
+            'distance',
+            'heart_rate',
+            'minutes_active',
+            'quest_nutritional',
+            'quest_odontological'
+        ]
     }
 
     public static readonly PILOT_STUDY_BASIC: any = {
@@ -91,7 +108,24 @@ export abstract class DefaultEntityMock {
         end: '2019-04-15T23:59:59.000Z',
         total_patients: 0,
         total_health_professionals: 0,
-        location: 'Mock Land'
+        location: 'Mock Land',
+        data_types: [
+            'weight',
+            'body_temperature',
+            'blood_glucose',
+            'blood_pressure',
+            'height',
+            'waist_circumference',
+            'physical_activity',
+            'sleep',
+            'steps',
+            'calories',
+            'distance',
+            'heart_rate',
+            'minutes_active',
+            'quest_nutritional',
+            'quest_odontological'
+        ]
     }
 
     public static readonly USER: any = {

@@ -8,9 +8,8 @@ export class GenderTypesValidator {
 
         if (!genderTypes.includes(value)) {
             throw new ValidationException(
-                Strings.ENUM_VALIDATOR.NOT_MAPPED.concat(`gender: ${value}`),
-                Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
-                    .concat(Object.values(GenderTypes).join(', ').concat('.')))
+                Strings.ENUM_VALIDATOR.NOT_MAPPED.replace('{0}', `gender: ${value}`),
+                Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC.replace('{0}', genderTypes.join(', ').concat('.')))
         }
     }
 }

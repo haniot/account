@@ -11,6 +11,7 @@ import { ObjectID } from 'bson'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
 import { Default } from '../../../src/utils/default'
+import { DataTypes } from '../../../src/application/domain/utils/data.types'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const app: App = DIContainer.get(Identifier.APP)
@@ -56,6 +57,7 @@ describe('Routes: PilotStudies', () => {
                         expect(res.body).to.have.property('total_health_professionals', 0)
                         expect(res.body).to.have.property('total_patients', 0)
                         expect(res.body).to.have.property('location', pilot.location)
+                        expect(res.body).to.have.deep.property('data_types', pilot.data_types)
                         pilot.id = res.body.id
                     })
             })
@@ -83,8 +85,8 @@ describe('Routes: PilotStudies', () => {
                     .expect(400)
                     .then(res => {
                         expect(res.body).to.have.property('message', 'Required fields were not provided...')
-                        expect(res.body).to.have.property('description', 'Pilot Study validation: name, is_active, start, end ' +
-                            'required!')
+                        expect(res.body).to.have.property('description', 'Pilot Study validation: name, ' +
+                            'is_active, start, end, data_types required!')
                     })
             })
 
@@ -102,6 +104,56 @@ describe('Routes: PilotStudies', () => {
                         expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.INVALID_DATETIME_FORMAT
                             .replace('{0}', '02/02/2019'))
                         expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.INVALID_DATETIME_FORMAT_DESC)
+                    })
+            })
+
+            it('should return status code 400 and message from empty data_types parameter', () => {
+                const body: any = JSON.parse(JSON.stringify(DefaultEntityMock.PILOT_STUDY_BASIC))
+                body.data_types = []
+
+                return request
+                    .post('/v1/pilotstudies')
+                    .send(body)
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(res => {
+                        expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.INVALID_FIELDS)
+                        expect(res.body).to.have.property('description',
+                            Strings.ERROR_MESSAGE.INVALID_DATA_TYPES_DESC)
+                    })
+            })
+
+            it('should return status code 400 and message from invalid data_types parameter', () => {
+                const body: any = JSON.parse(JSON.stringify(DefaultEntityMock.PILOT_STUDY_BASIC))
+                body.data_types = [
+                    'weight',
+                    'body_temperature',
+                    'blood_glucose',
+                    'invalid_type',
+                    'height',
+                    'waist_circumference',
+                    'other_invalid_type',
+                    'sleep',
+                    'steps',
+                    'calories',
+                    'distance',
+                    'heart_rate',
+                    'minutes_active',
+                    'quest_nutritional',
+                    'last_invalid_type'
+                ]
+
+                return request
+                    .post('/v1/pilotstudies')
+                    .send(body)
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(res => {
+                        expect(res.body).to.have.property('message', Strings.ENUM_VALIDATOR.NOT_MAPPED
+                            .replace('{0}', 'data_types: invalid_type, other_invalid_type, ' +
+                                'last_invalid_type'))
+                        expect(res.body).to.have.property('description', Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
+                            .replace('{0}', Object.values(DataTypes).join(', ').concat('.')))
                     })
             })
         })
@@ -171,6 +223,7 @@ describe('Routes: PilotStudies', () => {
                         expect(res.body).to.have.property('total_health_professionals', 0)
                         expect(res.body).to.have.property('total_patients', 0)
                         expect(res.body).to.have.property('location', pilot.location)
+                        expect(res.body).to.have.deep.property('data_types', pilot.data_types)
                     })
             })
         })
@@ -187,6 +240,57 @@ describe('Routes: PilotStudies', () => {
                         expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.UUID_NOT_VALID_FORMAT_DESC)
                     })
             })
+        })
+
+        it('should return status code 400 and message from empty data_types parameter', () => {
+            const body: any = JSON.parse(JSON.stringify(DefaultEntityMock.PILOT_STUDY_BASIC))
+            body.data_types = []
+
+            return request
+                .patch(`/v1/pilotstudies/${pilot.id}`)
+                .send(body)
+                .set('Content-Type', 'application/json')
+                .expect(400)
+                .then(res => {
+                    expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.INVALID_FIELDS)
+                    expect(res.body).to.have.property('description',
+                        Strings.ERROR_MESSAGE.INVALID_DATA_TYPES_DESC)
+                })
+        })
+
+        it('should return status code 400 and message from invalid data_types parameter', () => {
+            const body: any = JSON.parse(JSON.stringify(DefaultEntityMock.PILOT_STUDY_BASIC))
+            body.data_types = [
+                'weight',
+                'body_temperature',
+                'blood_glucose',
+                'invalid_type',
+                'height',
+                'waist_circumference',
+                'other_invalid_type',
+                'sleep',
+                'steps',
+                'calories',
+                'distance',
+                'heart_rate',
+                'minutes_active',
+                'quest_nutritional',
+                'last_invalid_type'
+            ]
+
+            return request
+                .patch(`/v1/pilotstudies/${pilot.id}`)
+                .send(body)
+                .set('Content-Type', 'application/json')
+                .expect(400)
+                .then(res => {
+                    console.log('ERR: ', res.body)
+                    expect(res.body).to.have.property('message', Strings.ENUM_VALIDATOR.NOT_MAPPED
+                        .replace('{0}', 'data_types: invalid_type, other_invalid_type, ' +
+                            'last_invalid_type'))
+                    expect(res.body).to.have.property('description', Strings.ENUM_VALIDATOR.NOT_MAPPED_DESC
+                        .replace('{0}', Object.values(DataTypes).join(', ').concat('.')))
+                })
         })
 
         context('when the pilot study is not founded', () => {

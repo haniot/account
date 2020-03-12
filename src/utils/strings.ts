@@ -18,8 +18,8 @@ export abstract class Strings {
     }
 
     public static readonly ENUM_VALIDATOR: any = {
-        NOT_MAPPED: 'Value not mapped for ',
-        NOT_MAPPED_DESC: 'The mapped values are: '
+        NOT_MAPPED: 'Values not mapped for {0}',
+        NOT_MAPPED_DESC: 'The mapped values are: {0}'
     }
 
     public static readonly USER: any = {
@@ -65,10 +65,12 @@ export abstract class Strings {
         INVALID_FIELDS: 'One or more request fields are invalid...',
         INTEGER_GREATER_ZERO: '{0} must be an integer greater than zero.',
         NUMBER_GREATER_ZERO: '{0} must be a number greater than zero.',
+        YEAR_NOT_ALLOWED: 'Date {0} has year not allowed. The year must be greater than 1678 and less than 2261.',
         INVALID_DATE_FORMAT: 'Date: {0}, is not in valid ISO 8601 format.',
         INVALID_DATE_FORMAT_DESC: 'Date must be in the format: yyyy-MM-dd',
         INVALID_DATETIME_FORMAT: 'Datetime: {0}, is not in valid ISO 8601 format.',
         INVALID_DATETIME_FORMAT_DESC: 'Datetime must be in the format: yyyy-MM-ddTHH:mm:ssZ',
+        INVALID_DATA_TYPES_DESC: 'The data_types array must contain at least one element.'
     }
 
     public static readonly PILOT_STUDY: any = {

@@ -36,7 +36,7 @@ describe('Validators: UpdatePatientValidator', () => {
             } catch (err) {
                 assert.property(err, 'message')
                 assert.property(err, 'description')
-                assert.propertyVal(err, 'message', 'Value not mapped for gender: invalid')
+                assert.propertyVal(err, 'message', 'Values not mapped for gender: invalid')
                 assert.propertyVal(err, 'description', 'The mapped values are: male, female.')
             } finally {
                 patient.gender = undefined

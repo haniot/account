@@ -152,6 +152,45 @@ describe('Routes: PatientsGoals', () => {
                             .replace('{0}', 'distance'))
                     })
             })
+
+            it('should return status code 400 and an error message about the invalid integer', async () => {
+                return request
+                    .patch(`/v1/patients/${user.id}/goals`)
+                    .send({ steps: '2000a', calories: 500, distance: 4000, active_minutes: 30, sleep: 420 })
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(res => {
+                        expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.INVALID_FIELDS)
+                        expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO
+                            .replace('{0}', 'steps'))
+                    })
+            })
+
+            it('should return status code 400 and an error message about the invalid integer (null)', async () => {
+                return request
+                    .patch(`/v1/patients/${user.id}/goals`)
+                    .send({ steps: null, calories: 500, distance: 4000, active_minutes: 30, sleep: 420 })
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(res => {
+                        expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.INVALID_FIELDS)
+                        expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO
+                            .replace('{0}', 'steps'))
+                    })
+            })
+
+            it('should return status code 400 and an error message about the negative integer', async () => {
+                return request
+                    .patch(`/v1/patients/${user.id}/goals`)
+                    .send({ steps: -2000, calories: 500, distance: 4000, active_minutes: 30, sleep: 420 })
+                    .set('Content-Type', 'application/json')
+                    .expect(400)
+                    .then(res => {
+                        expect(res.body).to.have.property('message', Strings.ERROR_MESSAGE.INVALID_FIELDS)
+                        expect(res.body).to.have.property('description', Strings.ERROR_MESSAGE.INTEGER_GREATER_ZERO
+                            .replace('{0}', 'steps'))
+                    })
+            })
         })
 
         context('when there are validation errors', () => {
