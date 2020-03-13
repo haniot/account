@@ -138,7 +138,7 @@ describe('Routes: PilotStudies', () => {
                     'calories',
                     'distance',
                     'heart_rate',
-                    'minutes_active',
+                    'active_minutes',
                     'quest_nutritional',
                     'last_invalid_type'
                 ]
@@ -273,7 +273,7 @@ describe('Routes: PilotStudies', () => {
                 'calories',
                 'distance',
                 'heart_rate',
-                'minutes_active',
+                'active_minutes',
                 'quest_nutritional',
                 'last_invalid_type'
             ]

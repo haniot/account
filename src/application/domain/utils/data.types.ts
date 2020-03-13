@@ -11,7 +11,7 @@ export enum DataTypes {
     CALORIES = 'calories',
     DISTANCE = 'distance',
     HEART_RATE = 'heart_rate',
-    MINUTES_ACTIVE = 'minutes_active',
+    MINUTES_ACTIVE = 'active_minutes',
     QUEST_NUTRITIONAL = 'quest_nutritional',
     QUEST_ODONTOLOGICAL = 'quest_odontological',
 }
