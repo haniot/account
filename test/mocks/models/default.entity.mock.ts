@@ -94,7 +94,7 @@ export abstract class DefaultEntityMock {
             'calories',
             'distance',
             'heart_rate',
-            'minutes_active',
+            'active_minutes',
             'quest_nutritional',
             'quest_odontological'
         ]
@@ -122,7 +122,7 @@ export abstract class DefaultEntityMock {
             'calories',
             'distance',
             'heart_rate',
-            'minutes_active',
+            'active_minutes',
             'quest_nutritional',
             'quest_odontological'
         ]
