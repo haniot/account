@@ -29,7 +29,7 @@ export class AdminsController {
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
-            return res.status(handleError.code).send(handleError.toJson())
+            return res.status(handleError.code).send(handleError.toJSON())
         }
     }
 
@@ -45,7 +45,7 @@ export class AdminsController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         } finally {
             req.query = {}
         }
@@ -60,7 +60,7 @@ export class AdminsController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         } finally {
             req.query = {}
         }
@@ -77,7 +77,7 @@ export class AdminsController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         }
     }
 
@@ -97,6 +97,6 @@ export class AdminsController {
             HttpStatus.NOT_FOUND,
             Strings.ADMIN.NOT_FOUND,
             Strings.ADMIN.NOT_FOUND_DESCRIPTION
-        ).toJson()
+        ).toJSON()
     }
 }

@@ -3,8 +3,6 @@ import { IBackgroundTask } from '../../application/port/background.task.interfac
 import { Identifier } from '../../di/identifiers'
 import { IEventBus } from '../../infrastructure/port/event.bus.interface'
 import { ILogger } from '../../utils/custom.logger'
-import { Default } from '../../utils/default'
-import fs from 'fs'
 import { FitbitLastSyncEvent } from '../../application/integration-event/event/fitbit.last.sync.event'
 import { FitbitLastSyncEventHandler } from '../../application/integration-event/handler/fitbit.last.sync.event.handler'
 import { DIContainer } from '../../di/di'
@@ -23,23 +21,7 @@ export class SubscribeEventBusTask implements IBackgroundTask {
     }
 
     public run(): void {
-        // To use SSL/TLS, simply mount the uri with the amqps protocol and pass the CA.
-        const rabbitUri = process.env.RABBITMQ_URI || Default.RABBITMQ_URI
-        const rabbitOptions: any = { sslOptions: { ca: [] } }
-        if (rabbitUri.indexOf('amqps') === 0) {
-            rabbitOptions.sslOptions.ca = [fs.readFileSync(process.env.RABBITMQ_CA_PATH || Default.RABBITMQ_CA_PATH)]
-        }
-        // It subscribe events
-        this._eventBus
-            .connectionSub
-            .open(rabbitUri, rabbitOptions)
-            .then(() => {
-                this._logger.info('Connection with subscribe event opened successful!')
-                this.subscribeEvents()
-            })
-            .catch(err => {
-                this._logger.error(`Error trying to get connection to Event Bus for event subscribing. ${err.message}`)
-            })
+        this.subscribeEvents()
     }
 
     public async stop(): Promise<void> {

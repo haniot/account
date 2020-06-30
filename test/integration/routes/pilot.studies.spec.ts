@@ -1,4 +1,5 @@
 import { expect } from 'chai'
+import { ObjectID } from 'bson'
 import { PilotStudy } from '../../../src/application/domain/model/pilot.study'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { DIContainer } from '../../../src/di/di'
@@ -7,11 +8,10 @@ import { Identifier } from '../../../src/di/identifiers'
 import { App } from '../../../src/app'
 import { PilotStudyRepoModel } from '../../../src/infrastructure/database/schema/pilot.study.schema'
 import { Strings } from '../../../src/utils/strings'
-import { ObjectID } from 'bson'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
-import { Default } from '../../../src/utils/default'
 import { DataTypes } from '../../../src/application/domain/utils/data.types'
+import { Config } from '../../../src/utils/config'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const app: App = DIContainer.get(Identifier.APP)
@@ -23,7 +23,8 @@ describe('Routes: PilotStudies', () => {
 
     before(async () => {
             try {
-                await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
+                const mongoConfigs = Config.getMongoConfig()
+                await dbConnection.tryConnect(mongoConfigs.uri, mongoConfigs.options)
                 await deleteAllPilots({})
             } catch (err) {
                 throw new Error('Failure on Auth test: ' + err.message)
@@ -284,7 +285,6 @@ describe('Routes: PilotStudies', () => {
                 .set('Content-Type', 'application/json')
                 .expect(400)
                 .then(res => {
-                    console.log('ERR: ', res.body)
                     expect(res.body).to.have.property('message', Strings.ENUM_VALIDATOR.NOT_MAPPED
                         .replace('{0}', 'data_types: invalid_type, other_invalid_type, ' +
                             'last_invalid_type'))
@@ -444,9 +444,9 @@ async function createUser(item) {
 }
 
 async function deleteAllPilots(doc) {
-    return await PilotStudyRepoModel.deleteMany(doc)
+    return PilotStudyRepoModel.deleteMany(doc)
 }
 
 async function deleteAllUsers(doc) {
-    return await UserRepoModel.deleteMany(doc)
+    return UserRepoModel.deleteMany(doc)
 }

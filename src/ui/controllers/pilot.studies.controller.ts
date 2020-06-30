@@ -28,7 +28,7 @@ export class PilotStudiesController {
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
-            return res.status(handleError.code).send(handleError.toJson())
+            return res.status(handleError.code).send(handleError.toJSON())
         }
     }
 
@@ -42,7 +42,7 @@ export class PilotStudiesController {
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
-            return res.status(handleError.code).send(handleError.toJson())
+            return res.status(handleError.code).send(handleError.toJSON())
         } finally {
             req.query = {}
         }
@@ -57,7 +57,7 @@ export class PilotStudiesController {
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
-            return res.status(handleError.code).send(handleError.toJson())
+            return res.status(handleError.code).send(handleError.toJSON())
         } finally {
             req.query = {}
         }
@@ -73,7 +73,7 @@ export class PilotStudiesController {
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
-            return res.status(handleError.code).send(handleError.toJson())
+            return res.status(handleError.code).send(handleError.toJSON())
         }
     }
 
@@ -84,7 +84,7 @@ export class PilotStudiesController {
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
-            return res.status(handleError.code).send(handleError.toJson())
+            return res.status(handleError.code).send(handleError.toJSON())
         }
     }
 
@@ -101,6 +101,6 @@ export class PilotStudiesController {
             HttpStatus.NOT_FOUND,
             Strings.PILOT_STUDY.NOT_FOUND,
             Strings.PILOT_STUDY.NOT_FOUND_DESCRIPTION
-        ).toJson()
+        ).toJSON()
     }
 }

@@ -1,3 +1,6 @@
+import { expect } from 'chai'
+import { ObjectID } from 'bson'
+import { App } from '../../../src/app'
 import { DIContainer } from '../../../src/di/di'
 import { IConnectionDB } from '../../../src/infrastructure/port/connection.db.interface'
 import { Identifier } from '../../../src/di/identifiers'
@@ -6,11 +9,8 @@ import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { HealthProfessional } from '../../../src/application/domain/model/health.professional'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { PilotStudyRepoModel } from '../../../src/infrastructure/database/schema/pilot.study.schema'
-import { expect } from 'chai'
-import { App } from '../../../src/app'
 import { Strings } from '../../../src/utils/strings'
-import { ObjectID } from 'bson'
-import { Default } from '../../../src/utils/default'
+import { Config } from '../../../src/utils/config'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const app: App = DIContainer.get(Identifier.APP)
@@ -22,7 +22,8 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
 
     before(async () => {
             try {
-                await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
+                const mongoConfigs = Config.getMongoConfig()
+                await dbConnection.tryConnect(mongoConfigs.uri, mongoConfigs.options)
                 await deleteAllPilots({})
                 await deleteAllUsers({})
                 await UserRepoModel.create(DefaultEntityMock.HEALTH_PROFESSIONAL).then(res => health.id = res.id)
@@ -227,9 +228,9 @@ describe('Routes: PilotStudiesHealthProfessionals', () => {
 })
 
 async function deleteAllUsers(doc) {
-    return await UserRepoModel.deleteMany(doc)
+    return UserRepoModel.deleteMany(doc)
 }
 
 async function deleteAllPilots(doc) {
-    return await PilotStudyRepoModel.deleteMany(doc)
+    return PilotStudyRepoModel.deleteMany(doc)
 }

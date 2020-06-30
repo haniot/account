@@ -1,17 +1,17 @@
+import { expect } from 'chai'
+import { ObjectID } from 'bson'
+import { App } from '../../../src/app'
+import { Strings } from '../../../src/utils/strings'
+import { ILogger } from '../../../src/utils/custom.logger'
 import { Admin } from '../../../src/application/domain/model/admin'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { DIContainer } from '../../../src/di/di'
 import { IConnectionDB } from '../../../src/infrastructure/port/connection.db.interface'
 import { Identifier } from '../../../src/di/identifiers'
-import { App } from '../../../src/app'
-import { expect } from 'chai'
-import { ObjectID } from 'bson'
-import { Strings } from '../../../src/utils/strings'
 import { IAdminRepository } from '../../../src/application/port/admin.repository.interface'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { RegisterDefaultAdminTask } from '../../../src/background/task/register.default.admin.task'
 import { Query } from '../../../src/infrastructure/repository/query/query'
-import { ILogger } from '../../../src/utils/custom.logger'
 import { UserRepository } from '../../../src/infrastructure/repository/user.repository'
 import { IEntityMapper } from '../../../src/infrastructure/port/entity.mapper.interface'
 import { UserEntity } from '../../../src/infrastructure/entity/user.entity'
@@ -20,6 +20,7 @@ import { ConnectionMongodb } from '../../../src/infrastructure/database/connecti
 import { IConnectionFactory } from '../../../src/infrastructure/port/connection.factory.interface'
 import { IUserRepository } from '../../../src/application/port/user.repository.interface'
 import { Default } from '../../../src/utils/default'
+import { Config } from '../../../src/utils/config'
 
 const adminRepo: IAdminRepository = DIContainer.get(Identifier.ADMIN_REPOSITORY)
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
@@ -30,7 +31,8 @@ describe('Routes: Users', () => {
 
     before(async () => {
             try {
-                await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
+                const mongoConfigs = Config.getMongoConfig()
+                await dbConnection.tryConnect(mongoConfigs.uri, mongoConfigs.options)
                 await deleteAllUsers({})
             } catch (err) {
                 throw new Error('Failure on Users test: ' + err.message)
@@ -130,5 +132,5 @@ describe('Routes: Users', () => {
 })
 
 async function deleteAllUsers(doc) {
-    return await UserRepoModel.deleteMany(doc)
+    return UserRepoModel.deleteMany(doc)
 }

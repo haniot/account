@@ -14,9 +14,11 @@ import { EmailWelcomeEvent } from '../../application/integration-event/event/ema
 import { EmailResetPasswordEvent } from '../../application/integration-event/event/email.reset.password.event'
 import { Email } from '../../application/domain/model/email'
 import { EmailUpdatePasswordEvent } from '../../application/integration-event/event/email.update.password.event'
-import { Default } from '../../utils/default'
-import fs from 'fs'
 
+/**
+ * It publishes events, that for some reason could not
+ * and sent and were saved for later submission.
+ */
 @injectable()
 export class PublishEventBusTask implements IBackgroundTask {
     constructor(
@@ -28,24 +30,7 @@ export class PublishEventBusTask implements IBackgroundTask {
     }
 
     public run(): void {
-        // To use SSL/TLS, simply mount the uri with the amqps protocol and pass the CA.
-        const rabbitUri = process.env.RABBITMQ_URI || Default.RABBITMQ_URI
-        const rabbitOptions: any = { sslOptions: { ca: [] } }
-        if (rabbitUri.indexOf('amqps') === 0) {
-            rabbitOptions.sslOptions.ca = [fs.readFileSync(process.env.RABBITMQ_CA_PATH || Default.RABBITMQ_CA_PATH)]
-        }
-        // It publishes events, that for some reason could not
-        // e sent and were saved for later submission.
-        this._eventBus
-            .connectionPub
-            .open(rabbitUri, rabbitOptions)
-            .then((conn) => {
-                conn.on('re_established_connection', () => this.internalPublishSavedEvents())
-                this._logger.info('Connection with publish event opened successful!')
-            })
-            .catch(err => {
-                this._logger.error(`Error trying to get connection to Event Bus for event publishing. ${err.message}`)
-            })
+        this.internalPublishSavedEvents().then()
     }
 
     public async stop(): Promise<void> {
