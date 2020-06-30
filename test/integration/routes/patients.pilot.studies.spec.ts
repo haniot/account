@@ -9,7 +9,7 @@ import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.
 import { PilotStudyRepoModel } from '../../../src/infrastructure/database/schema/pilot.study.schema'
 import { ObjectID } from 'bson'
 import { Patient } from '../../../src/application/domain/model/patient'
-import { Default } from '../../../src/utils/default'
+import { Config } from '../../../src/utils/config'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const app: App = DIContainer.get(Identifier.APP)
@@ -21,7 +21,8 @@ describe('Routes: PatientsPilotStudies', () => {
 
     before(async () => {
             try {
-                await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
+                const mongoConfigs = Config.getMongoConfig()
+                await dbConnection.tryConnect(mongoConfigs.uri, mongoConfigs.options)
                 await deleteAllPilots({})
                 await deleteAllUsers({})
                 await UserRepoModel.create(DefaultEntityMock.PATIENT).then(res => user.id = res.id)
@@ -95,9 +96,9 @@ describe('Routes: PatientsPilotStudies', () => {
 })
 
 async function deleteAllUsers(doc) {
-    return await UserRepoModel.deleteMany(doc)
+    return UserRepoModel.deleteMany(doc)
 }
 
 async function deleteAllPilots(doc) {
-    return await PilotStudyRepoModel.deleteMany(doc)
+    return PilotStudyRepoModel.deleteMany(doc)
 }

@@ -1,27 +1,27 @@
-import { IPatientRepository } from '../../../src/application/port/patient.repository.interface'
+import { expect } from 'chai'
 import { DIContainer } from '../../../src/di/di'
 import { Identifier } from '../../../src/di/identifiers'
+import { Strings } from '../../../src/utils/strings'
+import { Config } from '../../../src/utils/config'
+import { IPatientRepository } from '../../../src/application/port/patient.repository.interface'
 import { IBackgroundTask } from '../../../src/application/port/background.task.interface'
 import { IConnectionDB } from '../../../src/infrastructure/port/connection.db.interface'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
-import { Default } from '../../../src/utils/default'
 import { Patient } from '../../../src/application/domain/model/patient'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { IQuery } from '../../../src/application/port/query.interface'
 import { Query } from '../../../src/infrastructure/repository/query/query'
 import { UserType } from '../../../src/application/domain/utils/user.type'
-import { expect } from 'chai'
 import { AccessStatusTypes } from '../../../src/application/domain/utils/access.status.types'
 import { FitbitLastSyncEvent } from '../../../src/application/integration-event/event/fitbit.last.sync.event'
 import { Fitbit } from '../../../src/application/domain/model/fitbit'
 import { EventBusRabbitMQ } from '../../../src/infrastructure/eventbus/rabbitmq/eventbus.rabbitmq'
 import { FitbitRevokeEvent } from '../../../src/application/integration-event/event/fitbit.revoke.event'
-import { Strings } from '../../../src/utils/strings'
 import { FitbitErrorEvent } from '../../../src/application/integration-event/event/fitbit.error.event'
 import { ExternalServices } from '../../../src/application/domain/model/external.services'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
-const rabbitmq: EventBusRabbitMQ = DIContainer.get(Identifier.RABBITMQ_EVENT_BUS)
+const rabbit: EventBusRabbitMQ = DIContainer.get(Identifier.RABBITMQ_EVENT_BUS)
 const subscribeEventBusTask: IBackgroundTask = DIContainer.get(Identifier.SUBSCRIBE_EVENT_BUS_TASK)
 const patientRepository: IPatientRepository = DIContainer.get(Identifier.PATIENT_REPOSITORY)
 
@@ -34,19 +34,19 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
     // Start DB connection, RabbitMQ connection and SubscribeEventBusTask
     before(async () => {
         try {
-            await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
+            const mongoConfigs = Config.getMongoConfig()
+            await dbConnection.tryConnect(mongoConfigs.uri, mongoConfigs.options)
 
             await deleteAllUsers({})
 
             // Initialize RabbitMQ Publisher connection
-            const rabbitUri = process.env.RABBITMQ_URI || Default.RABBITMQ_URI
-            const rabbitOptions: any = { interval: 100, receiveFromYourself: true, sslOptions: { ca: [] } }
-
-            await rabbitmq.connectionPub.open(rabbitUri, rabbitOptions)
-
-            rabbitmq.receiveFromYourself = true
+            rabbit.receiveFromYourself = true
+            const rabbitConfigs = Config.getRabbitConfig()
+            await rabbit.connectionSub.open(rabbitConfigs.uri, rabbitConfigs.options)
+            await rabbit.connectionPub.open(rabbitConfigs.uri, rabbitConfigs.options)
 
             subscribeEventBusTask.run()
+            await timeout(2000)
 
             await timeout(2000)
         } catch (err) {
@@ -89,7 +89,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
                     await timeout(2000)
 
                     const fitbitLastSyncEvent: FitbitLastSyncEvent = new FitbitLastSyncEvent(new Date(), fitbitLastSync)
-                    await rabbitmq.publish(fitbitLastSyncEvent, FitbitLastSyncEvent.ROUTING_KEY)
+                    await rabbit.publish(fitbitLastSyncEvent, FitbitLastSyncEvent.ROUTING_KEY)
 
                     // Wait for 2000 milliseconds for the task to be executed
                     await timeout(2000)
@@ -128,7 +128,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
                     await timeout(2000)
 
                     const fitbitRevokeEvent: FitbitRevokeEvent = new FitbitRevokeEvent(new Date(), fitbitRevoke)
-                    await rabbitmq.publish(fitbitRevokeEvent, FitbitRevokeEvent.ROUTING_KEY)
+                    await rabbit.publish(fitbitRevokeEvent, FitbitRevokeEvent.ROUTING_KEY)
 
                     // Wait for 2000 milliseconds for the task to be executed
                     await timeout(2000)
@@ -168,7 +168,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
                     await timeout(2000)
 
                     const fitbitErrorEvent: FitbitErrorEvent = new FitbitErrorEvent(new Date(), fitbitError)
-                    await rabbitmq.publish(fitbitErrorEvent, FitbitErrorEvent.ROUTING_KEY)
+                    await rabbit.publish(fitbitErrorEvent, FitbitErrorEvent.ROUTING_KEY)
 
                     // Wait for 2000 milliseconds for the task to be executed
                     await timeout(2000)
@@ -188,5 +188,5 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
 })
 
 async function deleteAllUsers(doc) {
-    return await UserRepoModel.deleteMany(doc)
+    return UserRepoModel.deleteMany(doc)
 }

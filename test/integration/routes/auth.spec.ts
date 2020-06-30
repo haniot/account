@@ -8,7 +8,7 @@ import { UserType } from '../../../src/application/domain/utils/user.type'
 import { IAdminRepository } from '../../../src/application/port/admin.repository.interface'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { JwtRepositoryMock } from '../../mocks/repositories/jwt.repository.mock'
-import { Default } from '../../../src/utils/default'
+import { Config } from '../../../src/utils/config'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const adminRepo: IAdminRepository = DIContainer.get(Identifier.ADMIN_REPOSITORY)
@@ -25,7 +25,8 @@ describe('Routes: Auth', () => {
 
     before(async () => {
             try {
-                await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
+                const mongoConfigs = Config.getMongoConfig()
+                await dbConnection.tryConnect(mongoConfigs.uri, mongoConfigs.options)
                 await deleteAllUsers({})
                 const result = await adminRepo.create(user)
                 user.id = result.id
@@ -237,9 +238,9 @@ describe('Routes: Auth', () => {
 })
 
 async function deleteAllUsers(doc) {
-    return await UserRepoModel.deleteMany(doc)
+    return UserRepoModel.deleteMany(doc)
 }
 
 async function updateUser(email, doc) {
-    return await UserRepoModel.findOneAndUpdate({ email }, doc, { new: true })
+    return UserRepoModel.findOneAndUpdate({ email }, doc, { new: true })
 }

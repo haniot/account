@@ -1,14 +1,14 @@
 import { expect } from 'chai'
+import { ObjectID } from 'bson'
+import { App } from '../../../src/app'
 import { Admin } from '../../../src/application/domain/model/admin'
 import { UserRepoModel } from '../../../src/infrastructure/database/schema/user.schema'
 import { IConnectionDB } from '../../../src/infrastructure/port/connection.db.interface'
 import { Identifier } from '../../../src/di/identifiers'
-import { App } from '../../../src/app'
 import { DefaultEntityMock } from '../../mocks/models/default.entity.mock'
 import { Strings } from '../../../src/utils/strings'
-import { ObjectID } from 'bson'
 import { DIContainer } from '../../../src/di/di'
-import { Default } from '../../../src/utils/default'
+import { Config } from '../../../src/utils/config'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const app: App = DIContainer.get(Identifier.APP)
@@ -19,7 +19,8 @@ describe('Routes: Admins', () => {
 
     before(async () => {
             try {
-                await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
+                const mongoConfigs = Config.getMongoConfig()
+                await dbConnection.tryConnect(mongoConfigs.uri, mongoConfigs.options)
                 await deleteAllUsers({})
             } catch (err) {
                 throw new Error('Failure on Admins test: ' + err.message)
@@ -254,5 +255,5 @@ describe('Routes: Admins', () => {
 })
 
 async function deleteAllUsers(doc) {
-    return await UserRepoModel.deleteMany(doc)
+    return UserRepoModel.deleteMany(doc)
 }

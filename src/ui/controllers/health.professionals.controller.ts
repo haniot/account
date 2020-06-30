@@ -36,7 +36,7 @@ export class HealthProfessionalsController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         }
     }
 
@@ -53,7 +53,7 @@ export class HealthProfessionalsController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         }
     }
 
@@ -67,7 +67,7 @@ export class HealthProfessionalsController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         }
     }
 
@@ -82,7 +82,7 @@ export class HealthProfessionalsController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         }
     }
 
@@ -97,7 +97,7 @@ export class HealthProfessionalsController {
             HttpStatus.NOT_FOUND,
             Strings.HEALTH_PROFESSIONAL.NOT_FOUND,
             Strings.HEALTH_PROFESSIONAL.NOT_FOUND_DESCRIPTION
-        ).toJson()
+        ).toJSON()
     }
 
 }
