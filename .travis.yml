@@ -16,6 +16,9 @@ before_script:
   - sudo rabbitmqctl add_vhost haniot
   - sudo rabbitmqctl set_permissions -p haniot guest ".*" ".*" ".*"
   - npm install && npm install coveralls mocha-lcov-reporter --save-dev
+  - cp .env.example .env
+  - chmod +x create-self-signed-certs.sh
+  - ./create-self-signed-certs.sh
 script:
   - npm test
 after_success:

@@ -111,16 +111,13 @@ export class App {
      * @return Promise<void>
      */
     private setupSwaggerUI(): void {
-        // Middleware swagger. It should not run in the test environment.
-        if ((process.env.NODE_ENV || Default.NODE_ENV) !== 'test') {
-            const options = {
-                swaggerUrl: Default.SWAGGER_URI,
-                customCss: '.swagger-ui .topbar { display: none }',
-                customfavIcon: Default.LOGO_URI,
-                customSiteTitle: `API Reference | ${Strings.APP.TITLE}`
-            }
-            this.express.use('/v1/reference', swaggerUi.serve, swaggerUi.setup({}, options))
+        const options = {
+            swaggerUrl: Default.SWAGGER_URI,
+            customCss: '.swagger-ui .topbar { display: none }',
+            customfavIcon: Default.LOGO_URI,
+            customSiteTitle: `API Reference | ${Strings.APP.TITLE}`
         }
+        this.express.use('/v1/reference', swaggerUi.serve, swaggerUi.setup({}, options))
     }
 
     /**

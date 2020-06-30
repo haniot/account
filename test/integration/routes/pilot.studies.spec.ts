@@ -285,7 +285,6 @@ describe('Routes: PilotStudies', () => {
                 .set('Content-Type', 'application/json')
                 .expect(400)
                 .then(res => {
-                    console.log('ERR: ', res.body)
                     expect(res.body).to.have.property('message', Strings.ENUM_VALIDATOR.NOT_MAPPED
                         .replace('{0}', 'data_types: invalid_type, other_invalid_type, ' +
                             'last_invalid_type'))
