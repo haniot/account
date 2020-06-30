@@ -29,7 +29,7 @@ export class PatientsController {
             return res.status(HttpStatus.CREATED).send(this.toJSONView(result))
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
-            return res.status(handleError.code).send(handleError.toJson())
+            return res.status(handleError.code).send(handleError.toJSON())
         }
     }
 
@@ -45,7 +45,7 @@ export class PatientsController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         } finally {
             req.query = {}
         }
@@ -60,7 +60,7 @@ export class PatientsController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         } finally {
             req.query = {}
         }
@@ -77,7 +77,7 @@ export class PatientsController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         }
     }
 
@@ -92,6 +92,6 @@ export class PatientsController {
             HttpStatus.NOT_FOUND,
             Strings.PATIENT.NOT_FOUND,
             Strings.PATIENT.NOT_FOUND_DESCRIPTION
-        ).toJson()
+        ).toJSON()
     }
 }

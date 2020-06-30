@@ -10,7 +10,7 @@ import { IPilotStudyRepository } from '../../../src/application/port/pilot.study
 import { App } from '../../../src/app'
 import { expect } from 'chai'
 import { DIContainer } from '../../../src/di/di'
-import { Default } from '../../../src/utils/default'
+import { Config } from '../../../src/utils/config'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const healthRepo: IHealthProfessionalRepository = DIContainer.get(Identifier.HEALTH_PROFESSIONAL_REPOSITORY)
@@ -24,7 +24,8 @@ describe('Routes: HealthProfessionalsPilotStudies', () => {
 
     before(async () => {
             try {
-                await dbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
+                const mongoConfigs = Config.getMongoConfig()
+                await dbConnection.tryConnect(mongoConfigs.uri, mongoConfigs.options)
                 await deleteAllPilots({})
                 await deleteAllUsers({})
                 const health = await healthRepo.create(user)
@@ -97,9 +98,9 @@ describe('Routes: HealthProfessionalsPilotStudies', () => {
 })
 
 async function deleteAllUsers(doc) {
-    return await UserRepoModel.deleteMany(doc)
+    return UserRepoModel.deleteMany(doc)
 }
 
 async function deleteAllPilots(doc) {
-    return await PilotStudyRepoModel.deleteMany(doc)
+    return PilotStudyRepoModel.deleteMany(doc)
 }

@@ -28,7 +28,7 @@ export class PilotStudiesHealthProfessionalsController {
             return res.status(HttpStatus.OK).send(this.toJSONView(result))
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
-            return res.status(handleError.code).send(handleError.toJson())
+            return res.status(handleError.code).send(handleError.toJSON())
         }
     }
 
@@ -40,7 +40,7 @@ export class PilotStudiesHealthProfessionalsController {
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
-            return res.status(handleError.code).send(handleError.toJson())
+            return res.status(handleError.code).send(handleError.toJSON())
         }
     }
 
@@ -53,7 +53,7 @@ export class PilotStudiesHealthProfessionalsController {
             return res.status(HttpStatus.NO_CONTENT).send()
         } catch (err) {
             const handleError = ApiExceptionManager.build(err)
-            return res.status(handleError.code).send(handleError.toJson())
+            return res.status(handleError.code).send(handleError.toJSON())
         }
     }
 

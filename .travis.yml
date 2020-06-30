@@ -1,11 +1,9 @@
 language: node_js
 node_js:
-  - "8"
-  - "9"
-  - "10"
-  - "11"
   - "12"
-dist: xenial
+  - "13"
+env:
+  - NODE_ENV=test RABBITMQ_URI=amqp://guest:guest@localhost:5672/haniot MONGODB_ENABLE_TLS=false MONGODB_URI_TEST=mongodb://localhost:27017/account-test
 addons:
   apt:
     packages:
@@ -14,13 +12,13 @@ services:
   - rabbitmq
   - mongodb
 sudo: false
-cache:
-  directories:
-    - node_modules
 before_script:
   - sudo rabbitmqctl add_vhost haniot
   - sudo rabbitmqctl set_permissions -p haniot guest ".*" ".*" ".*"
   - npm install && npm install coveralls mocha-lcov-reporter --save-dev
+  - cp .env.example .env
+  - chmod +x create-self-signed-certs.sh
+  - ./create-self-signed-certs.sh
 script:
   - npm test
 after_success:

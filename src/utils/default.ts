@@ -8,6 +8,7 @@
  * @abstract
  */
 export abstract class Default {
+    public static readonly APP_ID: string = 'account.app'
     public static readonly APP_TITLE: string = 'HANIoT Account Service'
     public static readonly APP_DESCRIPTION: string = 'Microservice responsible for adding' +
         'updating, providing, deleting and authenticating users. '

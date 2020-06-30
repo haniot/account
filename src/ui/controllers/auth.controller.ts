@@ -21,11 +21,11 @@ export class AuthController {
             const result: any = await this._authService.authenticate(req.body.email, req.body.password)
             if (result) return res.status(HttpStatus.OK).send(result)
             return res.status(HttpStatus.UNAUTHORIZED)
-                .send(new ApiException(HttpStatus.UNAUTHORIZED, 'Invalid email or password!').toJson())
+                .send(new ApiException(HttpStatus.UNAUTHORIZED, 'Invalid email or password!').toJSON())
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         }
     }
 
@@ -37,7 +37,7 @@ export class AuthController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         }
     }
 
@@ -48,7 +48,7 @@ export class AuthController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         }
     }
 
@@ -67,7 +67,7 @@ export class AuthController {
         } catch (err) {
             const handlerError = ApiExceptionManager.build(err)
             return res.status(handlerError.code)
-                .send(handlerError.toJson())
+                .send(handlerError.toJSON())
         }
     }
 
@@ -76,7 +76,7 @@ export class AuthController {
             HttpStatus.BAD_REQUEST,
             Strings.ERROR_MESSAGE.OPERATION_CANT_BE_COMPLETED,
             Strings.ERROR_MESSAGE.OPERATION_CANT_BE_COMPLETED_DESC
-        ).toJson()
+        ).toJSON()
     }
 
 }
