@@ -178,7 +178,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
 
                     const result = await patientRepository.findOne(query)
 
-                    expect(result.external_services.fitbit_status).to.eql(AccessStatusTypes.EXPIRED_TOKEN)
+                    expect(result.external_services.fitbit_status).to.eql(AccessStatusTypes.NONE)
 
                     done()
                 })
