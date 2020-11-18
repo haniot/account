@@ -19,6 +19,7 @@ import { EventBusRabbitMQ } from '../../../src/infrastructure/eventbus/rabbitmq/
 import { FitbitRevokeEvent } from '../../../src/application/integration-event/event/fitbit.revoke.event'
 import { FitbitErrorEvent } from '../../../src/application/integration-event/event/fitbit.error.event'
 import { ExternalServices } from '../../../src/application/domain/model/external.services'
+import { FitbitTokenGrantedEvent } from '../../../src/application/integration-event/event/fitbit.token.granted.event'
 
 const dbConnection: IConnectionDB = DIContainer.get(Identifier.MONGODB_CONNECTION)
 const rabbit: EventBusRabbitMQ = DIContainer.get(Identifier.RABBITMQ_EVENT_BUS)
@@ -84,7 +85,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
             patientRepository.create(patient)
                 .then(async patientCreate => {
                     const fitbitLastSync: Fitbit = new Fitbit()
-                    fitbitLastSync.patient_id = patientCreate.id
+                    fitbitLastSync.user_id = patientCreate.id
                     fitbitLastSync.last_sync = '2020-02-05T10:30:00Z'
                     await timeout(2000)
 
@@ -124,7 +125,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
             patientRepository.create(patient)
                 .then(async patientCreate => {
                     const fitbitRevoke: Fitbit = new Fitbit()
-                    fitbitRevoke.patient_id = patientCreate.id
+                    fitbitRevoke.user_id = patientCreate.id
                     await timeout(2000)
 
                     const fitbitRevokeEvent: FitbitRevokeEvent = new FitbitRevokeEvent(new Date(), fitbitRevoke)
@@ -160,7 +161,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
             patientRepository.create(patient)
                 .then(async patientCreate => {
                     const fitbitError: Fitbit = new Fitbit()
-                    fitbitError.patient_id = patientCreate.id
+                    fitbitError.user_id = patientCreate.id
                     fitbitError.error = {
                         code: 1011, message: Strings.ERROR_MESSAGE.INTERNAL_SERVER_ERROR,
                         description: Strings.ERROR_MESSAGE.INTERNAL_SERVER_ERROR_DESC
@@ -178,7 +179,44 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
 
                     const result = await patientRepository.findOne(query)
 
-                    expect(result.external_services.fitbit_status).to.eql(AccessStatusTypes.EXPIRED_TOKEN)
+                    expect(result.external_services.fitbit_status).to.eql(AccessStatusTypes.NONE)
+
+                    done()
+                })
+                .catch(done)
+        })
+    })
+
+    context('when receiving a FitbitTokenGrantedEvent successfully', () => {
+        before(async () => {
+            try {
+                await deleteAllUsers({})
+            } catch (err) {
+                throw new Error('Failure on SubscribeEventBusTask test: ' + err.message)
+            }
+        })
+        it('should return an updated child with a new fitbit_status', (done) => {
+            const patient: Patient = new Patient().fromJSON(DefaultEntityMock.PATIENT)
+
+            patientRepository.create(patient)
+                .then(async patientCreate => {
+                    const fitbitTokenGranted: Fitbit = new Fitbit()
+                    fitbitTokenGranted.user_id = patientCreate.id
+                    await timeout(2000)
+
+                    const fitbitTokenGrantedEvent: FitbitTokenGrantedEvent = new FitbitTokenGrantedEvent(new Date(), fitbitTokenGranted)
+                    await rabbit.publish(fitbitTokenGrantedEvent, FitbitTokenGrantedEvent.ROUTING_KEY)
+
+                    // Wait for 2000 milliseconds for the task to be executed
+                    await timeout(2000)
+
+                    const query: IQuery = new Query()
+                    query.addFilter({ _id: patientCreate.id, type: UserType.PATIENT })
+
+                    const result = await patientRepository.findOne(query)
+
+                    expect(result.external_services.fitbit_last_sync).to.eql(null)
+                    expect(result.external_services.fitbit_status).to.eql(AccessStatusTypes.VALID_TOKEN)
 
                     done()
                 })

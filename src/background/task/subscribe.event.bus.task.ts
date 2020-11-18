@@ -11,6 +11,8 @@ import { FitbitRevokeEvent } from '../../application/integration-event/event/fit
 import { FitbitRevokeEventHandler } from '../../application/integration-event/handler/fitbit.revoke.event.handler'
 import { FitbitErrorEvent } from '../../application/integration-event/event/fitbit.error.event'
 import { FitbitErrorEventHandler } from '../../application/integration-event/handler/fitbit.error.event.handler'
+import { FitbitTokenGrantedEvent } from '../../application/integration-event/event/fitbit.token.granted.event'
+import { FitbitTokenGrantedEventHandler } from '../../application/integration-event/handler/fitbit.token.granted.event.handler'
 
 @injectable()
 export class SubscribeEventBusTask implements IBackgroundTask {
@@ -80,6 +82,20 @@ export class SubscribeEventBusTask implements IBackgroundTask {
                 })
                 .catch(err => {
                     this._logger.error(`Error in Subscribe FitbitRevokeEvent! ${err.message}`)
+                })
+
+            /**
+             * Subscribe in FitbitTokenGrantedEvent
+             */
+            this._eventBus
+                .subscribe(new FitbitTokenGrantedEvent(), new FitbitTokenGrantedEventHandler(
+                    DIContainer.get<IPatientRepository>(Identifier.PATIENT_REPOSITORY), this._logger),
+                    FitbitTokenGrantedEvent.ROUTING_KEY)
+                .then((result: boolean) => {
+                    if (result) this._logger.info('Subscribe in FitbitTokenGrantedEvent successful!')
+                })
+                .catch(err => {
+                    this._logger.error(`Error in Subscribe FitbitTokenGrantedEvent! ${err.message}`)
                 })
         } catch (err) {
             this._logger.error(`Error trying to get connection to Event Bus for event subscribe. ${err.message}`)
