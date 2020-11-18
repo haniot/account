@@ -1,7 +1,8 @@
 language: node_js
 node_js:
-  - "12"
   - "13"
+  - "14"
+  - "15"
 env:
   - NODE_ENV=test RABBITMQ_URI=amqp://guest:guest@localhost:5672/haniot MONGODB_ENABLE_TLS=false MONGODB_URI_TEST=mongodb://localhost:27017/account-test
 addons:
@@ -20,6 +21,7 @@ before_script:
   - chmod +x create-self-signed-certs.sh
   - ./create-self-signed-certs.sh
 script:
+  - npm run build
   - npm test
 after_success:
   - nyc report --reporter=text-lcov | coveralls
