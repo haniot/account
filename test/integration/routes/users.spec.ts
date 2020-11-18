@@ -16,10 +16,7 @@ import { UserRepository } from '../../../src/infrastructure/repository/user.repo
 import { IEntityMapper } from '../../../src/infrastructure/port/entity.mapper.interface'
 import { UserEntity } from '../../../src/infrastructure/entity/user.entity'
 import { User } from '../../../src/application/domain/model/user'
-import { ConnectionMongodb } from '../../../src/infrastructure/database/connection.mongodb'
-import { IConnectionFactory } from '../../../src/infrastructure/port/connection.factory.interface'
 import { IUserRepository } from '../../../src/application/port/user.repository.interface'
-import { Default } from '../../../src/utils/default'
 import { Config } from '../../../src/utils/config'
 
 const adminRepo: IAdminRepository = DIContainer.get(Identifier.ADMIN_REPOSITORY)
@@ -104,12 +101,15 @@ describe('Routes: Users', () => {
             const userEntityMapper: IEntityMapper<User, UserEntity> = DIContainer.get(Identifier.USER_ENTITY_MAPPER)
             const logger: ILogger = DIContainer.get(Identifier.LOGGER)
             const userRepo: IUserRepository = new UserRepository(userRepoModel, userEntityMapper, logger)
-            const dbConnectionFactory: IConnectionFactory = DIContainer.get(Identifier.MONGODB_CONNECTION_FACTORY)
-            const otherDbConnection: IConnectionDB = new ConnectionMongodb(dbConnectionFactory, logger)
             before(async () => {
-                await new RegisterDefaultAdminTask(otherDbConnection, adminRepo, logger).run()
+                await deleteAllUsers({})
 
-                await otherDbConnection.tryConnect(process.env.MONGODB_URI_TEST || Default.MONGODB_URI_TEST)
+                await dbConnection.dispose()
+
+                await new RegisterDefaultAdminTask(dbConnection, adminRepo, logger).run()
+
+                const mongoConfigs = Config.getMongoConfig()
+                await dbConnection.tryConnect(mongoConfigs.uri, mongoConfigs.options)
 
                 return new Promise(resolve => setTimeout(resolve, 2000))
             })
