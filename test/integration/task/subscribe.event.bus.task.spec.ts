@@ -84,7 +84,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
             patientRepository.create(patient)
                 .then(async patientCreate => {
                     const fitbitLastSync: Fitbit = new Fitbit()
-                    fitbitLastSync.patient_id = patientCreate.id
+                    fitbitLastSync.user_id = patientCreate.id
                     fitbitLastSync.last_sync = '2020-02-05T10:30:00Z'
                     await timeout(2000)
 
@@ -124,7 +124,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
             patientRepository.create(patient)
                 .then(async patientCreate => {
                     const fitbitRevoke: Fitbit = new Fitbit()
-                    fitbitRevoke.patient_id = patientCreate.id
+                    fitbitRevoke.user_id = patientCreate.id
                     await timeout(2000)
 
                     const fitbitRevokeEvent: FitbitRevokeEvent = new FitbitRevokeEvent(new Date(), fitbitRevoke)
@@ -160,7 +160,7 @@ describe('SUBSCRIBE EVENT BUS TASK', () => {
             patientRepository.create(patient)
                 .then(async patientCreate => {
                     const fitbitError: Fitbit = new Fitbit()
-                    fitbitError.patient_id = patientCreate.id
+                    fitbitError.user_id = patientCreate.id
                     fitbitError.error = {
                         code: 1011, message: Strings.ERROR_MESSAGE.INTERNAL_SERVER_ERROR,
                         description: Strings.ERROR_MESSAGE.INTERNAL_SERVER_ERROR_DESC

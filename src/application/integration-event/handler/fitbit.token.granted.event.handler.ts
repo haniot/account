@@ -25,12 +25,12 @@ export class FitbitTokenGrantedEventHandler implements IIntegrationEventHandler<
 
     public async handle(event: FitbitTokenGrantedEvent): Promise<void> {
         try {
-            if (!event.fitbit || !event.fitbit.patient_id) {
+            if (!event.fitbit || !event.fitbit.user_id) {
                 throw new ValidationException('Event is not in the expected format!', JSON.stringify(event))
             }
-            const patientId: string = event.fitbit.patient_id
+            const patientId: string = event.fitbit.user_id
 
-            // 1. Validate patient_id
+            // 1. Validate user_id
             ObjectIdValidator.validate(patientId, Strings.PATIENT.PARAM_ID_NOT_VALID_FORMAT)
 
             // 2. Try to update the patient

@@ -23,11 +23,11 @@ export class FitbitLastSyncEventHandler implements IIntegrationEventHandler<Fitb
 
     public async handle(event: FitbitLastSyncEvent): Promise<void> {
         try {
-            if (!event.fitbit || !event.fitbit.patient_id || !event.fitbit.last_sync) return
-            const patientId: string = event.fitbit.patient_id
+            if (!event.fitbit || !event.fitbit.user_id || !event.fitbit.last_sync) return
+            const patientId: string = event.fitbit.user_id
             const lastSync: string = event.fitbit.last_sync
 
-            // 1. Validate patient_id and last_sync
+            // 1. Validate user_id and last_sync
             ObjectIdValidator.validate(patientId, Strings.PATIENT.PARAM_ID_NOT_VALID_FORMAT)
             DatetimeValidator.validate(lastSync)
 

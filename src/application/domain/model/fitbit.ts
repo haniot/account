@@ -3,16 +3,16 @@ import { JsonUtils } from '../utils/json.utils'
 import { IJSONSerializable } from '../utils/json.serializable.interface'
 
 export class Fitbit implements IJSONSerializable, IJSONDeserializable<Fitbit> {
-    private _patient_id?: string
+    private _user_id?: string
     private _last_sync?: string
     private _error?: any
 
-    get patient_id(): string | undefined{
-        return this._patient_id
+    get user_id(): string | undefined{
+        return this._user_id
     }
 
-    set patient_id(value: string | undefined) {
-        this._patient_id = value
+    set user_id(value: string | undefined) {
+        this._user_id = value
     }
 
     get last_sync(): string | undefined {
@@ -37,7 +37,7 @@ export class Fitbit implements IJSONSerializable, IJSONDeserializable<Fitbit> {
             json = JSON.parse(json)
         }
 
-        if (json.patient_id) this.patient_id = json.patient_id
+        if (json.user_id) this.user_id = json.user_id
         if (json.last_sync) this.last_sync = json.last_sync
         if (json.error) this.error = json.error
 
@@ -46,7 +46,7 @@ export class Fitbit implements IJSONSerializable, IJSONDeserializable<Fitbit> {
 
     public toJSON(): any {
         return {
-            patient_id: this.patient_id,
+            user_id: this.user_id,
             last_sync: this.last_sync,
             error: this.error
         }

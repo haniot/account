@@ -23,10 +23,10 @@ export class FitbitErrorEventHandler implements IIntegrationEventHandler<FitbitE
 
     public async handle(event: FitbitErrorEvent): Promise<void> {
         try {
-            if (!event.fitbit || !event.fitbit.patient_id || !event.fitbit.error) return
-            const patientId: string = event.fitbit.patient_id
+            if (!event.fitbit || !event.fitbit.user_id || !event.fitbit.error) return
+            const patientId: string = event.fitbit.user_id
 
-            // 1. Validate patient id
+            // 1. Validate user_id
             ObjectIdValidator.validate(patientId, Strings.PATIENT.PARAM_ID_NOT_VALID_FORMAT)
 
             // 2. Try to update the patient access status
