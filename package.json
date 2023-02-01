@@ -62,7 +62,7 @@
     "inversify": "^5.0.1",
     "inversify-express-utils": "^6.3.2",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.10.15",
+    "mongoose": "^5.13.15",
     "morgan": "^1.10.0",
     "query-strings-parser": "^2.1.7",
     "reflect-metadata": "^0.1.13",
